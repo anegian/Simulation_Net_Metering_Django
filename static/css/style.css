@@ -1,0 +1,345 @@
+/* GENERAL settings*/
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+.menu-container .nav-list{
+   text-decoration-line: none;
+}
+
+/* BACKGROUND index and templates*/
+.index-bg{
+    background: url("../images/solar-cell.jpg") no-repeat fixed center;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.calculator-bg, .dashboard-bg, .regulations-bg{
+    background-color: steelblue;
+}
+.info-bg{
+    background: url("../images/lamp.jpg") no-repeat center;
+}
+img{
+    filter: brightness(90%);
+}
+
+h1{
+    margin-top: 100px;
+    text-align: center;
+    color: #f2f2f2;
+
+}
+h2{
+    text-align: left;
+    color: #f2f2f2;
+}
+
+/* FIRST Navigation Bar*/
+.first-navbar{
+    position: fixed;
+    display: flex;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #f2f2f2;
+    height: 60px;
+}
+
+/* solar panel.png on the left top corner */
+.sm-image{
+    float: left;
+    margin-top: 10px;
+    margin-left: 8px;
+    color: #000022;
+    width: 40px;
+    cursor: pointer;
+}
+/* Logo phrase of the web site */
+label.logo a{
+    float: left;
+    margin-left: 8px;
+    line-height: 55px;
+    color: #2c3e50;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+/* Button's settings for sign-up - register */
+label.login a{
+    position: fixed;
+    right: 20px;
+    line-height: 60px;
+    color: #2c3e50;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+label.signup a{
+    position: fixed;
+    line-height: 60px;
+    right: 35px;
+    margin-right: 20px;
+    color: #2c3e50;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.large-screen-search-button:hover,
+label.login a:hover,
+label.signup a:hover{
+    color: #ed4901;
+}
+
+/* Position of search box bar */
+.search-box{
+    display: flex;
+    position: fixed;
+    margin-top: 10px;
+    right: 20px;
+    color: #f2f2f2;
+    padding: 2px;
+    border: 1px solid currentColor;
+    border-radius: 5px;
+    height: 40px;
+}
+input[type="search"] {
+  background: transparent;
+  margin: 0;
+  padding: 7px 8px;
+  font-size: 14px;
+  color: inherit;
+  border: 1px solid transparent;
+  border-radius: inherit;
+}
+input[type="search"]::placeholder {
+  color: #bbb;
+}
+button[type="submit"] {
+    text-indent: -999px;
+    overflow: hidden;
+    width: 40px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    background: #f2f2f2 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat center;
+    cursor: pointer;
+    opacity: 0.7;
+}
+button[type="submit"]:hover {
+  opacity: 1;
+}
+button[type="submit"]:focus,
+input[type="search"]:focus {
+  box-shadow: 0 0 3px 0 #1183d6;
+  border-color: #ed4901;
+  outline: none;
+}
+
+/* Position and settings of search box button */
+.small-screen-show-search-button {
+    position: fixed;
+    right: 54px;
+    font-size: 19px;
+    color: #f2f2f2;
+    line-height: 60px;
+    cursor: pointer;
+    display: none;
+
+}
+.small-screen-show-search-button:hover {
+    color: #ed4901;
+}
+/* Hide search-bar show-buttton */
+#small-show-search-checkbox{
+    display: none;
+}
+
+/* MENU Navigation Bar - large screen inline-block - */
+.menu-container{
+    position: fixed;
+    display: flex;
+    background: #333333;
+    top: 60px;
+    height: 60px;
+    width: 100%;
+    margin-bottom: 80px;
+}
+/* large screen inline-block - settings of list items */
+.menu-container .nav-list li{
+    text-align: center;
+    display: inline-flex;
+    margin: 0 20px;
+    line-height:60px;
+}
+/* large screen inline-block - settings of anchor references */
+.menu-container .nav-list li a{
+    color: #f2f2f2;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+/*  large screen inline-block - color in active anchor reference */
+.menu-container .nav-list a:hover, .nav-list li a.active{   /* SOS a:active doesn't work, only a.active */
+    background: none;
+    color: #ed4901;
+}
+.menu-container .nav-list li:hover a{
+    letter-spacing: 1px;
+}
+
+/* CHECKBUTTON transformed in bars when small and times when checkbutton is checked */
+#bars{
+    font-size: 25px;
+    color: #f2f2f2;
+    position: fixed;
+    right: 18px;
+    line-height: 60px;
+    cursor: pointer;
+    display: none;
+}
+#times{
+    font-size: 28px;
+    color: #f2f2f2;
+    position: fixed;
+    right: 20px;
+    line-height: 60px;
+    cursor: pointer;
+    display: none;
+}
+#check{
+    display: none;
+}
+#bars:hover{
+    color: #ed4901;
+}
+#times:hover{
+    color: #ed4901;
+}
+
+
+/* MEDIA Movement and settings of menu block list */
+/* checkbox for menu container */
+/* checkbox for search box */
+@media screen and (max-width: 950px) {
+    .body{
+        overflow-y: scroll;
+    }
+    .large-screen-search-button{
+        display: none;
+    }
+    .small-screen-show-search-button{
+        display: block;
+    }
+    label.login a{
+        position: fixed;
+    }
+    label.signup a{
+        position: fixed;
+    }
+    .search-box{
+        left: 60px;
+        position: fixed;
+        display: none;
+        width: 170px;
+    }
+    /* position of search box bar in menu navbar */
+    #small-show-search-checkbox:checked ~ .search-box{
+        display: block;
+    }
+
+    /* settings & position of menu container left off the page */
+    .menu-container .nav-list{
+        position: fixed;
+        height: 100vh;
+        width: 100%;
+        background: #2c3e50;
+        top: 120px;
+        left: -100%;
+        text-align: center;
+        transition: all .75s ease-out;
+    }
+    /* show menu container vertical */
+    .menu-container .nav-list li{
+        display: block;
+    }
+    /* settings for anchor references in menu */
+    .menu-container .nav-list li a{
+        color: #f2f2f2;
+        font-size: 16px;
+        text-transform: uppercase;
+}
+    /*  color in active anchor reference */
+    .nav-list a:hover, .nav-list li a.active{
+        background: none;
+        color: #ed4901;
+    }
+    /* menu container in right position when check-button checked */
+    #check:checked ~ .nav-list{
+        left: 0;
+        transition: all .5s ease-in;
+    }
+
+    /* Check-button transformed in bars when small (600px) and
+    in times icon (x) when checkbutton is checked */
+    #bars{
+        display: block;
+    }
+    #check:checked ~ .checkbutton #bars{
+        display: none;
+    }
+    #check:checked ~ .checkbutton #times {
+        display: block;
+    }
+}
+
+/* Web site height*/
+.page-container{
+    position: static; /*for better movement relative, but it destroys menu functionality*/
+    min-height: 200vh;
+}
+.content-wrap{
+    padding-bottom: 2.5em;
+}
+
+/* FOOTER */
+.footer{
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    height: 4.2em;
+    width: 100%;
+    padding: 10px;
+    background-color: #333333;
+}
+.other_links{
+    font-size: 15px;
+    letter-spacing: 10px;
+}
+.other_links a{
+    text-decoration: none;
+    color: cornflowerblue;
+}
+.other_links a:hover{
+    color: #ed4901;
+}
+.admin{
+    font-size: 14px;
+    padding: inherit;
+    text-decoration: none;
+    color: #f2f2f2;
+}
+.s{
+    width: 500px;
+}
+
+.form-control{
+    background-color: transparent;
+   !important;
+}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+ {% block title %}
+    <title>index</title>
+{% endblock %}
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"/>
+    <link rel="stylesheet" href=" {% static 'css/style.css' %}"/>
+
+</head>
+
+<body class={% block bg %}"index-bg"{% endblock %}>
+
+<header>
+    <nav class="first-navbar">
+
+        <div class="first-navbar-left-container">
+            <a href="{% url 'home' %}"><img class="sm-image" src="{% static 'images/panel.png'%}" alt="photo not found"></a>
+            <label class="logo"><a class="text-decoration-none" href="{% url 'home' %}">Simulation - <b style="color: #ed4901;">N</b>et Metering</a></label>
+        </div>
+
+        <label class="signup"><a href="http://127.0.0.1:8000/signup/"><i class="fas fa-user"></i></a></label>
+        <label class="login"><a href="http://127.0.0.1:8000/login/"><i class="fas fa-sign-in"></i></a></label>
+
+        <div class="first-nav-right-container">
+
+        </div>
+    </nav>
+</header>
+
+<nav class="menu-container">
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbutton">
+            <i class="fas fa-bars" id="bars"></i>
+            <i class="fas fa-times" id="times"></i>
+        </label>
+
+{% block menu_list %}
+            <ul class="nav-list">
+                <li><a class="text-decoration-none active" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
+                <li><a class="text-decoration-none" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
+                <li><a class="text-decoration-none" href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+                <li><a class="text-decoration-none" href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
+                <li><a class="text-decoration-none" href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+            </ul>
+{% endblock %}
+
+<input type="checkbox" id="small-show-search-checkbox">
+    <label  for="small-show-search-checkbox"  class="small-screen-show-search-button"><i class="fas fa-search"></i></label>
+        <form action="#" class="search-box">
+
+            <input type="search" id="large-screen-search-button" placeholder="  Search here..">
+            <label for="large-screen-search-button"></label>
+            <button class="large-screen-search-button" type="submit"></button>
+        </form>
+
+</nav>
+
+<div class="page-container">
+    <div class="content-wrap">
+    {%block content%}
+    <br><br><br><br><br><br><br><br><br><br>
+
+    {% endblock %}
+    </div>
+
+<footer class="footer">
+    <div class="other_links">
+        <a href="https://linkedin.com/in/anestis-giannakosian-880707220"><i class="fab fa-linkedin-in"></i> </a>
+        <a href="https://github.com/anegian"><i class="fab fa-github"></i></a>
+        <a href="https://youtube.com"><i class="fab fa-youtube"></i></a>
+    </div>
+
+        <p class="admin">
+            <i class="fas fa-copyright"></i>
+            2022 Anestis Giannakosian. All rights reserved
+        </p>
+</footer>
+
+</div>
+
+</body>
+
+</html>
