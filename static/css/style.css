@@ -20,7 +20,7 @@
 }
 
 .calculator-bg, .dashboard-bg, .regulations-bg{
-    background-color: steelblue;
+    background-color: darkgrey;
 }
 .info-bg{
     background: url("../images/lamp.jpg") no-repeat center;
@@ -32,12 +32,13 @@ img{
 h1{
     margin-top: 100px;
     text-align: center;
-    color: #f2f2f2;
+    color: black;
 
 }
-h2{
-    text-align: left;
-    color: #f2f2f2;
+h3{
+    margin-top: 80px;
+    color: black;
+    text-align: center;
 }
 
 /* FIRST Navigation Bar*/
@@ -335,11 +336,9 @@ input[type="search"]:focus {
     text-decoration: none;
     color: #f2f2f2;
 }
-.s{
-    width: 500px;
-}
 
 .form-control{
     background-color: transparent;
-   !important;
+    outline-style: none;
+    !important;
 }

@@ -22,22 +22,25 @@
 
 {% block content %}
             <br><br>
-        <h1>Calculator view </h1>
-            <br><br>
+        <h3>Στοιχεία Επικοινωνίας</h3>
 
     <div class="container">
-        <form method="POST" class="form-control">
-            {% csrf_token %}
-            {% for field in form %}
-                <div class="mb-lg-5">
-                    <p>
-                        {{ field.label_tag }}
-                    </p>
-                </div>
-                        {{ field }}
-            {% endfor %}
-            <input type="submit">
-        </form>
+            <form method="POST" class="form-control">
+                {% csrf_token %}
+
+                    {% for field in form %}
+                        <label for="{{ field.name }}">{{ field.label }}</label><br>
+                        {{ field }}<br><br>
+                     {% endfor %}
+
+                     {% for field in form %}
+                        <label for="{{ field.name }}">{{ field.label }}</label><br>
+                        {{ field }}<br><br>
+                     {% endfor %}
+
+                <input type="submit" value=" Υποβολή Στοιχείων ">
+            </form>
+
     </div>
 
 {% endblock %}

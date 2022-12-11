@@ -1,6 +1,12 @@
-from django import forms
+from django.forms import ModelForm
+from .models import *
 
-class CalculatorForm(forms.Form):
-    first_name = forms.CharField(label='First Name:', max_length=100)
-    last_name = forms.CharField(label='Last Name:', max_length=100)
-    email = forms.EmailField(label='Email:')
+class CustomerForm(ModelForm):
+    class Meta:
+        model = CustomerModel
+        fields = '__all__'
+
+class PlaceForm(ModelForm):
+    class Meta:
+        model = PlaceModel
+        fields = '__all__'
