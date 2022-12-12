@@ -2,45 +2,170 @@
 
 {% load static %}
 
-{% block title %}
+<!-- ::::FORM START:::: -->
+<form method="POST" class="form-control">
+    {% csrf_token %}
+
+    {% block title %}
     <title>Calculator</title>
-{% endblock %}
+    {% endblock %}
 
-{% block bg %}
-    "calculator-bg"
-{% endblock %}
+    {% block bg %}
+        "calculator-bg"
+    {% endblock %}
 
-{% block menu_list %}
-    <ul class="nav-list">
-                <li><a class="text-decoration-none" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
-                <li><a class="text-decoration-none" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
-                <li><a class="active text-decoration-none" href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
-                <li><a class="text-decoration-none" href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-                <li><a class="text-decoration-none" href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
-            </ul>
-{% endblock %}
+    {% block menu_list %}
+        <ul class="nav-list">
+                    <li><a class="text-decoration-none" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
+                    <li><a class="text-decoration-none" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
+                    <li><a class="active text-decoration-none" href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+                    <li><a class="text-decoration-none" href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
+                    <li><a class="text-decoration-none" href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+                </ul>
+    {% endblock %}
 
-{% block content %}
-            <br><br>
-        <h3>Στοιχεία Επικοινωνίας</h3>
+    <!-- ::::CALCULATOR FORM:::: -->
+    {% block content %}
+                <br><br>    <br><br>    <br><br>
 
-    <div class="container">
-            <form method="POST" class="form-control">
-                {% csrf_token %}
+        <section class="">
 
-                    {% for field in form %}
-                        <label for="{{ field.name }}">{{ field.label }}</label><br>
-                        {{ field }}<br><br>
-                     {% endfor %}
+            <div class="table-fieldset">
+                <div class="flex table" role="table">
+                    <table class="table-calculator-form-control">
+                    <tr>
+                        <td>
+                           <i class=" fa fa-calculator" aria-hidden="true"  ></i>
+                        </td>
+                        <td class="calc-title">
+                            <h3>Υπολογιστής Απόδοσης - Απόσβεσης</h3>
+                        </td>
+                        <td>
+                            <div class="calculator-article">
+                               Ο υπολογιστής απόδοσης φωτοβολταϊκού συστήματος αυτοπαραγωγής με ενεργειακό συμψηφισμό
+                                (Net Metering) σας βοηθάει να υπολογίσετε την απόδοση οικιακών φωτοβολταϊκών συστημάτων
+                                με βάση τα χαρακτηριστικά του δικού σας σπιτιού.
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                </div>
+                    <br>
+            <fieldset class="calculator-fieldset">
+                <div class="panel">
+                    <div class="number"> 1 </div>
+                    <h5>Τοποθεσία</h5>
 
-                     {% for field in form %}
-                        <label for="{{ field.name }}">{{ field.label }}</label><br>
-                        {{ field }}<br><br>
-                     {% endfor %}
+                        <div class="select-district">
+                            <p class="spacer-in fieldset"><label for="area">Επιλέξτε:</label></p>
+                            <select class="form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε Τοποθεσία">
+                                <option value="">Περιφέρεια</option>
+                                <option value="1400">Αττική</option>
+                                <option value="1300">Ανατολική Μακεδονία &amp; Θράκη</option>
+                                <option value="1350">Βόρειο Αιγαίο</option>
+                                <option value="1600">Δυτική Ελλάδα</option>
+                                <option value="1600">Δυτική Μακεδονία</option>
+                                <option value="1300">Ήπειρος</option>
+                                <option value="1350">Θεσσαλία</option>
+                                <option value="1500">Ιόνιοι Νήσοι</option>
+                                <option value="1350">Κεντρική Μακεδονία</option>
+                                <option value="1550">Κρήτη</option>
+                                <option value="1600">Νότιο Αιγαίο</option>
+                                <option value="1400">Πελοπόννησος</option>
+                                <option value="1600">Στερεά Ελλάδα</option>
+                            </select>
+                        </div>
+               </div>
+
+                <div class="panel">
+                    <div class="number"> 2 </div>
+                    <h5>Ισχύς (KW) </h5>
+
+                    <div class="select-district">
+                        <div class="slidecontainer">
+                            <p class="spacer-in fieldset"><label for="myRange">Επιλέξτε:</label></p>
+                            <input type="range" min="1" max="10" value="50" class="form-control" id="myRange">
+                            <p>Value: <span id="demo"></span></p>
+                        </div>
+                    </div>
+                       <script>
+                            var slider = document.getElementById("myRange");
+                            var output = document.getElementById("demo");
+                            output.innerHTML = slider.value; // Display the default slider value
+
+                            // Update the current slider value (each time you drag the slider handle)
+                            slider.oninput = function() {
+                              output.innerHTML = this.value;
+                            }
+                        </script>
+               </div>
+
+                <div class="panel">
+                    <div class="number"> 3 </div>
+                    <h5>Έτη Απόσβεσης </h5>
+
+                        <div class="select-district">
+                             <p class="spacer-in fieldset">Επιλέξτε:</p>
+                            <select class="form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε Τοποθεσία">
+                                <option value="">Περιφέρεια</option>
+                                <option value="1400">Αττική</option>
+                                <option value="1300">Ανατολική Μακεδονία &amp; Θράκη</option>
+                                <option value="1350">Βόρειο Αιγαίο</option>
+                                <option value="1600">Δυτική Ελλάδα</option>
+                                <option value="1600">Δυτική Μακεδονία</option>
+                                <option value="1300">Ήπειρος</option>
+                                <option value="1350">Θεσσαλία</option>
+                                <option value="1500">Ιόνιοι Νήσοι</option>
+                                <option value="1350">Κεντρική Μακεδονία</option>
+                                <option value="1550">Κρήτη</option>
+                                <option value="1600">Νότιο Αιγαίο</option>
+                                <option value="1400">Πελοπόννησος</option>
+                                <option value="1600">Στερεά Ελλάδα</option>
+                            </select>
+                        </div>
+               </div>
+
+                <div class="panel">
+                    <div class="number"> 4 </div>
+                    <h5>ΚWh ανά Έτος </h5>
+
+                        <div class="select-district">
+                             <p class="spacer-in fieldset">Επιλέξτε:</p>
+                            <select class="form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε Τοποθεσία">
+                                <option value="">Περιφέρεια</option>
+                                <option value="1400">Αττική</option>
+                                <option value="1300">Ανατολική Μακεδονία &amp; Θράκη</option>
+                                <option value="1350">Βόρειο Αιγαίο</option>
+                                <option value="1600">Δυτική Ελλάδα</option>
+                                <option value="1600">Δυτική Μακεδονία</option>
+                                <option value="1300">Ήπειρος</option>
+                                <option value="1350">Θεσσαλία</option>
+                                <option value="1500">Ιόνιοι Νήσοι</option>
+                                <option value="1350">Κεντρική Μακεδονία</option>
+                                <option value="1550">Κρήτη</option>
+                                <option value="1600">Νότιο Αιγαίο</option>
+                                <option value="1400">Πελοπόννησος</option>
+                                <option value="1600">Στερεά Ελλάδα</option>
+                            </select>
+                        </div>
+               </div>
+
+            </fieldset>
+
+            </div>
+        <br>
+            <div class="form-container">
+
+                        {% for field in form %}
+                            <label for="{{ field.name }}">{{ field.label }}</label><br>
+                            {{ field }}<br><br>
+                         {% endfor %}
 
                 <input type="submit" value=" Υποβολή Στοιχείων ">
-            </form>
+        </div>
+        </section>
+ </form>
+<!-- ::::FORM ENDS:::: -->
 
-    </div>
 
-{% endblock %}
+    {% endblock %}

@@ -12,4 +12,4 @@ class CustomerModel(models.Model):
 class PlaceModel(models.Model):
     city_name = models.CharField(max_length=50)
     district_name = models.CharField(max_length=50)
-    TK = models.IntegerField(max_length=50)
+    TK = models.IntegerField()

@@ -36,9 +36,12 @@ h1{
 
 }
 h3{
-    margin-top: 80px;
-    color: black;
+    color: #333333;
     text-align: center;
+    font-size: 24px;
+}
+h5{
+   margin: -50px 30px;
 }
 
 /* FIRST Navigation Bar*/
@@ -175,7 +178,6 @@ input[type="search"]:focus {
 }
 /* large screen inline-block - settings of list items */
 .menu-container .nav-list li{
-    text-align: center;
     display: inline-flex;
     margin: 0 20px;
     line-height:60px;
@@ -228,7 +230,7 @@ input[type="search"]:focus {
 /* MEDIA Movement and settings of menu block list */
 /* checkbox for menu container */
 /* checkbox for search box */
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 960px) {
     .body{
         overflow-y: scroll;
     }
@@ -337,8 +339,112 @@ input[type="search"]:focus {
     color: #f2f2f2;
 }
 
+/* CALCULATOR FORM */
 .form-control{
     background-color: transparent;
     outline-style: none;
     !important;
 }
+.form-container{
+    margin: 250px 0 20px 80px;
+}
+
+.flex table{
+    display: flex;
+    flex-wrap: wrap;
+    color: #2c3e50;
+}
+.spacer-in fieldset{
+    margin-bottom: 10px;
+}
+.calc-title{
+    width: 100px;
+    height: 100px;
+}
+
+.table-calculator-form-control .fa-calculator{
+    margin-left: 80px;
+    margin-right: 10px;
+    font-size: 50px;
+
+}
+.calculator-article{
+    border-width: medium;
+    border-left-style: solid;
+    border-left-color: #ed4901;
+    padding-left: 30px;
+    text-align: justify;
+    margin-top: 10px;
+    margin-left: 50px;
+    width: 700px;
+    height: 100px;
+}
+.calculator-fieldset{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0 0 80px;
+
+}
+.table-fieldset .panel{
+    width: 250px;
+    height: 200px;
+    margin-right: 20px;
+}
+.table-fieldset .panel .number{
+    font-size: 40px;
+    color: #ed4901;
+}
+
+.table-fieldset .select-district{
+    margin-top: 100px;
+}
+.table-fieldset .form-select{
+    width: 200px;
+    !important;
+}
+
+/*Slider style*/
+.slidecontainer {
+  width: 100%; /* Width of the outside container */
+}
+
+/* ::::::: The slider ::::::: */
+
+.slidecontainer .form-control, .form-control {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 80%; /* Full-width */
+  height: 38px; /* Specified height */
+  background: #f2f2f2; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+    !important;
+}
+
+/* Mouse-over effects */
+.slidecontainer .form-control:hover, .form-control:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slidecontainer .form-control::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 35px; /* Set a specific slider handle width */
+  height: 35px; /* Slider handle height */
+  background: #ed4901; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slidecontainer .form-control::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #ed4901; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+
+
+
