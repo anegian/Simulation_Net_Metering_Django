@@ -24,12 +24,14 @@
                 </ul>
     {% endblock %}
 
+
     <!-- ::::CALCULATOR FORM:::: -->
     {% block content %}
-                <br><br>    <br><br>    <br><br>
 
-        <section class="">
 
+        <section>
+
+            <!-- ::::Calculator Title Text:::: -->
             <div class="table-fieldset">
                 <div class="flex table" role="table">
                     <table class="table-calculator-form-control">
@@ -50,110 +52,103 @@
                     </tr>
                 </table>
                 </div>
-                    <br>
-            <fieldset class="calculator-fieldset">
-                <div class="panel">
-                    <div class="number"> 1 </div>
-                    <h5>Τοποθεσία</h5>
+                <p></p>
+                <!-- ::::Calculator Panel Forms:::: -->
+                <fieldset class="calculator-fieldset">
+                    <!-- PANEL 1 -->
+                    <div class="panel">
+                        <div class="number"> 1 </div>
+                        <h5>Τοποθεσία</h5>
+
+                            <div class="select-district">
+                                <p id="spacer-panel"><label for="area">Επιλέξτε:</label></p>
+                                <select class="form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε Τοποθεσία">
+                                    <option value="">Περιφέρεια</option>
+                                    <option value="1300">Αττική</option>
+                                    <option value="1350">Ανατολική Μακεδονία &amp; Θράκη</option>
+                                    <option value="1400">Βόρειο Αιγαίο</option>
+                                    <option value="1450">Δυτική Ελλάδα</option>
+                                    <option value="1500">Δυτική Μακεδονία</option>
+                                    <option value="1550">Ήπειρος</option>
+                                    <option value="1600">Θεσσαλία</option>
+                                    <option value="1650">Ιόνιοι Νήσοι</option>
+                                    <option value="1700">Κεντρική Μακεδονία</option>
+                                    <option value="1750">Κρήτη</option>
+                                    <option value="1800">Νότιο Αιγαίο</option>
+                                    <option value="1850">Πελοπόννησος</option>
+                                    <option value="1900">Στερεά Ελλάδα</option>
+                                </select>
+                            </div>
+                   </div>
+
+                    <!-- PANEL 2 -->
+                    <div class="panel">
+                        <div class="number"> 2 </div>
+                        <h5>Ισχύς (KW) </h5>
 
                         <div class="select-district">
-                            <p class="spacer-in fieldset"><label for="area">Επιλέξτε:</label></p>
-                            <select class="form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε Τοποθεσία">
-                                <option value="">Περιφέρεια</option>
-                                <option value="1400">Αττική</option>
-                                <option value="1300">Ανατολική Μακεδονία &amp; Θράκη</option>
-                                <option value="1350">Βόρειο Αιγαίο</option>
-                                <option value="1600">Δυτική Ελλάδα</option>
-                                <option value="1600">Δυτική Μακεδονία</option>
-                                <option value="1300">Ήπειρος</option>
-                                <option value="1350">Θεσσαλία</option>
-                                <option value="1500">Ιόνιοι Νήσοι</option>
-                                <option value="1350">Κεντρική Μακεδονία</option>
-                                <option value="1550">Κρήτη</option>
-                                <option value="1600">Νότιο Αιγαίο</option>
-                                <option value="1400">Πελοπόννησος</option>
-                                <option value="1600">Στερεά Ελλάδα</option>
-                            </select>
+                            <div class="slidecontainer">
+                                <label for="myRangeSlider" id="spacer-panel">Επιλέξτε:</label>
+                                <input type="range" min="0" max="10" step="1" value="0"  class="form-range" id="myRangeSlider">
+                                <p>Τιμή: <span id="demo"></span></p>
+                            </div>
                         </div>
-               </div>
+                           <script>
+                                var slider = document.getElementById("myRangeSlider");
+                                var output = document.getElementById("demo");
+                                output.innerHTML = slider.value; // Display the default slider value
 
-                <div class="panel">
-                    <div class="number"> 2 </div>
-                    <h5>Ισχύς (KW) </h5>
+                                // Update the current slider value (each time you drag the slider handle)
+                                slider.oninput = function() {
+                                  output.innerHTML = this.value;
+                                }
+                            </script>
+                   </div>
 
-                    <div class="select-district">
-                        <div class="slidecontainer">
-                            <p class="spacer-in fieldset"><label for="myRange">Επιλέξτε:</label></p>
-                            <input type="range" min="1" max="10" value="50" class="form-control" id="myRange">
-                            <p>Value: <span id="demo"></span></p>
-                        </div>
-                    </div>
-                       <script>
-                            var slider = document.getElementById("myRange");
-                            var output = document.getElementById("demo");
-                            output.innerHTML = slider.value; // Display the default slider value
+                    <!-- PANEL 3 -->
+                    <div class="panel">
+                        <div class="number"> 3 </div>
+                        <h5>Σύστημα Αποθήκευσης </h5>
+                            <div class="select-district">
+                                 <p id="spacer-panel">Επιλέξτε:</p>
+                                    <div class="container mt-3">
 
-                            // Update the current slider value (each time you drag the slider handle)
-                            slider.oninput = function() {
-                              output.innerHTML = this.value;
-                            }
-                        </script>
-               </div>
+                                        <div class="form-check">
+                                          <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" checked>
+                                          <label class="form-check-label" for="radio1">Xωρίς</label>
+                                        </div>
 
-                <div class="panel">
-                    <div class="number"> 3 </div>
-                    <h5>Έτη Απόσβεσης </h5>
+                                        <div class="form-check">
+                                          <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">
+                                          <label class="form-check-label" for="radio2">Με</label>
+                                        </div>
 
-                        <div class="select-district">
-                             <p class="spacer-in fieldset">Επιλέξτε:</p>
-                            <select class="form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε Τοποθεσία">
-                                <option value="">Περιφέρεια</option>
-                                <option value="1400">Αττική</option>
-                                <option value="1300">Ανατολική Μακεδονία &amp; Θράκη</option>
-                                <option value="1350">Βόρειο Αιγαίο</option>
-                                <option value="1600">Δυτική Ελλάδα</option>
-                                <option value="1600">Δυτική Μακεδονία</option>
-                                <option value="1300">Ήπειρος</option>
-                                <option value="1350">Θεσσαλία</option>
-                                <option value="1500">Ιόνιοι Νήσοι</option>
-                                <option value="1350">Κεντρική Μακεδονία</option>
-                                <option value="1550">Κρήτη</option>
-                                <option value="1600">Νότιο Αιγαίο</option>
-                                <option value="1400">Πελοπόννησος</option>
-                                <option value="1600">Στερεά Ελλάδα</option>
-                            </select>
-                        </div>
-               </div>
+                                    </div>
+                            </div>
+                   </div>
 
-                <div class="panel">
-                    <div class="number"> 4 </div>
-                    <h5>ΚWh ανά Έτος </h5>
+                    <!-- PANEL 4 -->
+                    <div class="panel">
+                        <div class="number"> 4 </div>
+                        <h5>ΚWh ανά Έτος </h5>
 
-                        <div class="select-district">
-                             <p class="spacer-in fieldset">Επιλέξτε:</p>
-                            <select class="form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε Τοποθεσία">
-                                <option value="">Περιφέρεια</option>
-                                <option value="1400">Αττική</option>
-                                <option value="1300">Ανατολική Μακεδονία &amp; Θράκη</option>
-                                <option value="1350">Βόρειο Αιγαίο</option>
-                                <option value="1600">Δυτική Ελλάδα</option>
-                                <option value="1600">Δυτική Μακεδονία</option>
-                                <option value="1300">Ήπειρος</option>
-                                <option value="1350">Θεσσαλία</option>
-                                <option value="1500">Ιόνιοι Νήσοι</option>
-                                <option value="1350">Κεντρική Μακεδονία</option>
-                                <option value="1550">Κρήτη</option>
-                                <option value="1600">Νότιο Αιγαίο</option>
-                                <option value="1400">Πελοπόννησος</option>
-                                <option value="1600">Στερεά Ελλάδα</option>
-                            </select>
-                        </div>
-               </div>
+                            <div class="select-district">
+                                 <p id="spacer-panel">Επιλέξτε:</p>
+                                <select class="form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε Τοποθεσία">
+                                    <option value="">KWh ανά Μήνα</option>
+                                    <option value="1000">400 - 600</option>
+                                    <option value="1050">600 - 800</option>
+                                    <option value="1100">800 - 1000</option>
+                                    <option value="1100">>1000</option>
+                                </select>
+                            </div>
+                   </div>
 
-            </fieldset>
+                </fieldset>
 
             </div>
         <br>
+            <!-- ::::Calculator forms.py:::: -->
             <div class="form-container">
 
                         {% for field in form %}

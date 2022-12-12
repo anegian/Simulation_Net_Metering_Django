@@ -7,6 +7,9 @@
     text-decoration: none;
     box-sizing: border-box;
 }
+#spacer-in body{
+    margin-top: 500px;
+}
 .menu-container .nav-list{
    text-decoration-line: none;
 }
@@ -41,7 +44,7 @@ h3{
     font-size: 24px;
 }
 h5{
-   margin: -50px 30px;
+   margin: -50px 0 0 40px;
 }
 
 /* FIRST Navigation Bar*/
@@ -301,6 +304,9 @@ input[type="search"]:focus {
         display: block;
     }
 }
+/* ::: Finish MEDIA Movement ::: */
+
+
 
 /* Web site height*/
 .page-container{
@@ -311,7 +317,7 @@ input[type="search"]:focus {
     padding-bottom: 2.5em;
 }
 
-/* FOOTER */
+/* ::: FOOTER ::: */
 .footer{
     text-align: center;
     position: fixed;
@@ -339,7 +345,8 @@ input[type="search"]:focus {
     color: #f2f2f2;
 }
 
-/* CALCULATOR FORM */
+/* ::: CALCULATOR FORM ::: */
+/* ::: Table and other elements ::: */
 .form-control{
     background-color: transparent;
     outline-style: none;
@@ -348,7 +355,9 @@ input[type="search"]:focus {
 .form-container{
     margin: 250px 0 20px 80px;
 }
-
+.table-fieldset{
+    margin-top: 120px;
+}
 .flex table{
     display: flex;
     flex-wrap: wrap;
@@ -385,66 +394,56 @@ input[type="search"]:focus {
     margin: 20px 0 0 80px;
 
 }
+
+/* ::: Panels ::: */
 .table-fieldset .panel{
-    width: 250px;
-    height: 200px;
-    margin-right: 20px;
+    width: 280px;
+    height: 220px;
+    margin: 0 20px 10px 0;
+    border-style: solid;
+    outline-width: thin;
+    border-color: #f2f2f2;
 }
 .table-fieldset .panel .number{
+    margin-left: 10px;
     font-size: 40px;
     color: #ed4901;
 }
-
+#spacer-panel{
+   margin-left: 50px; /* the space between Επιλέξτε και panel*/
+}
 .table-fieldset .select-district{
-    margin-top: 100px;
-}
-.table-fieldset .form-select{
-    width: 200px;
-    !important;
+    margin-top: 80px;
 }
 
-/*Slider style*/
-.slidecontainer {
-  width: 100%; /* Width of the outside container */
-}
 
 /* ::::::: The slider ::::::: */
 
-.slidecontainer .form-control, .form-control {
-  -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-  width: 80%; /* Full-width */
-  height: 38px; /* Specified height */
-  background: #f2f2f2; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-    !important;
+#myRangeSlider {
+    margin-top: 20px;
+    height: 25px;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
 }
-
-/* Mouse-over effects */
-.slidecontainer .form-control:hover, .form-control:hover {
-  opacity: 1; /* Fully shown on mouse-over */
+#myRangeSlider::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ed4901;
+    cursor: pointer;
 }
+/* Mozilla linear gradient as the background of the track element */
+#myRangeSlider::-moz-range-track{
+    background: linear-gradient(to right, #2c3e50, #f2f2f2);
 
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slidecontainer .form-control::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
-  appearance: none;
-  width: 35px; /* Set a specific slider handle width */
-  height: 35px; /* Slider handle height */
-  background: #ed4901; /* Green background */
-  cursor: pointer; /* Cursor on hover */
 }
-
-.slidecontainer .form-control::-moz-range-thumb {
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: #ed4901; /* Green background */
-  cursor: pointer; /* Cursor on hover */
+#myRangeSlider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ed4901;
+    cursor: pointer;
 }
-
-
-
-
+/* Chrome linear gradient as the background of the track element */
+#myRangeSlider::-webkit-slider-runnable-track {
+    background: linear-gradient(to right, #2c3e50, #f2f2f2);
+}
