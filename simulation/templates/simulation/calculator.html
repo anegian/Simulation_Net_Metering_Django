@@ -1,101 +1,97 @@
-{% extends "index.html" %}
+{% extends "index2.html" %}
 
 {% load static %}
 
-<!-- ::::FORM START:::: -->
-<form method="POST" class="form-control">
-    {% csrf_token %}
+{% block title %}
+<title>Calculator</title>
+{% endblock %}
 
-    {% block title %}
-    <title>Calculator</title>
-    {% endblock %}
+{% block menu_list %}
+    <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
+    <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
+    <li><a class="nav-link active" href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+    <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
+    <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+{% endblock %}
 
-    {% block bg %}
-        "calculator-bg"
-    {% endblock %}
+{% block content %}
 
-    {% block menu_list %}
-        <ul class="nav-list">
-                    <li><a class="text-decoration-none" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
-                    <li><a class="text-decoration-none" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
-                    <li><a class="active text-decoration-none" href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
-                    <li><a class="text-decoration-none" href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-                    <li><a class="text-decoration-none" href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
-                </ul>
-    {% endblock %}
+    <div class="calculator-page-content">
 
-
-    <!-- ::::CALCULATOR FORM:::: -->
-    {% block content %}
-
-
-        <section>
-
-            <!-- ::::Calculator Title Text:::: -->
-            <div class="table-fieldset">
-                <div class="flex table" role="table">
-                    <table class="table-calculator-form-control">
-                    <tr>
-                        <td>
+        <section class="section-before-calculator">
+            <table class="table-title">
+                    <tr class="row-in-table-title">
+                        <td class="icon-calculator">
                            <i class=" fa fa-calculator" aria-hidden="true"  ></i>
                         </td>
-                        <td class="calc-title">
+                        <th class="calc-title">
                             <h3>Υπολογιστής Απόδοσης - Απόσβεσης</h3>
-                        </td>
-                        <td>
-                            <div class="calculator-article">
-                               Ο υπολογιστής απόδοσης φωτοβολταϊκού συστήματος αυτοπαραγωγής με ενεργειακό συμψηφισμό
-                                (Net Metering) σας βοηθάει να υπολογίσετε την απόδοση οικιακών φωτοβολταϊκών συστημάτων
-                                με βάση τα χαρακτηριστικά του δικού σας σπιτιού.
-                            </div>
-                        </td>
+                        </th>
                     </tr>
-                </table>
+            </table>
+
+            <article class="calculator-article">
+                <div class="padding-article">
+                    Ο υπολογιστής απόδοσης φωτοβολταϊκού συστήματος αυτοπαραγωγής με ενεργειακό συμψηφισμό
+                    (Net Metering) σας βοηθάει να υπολογίσετε την απόδοση οικιακών φωτοβολταϊκών συστημάτων
+                    με βάση τα χαρακτηριστικά του δικού σας σπιτιού.
                 </div>
-                <p></p>
-                <!-- ::::Calculator Panel Forms:::: -->
-                <fieldset class="calculator-fieldset">
+            </article>
+
+        </section>
+
+        <div class="spacer-in-main-content"><h2>Συμπληρώστε τα πεδία</h2></div>
+
+        <!-- ::: CALCULATOR FORM ::: -->
+        <form method="POST" class="my-form-control">
+            {% csrf_token %}
+
+            <fieldset class="calculator-fieldset">
                     <!-- PANEL 1 -->
                     <div class="panel">
-                        <div class="number"> 1 </div>
-                        <h5>Τοποθεσία</h5>
+                        <div class="title-panel">
+                            <span class="number"> 1 </span>
+                            <h4>Τοποθεσία</h4>
+                        </div>
 
                             <div class="select-district">
-                                <p id="spacer-panel"><label for="area">Επιλέξτε:</label></p>
-                                <select class="form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε Τοποθεσία">
+                                <p id="spacer-panel"><label for="area" title="Επιλέξτε από 1 έως 10">Επιλέξτε:</label></p>
+                                <select class="my-form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε ελληνική περιφέρεια" required>
                                     <option value="">Περιφέρεια</option>
-                                    <option value="1300">Αττική</option>
-                                    <option value="1350">Ανατολική Μακεδονία &amp; Θράκη</option>
-                                    <option value="1400">Βόρειο Αιγαίο</option>
-                                    <option value="1450">Δυτική Ελλάδα</option>
-                                    <option value="1500">Δυτική Μακεδονία</option>
-                                    <option value="1550">Ήπειρος</option>
-                                    <option value="1600">Θεσσαλία</option>
-                                    <option value="1650">Ιόνιοι Νήσοι</option>
-                                    <option value="1700">Κεντρική Μακεδονία</option>
-                                    <option value="1750">Κρήτη</option>
-                                    <option value="1800">Νότιο Αιγαίο</option>
-                                    <option value="1850">Πελοπόννησος</option>
-                                    <option value="1900">Στερεά Ελλάδα</option>
+                                    <option value="1">Αττική</option>
+                                    <option value="2">Ανατολική Μακεδονία &amp; Θράκη</option>
+                                    <option value="3">Βόρειο Αιγαίο</option>
+                                    <option value="4">Δυτική Ελλάδα</option>
+                                    <option value="5">Δυτική Μακεδονία</option>
+                                    <option value="6">Ήπειρος</option>
+                                    <option value="7">Θεσσαλία</option>
+                                    <option value="8">Ιόνιοι Νήσοι</option>
+                                    <option value="9">Κεντρική Μακεδονία</option>
+                                    <option value="10">Κρήτη</option>
+                                    <option value="11">Νότιο Αιγαίο</option>
+                                    <option value="12">Πελοπόννησος</option>
+                                    <option value="13">Στερεά Ελλάδα</option>
                                 </select>
                             </div>
                    </div>
 
                     <!-- PANEL 2 -->
                     <div class="panel">
-                        <div class="number"> 2 </div>
-                        <h5>Ισχύς (KW) </h5>
+                        <div class="title-panel">
+                            <span class="number"> 2 </span>
+                            <h4>Ισχύς (KW)</h4>
+                        </div>
 
                         <div class="select-district">
-                            <div class="slidecontainer">
-                                <label for="myRangeSlider" id="spacer-panel">Επιλέξτε:</label>
-                                <input type="range" min="0" max="10" step="1" value="0"  class="form-range" id="myRangeSlider">
-                                <p>Τιμή: <span id="demo"></span></p>
+                            <div class="slide-container" >
+                                <p><label for="myRangeSlider">Επιλέξτε:</label></p>
+                                <input type="range" min="0" max="10" step="1" value="slider_option" id="myRangeSlider" name="myRangeSlider" required>
+                                <p>Τιμή: <span id="slider-value"></span></p>
                             </div>
                         </div>
                            <script>
                                 var slider = document.getElementById("myRangeSlider");
-                                var output = document.getElementById("demo");
+                                var output = document.getElementById("slider-value");
                                 output.innerHTML = slider.value; // Display the default slider value
 
                                 // Update the current slider value (each time you drag the slider handle)
@@ -107,19 +103,21 @@
 
                     <!-- PANEL 3 -->
                     <div class="panel">
-                        <div class="number"> 3 </div>
-                        <h5>Σύστημα Αποθήκευσης </h5>
+                        <div class="title-panel">
+                            <span class="number"> 3 </span>
+                            <h4>Aποθήκευση</h4>
+                        </div>
                             <div class="select-district">
-                                 <p id="spacer-panel">Επιλέξτε:</p>
-                                    <div class="container mt-3">
+                                 <label>Επιλέξτε:</label>
+                                    <div class="container mt-3" >
 
-                                        <div class="form-check">
-                                          <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" checked>
+                                        <div class="form-check" >
+                                          <input type="radio" class="form-check-input" id="radio_option1" name="radio_option" value="radio_option1" checked>
                                           <label class="form-check-label" for="radio1">Xωρίς</label>
                                         </div>
 
                                         <div class="form-check">
-                                          <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">
+                                          <input type="radio" class="form-check-input" id="radio_option2" name="radio_option" value="radio_option2">
                                           <label class="form-check-label" for="radio2">Με</label>
                                         </div>
 
@@ -129,38 +127,38 @@
 
                     <!-- PANEL 4 -->
                     <div class="panel">
-                        <div class="number"> 4 </div>
-                        <h5>ΚWh ανά Έτος </h5>
-
+                        <div class="title-panel">
+                            <span class="number"> 4 </span>
+                            <h4>ΚWh ανά Έτος</h4>
+                        </div>
                             <div class="select-district">
-                                 <p id="spacer-panel">Επιλέξτε:</p>
-                                <select class="form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε Τοποθεσία">
+                                 <p id="spacer-panel"><label for="area">Επιλέξτε:</label></p>
+                                <select class="my-form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε μηνιαία κατανάλωση σε kW">
                                     <option value="">KWh ανά Μήνα</option>
-                                    <option value="1000">400 - 600</option>
-                                    <option value="1050">600 - 800</option>
-                                    <option value="1100">800 - 1000</option>
-                                    <option value="1100">>1000</option>
+                                    <option value="14">400 - 600</option>
+                                    <option value="15">600 - 800</option>
+                                    <option value="16">800 - 1000</option>
+                                    <option value="17">>1000</option>
                                 </select>
                             </div>
                    </div>
+            </fieldset>
 
-                </fieldset>
+            <fieldset class="name-form-container">
+                <div class="three-form-container">
+                    {% for field in form %}
+                        <label for="{{ field.name }}">{{ field.label }}</label><br>
+                        {{ field }}<br><br>
+                     {% endfor %}
+                </div>
 
+            </fieldset>
+
+            <div class="my-submit-form">
+                <button class="form-submit-button" type="submit">Υποβολή Στοιχείων</button>
             </div>
-        <br>
-            <!-- ::::Calculator forms.py:::: -->
-            <div class="form-container">
 
-                        {% for field in form %}
-                            <label for="{{ field.name }}">{{ field.label }}</label><br>
-                            {{ field }}<br><br>
-                         {% endfor %}
+        </form>
+    </div>
 
-                <input type="submit" value=" Υποβολή Στοιχείων ">
-        </div>
-        </section>
- </form>
-<!-- ::::FORM ENDS:::: -->
-
-
-    {% endblock %}
+{% endblock %}

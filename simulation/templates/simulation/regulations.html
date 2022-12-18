@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "index2.html" %}
 
 {% load static %}
 
@@ -6,23 +6,147 @@
 <title>Regulations</title>
 {% endblock %}
 
-{% block bg %}
-    "dashboard-bg"
-{% endblock %}
-
 {% block menu_list %}
-    <ul class="nav-list">
-                <li><a class="text-decoration-none" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
-                <li><a class="text-decoration-none" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
-                <li><a class="text-decoration-none" href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
-                <li><a class="text-decoration-none active" href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-                <li><a class="text-decoration-none" href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
-            </ul>
+    <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
+    <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
+    <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+    <li><a class="nav-link active" href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
+    <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
 {% endblock %}
-
 
 {% block content %}
-<br><br>
-    <h1> Regulations View </h1>
+
+    <div class="regulations-page-content">
+
+        <section class="section-before-calculator">
+            <table class="table-title">
+                    <tr class="row-in-table-title">
+                        <td class="icon-calculator">
+                           <i class=" fa fa-calculator" aria-hidden="true"  ></i>
+                        </td>
+                        <th class="calc-title">
+                            <h3>Υπολογιστής Απόδοσης - Απόσβεσης</h3>
+                        </th>
+                    </tr>
+            </table>
+
+            <article class="calculator-article">
+                <div class="padding-article">
+                    Ο υπολογιστής απόδοσης φωτοβολταϊκού συστήματος αυτοπαραγωγής με ενεργειακό συμψηφισμό
+                    (Net Metering) σας βοηθάει να υπολογίσετε την απόδοση οικιακών φωτοβολταϊκών συστημάτων
+                    με βάση τα χαρακτηριστικά του δικού σας σπιτιού.
+                </div>
+            </article>
+
+        </section>
+
+        <div class="spacer-in-main-content"><h2>Συμπληρώστε τα πεδία</h2></div>
+
+        <!-- ::: CALCULATOR FORM ::: -->
+        <form method="POST" class="my-form-control">
+            {% csrf_token %}
+
+            <fieldset class="calculator-fieldset">
+                    <!-- PANEL 1 -->
+                    <div class="panel">
+                        <div class="title-panel">
+                            <span class="number"> 1 </span>
+                            <h4>Τοποθεσία</h4>
+                        </div>
+
+                            <div class="select-district">
+                                <p id="spacer-panel"><label for="area" title="Επιλέξτε από 1 έως 10">Επιλέξτε:</label></p>
+
+                                 {{ form.as_p }}
+
+                            </div>
+                   </div>
+
+                    <!-- PANEL 2 -->
+                    <div class="panel">
+                        <div class="title-panel">
+                            <span class="number"> 2 </span>
+                            <h4>Ισχύς (KW)</h4>
+                        </div>
+
+                        <div class="select-district">
+                            <div class="slide-container" >
+                                <p><label for="myRangeSlider">Επιλέξτε:</label></p>
+                                <input type="range" min="0" max="10" step="1" value="slider_option" id="myRangeSlider" name="myRangeSlider" required>
+                                <p>Τιμή: <span id="slider-value"></span></p>
+                            </div>
+                        </div>
+                           <script>
+                                var slider = document.getElementById("myRangeSlider");
+                                var output = document.getElementById("slider-value");
+                                output.innerHTML = slider.value; // Display the default slider value
+
+                                // Update the current slider value (each time you drag the slider handle)
+                                slider.oninput = function() {
+                                  output.innerHTML = this.value;
+                                }
+                            </script>
+                   </div>
+
+                    <!-- PANEL 3 -->
+                    <div class="panel">
+                        <div class="title-panel">
+                            <span class="number"> 3 </span>
+                            <h4>Aποθήκευση</h4>
+                        </div>
+                            <div class="select-district">
+                                 <label>Επιλέξτε:</label>
+                                    <div class="container mt-3" >
+
+                                        <div class="form-check" >
+                                          <input type="radio" class="form-check-input" id="radio_option1" name="radio_option" value="radio_option1" checked>
+                                          <label class="form-check-label" for="radio1">Xωρίς</label>
+                                        </div>
+
+                                        <div class="form-check">
+                                          <input type="radio" class="form-check-input" id="radio_option2" name="radio_option" value="radio_option2">
+                                          <label class="form-check-label" for="radio2">Με</label>
+                                        </div>
+
+                                    </div>
+                            </div>
+                   </div>
+
+                    <!-- PANEL 4 -->
+                    <div class="panel">
+                        <div class="title-panel">
+                            <span class="number"> 4 </span>
+                            <h4>ΚWh ανά Έτος</h4>
+                        </div>
+                            <div class="select-district">
+                                 <p id="spacer-panel"><label for="area">Επιλέξτε:</label></p>
+                                <select class="my-form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε μηνιαία κατανάλωση σε kW">
+                                    <option value="">KWh ανά Μήνα</option>
+                                    <option value="14">400 - 600</option>
+                                    <option value="15">600 - 800</option>
+                                    <option value="16">800 - 1000</option>
+                                    <option value="17">>1000</option>
+                                </select>
+                            </div>
+                   </div>
+            </fieldset>
+
+            <fieldset class="name-form-container">
+                <div class="three-form-container">
+                    {% for field in form %}
+                        <label for="{{ field.name }}">{{ field.label }}</label><br>
+                        {{ field }}<br><br>
+                     {% endfor %}
+                </div>
+
+            </fieldset>
+
+            <div class="my-submit-form">
+                <button class="form-submit-button" type="submit">Υποβολή Στοιχείων</button>
+            </div>
+
+        </form>
+
+    </div>
 
 {% endblock %}

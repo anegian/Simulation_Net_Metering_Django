@@ -1,0 +1,461 @@
+/* ::: General Page Settings ::: */
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+body {
+    height: 100%;
+    margin: 0;
+
+}
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../../images/solar-cell.jpg') no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    opacity: 0.7;
+    z-index: -1;
+    filter: brightness(70%) contrast(120%);
+}
+
+
+    /* ::: HEADINGS ::: */
+    h2{
+        font-size: 26px;
+        color: #f2f2f2;
+    }
+
+    h3{
+        font-size: 20px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    h4{
+        font-weight: bold;
+    }
+
+    /* ::: MAIN HEADER ::: */
+    .main-header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #f2f2f2;
+        height: 50px;
+        width: 100%;
+    }
+    .header-container-left{
+        height: inherit;
+        display: inherit;
+        align-items: center;
+    }
+    .sm-image{
+        width: 40px;
+        cursor: pointer;
+    }
+    .login a, .signup a, .logo a{
+        margin: 0 20px 0 10px;
+        text-decoration: none;
+        color: #2c3e50;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .login a:hover, .signup a:hover{
+        color: #ed4901;
+    }
+
+
+/* ::: NAVBAR ::: */
+.second-navbar{
+    display: flex;
+    justify-content: space-between;
+    background-color: #333333;
+    height: 50px;
+    width: 100%;
+}
+.second-navbar-left-container .nav-list{
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+.second-navbar-right-container{
+    height: inherit;
+    display: inherit;
+    align-items: center;
+}
+.nav-list li, .nav-list a{
+    padding: 0 10px 0 0;
+    list-style: none;
+    text-decoration: none;
+    color: #f2f2f2;
+    font-size: 15px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.nav-list a:hover{
+    color: #ed4901;
+    letter-spacing: 1px;
+}
+.nav-link.active{
+    color: #ed4901;
+}
+
+/* ::: SEARCH BOX POSITION ::: */
+
+.search-box-container{
+    padding-right: 5px;
+    display: flex;
+    align-items: center;
+                }
+.search-box{
+    display: flex;
+    color: #f2f2f2;
+    border: 1px solid currentColor;
+    border-radius: 5px;
+    height: 40px;
+}
+input[type="search"] {
+  background: transparent;
+  margin: 0;
+  padding: 7px 8px;
+  font-size: 14px;
+  color: inherit;
+  border: 1px solid transparent;
+  border-radius: inherit;
+}
+input[type="search"]::placeholder {
+  color: #bbb;
+}
+.large-screen-search-button {
+    width: 40px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    background: #f2f2f2 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat center;
+    cursor: pointer;
+    opacity: 0.7;
+}
+button[type="submit"]:hover {
+  opacity: 1;
+}
+input[type="search"]:focus {
+  border-color: #ed4901;
+  outline: none;
+}
+/* ::: END SEARCH BOX POSITION ::: */
+
+
+    /* ::: MAIN PAGE CONTENT GENERAL SETTINGS :::*/
+
+    .main-page-content{
+        min-height: 200vh;
+        display: flex;
+        justify-content: center;
+    }
+    .main-page-section{
+        display: flex;
+        flex-direction: column;
+    }
+    .main-page-article{
+        background: transparent;
+        width: 400px;
+        height: 150px;
+        color: #000022;
+        font-size: 16px;
+        text-align: justify;
+    }
+    .article-paragraph-body{
+        background-color: transparent;
+    }
+    .calculator-page-content{
+        background-color: darkgray;
+        min-height: 100vh;
+    }
+    .dashboard-page-content{
+        background-color: #f2f2f2;
+    }
+    .section-dashboard-page{
+
+
+    }
+    .regulations-page-content{
+        background-color: darkgray;
+        min-height: 100vh;
+    }
+
+
+                /* ::: CHECKBUTTON & Search Box ::: */
+
+                .hamburger-second-navbar{
+                    right: 18px;
+                }
+                #bars{
+                    font-size: 25px;
+                    color: #f2f2f2;
+                    cursor: pointer;
+                    display: none;
+                    padding-right: 18px;
+
+                }
+                #times{
+                    padding-right: 21px;
+                    font-size: 25px;
+                    color: #f2f2f2;
+                    cursor: pointer;
+                    display: none;
+                }
+                #check{
+                    display: none;
+                }
+                #bars:hover{
+                    color: #ed4901;
+                }
+                #times:hover{
+                    color: #ed4901;
+                }
+                /* Position and settings of search box button */
+                .small-screen-show-search-button {
+                    font-size: 19px;
+                    color: #f2f2f2;
+                    cursor: pointer;
+                    right: 70px;
+                    display: none;
+                }
+                .small-screen-show-search-button:hover {
+                    color: #ed4901;
+                }
+                /* Hide search-bar show-button */
+                #small-show-search-checkbox{
+                    display: none;
+                }
+
+
+
+
+        /* ::: MAIN CONTENT OF CALCULATOR PAGE ::: */
+
+ /* ::: SECTION BEFORE CALCULATOR FORM::: */
+
+    .section-before-calculator{
+        width: 100%;
+        height: 150px;
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        background: #f2f2f2;
+        border-bottom: solid 2px;
+        border-bottom-color: #000022 ;
+        flex-wrap: wrap;
+    }
+    .table-title{
+        height: inherit;
+        -webkit-flex: 0.5;
+        -ms-flex: 0.5;
+        flex: 0.5;
+        border-right: solid 2px;
+        border-right-color: #ed4901;
+        padding-right: 10px;
+    }
+    .table-title td i{
+        font-size: 40px;
+        margin: 0 20px 0 20px;
+        color: #2c3e50;
+    }
+    .icon-calculator{
+        padding-left: 20px;
+    }
+    .calculator-article{
+        height: inherit;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        -webkit-flex: 2;
+        -ms-flex: 2;
+        flex: 2;
+        color: #2c3e50;
+    }
+    .padding-article{
+        padding-left: 5%;
+        padding-right: 32%;
+    }
+
+
+
+/* ::: CALCULATOR FORM Panels ::: */
+
+    .spacer-in-main-content{
+        height: 50px;
+        background-color: #2c3e50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .calculator-fieldset{
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .calculator-fieldset .panel{
+        width: 265px;
+        height: 220px;
+        margin: 10px 20px 10px 0;
+        border-style: solid;
+        outline-width: thin;
+        border-color: #f2f2f2;
+    }
+    .calculator-fieldset .panel .number{
+        margin: 0 10px 0 10px;
+        font-size: 40px;
+        color: #ed4901;
+    }
+    .title-panel{
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        justify-content: start;
+    }
+    .select-district{
+        margin: 20px 0 0 10px;
+    }
+    label{
+        font-weight: bold;
+    }
+    #myRangeSlider{
+        width: 90%;
+        color: #ed4901;
+    }
+
+    /* ::: Django forms.py form container::: */
+    .name-form-container{
+        display: flex;
+        justify-content: center;
+    }
+    .my-submit-form{
+        text-align: center;
+    }
+     /* ::: SUBMIT BUTTON ::: */
+    .form-submit-button{
+        width: 200px;
+        background-color: royalblue;
+        opacity: 0.5;
+        color: #f2f2f2;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .form-submit-button:hover{
+        opacity: 1;
+    }
+
+ /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
+
+
+
+ /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
+            @media (max-width: 1040px) {
+                .section-before-calculator {
+                    -webkit-flex-direction: column;
+                    flex-direction: column;
+                    height: 120%;
+                }
+                .table-title{
+                    -webkit-flex: 0.5;
+                    -ms-flex:0.5;
+                    flex: 0.5;
+                    border-right: none;
+                }
+                .padding-article{
+                    padding-left: 20%;
+                    padding-right: 15%;
+                    padding-bottom: 10px;
+                }
+                 /* Check-button transformed in bars when small (600px) and
+                    in times icon (x) when checkbutton is checked */
+                #bars{
+                    display: block;
+                }
+                #check:checked ~ .checkbutton #bars{
+                    display: none;
+                }
+                #check:checked ~ .checkbutton #times {
+                    display: block;
+                }
+                /* ::: MENU NAVBAR HIDDEN::: */
+                .second-navbar-left-container .nav-list li{
+                    display: none;
+                }
+                .search-box{
+                    position: fixed;
+                    display: none;
+                    left: 60px;
+                    top: 60px;
+                }
+                .small-screen-show-search-button {
+                    padding-right: 32px;
+                    display: block;
+                }
+                /* position of search box bar in menu navbar */
+                #small-show-search-checkbox:checked ~ .search-box{
+                    display: block;
+                }
+
+            }
+            /* ::: EXTRA ZOOM IN ::: */
+            @media (max-width: 410px) {
+                .login a, .signup a, .logo a {
+                    color: #2c3e50;
+                    font-size: 15px;
+                }
+
+                .sm-image {
+                    width: 25px;
+                }
+            }
+
+
+/* ::: FOOTER ::: */
+.footer{
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    background-color: #333333;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+ .other-links i:hover{
+     color: #ed4901;
+}
+ .other-links {
+    display: inherit;
+    align-items: center;
+    justify-content: center;
+}
+.other-links a{
+    text-decoration: none;
+    color: cornflowerblue;
+    font-size: 15px;
+    margin: 10px 10px 0 10px;
+}
+footer .admin-info{
+    min-height: 60px;
+    display: inherit;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #f2f2f2;
+    font-size: 10px;
+    text-align: center;
+}

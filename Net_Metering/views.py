@@ -4,4 +4,4 @@ from django.shortcuts import render
 
 # project level
 def simple_view(request):
-    return render(request, 'index.html')
+    return render(request, 'index2.html')
