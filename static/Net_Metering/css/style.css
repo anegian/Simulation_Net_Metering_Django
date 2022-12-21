@@ -252,7 +252,6 @@ input[type="search"]:focus {
     .search-box{
         left: 60px;
         position: fixed;
-        display: none;
         width: 170px;
     }
     /* position of search box bar in menu navbar */

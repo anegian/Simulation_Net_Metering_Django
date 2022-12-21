@@ -10,7 +10,7 @@
     {% endblock %}
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-
+    <link rel="website icon" type="png" href="{% static 'images/panel_128x107.png'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"/>
     <link rel="stylesheet" href=" {% static 'Net_Metering/css/style2.css' %}"/>
     <link rel="stylesheet" href=" {% static 'Net_Metering/javascript/script.js' %}"/>
@@ -31,8 +31,14 @@
         </header>
 
         <nav class="second-navbar">
-            <div class="second-navbar-left-container">
-                <ul class="nav-list">
+
+            <div class="second-navbar-left-container" id="second-navbar-left-container">
+
+                <input type="checkbox" id="check-navbar">
+                        <label  for="check-navbar" id="menu-nav-button" class="demo-class">
+                            <i class="fas fa-bars"></i></label>
+
+                <ul class="nav-list" id="nav-list">
                     {% block menu_list %}
                     <li><a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
                     <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
@@ -41,28 +47,73 @@
                     <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
                     {% endblock %}
                 </ul>
+
+                                <script>
+                                let button2 = document.querySelector('#menu-nav-button');
+                                let originalButton = button2.innerHTML;
+                                let button2IsOriginal = true;
+
+                                button2.addEventListener('click', function() {
+                                    if (button2IsOriginal) {
+                                    button2.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i>';
+                                    button2IsOriginal = false;
+                                    } else {
+                                    button2.innerHTML = originalButton;
+                                    button2IsOriginal = true;
+                                    }
+                                });
+
+                                </script>
+               <script>
+                // Store the element's initial position
+                var initialPositionMenu = {top: '100px', left: '-220%' };
+                var initialPositionSearchBox = {hidden};
+
+                window.onload = function() {
+                  // Get a reference to the elements
+                  var menuNavbar = document.getElementById('nav-list');
+                  var searchBox = document.getElementById('search-box')
+
+                  // Reset the elements' position to the initial position
+                  menuNavbar.style.top = initialPositionMenu.top;
+                  menuNavbar.style.left = initialPositionMenu.left;
+                  searchBox.style.top = initialPositionSearchBox.top;
+                  searchBox.style.left = initialPositionSearchBox.left;
+                };
+            </script>
             </div>
 
             <div class="second-navbar-right-container">
                     <div class="search-box-container">
-                        <form action="#" class="search-box">
-                                <input type="search" id="large-screen-search-button" placeholder="  Search here..">
-                                <label for="large-screen-search-button"></label>
-                                <button class="large-screen-search-button" type="submit"></button>
-                        </form>
-                            <input type="checkbox" id="small-show-search-checkbox">
-                            <label  for="small-show-search-checkbox"  class="small-screen-show-search-button"><i class="fas fa-search"></i></label>
+                        <input type="checkbox" id="small-show-search-checkbox">
+                        <label  for="small-show-search-checkbox" id="small-screen-button" class="small-screen-show-search-button">
+                            <i class="fas fa-search"></i></label>
+
+                       <script>
+                            let button = document.querySelector('#small-screen-button');
+                            let originalButtonSearchButton = button.innerHTML;
+                            let buttonIsOriginal = true;
+
+                            button.addEventListener('click', function() {
+                                if (buttonIsOriginal) {
+                                button.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i>';
+                                buttonIsOriginal = false;
+                                } else {
+                                button.innerHTML = originalButtonSearchButton;
+                                buttonIsOriginal = true;
+                                }
+                            });
+                       </script>
+
+                            <form action="{% url 'simulation:calculator' %}" class="search-box" id="search-box">
+                                    <input type="search" id="large-screen-search-button" placeholder="  Search here..">
+                                    <label for="large-screen-search-button"></label>
+                                    <button class="large-screen-search-button" type="submit"><i class="fas fa-search"></i></button>
+                            </form>
                     </div>
 
-                            <div class="hamburger-second-navbar">
-                                <input type="checkbox" id="check">
-                                <label for="check" class="checkbutton">
-                                    <i class="fas fa-bars" id="bars"></i>
-                                    <i class="fas fa-times" id="times"></i>
-                                </label>
-                             </div>
-
             </div >
+
 
         </nav>
 
