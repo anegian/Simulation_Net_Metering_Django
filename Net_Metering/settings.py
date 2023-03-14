@@ -102,6 +102,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# about authenticating users
+AUTH_USER_MODEL = 'simulation.MyUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

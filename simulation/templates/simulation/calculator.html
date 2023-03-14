@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-<title>Calculator</title>
+    <title>Calculator</title>
 {% endblock %}
 
 {% block menu_list %}
@@ -15,19 +15,18 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="calculator-page-content">
 
         <section class="section-before-calculator">
             <table class="table-title">
-                    <tr class="row-in-table-title">
-                        <td class="icon-calculator">
-                           <i class=" fa fa-calculator" aria-hidden="true"  ></i>
-                        </td>
-                        <th class="calc-title">
-                            <h3>Υπολογιστής Απόδοσης - Απόσβεσης</h3>
-                        </th>
-                    </tr>
+                <tr class="row-in-table-title">
+                    <td class="icon-calculator">
+                        <i class=" fa fa-calculator" aria-hidden="true"></i>
+                    </td>
+                    <th class="calc-title">
+                        <h3>Υπολογιστής Απόδοσης - Απόσβεσης</h3>
+                    </th>
+                </tr>
             </table>
 
             <article class="calculator-article">
@@ -47,101 +46,106 @@
             {% csrf_token %}
 
             <fieldset class="calculator-fieldset">
-                    <!-- PANEL 1 -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 1 </span>
-                            <h4>Τοποθεσία</h4>
-                        </div>
+                <!-- PANEL 1 -->
+                <div class="panel">
+                    <div class="title-panel">
+                        <span class="number"> 1 </span>
+                        <h4>Τοποθεσία</h4>
+                    </div>
 
-                            <div class="select-district">
-                                <p id="spacer-panel"><label for="area" title="Επιλέξτε από 1 έως 10">Επιλέξτε:</label></p>
-                                <select class="my-form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε ελληνική περιφέρεια" required>
-                                    <option value="">Περιφέρεια</option>
-                                    <option value="1">Αττική</option>
-                                    <option value="2">Ανατολική Μακεδονία &amp; Θράκη</option>
-                                    <option value="3">Βόρειο Αιγαίο</option>
-                                    <option value="4">Δυτική Ελλάδα</option>
-                                    <option value="5">Δυτική Μακεδονία</option>
-                                    <option value="6">Ήπειρος</option>
-                                    <option value="7">Θεσσαλία</option>
-                                    <option value="8">Ιόνιοι Νήσοι</option>
-                                    <option value="9">Κεντρική Μακεδονία</option>
-                                    <option value="10">Κρήτη</option>
-                                    <option value="11">Νότιο Αιγαίο</option>
-                                    <option value="12">Πελοπόννησος</option>
-                                    <option value="13">Στερεά Ελλάδα</option>
-                                </select>
+                    <div class="select-district">
+                        <p id="spacer-panel"><label for="area" title="Επιλέξτε από 1 έως 10">Επιλέξτε:</label></p>
+                        <select class="my-form-select" name="pv-district" id="area"
+                                title="Παρακαλούμε, επιλέξτε ελληνική περιφέρεια" required>
+                            <option value="">Περιφέρεια</option>
+                            <option value="1">Αττική</option>
+                            <option value="2">Ανατολική Μακεδονία &amp; Θράκη</option>
+                            <option value="3">Βόρειο Αιγαίο</option>
+                            <option value="4">Δυτική Ελλάδα</option>
+                            <option value="5">Δυτική Μακεδονία</option>
+                            <option value="6">Ήπειρος</option>
+                            <option value="7">Θεσσαλία</option>
+                            <option value="8">Ιόνιοι Νήσοι</option>
+                            <option value="9">Κεντρική Μακεδονία</option>
+                            <option value="10">Κρήτη</option>
+                            <option value="11">Νότιο Αιγαίο</option>
+                            <option value="12">Πελοπόννησος</option>
+                            <option value="13">Στερεά Ελλάδα</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- PANEL 2 -->
+                <div class="panel">
+                    <div class="title-panel">
+                        <span class="number"> 2 </span>
+                        <h4>Ισχύς (KW)</h4>
+                    </div>
+
+                    <div class="select-district">
+                        <div class="slide-container">
+                            <p><label for="myRangeSlider">Επιλέξτε:</label></p>
+                            <input type="range" min="0" max="10" step="1" value="slider_option" id="myRangeSlider"
+                                   name="myRangeSlider" required>
+                            <p>Τιμή: <span id="slider-value"></span></p>
+                        </div>
+                    </div>
+                    <script>
+                        var slider = document.getElementById("myRangeSlider");
+                        var output = document.getElementById("slider-value");
+                        output.innerHTML = slider.value; // Display the default slider value
+
+                        // Update the current slider value (each time you drag the slider handle)
+                        slider.oninput = function () {
+                            output.innerHTML = this.value;
+                        }
+                    </script>
+                </div>
+
+                <!-- PANEL 3 -->
+                <div class="panel">
+                    <div class="title-panel">
+                        <span class="number"> 3 </span>
+                        <h4>Aποθήκευση</h4>
+                    </div>
+                    <div class="select-district">
+                        <label>Επιλέξτε:</label>
+                        <div class="container mt-3">
+
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="radio_option1" name="radio_option"
+                                       value="radio_option1" checked>
+                                <label class="form-check-label" for="radio_option1">Xωρίς</label>
                             </div>
-                   </div>
 
-                    <!-- PANEL 2 -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 2 </span>
-                            <h4>Ισχύς (KW)</h4>
-                        </div>
-
-                        <div class="select-district">
-                            <div class="slide-container" >
-                                <p><label for="myRangeSlider">Επιλέξτε:</label></p>
-                                <input type="range" min="0" max="10" step="1" value="slider_option" id="myRangeSlider" name="myRangeSlider" required>
-                                <p>Τιμή: <span id="slider-value"></span></p>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="radio_option2"
+                                       name="radio_option" value="radio_option2">
+                                <label class="form-check-label" for="radio_option2">Με</label>
                             </div>
+
                         </div>
-                           <script>
-                                var slider = document.getElementById("myRangeSlider");
-                                var output = document.getElementById("slider-value");
-                                output.innerHTML = slider.value; // Display the default slider value
+                    </div>
+                </div>
 
-                                // Update the current slider value (each time you drag the slider handle)
-                                slider.oninput = function() {
-                                  output.innerHTML = this.value;
-                                }
-                            </script>
-                   </div>
-
-                    <!-- PANEL 3 -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 3 </span>
-                            <h4>Aποθήκευση</h4>
-                        </div>
-                            <div class="select-district">
-                                 <label>Επιλέξτε:</label>
-                                    <div class="container mt-3" >
-
-                                        <div class="form-check" >
-                                          <input type="radio" class="form-check-input" id="radio_option1" name="radio_option" value="radio_option1" checked>
-                                          <label class="form-check-label" for="radio1">Xωρίς</label>
-                                        </div>
-
-                                        <div class="form-check">
-                                          <input type="radio" class="form-check-input" id="radio_option2" name="radio_option" value="radio_option2">
-                                          <label class="form-check-label" for="radio2">Με</label>
-                                        </div>
-
-                                    </div>
-                            </div>
-                   </div>
-
-                    <!-- PANEL 4 -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 4 </span>
-                            <h4>ΚWh ανά Έτος</h4>
-                        </div>
-                            <div class="select-district">
-                                 <p id="spacer-panel"><label for="area">Επιλέξτε:</label></p>
-                                <select class="my-form-select" name="pv-district" id="area" title="Παρακαλούμε, επιλέξτε μηνιαία κατανάλωση σε kW">
-                                    <option value="">KWh ανά Μήνα</option>
-                                    <option value="14">400 - 600</option>
-                                    <option value="15">600 - 800</option>
-                                    <option value="16">800 - 1000</option>
-                                    <option value="17">>1000</option>
-                                </select>
-                            </div>
-                   </div>
+                <!-- PANEL 4 -->
+                <div class="panel">
+                    <div class="title-panel">
+                        <span class="number"> 4 </span>
+                        <h4>ΚWh ανά Έτος</h4>
+                    </div>
+                    <div class="select-district">
+                        <p id="spacer-panel"><label for="area">Επιλέξτε:</label></p>
+                        <select class="my-form-select" name="pv-district" id="area"
+                                title="Παρακαλούμε, επιλέξτε μηνιαία κατανάλωση σε kW">
+                            <option value="">KWh ανά Μήνα</option>
+                            <option value="14">400 - 600</option>
+                            <option value="15">600 - 800</option>
+                            <option value="16">800 - 1000</option>
+                            <option value="17">>1000</option>
+                        </select>
+                    </div>
+                </div>
             </fieldset>
 
             <fieldset class="name-form-container">
@@ -149,9 +153,8 @@
                     {% for field in form %}
                         <label for="{{ field.name }}">{{ field.label }}</label><br>
                         {{ field }}<br><br>
-                     {% endfor %}
+                    {% endfor %}
                 </div>
-
             </fieldset>
 
             <div class="my-submit-form">

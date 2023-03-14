@@ -173,6 +173,7 @@ input[type="search"]:focus {
         min-height: 200vh;
         display: flex;
         justify-content: center;
+        flex: initial;
         flex: 1;
     }
     .main-page-section{
@@ -332,8 +333,8 @@ input[type="search"]:focus {
         font-weight: bold;
         justify-content: start;
     }
-    .select-district{
-        margin: 20px 0 0 10px;
+    .option-selector-margin {
+       margin: 20px 0 20px 10px;
     }
     label{
         font-weight: bold;
@@ -341,6 +342,17 @@ input[type="search"]:focus {
     #myRangeSlider{
         width: 90%;
         color: #ed4901;
+    }
+    #slider-value{
+        color: #ed4901;
+        font-weight: bold;
+    }
+    .hidden-storage {
+    display: none;
+    }
+
+    #radio_option2:checked~.hidden-storage {
+    display: block;
     }
 
     /* ::: Django forms.py form container::: */
