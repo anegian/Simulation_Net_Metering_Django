@@ -347,6 +347,14 @@ input[type="search"]:focus {
         color: darkmagenta;
         opacity: 0.7;
     }
+    #annual-consumption-info{
+        color: #333333;
+        opacity: 0.8;
+    }
+    #annual-consumption-info:hover{
+        color: darkmagenta;
+        opacity: 0.7;
+    }
     #myRangeSlider{
         width: 90%;
         color: #ed4901;

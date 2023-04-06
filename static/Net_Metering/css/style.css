@@ -1,120 +1,138 @@
-/* GENERAL settings*/
+/* ::: General Page Settings ::: */
 *{
     margin: 0;
     padding: 0;
     font-family: sans-serif;
-    list-style: none;
-    text-decoration: none;
     box-sizing: border-box;
 }
-#spacer-in body{
-    margin-top: 500px;
-}
-.menu-container .nav-list{
-   text-decoration-line: none;
-}
-
-/* BACKGROUND image*/
-.index-bg{
-    background: url("../../images/solar-cell.jpg") no-repeat fixed center;
-    background-size: cover;
-    height: 100%;
+html, body {
+    margin: 0;
+    padding: 0;
     width: 100%;
-}
-
-.calculator-bg, .dashboard-bg, .regulations-bg{
-    background-color: darkgrey;
-}
-.info-bg{
-    background: url("../../images/lamp.jpg") no-repeat center;
-}
-img{
-    filter: brightness(90%);
-}
-
-h1{
-    margin-top: 100px;
-    text-align: center;
-    color: black;
+    height: 100%;
 
 }
-h3{
-    color: #333333;
-    text-align: center;
-    font-size: 24px;
-}
-h5{
-   margin: -50px 0 0 40px;
-}
 
-/* FIRST Navigation Bar*/
-.first-navbar{
+body::before {
+    content: "";
     position: fixed;
-    display: flex;
-    overflow: hidden;
     top: 0;
     left: 0;
     width: 100%;
-    background: #f2f2f2;
-    height: 60px;
+    height: 100%;
+    background: url('../../images/solar-cell.jpg') no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    opacity: 0.7;
+    z-index: -1;
+    filter: brightness(70%) contrast(120%);
 }
 
-/* solar panel.png on the left top corner */
-.sm-image{
-    float: left;
-    margin-top: 10px;
-    margin-left: 8px;
-    color: #000022;
-    width: 40px;
+
+    /* ::: HEADINGS ::: */
+    h2{
+        font-size: 26px;
+        color: #f2f2f2;
+    }
+
+    h3{
+        font-size: 20px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    h4{
+        font-weight: bold;
+    }
+
+    /* ::: MAIN HEADER ::: */
+    .main-header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #f2f2f2;
+        height: 50px;
+        width: 100%;
+    }
+    .header-container-left{
+        height: inherit;
+        display: inherit;
+        align-items: center;
+    }
+    .sm-image{
+        width: 40px;
+        cursor: pointer;
+    }
+    .login a, .signup a, .logo a{
+        margin: 0 10px 0 10px;
+        text-decoration: none;
+        color: #2c3e50;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .login a:hover, .signup a:hover{
+        color: #ed4901;
+    }
+
+
+/* ::: NAVBAR ::: */
+.second-navbar{
+    display: flex;
+    justify-content: space-between;
+    background-color: #333333;
+    height: 50px;
+    width: 100%;
+}
+.second-navbar-left-container{
+    height: inherit;
+    display: flex;
+    align-items: center;
+}
+.second-navbar-left-container .nav-list{
+    height: inherit;
+    display: flex;
+    align-items: center;
+    padding-top: 15px;
+
+}
+.second-navbar-right-container{
+    height: inherit;
+    display: inherit;
+    align-items: center;
+}
+.nav-list li, .nav-list a{
+    padding: 0 10px 0 0;
+    list-style: none;
+    text-decoration: none;
+    color: #f2f2f2;
+    font-size: 15px;
+    text-transform: uppercase;
     cursor: pointer;
 }
-/* Logo phrase of the web site */
-label.logo a{
-    float: left;
-    margin-left: 8px;
-    line-height: 55px;
-    color: #2c3e50;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
+.nav-list a:hover{
+    color: #ed4901;
+    letter-spacing: 1px;
 }
-/* Button's settings for sign-up - register */
-label.login a{
-    position: fixed;
-    right: 20px;
-    line-height: 60px;
-    color: #2c3e50;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-}
-label.signup a{
-    position: fixed;
-    line-height: 60px;
-    right: 35px;
-    margin-right: 20px;
-    color: #2c3e50;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-}
-.large-screen-search-button:hover,
-label.login a:hover,
-label.signup a:hover{
+.nav-link.active{
     color: #ed4901;
 }
 
-/* Position of search box bar */
+/* ::: SEARCH BOX POSITION ::: */
+
+.search-box-container{
+    padding-right: 5px;
+    display: flex;
+    align-items: center;
+}
 .search-box{
     display: flex;
-    position: fixed;
-    margin-top: 10px;
-    right: 20px;
     color: #f2f2f2;
-    padding: 2px;
     border: 1px solid currentColor;
     border-radius: 5px;
     height: 40px;
+
 }
 input[type="search"] {
   background: transparent;
@@ -128,321 +146,434 @@ input[type="search"] {
 input[type="search"]::placeholder {
   color: #bbb;
 }
-button[type="submit"] {
-    text-indent: -999px;
-    overflow: hidden;
+.large-screen-search-button {
     width: 40px;
     padding: 0;
     margin: 0;
     border: 1px solid transparent;
     border-radius: inherit;
-    background: #f2f2f2 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat center;
+    background: transparent;
+    color: #f2f2f2;
     cursor: pointer;
     opacity: 0.7;
 }
 button[type="submit"]:hover {
-  opacity: 1;
+  opacity: 0.8;
 }
-button[type="submit"]:focus,
 input[type="search"]:focus {
-  box-shadow: 0 0 3px 0 #1183d6;
   border-color: #ed4901;
   outline: none;
 }
-
-/* Position and settings of search box button */
-.small-screen-show-search-button {
-    position: fixed;
-    right: 54px;
-    font-size: 19px;
-    color: #f2f2f2;
-    line-height: 60px;
-    cursor: pointer;
-    display: none;
-
-}
-.small-screen-show-search-button:hover {
-    color: #ed4901;
-}
-/* Hide search-bar show-buttton */
-#small-show-search-checkbox{
-    display: none;
-}
-
-/* MENU Navigation Bar - large screen inline-block - */
-.menu-container{
-    position: fixed;
-    display: flex;
-    background: #333333;
-    top: 60px;
-    height: 60px;
-    width: 100%;
-    margin-bottom: 80px;
-}
-/* large screen inline-block - settings of list items */
-.menu-container .nav-list li{
-    display: inline-flex;
-    margin: 0 20px;
-    line-height:60px;
-}
-/* large screen inline-block - settings of anchor references */
-.menu-container .nav-list li a{
-    color: #f2f2f2;
-    font-size: 15px;
-    text-transform: uppercase;
-}
-/*  large screen inline-block - color in active anchor reference */
-.menu-container .nav-list a:hover, .nav-list li a.active{   /* SOS a:active doesn't work, only a.active */
-    background: none;
-    color: #ed4901;
-}
-.menu-container .nav-list li:hover a{
-    letter-spacing: 1px;
-}
-
-/* CHECKBUTTON transformed in bars when small and times when checkbutton is checked */
-#bars{
-    font-size: 25px;
-    color: #f2f2f2;
-    position: fixed;
-    right: 18px;
-    line-height: 60px;
-    cursor: pointer;
-    display: none;
-}
-#times{
-    font-size: 28px;
-    color: #f2f2f2;
-    position: fixed;
-    right: 20px;
-    line-height: 60px;
-    cursor: pointer;
-    display: none;
-}
-#check{
-    display: none;
-}
-#bars:hover{
-    color: #ed4901;
-}
-#times:hover{
-    color: #ed4901;
-}
+/* ::: END SEARCH BOX POSITION ::: */
 
 
-/* MEDIA Movement and settings of menu block list */
-/* checkbox for menu container */
-/* checkbox for search box */
-@media screen and (max-width: 960px) {
-    .body{
-        overflow-y: scroll;
-    }
-    .large-screen-search-button{
-        display: none;
-    }
-    .small-screen-show-search-button{
-        display: block;
-    }
-    label.login a{
-        position: fixed;
-    }
-    label.signup a{
-        position: fixed;
-    }
-    .search-box{
-        left: 60px;
-        position: fixed;
-        width: 170px;
-    }
-    /* position of search box bar in menu navbar */
-    #small-show-search-checkbox:checked ~ .search-box{
-        display: block;
-    }
+    /* ::: MAIN PAGE CONTENT GENERAL SETTINGS :::*/
 
-    /* settings & position of menu container left off the page */
-    .menu-container .nav-list{
-        position: fixed;
-        height: 100vh;
-        width: 100%;
-        background: #2c3e50;
-        top: 120px;
-        left: -100%;
-        text-align: center;
-        transition: all .75s ease-out;
+    .main-page-content{
+        min-height: 200vh;
+        display: flex;
+        justify-content: center;
+        flex: initial;
+        flex: 1;
     }
-    /* show menu container vertical */
-    .menu-container .nav-list li{
-        display: block;
+    .main-page-section{
+        display: flex;
+        flex-direction: column;
     }
-    /* settings for anchor references in menu */
-    .menu-container .nav-list li a{
-        color: #f2f2f2;
+    .main-page-section {
+        overflow-y: hidden;
+    }
+    .main-page-article{
+        background: transparent;
+        width: 400px;
+        height: 150px;
+        color: #000022;
         font-size: 16px;
-        text-transform: uppercase;
-}
-    /*  color in active anchor reference */
-    .nav-list a:hover, .nav-list li a.active{
-        background: none;
+        text-align: justify;
+    }
+    .article-paragraph-body{
+        background-color: transparent;
+    }
+    .calculator-page-content{
+        background-color: darkgray;
+        min-height: 100vh;
+    }
+    .dashboard-page-content{
+        background-color: #f2f2f2;
+    }
+    .section-dashboard-page{
+
+
+    }
+    .regulations-page-content{
+        background-color: darkgray;
+        min-height: 100vh;
+    }
+
+
+                /* ::: CHECKBUTTON & Search Box ::: */
+
+
+                #menu-nav-button{
+                    font-size: 25px;
+                    color: #f2f2f2;
+                    cursor: pointer;
+                    display: none;
+                }
+                #check-navbar{
+                    display: none;
+                }
+                #menu-nav-button:hover{
+                    color: #ed4901;
+                }
+                /* Position and settings of search box button */
+                .small-screen-show-search-button {
+                    font-size: 19px;
+                    color: #f2f2f2;
+                    cursor: pointer;
+                    display: none;
+                }
+                .small-screen-show-search-button:hover {
+                    color: #ed4901;
+                }
+                /* Hide search-bar show-button */
+                #small-show-search-checkbox{
+                    display: none;
+                }
+
+
+
+
+
+        /* ::: MAIN CONTENT OF CALCULATOR PAGE ::: */
+
+ /* ::: SECTION BEFORE CALCULATOR FORM::: */
+
+    .section-before-calculator{
+        width: 100%;
+        height: 150px;
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        background: #f2f2f2;
+        border-bottom: solid 2px;
+        border-bottom-color: #000022 ;
+        flex-wrap: wrap;
+    }
+    .table-title{
+        height: inherit;
+        -webkit-flex: 0.5;
+        -ms-flex: 0.5;
+        flex: 0.5;
+        border-right: solid 2px;
+        border-right-color: #ed4901;
+        padding-right: 10px;
+    }
+    .table-title td i{
+        font-size: 40px;
+        margin: 0 20px 0 20px;
+        color: #2c3e50;
+    }
+    .icon-calculator{
+        padding-left: 20px;
+    }
+    .calculator-article{
+        height: inherit;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        -webkit-flex: 2;
+        -ms-flex: 2;
+        flex: 2;
+        color: #2c3e50;
+    }
+    .padding-article{
+        padding-left: 5%;
+        padding-right: 32%;
+    }
+    .spacer{
+        min-height: 1000px;
+    }
+
+
+/* ::: CALCULATOR FORM Panels ::: */
+
+    .spacer-in-main-content{
+        height: 50px;
+        background-color: #2c3e50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .calculator-fieldset{
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+
+    }
+    .calculator-fieldset .panel{
+        width: 265px;
+        height: 220px;
+        margin: 10px 20px 10px 0;
+        border-style: solid;
+        outline-width: thin;
+        border-color: #f2f2f2;
+    }
+    .calculator-fieldset .panel .number{
+        margin: 0 10px 0 10px;
+        font-size: 40px;
         color: #ed4901;
     }
-    /* menu container in right position when check-button checked */
-    #check:checked ~ .nav-list{
-        left: 0;
-        transition: all .5s ease-in;
+    .title-panel{
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        justify-content: start;
+    }
+    .option-selector-margin {
+       margin: 20px 0 20px 10px;
+    }
+    label{
+        font-weight: bold;
+    }
+    #phase-load-info{
+        color: #333333;
+        opacity: 0.8;
+    }
+    #phase-load-info:hover{
+        color: darkmagenta;
+        opacity: 0.7;
+    }
+    #annual-consumption-info{
+        color: #333333;
+        opacity: 0.8;
+    }
+    #annual-consumption-info:hover{
+        color: darkmagenta;
+        opacity: 0.7;
+    }
+    #myRangeSlider{
+        width: 90%;
+        color: #ed4901;
+    }
+    #slider-value{
+        color: #ed4901;
+        font-weight: bold;
+    }
+    .hidden-storage {
+    display: none;
     }
 
-    /* Check-button transformed in bars when small (600px) and
-    in times icon (x) when checkbutton is checked */
-    #bars{
-        display: block;
+    #radio_option2:checked~.hidden-storage {
+    display: block;
     }
-    #check:checked ~ .checkbutton #bars{
-        display: none;
+
+    /* ::: Django forms.py form container::: */
+    .name-form-container{
+        display: flex;
+        justify-content: center;
     }
-    #check:checked ~ .checkbutton #times {
-        display: block;
+    .my-submit-form{
+        text-align: center;
     }
-}
-/* ::: Finish MEDIA Movement ::: */
+     /* ::: SUBMIT BUTTON ::: */
+    .form-submit-button{
+        width: 180px;
+        height: 60px;
+        background-color: royalblue;
+        border-color: #ed4901;
+        border-width: 1px;
+        color: #f2f2f2;
+        font-weight: bold;
+        margin: 50px 0 0 15px;
+    }
+    .form-submit-button:hover{
+        background-color: blue;
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+
+ /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
 
 
 
-/* Web site height*/
-.page-container{
-    position: static; /*for better movement relative, but it destroys menu functionality*/
-    min-height: 200vh;
-}
-.content-wrap{
-    padding-bottom: 2.5em;
-}
+ /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
+            @media (max-width: 1040px) {
+
+                .section-before-calculator {
+                    -webkit-flex-direction: column;
+                    flex-direction: column;
+                    height: 120%;
+                }
+                .table-title{
+                    -webkit-flex: 0.5;
+                    -ms-flex:0.5;
+                    flex: 0.5;
+                    border-right: none;
+                }
+                .padding-article{
+                    padding-left: 20%;
+                    padding-right: 15%;
+                    padding-bottom: 10px;
+                }
+                 /* Check-button transformed in bars when small (600px) and
+                    in times icon (x) when checkbutton is checked */
+                #menu-nav-button{
+                    padding-left: 10px;
+                    display: block;
+                }
+
+
+                /* ::: MENU NAVBAR HIDDEN::: */
+                /* settings & position of menu container left off the page */
+
+
+                /* settings & position of menu container left off the page */
+                #nav-list{
+                    position: absolute;
+                    display: flex;
+                    flex-direction: column;
+                    top: 100px;
+                    left: -220%;
+                    height: 400px;
+                    width: 200px;
+                    background: #2c3e50;
+                    transition: all .5s ease-out;
+                    /* :: The higher z-index is over other elements:: */
+                    z-index: 1;
+
+                }
+                /* show menu container vertical */
+                #nav-list li{
+                    display: block;
+                }
+                /* settings for anchor references in menu */
+                #nav-list li a{
+                    color: #f2f2f2;
+                    font-size: 14px;
+                    text-transform: uppercase;
+            }
+                /*  color in active anchor reference */
+                #nav-list a:hover, #nav-list li a.active{
+                    background: none;
+                    color: #ed4901;
+                }
+                /* menu container in right position when check-button checked */
+                #check-navbar:checked ~ #nav-list{
+                    left: 0;
+                    transition: all .5s ease-in;
+                }
+
+                .second-navbar-left-container .nav-list li{
+                    padding-bottom: 50px;
+                    cursor: pointer;
+                }
+
+                /* ::: SEARCH BOX ::: */
+                .search-box {
+                    position: absolute;
+                    right: 10%;
+                    display: none;
+                }
+                .large-screen-search-button{
+
+                }
+                /* position of search box bar in menu navbar */
+                .small-screen-show-search-button {
+                    padding-right: 10px;
+                    display: block;
+                }
+
+                #small-show-search-checkbox:checked ~ .search-box{
+                    display: block;
+
+                }
+
+            }
+            /* ::: EXTRA ZOOM IN ::: */
+            @media (max-width: 420px) {
+                .login a, .signup a, .logo a {
+                    color: #2c3e50;
+                    font-size: 15px;
+                }
+
+                .sm-image {
+                    width: 25px;
+                }
+
+                #nav-list {
+                    height: 400px;
+                }
+
+                .main-page-content {
+                    height: 300vh;
+                }
+            }
+
+                /* ::: EXTRA ZOOM IN ::: */
+                @media (max-width: 330px) {
+                    .login a, .signup a {
+                        padding: 0;
+                        color: #2c3e50;
+                        font-size: 15px;
+                    }
+                    .logo a{
+                        display: none;
+                    }
+
+                    .sm-image {
+                        width: 25px;
+                    }
+
+                    #nav-list {
+                        height: 400px;
+                    }
+
+                    .main-page-content {
+                        height: 500vh;
+                    }
+                }
+
 
 /* ::: FOOTER ::: */
-.footer{
-    text-align: center;
-    position: fixed;
+.footer {
+    margin-top: auto;
     bottom: 0;
-    height: 4.2em;
     width: 100%;
-    padding: 10px;
     background-color: #333333;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
-.other_links{
-    font-size: 15px;
-    letter-spacing: 10px;
+
+.other-links i:hover {
+    color: #ed4901;
 }
-.other_links a{
+
+.other-links {
+    display: inherit;
+    align-items: center;
+    justify-content: center;
+}
+
+.other-links a {
     text-decoration: none;
     color: cornflowerblue;
+    font-size: 15px;
+    margin: 10px 10px 0 10px;
 }
-.other_links a:hover{
-    color: #ed4901;
-}
-.admin{
-    font-size: 14px;
-    padding: inherit;
+
+footer .admin-info {
+    min-height: 60px;
+    display: inherit;
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
     color: #f2f2f2;
+    font-size: 8px;
+    text-align: center;
 }
 
-/* ::: CALCULATOR FORM ::: */
-/* ::: Table and other elements ::: */
-.form-control{
-    background-color: transparent;
-    outline-style: none;
-    !important;
-}
-.form-container{
-    margin: 250px 0 20px 80px;
-}
-.table-fieldset{
-    margin-top: 120px;
-}
-.flex table{
-    display: flex;
-    flex-wrap: wrap;
-    color: #2c3e50;
-}
-.spacer-in fieldset{
-    margin-bottom: 10px;
-}
-.calc-title{
-    width: 100px;
-    height: 100px;
-}
-
-.table-calculator-form-control .fa-calculator{
-    margin-left: 80px;
-    margin-right: 10px;
-    font-size: 50px;
-
-}
-.calculator-article{
-    border-width: medium;
-    border-left-style: solid;
-    border-left-color: #ed4901;
-    padding-left: 30px;
-    text-align: justify;
-    margin-top: 10px;
-    margin-left: 50px;
-    width: 700px;
-    height: 100px;
-}
-.calculator-fieldset{
-    display: flex;
-    flex-wrap: wrap;
-    margin: 20px 0 0 80px;
-
-}
-
-/* ::: Panels ::: */
-.table-fieldset .panel{
-    width: 280px;
-    height: 220px;
-    margin: 0 20px 10px 0;
-    border-style: solid;
-    outline-width: thin;
-    border-color: #f2f2f2;
-}
-.table-fieldset .panel .number{
-    margin-left: 10px;
-    font-size: 40px;
-    color: #ed4901;
-}
-#spacer-panel{
-   margin-left: 50px; /* the space between Επιλέξτε και panel*/
-}
-.table-fieldset .select-district{
-    margin-top: 80px;
-}
-
-
-/* ::::::: The slider ::::::: */
-
-#myRangeSlider {
-    margin-top: 20px;
-    height: 25px;
-    outline: none;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-}
-#myRangeSlider::-webkit-slider-thumb {
-    width: 20px;
-    height: 20px;
-    background: #ed4901;
-    cursor: pointer;
-}
-/* Mozilla linear gradient as the background of the track element */
-#myRangeSlider::-moz-range-track{
-    background: linear-gradient(to right, #2c3e50, #f2f2f2);
-
-}
-#myRangeSlider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: #ed4901;
-    cursor: pointer;
-}
-/* Chrome linear gradient as the background of the track element */
-#myRangeSlider::-webkit-slider-runnable-track {
-    background: linear-gradient(to right, #2c3e50, #f2f2f2);
-}

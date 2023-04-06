@@ -6,6 +6,10 @@
 <title>Regulations</title>
 {% endblock %}
 
+{% block script %}
+<script src="{% static 'Net_Metering/javascript/script.js' %}" defer></script>
+{% endblock %}
+
 {% block menu_list %}
     <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
     <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
@@ -43,7 +47,7 @@
         <div class="spacer-in-main-content"><h2>Συμπληρώστε τα πεδία</h2></div>
 
         <!-- ::: CALCULATOR FORM ::: -->
-        <form method="POST" class="my-form-control" autocomplete="off">
+        <form method="POST" class="my-form-control" name="calculatorForm" onsubmit="validateForm()">
             {% csrf_token %}
 
             <fieldset class="calculator-fieldset">
@@ -60,7 +64,7 @@
                                     <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος">
                                         <input type="hidden" name="phase_load" id="phase_load" required>
                                             {{ form1.select_phase }}
-                                        <i class="fas fa-question-circle" id="phase-load-info" title="Συμβουλευτείτε το λογαριασμό παρόχου ρεύματος.
+                                        <i class="fas fa-question-circle" id="phase-load-info" title="Συμβουλευτείτε το λογαριασμό παρόχου ρεύματος:
 -> Μονοφασική παροχή εάν η συμφωνημένη ισχύς είναι: 8-12kVΑ!
 -> Τριφασική παροχή εάν η συμφωνημένη ισχύς είναι: > 15 kVΑ!
                                             "></i>
@@ -69,20 +73,20 @@
                    </div>
 
                     <!-- PANEL 2 -->
+                    <!-- Here you select the annual consumption of your house in kWh -->
                     <div class="panel">
                         <div class="title-panel">
                             <span class="number"> 2 </span>
-                            <h4>Ισχύς (KWp)</h4>
+                            <h4>Κατανάλωση</h4>
                         </div>
 
-                        <div class="option-selector-margin">
-                            <div class="slide-container" title="Παρακαλούμε, επιλέξτε παροχή και ύστερα επιθυμητή ισχύς φωτοβολταϊκού σε kWp">
-                                <p><label for="myRangeSlider">Επιλέξτε:</label></p>
-                                <input type="range" min="0" max="25" step="1" value="0" id="myRangeSlider" name="myRangeSlider" required>
-                                <p>Τιμή: <span id="slider-value"></span></p>
+                                    <div class="option-selector-margin" >
+                                        <p>{{ form2.select_kwh.label_tag }}</p>
+                                        <p title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">{{ form2.select_kwh }}
+                                            <i class="fas fa-question-circle" id="annual-consumption-info" title="Συμβουλευτείτε το λογαριασμό παρόχου ρεύματος"></i>
+                                        </p>
+                                         </div>
 
-                            </div>
-                        </div>
                    </div>
 
                     <!-- PANEL 3 -->
@@ -118,20 +122,22 @@
                    </div>
 
                     <!-- PANEL 4 -->
-                    <!-- Here you select the annual consumption of your house in kWh -->
                     <div class="panel">
                         <div class="title-panel">
                             <span class="number"> 4 </span>
-                            <h4>Κατανάλωση</h4>
+                            <h4>Ισχύς (KWp)</h4>
                         </div>
 
-                                    <div class="option-selector-margin" >
-                                        <p>{{ form2.select_kwh.label_tag }}</p>
-                                        <p title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">{{ form2.select_kwh }}</p>
-                                        <i class="fas fa-question-circle" id="annual-consumption-info" title="Συμβουλευτείτε το λογαριασμό παρόχου ρεύματος"></i>
-                                    </div>
+                        <div class="option-selector-margin">
+                            <div class="slide-container" title="Παρακαλούμε, επιλέξτε παροχή και ύστερα επιθυμητή ισχύς φωτοβολταϊκού σε kWp">
+                                <p><label for="myRangeSlider">Επιλέξτε:</label></p>
+                                <input type="range" min="0" max="25" step="1" value="0" id="myRangeSlider" name="myRangeSlider" required>
+                                <p>Τιμή: <span id="slider-value"></span></p>
 
+                            </div>
+                        </div>
                    </div>
+
             </fieldset>
 
             <fieldset class="name-form-container">
@@ -145,42 +151,12 @@
             </fieldset>
 
             <div class="my-submit-form">
-                <button class="form-submit-button" type="reset">Διόρθωση</button>
-                <button class="form-submit-button" type="submit">Υποβολή Στοιχείων</button>
+                <button class="form-submit-button" type="reset" id="resetBtn">Διόρθωση</button>
+                <button class="form-submit-button" type="submit" id="submitBtn">Υποβολή Στοιχείων</button>
             </div>
 
         </form>
 
-                             <script>
-                                const slider = document.getElementById("myRangeSlider");
-                                const output = document.getElementById("slider-value");
-                                slider.value = 0;
-                                slider.disabled = 'phase_load'
-                                // Set the initial value of the output element to 0
-                                output.innerHTML = slider.value;
-
-
-                                // Listen for changes in the phase load input and store the selected option
-                                document.getElementById("id_select_phase").addEventListener("change", function(event){
-                                    slider.value = 0; // Update the slider value to 0 when the phase load is changed
-                                    slider.max = event.target.value === 'single_phase' ? 5 : 25
-                                    slider.disabled = event.target.value === 'phase_load'
-                                    output.innerHTML = slider.value; // Update the output element value to 0 when the phase load is changed
-                                })
-
-                                // Update the current slider value (each time you drag the slider handle)
-                                    slider.oninput = function() {
-                                        output.innerHTML = this.value;
-                                    }
-
-                                // Reset the output element value to the initial value when the reset button is clicked
-                                    document.querySelector('button[type="reset"]').addEventListener('click', function(event) {
-                                        slider.disabled = "phase_load"
-                                        slider.value = 0;
-                                        output.innerHTML = slider.value;
-                                    });
-
-                            </script>
     </div>
 
 {% endblock %}
