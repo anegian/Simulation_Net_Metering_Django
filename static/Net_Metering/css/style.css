@@ -200,11 +200,12 @@ input[type="search"]:focus {
     }
     .dashboard-page-content{
         background-color: #f2f2f2;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
     }
-    .section-dashboard-page{
-
-
-    }
+    
+    
     .regulations-page-content{
         background-color: darkgray;
         min-height: 100vh;
@@ -478,9 +479,9 @@ input[type="search"]:focus {
                     right: 10%;
                     display: none;
                 }
-                .large-screen-search-button{
 
-                }
+                
+
                 /* position of search box bar in menu navbar */
                 .small-screen-show-search-button {
                     padding-right: 10px;
@@ -577,3 +578,18 @@ footer .admin-info {
     text-align: center;
 }
 
+
+/* ::: DASHBOARD CHARTS SECTION ::: */
+.panels-container{
+    background-color: #f2f2f2;
+    width: 500px;
+    margin: 10px 20px 20px 20px;
+    text-align: center;
+    font-size: 500px;
+  }
+  .chart-section-upper{
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #828282;
+  }

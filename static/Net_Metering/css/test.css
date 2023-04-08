@@ -158,7 +158,7 @@ input[type="search"]::placeholder {
     opacity: 0.7;
 }
 button[type="submit"]:hover {
-  opacity: 1;
+  opacity: 0.8;
 }
 input[type="search"]:focus {
   border-color: #ed4901;
@@ -201,10 +201,8 @@ input[type="search"]:focus {
     .dashboard-page-content{
         background-color: #f2f2f2;
     }
-    .section-dashboard-page{
-
-
-    }
+    
+    
     .regulations-page-content{
         background-color: darkgray;
         min-height: 100vh;
@@ -381,18 +379,19 @@ input[type="search"]:focus {
     }
      /* ::: SUBMIT BUTTON ::: */
     .form-submit-button{
-        width: 200px;
+        width: 180px;
         height: 60px;
         background-color: royalblue;
         border-color: #ed4901;
-        border-width: 3px;
-        opacity: 0.5;
+        border-width: 1px;
         color: #f2f2f2;
         font-weight: bold;
-        margin: 50px 0 0 10px;
+        margin: 50px 0 0 15px;
     }
     .form-submit-button:hover{
-        opacity: 1;
+        background-color: blue;
+        opacity: 0.8;
+        transform: scale(1.1);
     }
 
  /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
@@ -477,9 +476,9 @@ input[type="search"]:focus {
                     right: 10%;
                     display: none;
                 }
-                .large-screen-search-button{
 
-                }
+                
+
                 /* position of search box bar in menu navbar */
                 .small-screen-show-search-button {
                     padding-right: 10px;
@@ -576,3 +575,19 @@ footer .admin-info {
     text-align: center;
 }
 
+
+/* ::: DASHBOARD CHARTS SECTION ::: */
+.panels-container{
+    background-color: #a09c9c;
+    margin: 10px 20px 20px 20px;
+    text-align: center;
+    align-items: center;
+    font-size: 500px;
+  }
+  .chart-section-upper{
+    min-height: 50vh;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background-color: #f2f2f2;
+  }
