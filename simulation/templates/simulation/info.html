@@ -6,6 +6,8 @@
 <title>Info</title>
 {% endblock %}
 
+{% block body_class %} info-body {% endblock%}
+
 {% block menu_list %}
     <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
     <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
@@ -16,58 +18,56 @@
 
 {% block content %}
 
-    <div class="dashboard-page-content">
+    <section class="info-page-content">
 
-         <section class="section-dashboard-page">
-            <!-- ::: CHART JS ::: -->
-        <canvas id="energy-balance-chart"></canvas>
-        <script>
-            var ctx = document.getElementById("energy-balance-chart").getContext("2d");
 
-            // Generate the data for the chart, including the energy generation, consumption, and net balance over time
-            var generationData = [100, 150, 200, 250, 300];
-            var consumptionData = [200, 250, 300, 350, 400];
-            var netBalanceData = generationData.map(function(generation, i) {
-              return generation - consumptionData[i];
-            });
 
-            // Create the chart using Chart.js
-            var chart = new Chart(ctx, {
-              type: "line",
-              data: {
-                labels: ["Jan", "Feb", "Mar", "Apr", "May"],  // Replace with the actual labels for the time period
-                datasets: [
-                  {
-                    label: "Generation",
-                    data: generationData,
-                    borderColor: "#3e95cd",
-                    fill: false
-                  },
-                  {
-                    label: "Consumption",
-                    data: consumptionData,
-                    borderColor: "#8e5ea2",
-                    fill: false
-                  },
-                  {
-                    label: "Net Balance",
-                    data: netBalanceData,
-                    borderColor: "#3cba9f",
-                    fill: false
-                  }
-                ]
-              },
-              options: {
-                title: {
-                  display: true,
-                  text: "Energy Generation, Consumption, and Net Balance"
-                }
-              }
-            });
-        </script>
+      <div class="container-info">
+        <div class="main-page-content">
+
+          <section class="main-page-section">
+               <div class="main-page-article">
+
+                  <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                      laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                      in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                  </p>
+
+                  <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                      laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                      in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                  </p>
+
+                  <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                      laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                      in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                  </p>
+
+                  <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                      laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                      in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                  </p>
+
+              </div>
+          </section>
+
+          <div class="spacer"></div>
+      </div>
+
+      </div>
 
     </section>
-
-    </div>
 
 {% endblock %}

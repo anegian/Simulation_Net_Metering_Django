@@ -7,6 +7,7 @@ app_name = 'simulation'
 urlpatterns = [
     # path --> domain.com / simulation /
     # /my_apps --> PROJECT urls.py
+
     path('calculator/', views.calculator, name='calculator'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('regulations/', views.regulations, name='regulations'),

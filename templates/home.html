@@ -1,0 +1,66 @@
+{% extends "index2.html" %}
+
+{% load static %}
+
+{% block title %}
+<title>Home</title>
+{% endblock %}
+
+{% block menu_list %}
+    <li><a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
+    <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
+    <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+    <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
+    <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+{% endblock %}
+
+
+{% block body_class %} home-body {% endblock %}
+  
+
+{% block content %}
+
+<div class="main-page-content">
+
+  <section class="main-page-section">
+       <div class="main-page-article">
+
+          <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+              sed do eiusmod tempor incididunt ut labore et dolore magna
+              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+              laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+          </p>
+
+          <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+              sed do eiusmod tempor incididunt ut labore et dolore magna
+              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+              laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+          </p>
+
+          <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+              sed do eiusmod tempor incididunt ut labore et dolore magna
+              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+              laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+          </p>
+
+          <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+              sed do eiusmod tempor incididunt ut labore et dolore magna
+              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+              laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+          </p>
+
+      </div>
+  </section>
+
+  <div class="spacer"></div>
+</div>
+
+{% endblock %}

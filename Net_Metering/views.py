@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 # project level
 def simple_view(request):
-    return render(request, 'index2.html')
+    return render(request, 'home.html')
 
 # @login_required
 # def home(request):

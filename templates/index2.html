@@ -21,7 +21,9 @@
     {% endblock %}
 
 </head>
-<body>
+
+<body class="{% block body_class %}{% endblock %} ">
+  
 
         <header class="main-header">
             <div class="header-container-left">
@@ -123,48 +125,7 @@
 
         {% block content %}
 
-            <div class="main-page-content">
-
-                <section class="main-page-section">
-                     <div class="main-page-article">
-
-                        <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna
-                            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                            in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                        </p>
-
-                        <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna
-                            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                            in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                        </p>
-
-                        <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna
-                            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                            in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                        </p>
-
-                        <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna
-                            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                            in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                        </p>
-
-                    </div>
-                </section>
-
-                <div class="spacer"></div>
-            </div>
+            
 
         {% endblock %}
 
@@ -176,7 +137,7 @@
     </div>
 
         <span class="admin-info">
-            <i class="fas fa-copyright"> 2022 Anestis Giannakosian. All rights reserved</i>
+            <i class="fas fa-copyright"> 2023 Anestis Giannakosian. All rights reserved</i>
 
         </span>
 </footer>
