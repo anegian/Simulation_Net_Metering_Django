@@ -577,17 +577,56 @@ footer .admin-info {
 
 
 /* ::: DASHBOARD CHARTS SECTION ::: */
-.panels-container{
-    background-color: #a09c9c;
-    margin: 10px 20px 20px 20px;
-    text-align: center;
-    align-items: center;
-    font-size: 500px;
-  }
-  .chart-section-upper{
-    min-height: 50vh;
+.full-container{
+    min-height: 100vh;
     display: flex;
     flex-wrap: wrap;
+    background-color: #272A2A;
+  }        
+  .left-container{
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+  .left-upper{
+    display: flex;
+    justify-content: space-evenly;  
+  }
+  .left-middle{
+    display: flex;
+    justify-content: center;
+  }
+  .left-below{
+    display: flex;
+    justify-content: space-evenly;  
+  }
+  .panels-container{
+    margin-top: 10px;
+    width: 95%;
+    background-color: #505050;
+  }
+  .panels-container2{
+    margin-top: 10px;
+    text-align: center;
+    background-color: #505050;
+    width: 30%;
+  }
+  .right-container{
+    flex-basis: 50%;
+  }
+  .right-upper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    background-color: #f2f2f2;
+  }
+  .titles-panel{
+    margin-top: 10px;
+    color: #ED4901;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .info-title{
+    color: #f2f2f2;
+    font-weight: bold;
   }

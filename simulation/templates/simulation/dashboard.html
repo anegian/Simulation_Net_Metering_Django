@@ -8,6 +8,7 @@
 
 {% block script %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" ></script>
+    <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
     <script src="{% static 'Net_Metering/javascript/chart.js' %}" defer></script>
 {% endblock %}
 
@@ -23,33 +24,112 @@
 
     <div class="dashboard-page-content">
 
+      <section class="full-container">
+    
+        <div class="left-container">
 
-          <section class="chart-section-upper">
+            <div class="left-upper">
 
-            <div class="panels-container" id="first-panel" title="production">
-              <canvas id="myChart1" style="width:100%;max-width:600px"></canvas>
+              <div class="container-icons">
+                <div class="titles-panel">Επένδυση</div>
+                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+                <lord-icon src="https://cdn.lordicon.com/ftjtyaku.json"
+                    trigger="hover"
+                    style="width:150px;height:150px">
+                </lord-icon>
+                <p class="info-title">10.000 euro</p>
+              </div>
+
+              <div class="container-icons">
+                <div class="titles-panel">Απόσβεση</div>
+                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+                  <lord-icon
+                      src="https://cdn.lordicon.com/uutnmngi.json"
+                      trigger="hover"
+                      style="width:130px;height:150px">
+                  </lord-icon>
+                <p class="info-title">7 χρόνια</p>
+              </div>
+
+              <div class="container-icons">
+                <div class="titles-panel">Όφελος</div>
+                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+                  <lord-icon
+                      src="https://cdn.lordicon.com/isdxbcqi.json"
+                      trigger="hover"
+                      style="width:140px;height:150px">
+                  </lord-icon>
+                <p class="info-title">70 %</p>
+              </div>
+          
             </div>
-
-            <div class="panels-container" id="second-panel" title="profit">
-              <canvas id="myChart2" style="width:100%;max-width:600px"></canvas>
+          
+            <div class="left-middle">
+            
+                 <div class="panels-container" id="second-panel" title="profit">
+                     <canvas id="myChart2" ></canvas>
+                 </div>
+            
+             </div>
+          
+            <div class="left-below">
+          
+              <div class="container-icons">
+                <div class="titles-panel">Μειωμένη Εκπομπή CO2</div>
+                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+                  <lord-icon
+                      src="https://cdn.lordicon.com/npfyliwp.json"
+                      trigger="hover"
+                      style="width:150px;height:150px">
+                  </lord-icon>
+              </div>
+              
+              <div class="container-icons">
+                <div class="titles-panel">Αντίστοιχα Φυτεμένα Δέντρα</div>
+                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+                  <lord-icon
+                      src="https://cdn.lordicon.com/azbllxpx.json"
+                      trigger="hover"
+                      style="width:150px;height:150px">
+                  </lord-icon>
+              </div>
+              
+              <div class="container-icons">
+                <div class="titles-panel">Μικρότερο Ενεργειακό Αποτύπωμα</div>
+                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+                  <lord-icon
+                      src="https://cdn.lordicon.com/efdhjqgx.json"
+                      trigger="hover"
+                      style="width:130px;height:150px">
+                  </lord-icon>
+              </div>
+          
             </div>
-
-            <div class="panels-container" id="third-panel">
-              <canvas id="myChart3" style="width:100%;max-width:600px"></canvas>
-            </div>
- 
-          </section>
-
-         <section class="section-dashboard-page">
-                    <!-- ::: CHART JS ::: -->
-                <canvas id="energy-balance-chart"></canvas>   
-         </section>
-
-         
-
-         <div class="spacer">
 
         </div>
+        
+        <div class="right-container">
+          
+           <div class="right-upper">
+    
+                    <div class="panels-container" id="first-panel" title="production">
+                      <canvas id="myChart1"></canvas>
+                    </div>
+
+          
+            </div>
+
+            <div class="right-below">
+
+             <div class="panels-container" id="third-panel">
+                  <canvas id="myChart3"></canvas>
+                </div>
+    
+      </div>
+          
+        </div> 
+        
+      </section>
 
     </div>
 

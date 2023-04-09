@@ -10,7 +10,6 @@ html, body {
     padding: 0;
     width: 100%;
     height: 100%;
-
 }
 
 body::before {
@@ -33,7 +32,8 @@ body::before {
 
     /* ::: HEADINGS ::: */
     h2{
-        font-size: 26px;
+        font-size: 28px;
+        font-weight: bold;
         color: #f2f2f2;
     }
 
@@ -44,6 +44,7 @@ body::before {
     }
     h4{
         font-weight: bold;
+        color: #f2f2f2;
     }
 
     /* ::: MAIN HEADER ::: */
@@ -200,14 +201,10 @@ input[type="search"]:focus {
     }
     .dashboard-page-content{
         background-color: #f2f2f2;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
     }
     
-    
     .regulations-page-content{
-        background-color: darkgray;
+        background-color: #505050;
         min-height: 100vh;
     }
 
@@ -320,7 +317,7 @@ input[type="search"]:focus {
         height: 220px;
         margin: 10px 20px 10px 0;
         border-style: solid;
-        outline-width: thin;
+        border-width: 1px;
         border-color: #f2f2f2;
     }
     .calculator-fieldset .panel .number{
@@ -345,7 +342,7 @@ input[type="search"]:focus {
         opacity: 0.8;
     }
     #phase-load-info:hover{
-        color: darkmagenta;
+        color: #f2f2f2;
         opacity: 0.7;
     }
     #annual-consumption-info{
@@ -353,7 +350,7 @@ input[type="search"]:focus {
         opacity: 0.8;
     }
     #annual-consumption-info:hover{
-        color: darkmagenta;
+        color: #f2f2f2;
         opacity: 0.7;
     }
     #myRangeSlider{
@@ -385,8 +382,8 @@ input[type="search"]:focus {
         width: 180px;
         height: 60px;
         background-color: royalblue;
-        border-color: #ed4901;
-        border-width: 1px;
+        border-color: #553f33;
+        border-width: 0.01px;
         color: #f2f2f2;
         font-weight: bold;
         margin: 50px 0 0 15px;
@@ -580,16 +577,65 @@ footer .admin-info {
 
 
 /* ::: DASHBOARD CHARTS SECTION ::: */
-.panels-container{
-    background-color: #f2f2f2;
-    width: 500px;
-    margin: 10px 20px 20px 20px;
-    text-align: center;
-    font-size: 500px;
-  }
-  .chart-section-upper{
+.full-container{
     min-height: 100vh;
     display: flex;
     flex-wrap: wrap;
-    background-color: #828282;
+    background-color: #272A2A;
+  }        
+  .left-container{
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+  .left-upper{
+    display: flex;
+    justify-content: space-evenly;  
+  }
+  .left-middle{
+    display: flex;
+    justify-content: center;
+  }
+  .left-below{
+    display: flex;
+    justify-content: space-evenly;  
+  }
+  .panels-container{
+    height: 60vh;
+    margin: 10px 0 10px 0;
+    width: 95%;
+    background-color: #505050;
+  }
+  .container-icons{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: #505050;
+    width: 30%;
+  }
+
+  .right-container{
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;  
+  }
+  .right-upper{
+    display: flex;
+    align-items: center;
+  }
+  .right-below{
+    display: flex;
+    align-items: center;
+  }
+
+  .titles-panel{
+    margin-top: 10px;
+    color: #ED4901;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .info-title{
+    color: #f2f2f2;
+    font-weight: bold;
   }
