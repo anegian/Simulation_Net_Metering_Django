@@ -1,10 +1,11 @@
-{% extends "index2.html" %}
+{% extends "index.html" %}
 
 {% load static %}
 
 {% block title %}
 <title>Home</title>
 {% endblock %}
+
 
 {% block menu_list %}
     <li><a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
@@ -13,6 +14,7 @@
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
     <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
 {% endblock %}
+
 
 
 {% block body_class %} home-body {% endblock %}

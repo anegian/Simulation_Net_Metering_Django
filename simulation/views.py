@@ -3,23 +3,24 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http.response import Http404, HttpResponse
 from .forms import *
+from .models import *
 
 # Create your views here
 # App level
 
-def calculator(request):     # simulation/templates/calculator.html
+def regulations(request):     # simulation/templates/regulations.html
 
     if request.method == 'POST':
-        # changes the name of variable to calculator_form because form was fault --> shadow name 'form' out of scope
+        # changes the name of variable to regulations because form was fault --> shadow name 'form' out of scope
         form = CustomerForm(request.POST)
 
         if form.is_valid():
             print(form.cleaned_data)
-            return redirect(reverse('simulation:calculator'))  # redirect to function calculator
+            return redirect(reverse('simulation:regulations'))  # redirect to regulations page
 
     else:
         form = CustomerForm()
-    return render(request, 'simulation/calculator.html', context={'form': form})
+    return render(request, 'simulation/regulations.html', context={'form': form})
 
 
 def dashboard(request):      # simulation/templates/dashboard.html
@@ -29,7 +30,7 @@ def dashboard(request):      # simulation/templates/dashboard.html
     except Http404:      # not use bare except
         return Http404("404 Generic Error")
 
-def regulations(request):    # simulation/templates/regulations.html
+def calculator(request):    # simulation/templates/calculator.html
 
     if request.method == 'POST':
         # changes the name of variable to calculator_form because form was fault --> shadow name 'form' out of scope
@@ -49,12 +50,12 @@ def regulations(request):    # simulation/templates/regulations.html
             else:
                 print('No storage selected')
 
-        return redirect(reverse('simulation:regulations'))  # redirect to function calculator
+        return redirect(reverse('simulation:calculator'))  # redirect to function calculator
 
     else:
         form1 = PlaceOfInstallationForm()
         form2 = EnergyConsumptionForm()
-    return render(request, 'simulation/regulations.html', context={'form1': form1, 'form2': form2})
+    return render(request, 'simulation/calculator.html', context={'form1': form1, 'form2': form2})
 
 
 def info(request):           # simulation/templates/info.html
@@ -80,4 +81,71 @@ def submit_form(request):
             return HttpResponse('There was an error in the form')
     else:
         form = CustomerForm()
-        return render(request, 'simulation/regulations.html', {'form': form})
+        return render(request, 'simulation/calculator.html', {'form': form})
+
+
+def calculatorResults(request):
+    if request.method == 'POST':
+        district = request.POST.get('district')
+        phase = request.POST.get('phase')
+        profile = request.POST.get('profile')
+        usage = request.POST.get('usage')
+        battery = request.POST.get('battery')
+        inclination = request.POST.get('inclination')
+        system = PVSystem.objects.get(district=district, phase=phase)
+
+        total_cost = calculate_total_cost(system, profile, usage, battery, inclination)
+        payoff = calculate_payoff(total_cost, usage)
+        production = calculate_production(system, inclination)
+        total_profit = calculate_total_profit(production)
+        npv = calculate_npv(total_profit, total_cost)
+        roi = calculate_roi(payoff, total_cost)
+        lcoe = calculate_lcoe(total_cost, production, usage)
+
+        return render(request, 'dashboard.html', {'total_cost': total_cost, 'payoff': payoff, 'production': production, 'total_profit': total_profit, 'npv': npv, 'roi': roi, 'lcoe': lcoe})
+    else:
+        return render(request, 'calculator.html')
+    pass;
+
+def calculate_total_cost(system, profile, usage, battery, inclination):
+    # Calculate the total cost of the PV system
+    # based on the user's inputs
+    # Return the result
+
+    def calculate_payoff(total_cost, usage):
+    # Calculate the payoff period in years
+    # based on the total cost and the user's annual usage
+    # Return the result
+        pass;
+
+    def calculate_production(system, inclination):
+        # Calculate the annual production of the PV system
+        # based on the system's specifications and the inclination
+        # Return the result
+        pass;
+
+    def calculate_total_profit(production):
+        # Calculate the total profit over 25 years
+        # based on the annual production
+        # Return the result
+        pass;
+
+    def calculate_npv(total_profit, total_cost):
+        # Calculate the net present value
+        # based on the total profit and the total cost
+        # Return the result
+        pass;
+
+    def calculate_roi(payoff, total_cost):
+        # Calculate the return on investment
+        # based on the payoff period and the total cost
+        # Return the result
+        pass;
+
+    def calculate_lcoe(total_cost, production, usage):
+        # Calculate the levelized cost of electricity
+        # based on the total cost, the annual production, and the user's annual usage
+        # Return the result
+        pass;
+
+

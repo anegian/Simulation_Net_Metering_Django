@@ -74,7 +74,7 @@ new Chart("myChart2", {
 });
 
 // DASHBOARD CHART 3
-var zValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+var zValues = ["1", "2", "3", "4", "5"];
 var rValues = [55, 49, 44, 24, 15];
 var barColors = [
   "#b91d47",

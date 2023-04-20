@@ -10,17 +10,23 @@ html, body {
     padding: 0;
     width: 100%;
     height: 100%;
-
 }
 
-body::before {
+.blurred {
+    filter: blur(2px); /* apply the blur effect */
+    opacity: 0.5;
+  }
+
+
+/* ::: Home Page Main image ::: */
+.home-body::before{
+    background: url('../../images/solar-cell.jpg');
     content: "";
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('../../images/solar-cell.jpg') no-repeat center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -33,7 +39,8 @@ body::before {
 
     /* ::: HEADINGS ::: */
     h2{
-        font-size: 26px;
+        font-size: 28px;
+        font-weight: bold;
         color: #f2f2f2;
     }
 
@@ -44,6 +51,7 @@ body::before {
     }
     h4{
         font-weight: bold;
+        color: #f2f2f2;
     }
 
     /* ::: MAIN HEADER ::: */
@@ -91,11 +99,10 @@ body::before {
     align-items: center;
 }
 .second-navbar-left-container .nav-list{
-    height: inherit;
     display: flex;
     align-items: center;
     padding-top: 15px;
-
+    min-height: 100vh;
 }
 .second-navbar-right-container{
     height: inherit;
@@ -175,6 +182,7 @@ input[type="search"]:focus {
         justify-content: center;
         flex: initial;
         flex: 1;
+        
     }
     .main-page-section{
         display: flex;
@@ -195,22 +203,17 @@ input[type="search"]:focus {
         background-color: transparent;
     }
     .calculator-page-content{
-        background-color: darkgray;
+        background-color: #747272;
         min-height: 100vh;
     }
     .dashboard-page-content{
-        background-color: #f2f2f2;
+        background-color: #747272;
     }
     
-    
-    .regulations-page-content{
-        background-color: darkgray;
-        min-height: 100vh;
-    }
+
 
 
                 /* ::: CHECKBUTTON & Search Box ::: */
-
 
                 #menu-nav-button{
                     font-size: 25px;
@@ -317,7 +320,7 @@ input[type="search"]:focus {
         height: 220px;
         margin: 10px 20px 10px 0;
         border-style: solid;
-        outline-width: thin;
+        border-width: 1px;
         border-color: #f2f2f2;
     }
     .calculator-fieldset .panel .number{
@@ -342,7 +345,7 @@ input[type="search"]:focus {
         opacity: 0.8;
     }
     #phase-load-info:hover{
-        color: darkmagenta;
+        color: #f2f2f2;
         opacity: 0.7;
     }
     #annual-consumption-info{
@@ -350,7 +353,7 @@ input[type="search"]:focus {
         opacity: 0.8;
     }
     #annual-consumption-info:hover{
-        color: darkmagenta;
+        color: #f2f2f2;
         opacity: 0.7;
     }
     #myRangeSlider{
@@ -382,8 +385,8 @@ input[type="search"]:focus {
         width: 180px;
         height: 60px;
         background-color: royalblue;
-        border-color: #ed4901;
-        border-width: 1px;
+        border-color: #553f33;
+        border-width: 0.01px;
         color: #f2f2f2;
         font-weight: bold;
         margin: 50px 0 0 15px;
@@ -431,18 +434,18 @@ input[type="search"]:focus {
 
                 /* settings & position of menu container left off the page */
                 #nav-list{
+                    padding: 0 0 0 0;
+                    margin: 0 0 0 0;
                     position: absolute;
                     display: flex;
                     flex-direction: column;
                     top: 100px;
-                    left: -220%;
-                    height: 400px;
-                    width: 200px;
-                    background: #2c3e50;
-                    transition: all .5s ease-out;
+                    left: -240px;
+                    width: 240px;
+                    transition: left 0.2s ease-in-out;
                     /* :: The higher z-index is over other elements:: */
                     z-index: 1;
-
+                    background-color: rgba(44,62,80, 0.8);
                 }
                 /* show menu container vertical */
                 #nav-list li{
@@ -477,8 +480,6 @@ input[type="search"]:focus {
                     display: none;
                 }
 
-                
-
                 /* position of search box bar in menu navbar */
                 .small-screen-show-search-button {
                     padding-right: 10px;
@@ -497,18 +498,13 @@ input[type="search"]:focus {
                     color: #2c3e50;
                     font-size: 15px;
                 }
-
+                #nav-list{
+                    min-height: 200vh;
+                }
                 .sm-image {
                     width: 25px;
                 }
 
-                #nav-list {
-                    height: 400px;
-                }
-
-                .main-page-content {
-                    height: 300vh;
-                }
             }
 
                 /* ::: EXTRA ZOOM IN ::: */
@@ -518,6 +514,9 @@ input[type="search"]:focus {
                         color: #2c3e50;
                         font-size: 15px;
                     }
+                    #nav-list{
+                        min-height: 200vh;
+                    }
                     .logo a{
                         display: none;
                     }
@@ -526,13 +525,6 @@ input[type="search"]:focus {
                         width: 25px;
                     }
 
-                    #nav-list {
-                        height: 400px;
-                    }
-
-                    .main-page-content {
-                        height: 500vh;
-                    }
                 }
 
 
@@ -601,25 +593,34 @@ footer .admin-info {
     justify-content: space-evenly;  
   }
   .panels-container{
-    margin-top: 10px;
+    height: 60vh;
+    margin: 10px 0 10px 0;
     width: 95%;
-    background-color: #505050;
+    background-color: #747272;
   }
-  .panels-container2{
+  .container-icons{
     margin-top: 10px;
+    margin-bottom: 10px;
     text-align: center;
-    background-color: #505050;
+    background-color: #747272;
     width: 30%;
   }
+
   .right-container{
     flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;  
   }
   .right-upper{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
   }
+  .right-below{
+    display: flex;
+    align-items: center;
+  }
+
   .titles-panel{
     margin-top: 10px;
     color: #ED4901;
@@ -630,3 +631,28 @@ footer .admin-info {
     color: #f2f2f2;
     font-weight: bold;
   }
+
+
+
+  /* ::: INFO PAGE SECTION ::: */
+  .info-body::before{
+    background-image: url('../../images/lamp2.jpg');
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    opacity: 0.7;
+    z-index: -1;
+    filter: brightness(70%) contrast(120%);
+  }
+
+  .container-info{
+    min-height: 100vh;
+  }
+

@@ -1,4 +1,4 @@
-{% extends "index2.html" %}
+{% extends "index.html" %}
 
 {% load static %}
 
@@ -6,8 +6,13 @@
 <title>Regulations</title>
 {% endblock %}
 
+{% block css %}
+    <link rel="stylesheet" href=" {% static 'Net_Metering/css/regulations.css' %}"/>
+{% endblock %}
+
 {% block script %}
-    <script src="{% static 'Net_Metering/javascript/script.js' %}" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" ></script>
+<script src="{% static 'Net_Metering/javascript/chart.js' %}" defer></script>
 {% endblock %}
 
 {% block menu_list %}
@@ -21,162 +26,80 @@
 {% block content %}
 
     <div class="regulations-page-content">
+        <div class="spacer-before-main-content">
 
-        <section class="section-before-calculator">
-            <table class="table-title">
-                    <tr class="row-in-table-title">
-                        <td class="icon-calculator">
-                           <i class=" fa fa-calculator" aria-hidden="true"  ></i>
-                        </td>
-                        <th class="calc-title">
-                            <h3>Υπολογιστής Απόδοσης - Απόσβεσης</h3>
-                        </th>
-                    </tr>
-            </table>
+        </div>
+      
+        <section class="flex-section-regulations">
 
-            <article class="calculator-article">
-                <div class="padding-article">
-                    Ο υπολογιστής απόδοσης οικιακού φωτοβολταϊκού συστήματος αυτοπαραγωγής με ενεργειακό συμψηφισμό
-                    (Net Metering) σας βοηθάει να υπολογίσετε το εκτιμώμενο χρόνο απόσβασης της επένδυσης σας,
-                    όπως και τα οικονομικά οφέλη βάσει το καταναλωτικό σας προφίλ.
+            <div class="regulations-left-column">
+              
+            </div>
+
+            <div class="regulations-middle-column">
+                
+                <div class="carousel-middle-section">
+                    <div class="spacer-in-main-content">
+                       <h2>Επιλέξτε μία κατηγορία</h2> 
+                    </div>
+
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Αυτοπαραγωγή με ενεργειακό συμψηφισμό (net-metering)
+                            </button>
+                          </h2>
+                          <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                              <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                          </div>
+                        </div>
+                        <div class="accordion-item">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Νόμοι για τα Φωτοβολταϊκά Συστήματα
+                            </button>
+                          </h2>
+                          <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                              <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                          </div>
+                        </div>
+                        <div class="accordion-item">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Υπουργικές Αποφάσεις για τα Φωτοβολταϊκά
+                            </button>
+                          </h2>
+                          <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                              <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
                 </div>
-            </article>
+            </div>
+
+            <div class="regulations-right-column">
+                
+            </div>
 
         </section>
 
-        <div class="spacer-in-main-content"><h2>Συμπληρώστε τα πεδία</h2></div>
+        <div class="spacer-after-main-content">
 
-        <!-- ::: CALCULATOR FORM ::: -->
-        <form method="POST" class="my-form-control" name="calculatorForm" onsubmit="validateForm()">
-            {% csrf_token %}
-
-            <fieldset class="calculator-fieldset">
-                    <!-- PANEL 1 -->
-                    <div class="panel">
-
-                        <div class="title-panel">
-                            <span class="number"> 1 </span>
-                            <h4>Τοποθεσία</h4>
-                        </div>
-
-                            <div class="option-selector-margin">
-                                <p>{{ form1.select_district.label_tag }}</p>
-                                <p  title="Παρακαλούμε, επιλέξτε Περιφέρεια εγκατάστασης">{{ form1.select_district }}</p>
-                                    <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος">
-                                        <input type="hidden" name="phase_load" id="phase_load" required>
-                                            {{ form1.select_phase }}
-                                        <i class="fas fa-question-circle" id="phase-load-info" title="Συμβουλευτείτε το λογαριασμό παρόχου ρεύματος:
--> Μονοφασική παροχή εάν η συμφωνημένη ισχύς είναι: 8-12kVΑ!
--> Τριφασική παροχή εάν η συμφωνημένη ισχύς είναι: > 15 kVΑ!
-                                            "></i>
-                                    </div>
-                            </div>
-                    </div>
-
-                    <!-- PANEL 2 -->
-                    <!-- Here you select the annual consumption of your house in kWh -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 2 </span>
-                            <h4>Κατανάλωση</h4>
-                        </div>
-
-                                    <div class="option-selector-margin" >
-                                        <p>{{ form2.select_kwh.label_tag }}</p>
-                                        <p title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">{{ form2.select_kwh }}
-                                            <i class="fas fa-question-circle" id="annual-consumption-info" title="Συμβουλευτείτε το λογαριασμό παρόχου ρεύματος"></i>
-                                        </p>
-                                         </div>
-
-                    </div>
-
-                    <!-- PANEL 3 -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 3 </span>
-                            <h4>Προφίλ Χρήσης</h4>
-                        </div>
-                        <div class="option-selector-margin" title="Πότε εντοπίζετε τις μεγαλύτερες ανάγκες σας για οικιακό ρεύμα;">
-                            <label>Επιλέξτε προφίλ:</label>
-
-                            <div class="form-check" >
-                                <input type="radio" class="form-check-input" id="day-power" name="power_option" value="day-power" checked>
-                                <label class="form-check-label" for="day-power">Ημερήσιο</label>
-                            </div>
-
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input option2" id="night-power" name="power_option" value="night-power">
-                                <label class="form-check-label" for="night-power">Νυχτερινό</label>
-                            </div> 
-
-                        </div>
-                    </div>
-
-                    <!-- PANEL 4 -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 4 </span>
-                            <h4>Aποθήκευση</h4>
-                        </div>
-                            <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
-                                 <label>Επιλέξτε:</label>
-                                    
-
-                                        <div class="form-check" >
-                                          <input type="radio" class="form-check-input" id="radio_option1" name="radio_option" value="without storage" checked>
-                                          <label class="form-check-label" for="radio_option1">Xωρίς</label>
-                                        </div>
-
-                                        <div class="form-check">
-                                          <input type="radio" class="form-check-input option2" id="radio_option2" name="radio_option" value="with storage">
-                                          <label class="form-check-label" for="radio_option2">Με</label>
-
-                                                  <div class="hidden-storage">
-                                                    <label for="storage_kw">Επιθυμητή ισχύς μπαταρίας (σε kWh):</label>
-                                                    <input type="number" class="form-control" id="storage_kw" name="storage_kw">
-                                                  </div>
-
-                                        </div>
-                      
-                            </div>
-                    </div>
-
-                    <!-- PANEL 5 -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 5 </span>
-                            <h4>Ισχύς (KWp)</h4>
-                        </div>
-
-                        <div class="option-selector-margin">
-                            <div class="slide-container" title="Παρακαλούμε, επιλέξτε παροχή και ύστερα επιθυμητή ισχύς φωτοβολταϊκού σε kWp">
-                                <p><label for="myRangeSlider">Επιλέξτε:</label></p>
-                                <input type="range" min="0" max="25" step="1" value="0" id="myRangeSlider" name="myRangeSlider" required>
-                                <p>Τιμή: <span id="slider-value"></span></p>
-
-                            </div>
-                        </div>
-                    </div>
-
-            </fieldset>
-
-            <fieldset class="name-form-container">
-                <div class="three-form-container">
-                    {% for field in form %}
-                        <label for="{{ field.name }}">{{ field.label }}</label><br>
-                        {{ field }}<br><br>
-                     {% endfor %}
-                </div>
-
-            </fieldset>
-
-            <div class="my-submit-form">
-                <button class="form-submit-button" type="reset" id="resetBtn">Διόρθωση</button>
-                <button class="form-submit-button" type="submit" id="submitBtn">Υποβολή Στοιχείων</button>
-            </div>
-
-        </form>
+        </div>
 
     </div>
+
+
+
+
+
 
 {% endblock %}

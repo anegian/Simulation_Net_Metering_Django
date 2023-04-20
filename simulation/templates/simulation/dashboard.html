@@ -1,4 +1,4 @@
-{% extends "index2.html" %}
+{% extends "index.html" %}
 
 {% load static %}
 
@@ -7,9 +7,8 @@
 {% endblock %}
 
 {% block script %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" ></script>
-    <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-    <script src="{% static 'Net_Metering/javascript/chart.js' %}" defer></script>
+<script src="{% static 'Net_Metering/javascript/chart.js' %}" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" ></script>
 {% endblock %}
 
 {% block menu_list %}
