@@ -14,17 +14,22 @@
      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="website icon" type="png" href="{% static 'images/panel_128x107.png'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"/>
-    <link rel="stylesheet" href=" {% static 'Net_Metering/css/styles.css' %}"/>
+
+    <link rel="stylesheet" href=" {% static 'Net_Metering/css/style.css' %}"/>
+    <link rel="stylesheet" href=" {% static 'Net_Metering/css/register.css' %}"/>
+
     {% block css %} 
 
     {% endblock %}
 
     <script src="{% static 'Net_Metering/javascript/scripts.js' %}" defer></script>
+    <script src="{% static 'Net_Metering/javascript/registration.js' %}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+     
 
     {% block script %}
-    
+
     {% endblock %}
 
 </head>
@@ -33,14 +38,98 @@
   
 
         <header class="main-header">
+               
             <div class="header-container-left">
                 <a href="{% url 'home' %}"><img class="sm-image" src="{% static 'images/panel.png'%}" alt="photo not found"></a>
                 <label class="logo"><a class="text-decoration-none" href="{% url 'home' %}">Simulation - <b style="color: #ed4901;">N</b>et Metering</a></label>
             </div>
             <div class="header-container-right">
-                <label class="signup"><a href="http://127.0.0.1:8000/signup/"><i class="fas fa-user"></i></a></label>
-                <label class="login"><a href="http://127.0.0.1:8000/login/"><i class="fas fa-sign-in"></i></a></label>
+                <label class="signup"><a href="{% url 'simulation:signup' %}" title="Νέα Εγγραφή"><i class="fas fa-user"></i></a></label>
+
+                <form method="POST" id="signup-form-test">
+                    {% csrf_token %}
+                  
+                    <section class="vh-100" style="background-color: #eee;">
+                          <div class="container h-100">
+                            <div class="row d-flex justify-content-center align-items-center h-100">
+                              <div class="col-lg-12 col-xl-11">
+                                <div class="card text-black" style="border-radius: 25px;">
+                                  <div class="card-body p-md-5">
+                                    <div class="row justify-content-center">
+                                      <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                        
+                                        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+                        
+                                        <form class="mx-1 mx-md-4">
+                        
+                                          <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                              <input type="text" id="form3Example1c" class="form-control" />
+                                              <label class="form-label" for="form3Example1c">Your Name</label>
+                                            </div>
+                                          </div>
+                        
+                                          <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                              <input type="email" id="form3Example3c" class="form-control" />
+                                              <label class="form-label" for="form3Example3c">Your Email</label>
+                                            </div>
+                                          </div>
+                        
+                                          <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                              <input type="password" id="form3Example4c" class="form-control" />
+                                              <label class="form-label" for="form3Example4c">Password</label>
+                                            </div>
+                                          </div>
+                        
+                                          <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                              <input type="password" id="form3Example4cd" class="form-control" />
+                                              <label class="form-label" for="form3Example4cd">Repeat your password</label>
+                                            </div>
+                                          </div>
+                        
+                                          <div class="form-check d-flex justify-content-center mb-5">
+                                            <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                                            <label class="form-check-label" for="form2Example3">
+                                              I agree all statements in <a href="#!">Terms of service</a>
+                                            </label>
+                                          </div>
+                        
+                                          <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                            <button type="button" class="btn btn-primary btn-lg">Register</button>
+                                          </div>
+                        
+                                        </form>
+                        
+                                      </div>
+                                      <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                        
+                                        <img src="{% static 'images/pv-sun.png' %}"
+                                          class="img-fluid" alt="No image loaded">
+                        
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </section>
+                  
+                  </form>
+
+                <label class="login"><a title="Σύνδεση" data-toggle="modal" data-target="#loginModal">
+                    <i class="fas fa-sign-in"></i></a></label>
+                  
+               
             </div>
+
         </header>
 
         <nav class="second-navbar">
@@ -89,7 +178,6 @@
             {% endblock %}
         </div>
             
-
 <footer class="footer">
     <div class="other-links">
         <a href="https://linkedin.com/in/anestis-giannakosian-880707220"><i class="fab fa-linkedin-in"></i> </a>

@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http.response import Http404, HttpResponse
+from django.http import JsonResponse
 from .forms import *
 from .models import *
 
@@ -9,18 +10,11 @@ from .models import *
 # App level
 
 def regulations(request):     # simulation/templates/regulations.html
-
-    if request.method == 'POST':
-        # changes the name of variable to regulations because form was fault --> shadow name 'form' out of scope
-        form = CustomerForm(request.POST)
-
-        if form.is_valid():
-            print(form.cleaned_data)
-            return redirect(reverse('simulation:regulations'))  # redirect to regulations page
-
-    else:
-        form = CustomerForm()
-    return render(request, 'simulation/regulations.html', context={'form': form})
+    try:
+        result = 'simulation/regulations.html'
+        return render(request, result)
+    except Http404:      # not use bare except
+        return Http404("404 Generic Error")
 
 
 def dashboard(request):      # simulation/templates/dashboard.html
@@ -57,7 +51,6 @@ def calculator(request):    # simulation/templates/calculator.html
         form2 = EnergyConsumptionForm()
     return render(request, 'simulation/calculator.html', context={'form1': form1, 'form2': form2})
 
-
 def info(request):           # simulation/templates/info.html
     try:
         result = 'simulation/info.html'
@@ -84,6 +77,7 @@ def submit_form(request):
         return render(request, 'simulation/calculator.html', {'form': form})
 
 
+# Getting results after submitting the form
 def calculatorResults(request):
     if request.method == 'POST':
         district = request.POST.get('district')
@@ -107,6 +101,7 @@ def calculatorResults(request):
         return render(request, 'calculator.html')
     pass;
 
+# Calculations with the results
 def calculate_total_cost(system, profile, usage, battery, inclination):
     # Calculate the total cost of the PV system
     # based on the user's inputs
@@ -148,4 +143,35 @@ def calculate_total_cost(system, profile, usage, battery, inclination):
         # Return the result
         pass;
 
+def signup(request):
+    try:
+        result = 'simulation/signup.html'
+        return render(request, result)
+    except Http404:      # not use bare except
+        return Http404("404 Generic Error")
+    
+def signupJsonResponse(request):
+    if request.method == 'POST':
+        # Get form data from request.POST
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        repeat_password = request.POST.get('repeat_password')
 
+        # Check if passwords match
+        if password != repeat_password:
+            return JsonResponse({'success': False, 'error': 'Passwords do not match'})
+
+        # Check if user with same email already exists
+        if MyUser.objects.filter(email=email).exists():
+            return JsonResponse({'success': False, 'error': 'User with this email already exists'})
+
+        # Create user account
+        user = MyUser.objects.create_user(username=email, email=email, password=password)
+        user.first_name = name
+        user.save()
+
+        # Return success response
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})

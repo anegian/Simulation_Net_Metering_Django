@@ -1,0 +1,156 @@
+{% load static %}
+
+{% block css %} 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" 
+integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://mdbcdn.b-cdn.net/wp-content/themes/mdbootstrap4/docs-app/css/dist/mdb5/standard/core.min.css">
+
+<link rel="canonical" href="https://getbootstrap.com/docs/4.3/components/modal/">
+
+<link rel="stylesheet" href="{% static 'Net_Metering/css/register.css' %}">
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'Net_Metering/javascript/registration.js' %}" defer></script>
+<script src="https://kit.fontawesome.com/17b73fabde.js" crossorigin="anonymous" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
+integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+{% endblock %}
+
+
+<div id="signup-main-content">
+
+<form method="POST" id="signup-form">
+  {% csrf_token %}
+
+  <section class="vh-100" style="background-color: #eee;">
+        <div class="container h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+              <div class="card text-black" style="border-radius: 25px;">
+                <div class="card-body p-md-5">
+                  <div class="row justify-content-center">
+                    <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+      
+                      <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Εγγραφή</p>
+      
+                      <form class="mx-1 mx-md-4">
+      
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="form3Example1c" class="form-control" />
+                            <label class="form-label" for="form3Example1c">Your Name</label>
+                          </div>
+                        </div>
+      
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="email" id="form3Example3c" class="form-control" />
+                            <label class="form-label" for="form3Example3c">Your Email</label>
+                          </div>
+                        </div>
+      
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="password" id="form3Example4c" class="form-control" />
+                            <label class="form-label" for="form3Example4c">Password</label>
+                          </div>
+                        </div>
+      
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="password" id="form3Example4cd" class="form-control" />
+                            <label class="form-label" for="form3Example4cd">Repeat your password</label>
+                          </div>
+                        </div>
+      
+                        <div class="form-check d-flex justify-content-center mb-5">
+                          <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                          <label class="form-check-label2" for="form2Example3">
+                            Αποδέχομαι τους <a id="termsOfUse" data-toggle="modal" data-target="#exampleModalLong"><strong>Όρους χρήσης</strong></a> και την Πολιτική απορρήτου 
+                          </label>
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalScrollable">
+              Launch demo modal
+            </button>
+            
+                          <!-- Modal -->
+                          <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  ...
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+
+                         </div>
+
+                  
+                                 
+                        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+
+                          <div class="d-flex-spacer">
+                            <a href="{% url 'home' %}" class="btn btn-primary btn-lg">Επιστροφη</a>
+                            
+                            <button type="button" class="btn btn-primary btn-lg">Δημιουργια</button>
+                        
+                         </div>
+                        
+                        </div>
+
+                      </form>
+      
+                    </div>
+                    <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+      
+                      <img src="{% static 'images/pv-sun.png' %}"
+                        class="img-fluid" alt="No image loaded">
+      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  </section>
+
+</form>
+
+</div>
+
+
+
+
+
+<footer class="footer">
+  <div class="other-links">
+      <a href="https://linkedin.com/in/anestis-giannakosian-880707220"><i class="fab fa-linkedin-in"></i> </a>
+      <a href="https://github.com/anegian"><i class="fab fa-github"></i></a>
+      <a href="https://youtube.com"><i class="fab fa-youtube"></i></a>
+  </div>
+
+      <span class="admin-info">
+          <i class="fas fa-copyright"> 2023 Anestis Giannakosian. All rights reserved</i>
+
+      </span>
+</footer>

@@ -1,0 +1,56 @@
+.accordion-title{
+    font-size: 22px;
+    font-weight: bold;
+    color: #f2f2f2;
+  }
+  .blurred {
+    background-color: hsla(0, 0%, 0%, 0.5); /* Set the background color to semi-transparent black */
+    filter: brightness(40%); /* Adjust the brightness of the background to 50% */
+  }
+  .spacer-before-main-content, .spacer-after-main-content{
+    background-color: #f2f2f2;
+    height: 50px;
+  }
+  .regulations-page-content{
+      background-color: none;
+      min-height: 100vh;
+  }
+  .flex-section-regulations{
+      display: flex;
+      min-height:inherit;
+  }
+  
+  .regulations-left-column{
+      background-color: #f2f2f2;
+      border-width: 3px;
+      flex-basis: 10%;
+  }
+  .regulations-middle-column{
+      background-color: #f2f2f2;
+      flex-basis: 80%;
+  }
+  .carousel-middle-section{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #2c3e50;
+  }
+  .regulations-right-column{
+      background-color: #f2f2f2;
+      flex-basis: 10%;
+  }
+  
+  .accordion-item{ 
+    background-color: #f2f2f2!important;
+  }
+  .accordion-button{ 
+    background-color: #747272!important;
+    font-size: 14px;
+    font-weight: bold;
+    color: #f2f2f2;
+  }
+  .accordion-button:hover{
+    color: #f19292;
+  }
+  .accordion-button:active{
+    color: #f19292;
+  }

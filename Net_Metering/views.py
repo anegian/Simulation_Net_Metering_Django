@@ -37,6 +37,7 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+
 def signup_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -50,6 +51,7 @@ def signup_view(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
 
 @login_required
 def change_password_view(request):
