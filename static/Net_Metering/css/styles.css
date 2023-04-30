@@ -17,6 +17,15 @@ html, body {
     filter: brightness(10%); /* Adjust the brightness of the background to 50% */
   }
 
+.error {
+border: 1px solid hsla(0, 100%, 50%, 0.5);
+
+}
+#error-message-panel, #error-message-panel5, #error-message-panel6{
+    display: none;
+    color: hsla(0, 100%, 50%, 0.5);
+}
+
 /* ::: Home Page Main image ::: */
 .home-body::before{
     background: url('../../images/solar-cell.jpg');
@@ -371,7 +380,7 @@ input[type="search"]:focus {
     display: none;
     }
 
-    #radio_option2:checked~.hidden-storage {
+    #with_storage:checked~.hidden-storage {
     display: block;
     }
 

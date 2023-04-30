@@ -33,7 +33,7 @@ class PlaceOfInstallationForm(forms.Form):
 
     PHASE_LOAD = [('phase_load', 'Παροχή'), ('single_phase', 'Μονοφασική'), ('3_phase', 'Τριφασική'), ]
 
-    select_district = forms.ChoiceField(choices=DISTRICT_CHOICES, label='Επιλέξτε Περιφέρεια και Παροχή',
+    select_district = forms.ChoiceField(choices=DISTRICT_CHOICES, label='Επιλέξτε Περιφέρεια',
                                         initial='district')
     select_phase = forms.ChoiceField(choices=PHASE_LOAD, initial='phase_load')
 
@@ -58,12 +58,14 @@ class PlaceOfInstallationForm(forms.Form):
 class EnergyConsumptionForm(forms.Form):
     KWh_CHOICES = [
         ('annual_kW', 'KWh σε ετήσια βάση'),
-        ('1500', '1500-2000'),
-        ('2000', '2000-2500'),
-        ('2500', '2500-3500'),
-        ('3000', '3500-4500'),
+        ('2', '2000-3000'),
+        ('3', '3100-4500'),
+        ('4', '4600-6100'),
+        ('5', '6200-7500'),
+        ('6', '7600-9000'),
+        ('10', '>9000'),
     ]
-    select_kwh = forms.ChoiceField(choices=KWh_CHOICES, label='Επιλέξτε KWh', initial = 'annual_kW')
+    select_kwh = forms.ChoiceField(choices=KWh_CHOICES, label='Επιλέξτε Παροχή και KWh', initial = 'annual_kW')
 
 
 class RegistrationForm(UserCreationForm):
