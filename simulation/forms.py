@@ -30,11 +30,14 @@ class PlaceOfInstallationForm(forms.Form):
         ('peloponnisos', 'Πελοπόννησος'),
         ('sterea_ellada', 'Στερεά Ελλάδα'),
     ]
-
-    PHASE_LOAD = [('phase_load', 'Παροχή'), ('single_phase', 'Μονοφασική'), ('3_phase', 'Τριφασική'), ]
-
     select_district = forms.ChoiceField(choices=DISTRICT_CHOICES, label='Επιλέξτε Περιφέρεια',
                                         initial='district')
+    
+
+class PhaseLoad(forms.Form):
+    PHASE_LOAD = [('phase_load', 'Παροχή'), ('single_phase', 'Μονοφασική'), ('3_phase', 'Τριφασική'), ]
+
+    
     select_phase = forms.ChoiceField(choices=PHASE_LOAD, initial='phase_load')
 
 

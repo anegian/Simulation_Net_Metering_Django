@@ -28,28 +28,43 @@ def calculator(request):    # simulation/templates/calculator.html
 
     if request.method == 'POST':
         # changes the name of variable to calculator_form because form was fault --> shadow name 'form' out of scope
-        form1 = PlaceOfInstallationForm(request.POST)
-        form2 = EnergyConsumptionForm(request.POST)
+        formDistrict = PlaceOfInstallationForm(request.POST)
+        formAnnualKwh = EnergyConsumptionForm(request.POST)
+        formPhaseLoad = PhaseLoad(request.POST)
         slider_value = request.POST.get('myRangeSlider')
-        radio_value = request.POST.get('radio_option')
+        radio_value = request.POST.get('storage')
         storage_kW = request.POST.get('storage_kw')
+        district_key = request.POST.get('select_district')
+        district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_key)
+        recommendedPVinKwp = request.POST.get('select_kwh')
+        # get the value of the energy consumption dict, where key is the kWh selected
+        annualKwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommendedPVinKwp) 
 
-        if form1.is_valid() and form2.is_valid():
-            print(f"District value: {form1.cleaned_data}")
-            print(f"kW of PV value: {slider_value}")
+
+        if formDistrict.is_valid() and formAnnualKwh.is_valid() and formPhaseLoad.is_valid():
+            print(f"District key: {district_key}")
+            print(f"District value: {district_value}")
+
+            print(f"AnnualKwh is: {annualKwh}")
+            print(f"Recommended Kwp is: {recommendedPVinKwp}" )
+
+            print(f"kWp of PV value: {slider_value}")
             print(f"Did User select Battery storage: {radio_value}")
-            print(f"kWh value: {form2.cleaned_data}")
-            if storage_kW:
+                        
+            if radio_value == 'with_storage':
                 print(f"Battery kWh value: {storage_kW}")
             else:
+                storage_kW = None
                 print('No storage selected')
 
         return redirect(reverse('simulation:calculator'))  # redirect to function calculator
 
     else:
-        form1 = PlaceOfInstallationForm()
-        form2 = EnergyConsumptionForm()
-    return render(request, 'simulation/calculator.html', context={'form1': form1, 'form2': form2})
+        formDistrict = PlaceOfInstallationForm()
+        formAnnualKwh = EnergyConsumptionForm()
+        formPhaseLoad = PhaseLoad()
+    return render(request, 'simulation/calculator.html', context={'formDistrict': formDistrict, 
+         'formAnnualKwh': formAnnualKwh,'formPhaseLoad': formPhaseLoad,})
 
 def info(request):           # simulation/templates/info.html
     try:

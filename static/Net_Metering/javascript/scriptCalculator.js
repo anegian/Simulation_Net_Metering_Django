@@ -13,6 +13,9 @@ const errorMessage3 = document.getElementById('error-message-panel6');
 const storageSelect = document.getElementById("with_storage");
 const storageKW = document.getElementById("storage_kw");
 const noStorage = document.getElementById("without_storage");
+// select all radio buttons with the class "form-check-input"
+const radioButtons = document.querySelectorAll('.form-check-input');
+
 
 // Set the initial value of the output element to 0
 slider.value = 0;
@@ -175,3 +178,13 @@ function validateForm() {
     }
     return true;
 };
+
+console.log("The District is: " + selectDistrict.value + "\nThe installation place is: " + slider.value);
+
+// loop through the radio buttons and add an event listener to each one
+radioButtons.forEach(radioButton => {
+    radioButton.addEventListener('click', () => {
+    // log the value of the selected radio button
+    console.log(radioButton.value);
+    });
+});
