@@ -11,6 +11,9 @@ html, body {
     width: 100%;
     height: 100%;
 }
+p{
+    margin-bottom: 8px;
+}
 
 .blurred {
     background-color: hsla(0, 0%, 0%, 0.5); /* Set the background color to semi-transparent black */
@@ -18,11 +21,12 @@ html, body {
   }
 
 .error {
-border: 1px solid hsla(0, 100%, 50%, 0.5);
+border: 2px solid hsla(0, 100%, 50%, 0.5);
 
 }
 #error-message-panel, #error-message-panel5, #error-message-panel6{
     display: none;
+    font-weight: bold;
     color: hsla(0, 100%, 50%, 0.5);
 }
 
@@ -349,6 +353,21 @@ input[type="search"]:focus {
     .option-selector-margin {
        margin: 20px 0 20px 10px;
     }
+    /* Set the position of the label to absolute, and move it to the right by 5 pixels */
+    #option-selector-margin-label {
+        left: 25px;
+    }
+    
+    #id_select_district{
+        height: 25px;
+    }
+    #id_select_phase{
+        height: 25px;
+    }
+    #id_select_kwh{
+        height: 25px;
+        margin-top: 5px;
+    }
     label{
         font-weight: bold;
     }
@@ -384,6 +403,10 @@ input[type="search"]:focus {
     display: block;
     }
 
+    #storage_kw.form-control{
+        height: 25px!important;
+        width: 100px;
+    }
     /* ::: Django forms.py form container::: */
     .name-form-container{
         display: flex;
@@ -404,7 +427,7 @@ input[type="search"]:focus {
         margin: 50px 0 0 15px;
     }
     .form-submit-button:hover{
-        background-color: blue;
+        background-color: #2c3e50;
         opacity: 0.8;
         transform: scale(1.1);
     }

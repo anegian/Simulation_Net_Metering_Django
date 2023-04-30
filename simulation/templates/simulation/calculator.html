@@ -66,7 +66,8 @@
                                 <input type="hidden" name="select_district" id="select_district" required>
                                 
                                 <p>{{ form1.select_district.label_tag }}</p>
-                                <p  title="Παρακαλούμε, επιλέξτε Περιφέρεια εγκατάστασης">{{ form1.select_district }}</p>
+                                <p  title="Παρακαλούμε, επιλέξτε Περιφέρεια εγκατάστασης" id="option-selector-margin-label" >
+                                    {{ form1.select_district }}</p>
                                 <span id="error-message-panel">Please enter a valid value</span>
                             </div>
                     </div>
@@ -201,7 +202,7 @@ title="Συμπληρώστε πρώτα το είδος της παροχής,
                                 <p><label for="myRangeSlider">Επιλέξτε:</label></p>
                                 <input type="range" min="0" max="25" step="1" value="0" id="myRangeSlider" name="myRangeSlider" required>
                                 <p>Τιμή: <span id="slider-value"></span></p>
-                                <span id="error-message-panel6">Please enter a value, instead of 0</span>
+                                <span id="error-message-panel6">Please select annual kWh & kWp.</span>
                             </div>
                             
                         </div>
