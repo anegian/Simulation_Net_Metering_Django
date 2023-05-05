@@ -64,9 +64,11 @@ def calculator(request):    # simulation/templates/calculator.html
                 placeOfInstallment = request.POST.get('installation')
                 inclinationPV = request.POST.get('inclination')
                 userPowerProfile = request.POST.get('power_option')
+                
+                recommendedPVinKwp = request.POST.get('select_kwh')
                 # get the value of the energy consumption dict, where key is the kWh selected
                 annualKwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommendedPVinKwp) 
-                recommendedPVinKwp = request.POST.get('select_kwh')
+                
                 PV_kWp = request.POST.get('myRangeSlider')
                 hasStorage = request.POST.get('storage')
                 storage_kW = request.POST.get('storage_kw')

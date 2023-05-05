@@ -107,3 +107,12 @@ new Chart("myChart3", {
     },
   }
 });
+
+// Get the p element with id placeOfInstallment
+const placeOfInstallmentElement = document.getElementById('placeOfInstallment');
+
+// Get the value of placeOfInstallment from the data-value attribute
+const placeOfInstallmentValue = placeOfInstallmentElement.dataset.value;
+
+// Set the inner HTML of the p element with the value of placeOfInstallment
+placeOfInstallmentElement.innerHTML = placeOfInstallmentValue;
