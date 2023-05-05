@@ -16,14 +16,38 @@ def regulations(request):     # simulation/templates/regulations.html
     except Http404:      # not use bare except
         return Http404("404 Generic Error")
 
-
-def dashboard(request):      # simulation/templates/dashboard.html
+def dashboard(request):   # simulation/templates/dashboard.html
     try:
-        result = 'simulation/dashboard.html'
-        return render(request, result)
-    except Http404:      # not use bare except
-        return Http404("404 Generic Error")
+        district_key = request.session.get('district_key', 'N/A')
+        district_value = request.session.get('district_value', 'N/A')
+        placeOfInstallment = request.session.get('placeOfInstallment', 'N/A')
+        inclinationPV = request.session.get('inclinationPV', 'N/A')
+        userPowerProfile = request.session.get('userPowerProfile', 'N/A')
+        recommendedPVinKwp = request.session.get('recommendedPVinKwp', 'N/A')
+        annualKwh = request.session.get('annualKwh', 'N/A')
+        PV_kWp = request.session.get('PV_kWp', 'N/A')
+        hasStorage = request.session.get('hasStorage', 'N/A')
+        storage_kW = request.session.get('storage_kW', 'N/A')
+        
+        context = {
+        'district_key': district_key,
+        'district_value': district_value,
+        'placeOfInstallment': placeOfInstallment,
+        'inclinationPV': inclinationPV,
+        'userPowerProfile': userPowerProfile,
+        'recommendedPVinKwp': recommendedPVinKwp,
+        'annualKwh': annualKwh,
+        'PV_kWp': PV_kWp,
+        'hasStorage': hasStorage,
+        'storage_kW': storage_kW,
+        }
 
+        result = 'simulation/dashboard.html'
+        return render(request, result, context)
+
+    except Http404:
+        return Http404("404 Generic Error")
+    
 def calculator(request):    # simulation/templates/calculator.html
 
     if request.method == 'POST':
@@ -31,33 +55,54 @@ def calculator(request):    # simulation/templates/calculator.html
         formDistrict = PlaceOfInstallationForm(request.POST)
         formAnnualKwh = EnergyConsumptionForm(request.POST)
         formPhaseLoad = PhaseLoad(request.POST)
-        slider_value = request.POST.get('myRangeSlider')
-        radio_value = request.POST.get('storage')
-        storage_kW = request.POST.get('storage_kw')
-        district_key = request.POST.get('select_district')
-        district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_key)
-        recommendedPVinKwp = request.POST.get('select_kwh')
-        # get the value of the energy consumption dict, where key is the kWh selected
-        annualKwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommendedPVinKwp) 
-
-
+        
         if formDistrict.is_valid() and formAnnualKwh.is_valid() and formPhaseLoad.is_valid():
-            print(f"District key: {district_key}")
-            print(f"District value: {district_value}")
+            try:
+                # initialization of variables
+                district_key = request.POST.get('select_district')
+                district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_key)
+                placeOfInstallment = request.POST.get('installation')
+                inclinationPV = request.POST.get('inclination')
+                userPowerProfile = request.POST.get('power_option')
+                # get the value of the energy consumption dict, where key is the kWh selected
+                annualKwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommendedPVinKwp) 
+                recommendedPVinKwp = request.POST.get('select_kwh')
+                PV_kWp = request.POST.get('myRangeSlider')
+                hasStorage = request.POST.get('storage')
+                storage_kW = request.POST.get('storage_kw')
 
-            print(f"AnnualKwh is: {annualKwh}")
-            print(f"Recommended Kwp is: {recommendedPVinKwp}" )
+                # print the variables to check
+                print(f"District key: {district_key}")
+                print(f"District value: {district_value}")
+                print(f"AnnualKwh is: {annualKwh}")
+                print(f"Recommended Kwp is: {recommendedPVinKwp}" )
+                print(f"Place of installment is: {placeOfInstallment}")
+                print(f"Degrees of PV inclination: {inclinationPV}" )
+                print(f"Users prefer to use: {userPowerProfile}" )
+                print(f"kWp of PV value: {PV_kWp}")
+                print(f"Did User select Battery storage: {hasStorage}")
 
-            print(f"kWp of PV value: {slider_value}")
-            print(f"Did User select Battery storage: {radio_value}")
-                        
-            if radio_value == 'with_storage':
-                print(f"Battery kWh value: {storage_kW}")
-            else:
-                storage_kW = None
-                print('No storage selected')
+                if hasStorage == 'with_storage':
+                    print(f"Battery kWh value: {storage_kW}")
+                else:
+                    storage_kW = None
+                    print('No storage selected')
+            except KeyError:
+                # Handle the case where an invalid key is provided
+                return HttpResponse('Invalid request parameters')
 
-        return redirect(reverse('simulation:calculator'))  # redirect to function calculator
+            request.session['district_key'] = district_key
+            request.session['district_value'] = district_value
+            request.session['placeOfInstallment'] = placeOfInstallment
+            request.session['inclinationPV'] = inclinationPV
+            request.session['userPowerProfile'] = userPowerProfile
+            request.session['recommendedPVinKwp'] = recommendedPVinKwp
+            request.session['annualKwh'] = annualKwh
+            request.session['PV_kWp'] = PV_kWp
+            request.session['hasStorage'] = hasStorage
+            request.session['storage_kW'] = storage_kW
+
+        return redirect(reverse('simulation:dashboard'))  # redirect to function calculator
 
     else:
         formDistrict = PlaceOfInstallationForm()
@@ -110,7 +155,17 @@ def calculatorResults(request):
         npv = calculate_npv(total_profit, total_cost)
         roi = calculate_roi(payoff, total_cost)
         lcoe = calculate_lcoe(total_cost, production, usage)
-
+        
+        request.session['district_key'] = district_key
+        request.session['district_value'] = district_value
+        request.session['placeOfInstallment'] = placeOfInstallment
+        request.session['inclinationPV'] = inclinationPV
+        request.session['userPowerProfile'] = userPowerProfile
+        request.session['recommendedPVinKwp'] = recommendedPVinKwp
+        request.session['PV_kWp'] = PV_kWp
+        request.session['hasStorage'] = hasStorage
+        request.session['storage_kW'] = storage_kW
+        
         return render(request, 'dashboard.html', {'total_cost': total_cost, 'payoff': payoff, 'production': production, 'total_profit': total_profit, 'npv': npv, 'roi': roi, 'lcoe': lcoe})
     else:
         return render(request, 'calculator.html')
