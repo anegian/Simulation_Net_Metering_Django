@@ -22,7 +22,9 @@ def dashboard(request):   # simulation/templates/dashboard.html
         district_value = request.session.get('district_value', 'N/A')
         placeOfInstallment = request.session.get('placeOfInstallment', 'N/A')
         inclinationPV = request.session.get('inclinationPV', 'N/A')
+        azimuthValue = request.session.get('azimuthValue', 'N/A')
         userPowerProfile = request.session.get('userPowerProfile', 'N/A')
+        phaseLoad = request.session.get('phaseLoad', 'N/A')
         recommendedPVinKwp = request.session.get('recommendedPVinKwp', 'N/A')
         annualKwh = request.session.get('annualKwh', 'N/A')
         PV_kWp = request.session.get('PV_kWp', 'N/A')
@@ -33,8 +35,10 @@ def dashboard(request):   # simulation/templates/dashboard.html
         'district_key': district_key,
         'district_value': district_value,
         'placeOfInstallment': placeOfInstallment,
+        'azimuthValue': azimuthValue,
         'inclinationPV': inclinationPV,
         'userPowerProfile': userPowerProfile,
+        'phaseLoad':phaseLoad,
         'recommendedPVinKwp': recommendedPVinKwp,
         'annualKwh': annualKwh,
         'PV_kWp': PV_kWp,
@@ -62,9 +66,11 @@ def calculator(request):    # simulation/templates/calculator.html
                 district_key = request.POST.get('select_district')
                 district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_key)
                 placeOfInstallment = request.POST.get('installation')
+                azimuthValue = request.POST.get('azimuth')
                 inclinationPV = request.POST.get('inclination')
                 userPowerProfile = request.POST.get('power_option')
-                
+
+                phaseLoad = request.POST.get('select_phase')
                 recommendedPVinKwp = request.POST.get('select_kwh')
                 # get the value of the energy consumption dict, where key is the kWh selected
                 annualKwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommendedPVinKwp) 
@@ -76,9 +82,11 @@ def calculator(request):    # simulation/templates/calculator.html
                 # print the variables to check
                 print(f"District key: {district_key}")
                 print(f"District value: {district_value}")
+                print(f"The selected phase load is: {phaseLoad}")
                 print(f"AnnualKwh is: {annualKwh}")
                 print(f"Recommended Kwp is: {recommendedPVinKwp}" )
                 print(f"Place of installment is: {placeOfInstallment}")
+                print(f"Azimuth of PV: {azimuthValue}")
                 print(f"Degrees of PV inclination: {inclinationPV}" )
                 print(f"Users prefer to use: {userPowerProfile}" )
                 print(f"kWp of PV value: {PV_kWp}")
