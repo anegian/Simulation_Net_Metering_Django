@@ -686,6 +686,26 @@ footer .admin-info {
     color: #f2f2f2;
     font-weight: bold;
   }
+  .go-back-button{
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #272A2A;
+  }
+  #change-data-button{
+    height: 40px;
+    width: 260px;
+    background-color: coral;
+  }
+  #change-data-button a i, #change-data-button a{
+    margin: 0 10px 0 10px;
+    text-decoration: none;
+    color: #2c3e50;
+    font-size: 20px;
+    font-weight: normal;
+    cursor: pointer;
+  }
 
 
 
