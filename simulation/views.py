@@ -16,21 +16,30 @@ def regulations(request):     # simulation/templates/regulations.html
     except Http404:      # not use bare except
         return Http404("404 Generic Error")
 
-def dashboard(request):   # simulation/templates/dashboard.html
+def dashboardResults(request):   # simulation/templates/dashboard.html
     try:
-        district_key = request.session.get('district_key', 'N/A')
+        district_key = int(request.session.get('district_key', 'N/A'))
         district_value = request.session.get('district_value', 'N/A')
         placeOfInstallment = request.session.get('placeOfInstallment', 'N/A')
         inclinationPV = request.session.get('inclinationPV', 'N/A')
         azimuthValue = request.session.get('azimuthValue', 'N/A')
         userPowerProfile = request.session.get('userPowerProfile', 'N/A')
         phaseLoad = request.session.get('phaseLoad', 'N/A')
+        phaseLoadkVA = request.session.get('phaseLoadkVA', 'N/A')
         recommendedPVinKwp = request.session.get('recommendedPVinKwp', 'N/A')
-        annualKwh = request.session.get('annualKwh', 'N/A')
-        PV_kWp = request.session.get('PV_kWp', 'N/A')
+        annualKwh = int(request.session.get('annualKwh', 'N/A'))
+        PV_kWp = int(request.session.get('PV_kWp', 'N/A'))
+        averageAnnualProduction = district_key * PV_kWp
         hasStorage = request.session.get('hasStorage', 'N/A')
-        storage_kW = request.session.get('storage_kW', 'N/A')
-        
+        storage_kW = int(request.session.get('storage_kW', 'N/A'))
+        batteryCost = storage_kW * 700
+
+           
+        totalInvestment = calculateTotalInvestment(PV_kWp, batteryCost)
+        averageAnnualSavings, profitPercent, totalAnnualCost, otherEnergyCharges = calculateAnnualSavings(annualKwh, phaseLoadkVA, batteryCost, userPowerProfile, averageAnnualProduction)
+        payBackPeriod = calculatePayBackPeriod(totalInvestment, averageAnnualSavings)
+
+        # dictionary with rendered variables
         context = {
         'district_key': district_key,
         'district_value': district_value,
@@ -38,27 +47,36 @@ def dashboard(request):   # simulation/templates/dashboard.html
         'azimuthValue': azimuthValue,
         'inclinationPV': inclinationPV,
         'userPowerProfile': userPowerProfile,
-        'phaseLoad':phaseLoad,
+        'phaseLoad': phaseLoad,
+        'phaseLoadkVA': phaseLoadkVA,
         'recommendedPVinKwp': recommendedPVinKwp,
         'annualKwh': annualKwh,
         'PV_kWp': PV_kWp,
         'hasStorage': hasStorage,
         'storage_kW': storage_kW,
+        'totalInvestment': totalInvestment,
+        'payBackPeriod': payBackPeriod,
+        'averageAnnualSavings': averageAnnualSavings,
+        'profitPercent': profitPercent,
+        'totalAnnualCost': totalAnnualCost,
+        'otherEnergyCharges': otherEnergyCharges,
         }
 
         result = 'simulation/dashboard.html'
+        print('Total Investment:', totalInvestment,"euro", '& Περίοδος Απόσβεσης:', payBackPeriod, "Ετήσιο κόστος ρεύματος: ", totalAnnualCost, "& ετήσια μείωση: ", averageAnnualSavings, "Ρυθμιζόμενες χρεώσεις: ", otherEnergyCharges, )  # Add this line for debugging
         return render(request, result, context)
 
     except Http404:
         return Http404("404 Generic Error")
     
-def calculator(request):    # simulation/templates/calculator.html
+def calculatorFormsOptions(request):    # simulation/templates/calculator.html
 
     if request.method == 'POST':
         # changes the name of variable to calculator_form because form was fault --> shadow name 'form' out of scope
         formDistrict = PlaceOfInstallationForm(request.POST)
         formAnnualKwh = EnergyConsumptionForm(request.POST)
         formPhaseLoad = PhaseLoad(request.POST)
+        
         
         if formDistrict.is_valid() and formAnnualKwh.is_valid() and formPhaseLoad.is_valid():
             try:
@@ -71,6 +89,12 @@ def calculator(request):    # simulation/templates/calculator.html
                 userPowerProfile = request.POST.get('power_option')
 
                 phaseLoad = request.POST.get('select_phase')
+
+                if phaseLoad == "single_phase":
+                    phaseLoadkVA = 8
+                else:
+                    phaseLoadkVA = 25
+
                 recommendedPVinKwp = request.POST.get('select_kwh')
                 # get the value of the energy consumption dict, where key is the kWh selected
                 annualKwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommendedPVinKwp) 
@@ -83,6 +107,7 @@ def calculator(request):    # simulation/templates/calculator.html
                 print(f"District key: {district_key}")
                 print(f"District value: {district_value}")
                 print(f"The selected phase load is: {phaseLoad}")
+                print(f"Agreed kVA is: {phaseLoadkVA}")
                 print(f"AnnualKwh is: {annualKwh}")
                 print(f"Recommended Kwp is: {recommendedPVinKwp}" )
                 print(f"Place of installment is: {placeOfInstallment}")
@@ -95,7 +120,7 @@ def calculator(request):    # simulation/templates/calculator.html
                 if hasStorage == 'with_storage':
                     print(f"Battery kWh value: {storage_kW}")
                 else:
-                    storage_kW = None
+                    storage_kW = 0
                     print('No storage selected')
             except KeyError:
                 # Handle the case where an invalid key is provided
@@ -111,6 +136,7 @@ def calculator(request):    # simulation/templates/calculator.html
             request.session['PV_kWp'] = PV_kWp
             request.session['hasStorage'] = hasStorage
             request.session['storage_kW'] = storage_kW
+            request.session['phaseLoadkVA'] = phaseLoadkVA
 
         return redirect(reverse('simulation:dashboard'))  # redirect to function calculator
 
@@ -121,107 +147,92 @@ def calculator(request):    # simulation/templates/calculator.html
     return render(request, 'simulation/calculator.html', context={'formDistrict': formDistrict, 
          'formAnnualKwh': formAnnualKwh,'formPhaseLoad': formPhaseLoad,})
 
-def info(request):           # simulation/templates/info.html
-    try:
-        result = 'simulation/info.html'
-        return render(request, result)
-    except Http404:      # not use bare except
-        return Http404("404 Generic Error")
 
-# FUNCTION FOR THE CALCULATOR FORM SUBMIT
-def submit_form(request):
+# Calculation functions
 
-    if request.method == 'POST':
-        form = CustomerForm(request.POST)
-        if form.is_valid():
-            # process the form data
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            # perform any necessary actions with the form data
-            return HttpResponse('Form submitted successfully')
-        else:
-            # handle form errors
-            return HttpResponse('There was an error in the form')
+# Calculate total investment
+def calculateTotalInvestment(PV_kWp, batteryCost):
+    PvCost = PV_kWp * 1500
+    installationCost = 400
+    
+    return PvCost + installationCost + batteryCost
+
+# Calculate annual savings and percentage
+def calculateAnnualSavings(annualKwh, phaseLoadkVA, batteryCost, userPowerProfile, averageAnnualProduction):
+    annualConsumption = annualKwh
+    energyCost = 0.19 # €/kWh today
+    annualkWhCost = annualConsumption * energyCost
+    # Ρυθμιζόμενες Χρεώσεις
+    otherEnergyCharges = (phaseLoadkVA * 0.52) + (annualKwh * 0.0213) + (phaseLoadkVA * 1) + (annualKwh * 0.00844) + (annualKwh*0.017) + (annualKwh*energyCost*0.06)
+    totalAnnualCost = annualkWhCost + otherEnergyCharges
+
+    # cases with battery storage and use profile to calculate self-consumption rate
+    if batteryCost == 0 and userPowerProfile == "day-power":
+        selfConsumptionRate = 0.75
+    elif batteryCost > 0 and userPowerProfile == "day-power":
+        selfConsumptionRate = 0.9
+    elif batteryCost == 0 and userPowerProfile == "night-power":
+        selfConsumptionRate = 0.5
+    elif batteryCost > 0 and userPowerProfile == "night-power":
+        selfConsumptionRate = 0.7
     else:
-        form = CustomerForm()
-        return render(request, 'simulation/calculator.html', {'form': form})
+        selfConsumptionRate = 0.5
 
-
-# Getting results after submitting the form
-def calculatorResults(request):
-    if request.method == 'POST':
-        district = request.POST.get('district')
-        phase = request.POST.get('phase')
-        profile = request.POST.get('profile')
-        usage = request.POST.get('usage')
-        battery = request.POST.get('battery')
-        inclination = request.POST.get('inclination')
-        system = PVSystem.objects.get(district=district, phase=phase)
-
-        total_cost = calculate_total_cost(system, profile, usage, battery, inclination)
-        payoff = calculate_payoff(total_cost, usage)
-        production = calculate_production(system, inclination)
-        total_profit = calculate_total_profit(production)
-        npv = calculate_npv(total_profit, total_cost)
-        roi = calculate_roi(payoff, total_cost)
-        lcoe = calculate_lcoe(total_cost, production, usage)
-        
-        request.session['district_key'] = district_key
-        request.session['district_value'] = district_value
-        request.session['placeOfInstallment'] = placeOfInstallment
-        request.session['inclinationPV'] = inclinationPV
-        request.session['userPowerProfile'] = userPowerProfile
-        request.session['recommendedPVinKwp'] = recommendedPVinKwp
-        request.session['PV_kWp'] = PV_kWp
-        request.session['hasStorage'] = hasStorage
-        request.session['storage_kW'] = storage_kW
-        
-        return render(request, 'dashboard.html', {'total_cost': total_cost, 'payoff': payoff, 'production': production, 'total_profit': total_profit, 'npv': npv, 'roi': roi, 'lcoe': lcoe})
+    # Μειωμένο Ποσό Ρυθμιζόμενων Χρεώσεων
+    discountOtherEnergyCharges = otherEnergyCharges * selfConsumptionRate
+    
+    if averageAnnualProduction >= annualKwh:
+        averageAnnualSavings = round( annualkWhCost + discountOtherEnergyCharges )
     else:
-        return render(request, 'calculator.html')
+        averageAnnualSavings = round( ( (annualkWhCost - (annualConsumption - averageAnnualProduction ) * energyCost) )  + discountOtherEnergyCharges)
+
+    profitPercent =  round(averageAnnualSavings / totalAnnualCost * 100, 1)
+
+    return averageAnnualSavings, profitPercent, totalAnnualCost, otherEnergyCharges
+
+# Payback Period
+def calculatePayBackPeriod(totalInvestment, averageAnnualSavings):    
+    payBackPeriod = totalInvestment / averageAnnualSavings
+    years = int(payBackPeriod)
+    months = round((payBackPeriod - years) * 12)
+
+    return f"{years} έτη & {months} μήνες"
+
+
+def calculate_production(system, inclination):
+    # Calculate the annual production of the PV system
+    # based on the system's specifications and the inclination
+    # Return the result
     pass;
 
-# Calculations with the results
-def calculate_total_cost(system, profile, usage, battery, inclination):
-    # Calculate the total cost of the PV system
-    # based on the user's inputs
+def calculate_total_profit(production):
+    # Calculate the total profit over 25 years
+    # based on the annual production
+    # Return the result
+    pass;
+
+def calculate_npv(total_profit, total_cost):
+    # Calculate the net present value
+    # based on the total profit and the total cost
+    # Return the result
+    pass;
+
+def calculate_roi(payoff, total_cost):
+    # Calculate the return on investment
+    # based on the payoff period and the total cost
+    # Return the result
+    pass;
+
+def calculate_lcoe(total_cost, production, usage):
+    # Calculate the levelized cost of electricity
+    # based on the total cost, the annual production, and the user's annual usage
     # Return the result
 
-    def calculate_payoff(total_cost, usage):
-    # Calculate the payoff period in years
-    # based on the total cost and the user's annual usage
-    # Return the result
-        pass;
-
-    def calculate_production(system, inclination):
-        # Calculate the annual production of the PV system
-        # based on the system's specifications and the inclination
-        # Return the result
-        pass;
-
-    def calculate_total_profit(production):
-        # Calculate the total profit over 25 years
-        # based on the annual production
-        # Return the result
-        pass;
-
-    def calculate_npv(total_profit, total_cost):
-        # Calculate the net present value
-        # based on the total profit and the total cost
-        # Return the result
-        pass;
-
-    def calculate_roi(payoff, total_cost):
-        # Calculate the return on investment
-        # based on the payoff period and the total cost
-        # Return the result
-        pass;
-
-    def calculate_lcoe(total_cost, production, usage):
-        # Calculate the levelized cost of electricity
-        # based on the total cost, the annual production, and the user's annual usage
-        # Return the result
-        pass;
+    # lifetimePv = 25
+    # discountRate = 0.05
+    # annualreservationCost = 400 * 12
+    # lcoe = ( totalInvestment + (annualreservationCost * lifetimePv) ) / discountRate
+    pass;
 
 def signup(request):
     try:
@@ -255,3 +266,31 @@ def signupJsonResponse(request):
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
+    
+
+def info(request):           # simulation/templates/info.html
+    try:
+        result = 'simulation/info.html'
+        return render(request, result)
+    except Http404:      # not use bare except
+        return Http404("404 Generic Error")
+
+# FUNCTION FOR THE CALCULATOR FORM SUBMIT
+def submit_form(request):
+
+    if request.method == 'POST':
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            # process the form data
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            # perform any necessary actions with the form data
+            return HttpResponse('Form submitted successfully')
+        else:
+            # handle form errors
+            return HttpResponse('There was an error in the form')
+    else:
+        form = CustomerForm()
+        return render(request, 'simulation/calculator.html', {'form': form})
+
+
