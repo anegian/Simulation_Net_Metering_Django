@@ -10,57 +10,65 @@ from .models import *
 # App level
 
 def dashboard_results(request):   # simulation/templates/dashboard.html
-    try:
-        district_key = int(request.session.get('district_key', 'N/A'))
-        district_value = request.session.get('district_value', 'N/A')
-        place_of_installment = request.session.get('place_of_installment', 'N/A')
-        inclination_PV = request.session.get('inclination_PV', 'N/A')
-        azimuth_value = request.session.get('azimuth_value', 'N/A')
-        userPower_profile = request.session.get('userPower_profile', 'N/A')
-        phase_load = request.session.get('phase_load', 'N/A')
-        phase_loadkVA = request.session.get('phase_loadkVA', 'N/A')
-        recommended_PV_in_Kwp = request.session.get('recommended_PV_in_Kwp', 'N/A')
-        annual_kwh = int(request.session.get('annual_kwh', 'N/A'))
-        PV_kWp = int(request.session.get('PV_kWp', 'N/A'))
-        average_annual_production = district_key * PV_kWp
-        has_storage = request.session.get('has_storage', 'N/A')
-        storage_kW = int(request.session.get('storage_kW', 'N/A'))
-        battery_cost = storage_kW * 700
+ 
+    if 'district_key' in request.session:
+        try:
+            district_key = int(request.session.get('district_key'))
+            district_value = request.session.get('district_value')
+            place_of_installment = request.session.get('place_of_installment')
+            inclination_PV = int(request.session.get('inclination_PV'))
+            azimuth_value = request.session.get('azimuth_value')
+            userPower_profile = request.session.get('userPower_profile')
+            phase_load = request.session.get('phase_load')
+            phase_loadkVA = int(request.session.get('phase_loadkVA'))
+            recommended_PV_in_Kwp = request.session.get('recommended_PV_in_Kwp')
+            annual_kwh = int(request.session.get('annual_kwh'))
+            PV_kWp = int(request.session.get('PV_kWp'))
+            average_annual_production = district_key * PV_kWp
+            has_storage = request.session.get('has_storage')
+            storage_kW = int(request.session.get('storage_kW'))
+            battery_cost = storage_kW * 700
 
-           
-        total_investment = calculate_total_investment(PV_kWp, battery_cost)
-        average_annual_savings, profitPercent, totalAnnualCost, otherEnergyCharges = calculate_annual_savings(annual_kwh, phase_loadkVA, battery_cost, userPower_profile, average_annual_production)
-        payback_period = calculate_payback_period(total_investment, average_annual_savings)
+            
+            total_investment = calculate_total_investment(PV_kWp, battery_cost)
+            average_annual_savings, profitPercent, totalAnnualCost, otherEnergyCharges = calculate_annual_savings(annual_kwh, phase_loadkVA, battery_cost, userPower_profile, average_annual_production)
+            payback_period = calculate_payback_period(total_investment, average_annual_savings)
 
-        # dictionary with rendered variables
-        context = {
-        'district_key': district_key,
-        'district_value': district_value,
-        'place_of_installment': place_of_installment,
-        'azimuth_value': azimuth_value,
-        'inclination_PV': inclination_PV,
-        'userPower_profile': userPower_profile,
-        'phase_load': phase_load,
-        'phase_loadkVA': phase_loadkVA,
-        'recommended_PV_in_Kwp': recommended_PV_in_Kwp,
-        'annual_kwh': annual_kwh,
-        'PV_kWp': PV_kWp,
-        'has_storage': has_storage,
-        'storage_kW': storage_kW,
-        'total_investment': total_investment,
-        'payback_period': payback_period,
-        'average_annual_savings': average_annual_savings,
-        'profitPercent': profitPercent,
-        'totalAnnualCost': totalAnnualCost,
-        'otherEnergyCharges': otherEnergyCharges,
-        }
+            # dictionary with rendered variables
+            context = {
+            'district_key': district_key,
+            'district_value': district_value,
+            'place_of_installment': place_of_installment,
+            'azimuth_value': azimuth_value,
+            'inclination_PV': inclination_PV,
+            'userPower_profile': userPower_profile,
+            'phase_load': phase_load,
+            'phase_loadkVA': phase_loadkVA,
+            'recommended_PV_in_Kwp': recommended_PV_in_Kwp,
+            'annual_kwh': annual_kwh,
+            'PV_kWp': PV_kWp,
+            'has_storage': has_storage,
+            'storage_kW': storage_kW,
+            'total_investment': total_investment,
+            'payback_period': payback_period,
+            'average_annual_savings': average_annual_savings,
+            'profitPercent': profitPercent,
+            'totalAnnualCost': totalAnnualCost,
+            'otherEnergyCharges': otherEnergyCharges,
+            }
 
-        result = 'simulation/dashboard.html'
-        print('Total Investment:', total_investment,"euro", '& Περίοδος Απόσβεσης:', payback_period, "Ετήσιο κόστος ρεύματος: ", totalAnnualCost, "& ετήσια μείωση: ", average_annual_savings, "Ρυθμιζόμενες χρεώσεις: ", otherEnergyCharges, )  # Add this line for debugging
-        return render(request, result, context)
+            result = 'simulation/dashboard.html'
+            print('Total Investment:', total_investment,"euro", '& Περίοδος Απόσβεσης:', payback_period, "Ετήσιο κόστος ρεύματος: ", totalAnnualCost, "& ετήσια μείωση: ", average_annual_savings, "Ρυθμιζόμενες χρεώσεις: ", otherEnergyCharges, )  # Add this line for debugging
+            return render(request, result, context)
+        except Http404:
+            return Http404("404 Generic Error")
+    else:
+        try:
+            result = 'simulation/dashboard.html'
+            return render(request, result)
+        except Http404:      # not use bare except
+            return Http404("404 Generic Error")
 
-    except Http404:
-        return Http404("404 Generic Error")
     
 def calculator_forms_choice(request):    # simulation/templates/calculator.html
 
@@ -90,7 +98,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
 
                 recommended_PV_in_Kwp = request.POST.get('select_kwh')
                 # get the value of the energy consumption dict, where key is the kWh selected
-                annual_kwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommended_PV_in_Kwp) 
+                annual_kwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommended_PV_in_Kwp)
                 
                 PV_kWp = request.POST.get('myRangeSlider')
                 has_storage = request.POST.get('storage')
@@ -120,7 +128,6 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 return HttpResponse('Invalid request parameters')
 
             request.session['district_key'] = district_key
-            request.session['district_value'] = district_value
             request.session['place_of_installment'] = place_of_installment
             request.session['inclination_PV'] = inclination_PV
             request.session['userPower_profile'] = userPower_profile

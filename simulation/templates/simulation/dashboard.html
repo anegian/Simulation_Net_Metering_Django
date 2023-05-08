@@ -36,7 +36,7 @@
                     trigger="hover"
                     style="width:120px;height:120px">
                 </lord-icon>
-                <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'-' }}">Σύνολο: {{total_investment|default:'-' }} €</p>
+                <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">Σύνολο: {{total_investment|default:'0' }} €</p>
               </div>
 
               <div class="container-icons">
@@ -47,7 +47,7 @@
                       trigger="hover"
                       style="width:100px;height:120px">
                   </lord-icon>
-                <p class="info-title"  id="paybackPeriod" data-value="{{ payback_period|default:'-' }}" >{{payback_period|default:'-'}}</p>
+                <p class="info-title"  id="paybackPeriod" data-value="{{ payback_period|default:'0' }}" >{{payback_period|default:'0 έτη'}}</p>
               </div>
 
               <div class="container-icons">
@@ -58,7 +58,7 @@
                       trigger="hover"
                       style="width:110px;height:120px">
                   </lord-icon>
-                <p class="info-title" id="profit" >{{average_annual_savings|default:'-'}} €/έτος   ({{profitPercent|default:'-'}}%)</p>
+                <p class="info-title" id="profit" >{{average_annual_savings|default:'0'}} €/έτος   ({{profitPercent|default:'0'}}%)</p>
               </div>
           
             </div>

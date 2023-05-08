@@ -63,9 +63,11 @@ class EnergyConsumptionForm(forms.Form):
         ('annual_kW', 'KWh σε ετήσια βάση'),
         ('2', '3000'),
         ('3', '4500'),
-        ('4', '6100'),
+        ('4', '6000'),
         ('5', '7500'),
         ('6', '9000'),
+        ('7', '10000'),
+        ('8', '11000'),
         ('10', '12000'),
     ]
     select_kwh = forms.ChoiceField(choices=KWh_CHOICES, label='Επιλέξτε Παροχή και KWh', initial = 'annual_kW')
