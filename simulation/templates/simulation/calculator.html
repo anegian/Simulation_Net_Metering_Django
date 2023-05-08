@@ -18,6 +18,7 @@
     <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
 {% endblock %}
 
+
 {% block content %}
 
     <div class="calculator-page-content">
@@ -49,214 +50,270 @@
         </div>
 
         <!-- ::: CALCULATOR FORM ::: -->
-        <form method="POST" class="my-form-control" id="calculatorForm" name="calculatorForm" onsubmit="validateForm()">
-            {% csrf_token %}
+        <div class="calculator-container">
 
-            <fieldset class="calculator-fieldset">
-                    <!-- PANEL 1 -->
-                    <!-- Here you select installation DISTRICT -->
-                    <div class="panel">
+            <div class="column-calculator-page"></div>
 
-                        <div class="title-panel">
-                            <span class="number"> 1 </span>
-                            <h4>Τοποθεσία</h4>
+            <form method="POST" class="my-form-control" id="calculatorForm" name="calculatorForm" onsubmit="validateForm()">
+                {% csrf_token %}
+
+                <fieldset class="calculator-fieldset">
+                        <!-- PANEL 1 -->
+                        <!-- Here you select installation DISTRICT -->
+                        <div class="panel">
+
+                            <div class="title-panel">
+                                <span class="number"> 1 </span>
+                                <h4>Τοποθεσία</h4>
+                            </div>
+
+                                <div class="option-selector-margin">
+                                    <input type="hidden" name="select_district" id="select_district" required>
+                                    
+                                    <p>{{ form_district.select_district.label_tag }}</p>
+                                    <p  title="Παρακαλούμε, επιλέξτε Περιφέρεια εγκατάστασης" id="option-selector-margin-label" >
+                                        {{ form_district.select_district }}</p>
+                                    <span id="error-message-panel">Please enter a valid value</span>
+                                </div>
                         </div>
+
+                        <!-- PANEL 2 -->
+                        <!-- Here you select installation place -->
+                        <div class="panel">
+                            <div class="title-panel">
+                                <span class="number"> 2 </span>
+                                <h4>Εγκατάσταση</h4>
+                            </div>
+                                <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
+                                    <label>Επιλέξτε:</label>
+                                        
+
+                                            <div class="form-check" >
+                                            <input type="radio" class="form-check-input" id="roof" name="installation" value="roof">
+                                            <label class="form-check-label" for="roof">Στέγη</label>
+                                            </div>
+
+                                            <div class="form-check">
+                                            <input type="radio" class="form-check-input option2" id="taratsa" name="installation" value="taratsa">
+                                            <label class="form-check-label" for="taratsa">Ταράτσα</label>
+                                            </div>
+                        
+                                </div>
+                        </div>
+
+                        <!-- PANEL 3 -->
+                        <!-- Here you select Azimuth -->
+                        <div class="panel">
+
+                            <div class="title-panel">
+
+                                <span class="number">3</span>
+
+                                <h4>Αζιμούθιο</h4>
+                            
+                            </div>
+                            <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κατεύθυνση του PV συστήματος">
+                                <label>Επιλέξτε:</label> 
+                            
+                                <div>
+                                    <img id="compass-photo" src="{% static 'images/compass4.png'%}" alt="photo not found" style="width: 110px;">
+                                </div>
+
+                                <div class="form-check">
+                                <input type="radio" class="form-check-input" id="west" name="azimuth" value="90">
+                                <label class="form-check-label" id="west-label" for="west"></label>
+                                </div>
+
+
+                                <div class="form-check">
+                                <input type="radio" class="form-check-input" id="southWest" name="azimuth" value="45">
+                                <label class="form-check-label" id="southWest-label" for="southWest"></label>
+                                </div>
+
+                                <div class="form-check south">
+                                <input type="radio" class="form-check-input" id="south" name="azimuth" value="0" checked>
+                                <label class="form-check-label" id="south-label" for="south"></label>
+                                </div>
+
+                                <div class="form-check">
+                                <input type="radio" class="form-check-input" id="southEast" name="azimuth" value="-45">
+                                <label class="form-check-label" id="southEast-label" for="southEast"></label>
+                                </div>
+                                
+                                <div class="form-check">
+                                <input type="radio" class="form-check-input" id="east" name="azimuth" value="-90">
+                                <label class="form-check-label" id="east-label" for="east"></label>
+
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <!-- PANEL 4 -->
+                        <!-- Here you select PV inclination -->
+                        <div class="panel">
+                            <div class="title-panel">
+                                <span class="number">4</span>
+                                <h4>Κλίση PV</h4>
+                            </div>
+                            <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κλίση του συστήματος PV">
+                                <label>Επιλέξτε:</label>
+                                <div class="form-check">
+                                <input type="radio" class="form-check-input" id="inclination0" name="inclination" value="0">
+                                <label class="form-check-label" for="inclination0">0&deg;</label>
+
+                                </div>
+                                <div class="form-check">
+                                <input type="radio" class="form-check-input" id="inclination15" name="inclination" value="15">
+                                <label class="form-check-label" for="inclination15">15&deg;</label>
+
+                                </div>
+                                <div class="form-check">
+                                <input type="radio" class="form-check-input" id="inclination30" name="inclination" value="30" checked>
+                                <label class="form-check-label" for="inclination30">30&deg;</label>
+
+                                </div>
+                                <div class="form-check">
+                                <input type="radio" class="form-check-input" id="inclination45" name="inclination" value="45">
+                                <label class="form-check-label" for="inclination45">45&deg;</label>
+
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PANEL 55 -->
+                        <!-- Here you select consumption profile -->
+                        <div class="panel">
+                            <div class="title-panel">
+                                <span class="number"> 6 </span>
+                                <h4>Προφίλ Χρήσης</h4>
+                            </div>
+                            <div class="option-selector-margin" title="Πότε εντοπίζετε τις μεγαλύτερες ανάγκες σας για οικιακό ρεύμα;">
+                                <label>Επιλέξτε προφίλ:</label>
+
+                                <div class="form-check" >
+                                    <input type="radio" class="form-check-input" id="day-power" name="power_option" value="day-power" checked>
+                                    <label class="form-check-label" for="day-power">Ημερήσιο</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input option2" id="night-power" name="power_option" value="night-power">
+                                    <label class="form-check-label" for="night-power">Νυχτερινό</label>
+                                </div> 
+
+                            </div>
+                        </div>
+
+                        <!-- PANEL 6 -->
+                        <!-- Here you select 1) Phase Load & 2) the annual consumption of your house in kWh-->
+                        <div class="panel">
+                            <div class="title-panel">
+                                <span class="number"> 6 </span>
+                                <h4>Κατανάλωση</h4>
+                            </div>
+
+                                        <div class="option-selector-margin" >
+
+                                            <p>{{ form_annual_kwh.select_kwh.label_tag }}</p>
+
+                                            <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος">
+                                            <input type="hidden" name="phase_load" id="phase_load" required>
+
+                                                    {{ form_phase_load.select_phase }}
+                                                    
+                                                <i class="fas fa-question-circle" id="phase-load-info" title="Συμβουλευτείτε το λογαριασμό παρόχου ρεύματος:
+        -> Μονοφασική παροχή εάν η συμφωνημένη ισχύς είναι: 8-12kVΑ!
+        -> Τριφασική παροχή εάν η συμφωνημένη ισχύς είναι: > 15 kVΑ!
+                                                    "></i>
+                                                    
+                                            </div>
+                                            
+
+                                            
+                                            <p title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">{{ form_annual_kwh.select_kwh }}
+                                                <i class="fas fa-question-circle" id="annual-consumption-info" 
+    title="Συμπληρώστε πρώτα το είδος της παροχής, 
+    Υπολογίστε κατά προσέγγιση την ετήσια κατανάλωση"></i>
+                                            </p>
+
+                                            <span id="error-message-panel5">Please enter a valid value</span>
+                                        
+                                        </div>
+
+                        </div>
+
+                        <!-- PANEL 7 -->
+                        <!-- Here you select the PV's kWp -->
+                        <div class="panel">
+                            <div class="title-panel">
+                                <span class="number"> 7 </span>
+                                <h4>Ισχύς (KWp)</h4>
+                            </div>
 
                             <div class="option-selector-margin">
-                                <input type="hidden" name="select_district" id="select_district" required>
+                                <div class="slide-container" title="Παρακαλούμε, επιλέξτε παροχή και ύστερα επιθυμητή ισχύς φωτοβολταϊκού σε kWp">
+                                    <p><label for="myRangeSlider">Επιλέξτε:</label></p>
+                                    <input type="range" min="0" max="25" step="1" value="0" id="myRangeSlider" name="myRangeSlider" required>
+                                    <p>Τιμή: <span id="slider-value"></span></p>
+                                    <span id="error-message-panel6">Please select annual kWh & kWp.</span>
+                                </div>
                                 
-                                <p>{{ formDistrict.select_district.label_tag }}</p>
-                                <p  title="Παρακαλούμε, επιλέξτε Περιφέρεια εγκατάστασης" id="option-selector-margin-label" >
-                                    {{ formDistrict.select_district }}</p>
-                                <span id="error-message-panel">Please enter a valid value</span>
-                            </div>
-                    </div>
-
-                     <!-- PANEL 2 -->
-                    <!-- Here you select installation place -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 2 </span>
-                            <h4>Εγκατάσταση</h4>
-                        </div>
-                            <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
-                                 <label>Επιλέξτε:</label>
-                                    
-
-                                        <div class="form-check" >
-                                          <input type="radio" class="form-check-input" id="roof" name="installation" value="roof">
-                                          <label class="form-check-label" for="roof">Στέγη</label>
-                                        </div>
-
-                                        <div class="form-check">
-                                          <input type="radio" class="form-check-input option2" id="taratsa" name="installation" value="taratsa">
-                                          <label class="form-check-label" for="taratsa">Ταράτσα</label>
-                                        </div>
-                      
-                            </div>
-                    </div>
-
-                    <!-- PANEL 3 -->
-                    <!-- Here you select PV inclination -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number">3</span>
-                            <h4>Κλίση PV</h4>
-                          </div>
-                          <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κλίση του συστήματος PV">
-                            <label>Επιλέξτε:</label>
-                            <div class="form-check">
-                              <input type="radio" class="form-check-input" id="inclination0" name="inclination" value="0">
-                              <label class="form-check-label" for="inclination0">0&deg;</label>
-
-                            </div>
-                            <div class="form-check">
-                              <input type="radio" class="form-check-input" id="inclination15" name="inclination" value="15">
-                              <label class="form-check-label" for="inclination15">15&deg;</label>
-
-                            </div>
-                            <div class="form-check">
-                              <input type="radio" class="form-check-input" id="inclination30" name="inclination" value="30">
-                              <label class="form-check-label" for="inclination30">30&deg;</label>
-
-                            </div>
-                            <div class="form-check">
-                              <input type="radio" class="form-check-input" id="inclination45" name="inclination" value="45">
-                              <label class="form-check-label" for="inclination45">45&deg;</label>
-
-                            </div>
-                          </div>
-                    </div>
-                      
-                    <!-- PANEL 4 -->
-                    <!-- Here you select consumption profile -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 4 </span>
-                            <h4>Προφίλ Χρήσης</h4>
-                        </div>
-                        <div class="option-selector-margin" title="Πότε εντοπίζετε τις μεγαλύτερες ανάγκες σας για οικιακό ρεύμα;">
-                            <label>Επιλέξτε προφίλ:</label>
-
-                            <div class="form-check" >
-                                <input type="radio" class="form-check-input" id="day-power" name="power_option" value="day-power" >
-                                <label class="form-check-label" for="day-power">Ημερήσιο</label>
-                            </div>
-
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input option2" id="night-power" name="power_option" value="night-power">
-                                <label class="form-check-label" for="night-power">Νυχτερινό</label>
-                            </div> 
-
-                        </div>
-                    </div>
-
-                    <!-- PANEL 5 -->
-                    <!-- Here you select 1) Phase Load & 2) the annual consumption of your house in kWh-->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 5 </span>
-                            <h4>Κατανάλωση</h4>
-                        </div>
-
-                                    <div class="option-selector-margin" >
-
-                                        <p>{{ formAnnualKwh.select_kwh.label_tag }}</p>
-
-                                        <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος">
-                                        <input type="hidden" name="phase_load" id="phase_load" required>
-
-                                                {{ formPhaseLoad.select_phase }}
-                                                
-                                            <i class="fas fa-question-circle" id="phase-load-info" title="Συμβουλευτείτε το λογαριασμό παρόχου ρεύματος:
-    -> Μονοφασική παροχή εάν η συμφωνημένη ισχύς είναι: 8-12kVΑ!
-    -> Τριφασική παροχή εάν η συμφωνημένη ισχύς είναι: > 15 kVΑ!
-                                                "></i>
-                                                
-                                        </div>
-                                        
-
-                                        
-                                        <p title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">{{ formAnnualKwh.select_kwh }}
-                                            <i class="fas fa-question-circle" id="annual-consumption-info" 
-title="Συμπληρώστε πρώτα το είδος της παροχής, 
-Υπολογίστε κατά προσέγγιση την ετήσια κατανάλωση"></i>
-                                        </p>
-
-                                        <span id="error-message-panel5">Please enter a valid value</span>
-                                    
-                                    </div>
-
-                    </div>
-
-                    <!-- PANEL 6 -->
-                    <!-- Here you select the PV's kWp -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 6 </span>
-                            <h4>Ισχύς (KWp)</h4>
-                        </div>
-
-                        <div class="option-selector-margin">
-                            <div class="slide-container" title="Παρακαλούμε, επιλέξτε παροχή και ύστερα επιθυμητή ισχύς φωτοβολταϊκού σε kWp">
-                                <p><label for="myRangeSlider">Επιλέξτε:</label></p>
-                                <input type="range" min="0" max="25" step="1" value="0" id="myRangeSlider" name="myRangeSlider" required>
-                                <p>Τιμή: <span id="slider-value"></span></p>
-                                <span id="error-message-panel6">Please select annual kWh & kWp.</span>
                             </div>
                             
                         </div>
-                        
-                    </div>
 
-                    <!-- PANEL 7 -->
-                    <!-- Here you select battery kwh -->
-                    <div class="panel">
-                        <div class="title-panel">
-                            <span class="number"> 7 </span>
-                            <h4>Aποθήκευση</h4>
-                        </div>
-                            <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
-                                 <label>Επιλέξτε:</label>
-                                    
-
-                                        <div class="form-check" >
-                                          <input type="radio" class="form-check-input" id="without_storage" name="storage" value="without_storage" checked>
-                                          <label class="form-check-label" for="without_storage">Xωρίς</label>
-                                        </div>
-
-                                        <div class="form-check">
-                                          <input type="radio" class="form-check-input option2" id="with_storage" name="storage" value="with_storage">
-                                          <label class="form-check-label" for="with_storage">Με</label>
-
-                                                  <div class="hidden-storage">
-                                                    <label for="storage_kw">Iσχύς μπαταρίας (σε kWh):</label>
-                                                    <input type="number" class="form-control" id="storage_kw" name="storage_kw">
-                                                  </div>
-
-                                        </div>
+                        <!-- PANEL 8 -->
+                        <!-- Here you select battery kwh -->
+                        <div class="panel">
+                            <div class="title-panel">
+                                <span class="number"> 8 </span>
+                                <h4>Aποθήκευση</h4>
                             </div>
+                                <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
+                                    <label>Επιλέξτε:</label>
+                                        
+
+                                            <div class="form-check" >
+                                            <input type="radio" class="form-check-input" id="without_storage" name="storage" value="without_storage" checked>
+                                            <label class="form-check-label" for="without_storage">Xωρίς</label>
+                                            </div>
+
+                                            <div class="form-check">
+                                            <input type="radio" class="form-check-input option2" id="with_storage" name="storage" value="with_storage">
+                                            <label class="form-check-label" for="with_storage">Με</label>
+
+                                                    <div class="hidden-storage">
+                                                        <label for="storage_kw">Iσχύς μπαταρίας (σε kWh):</label>
+                                                        <input type="number" class="form-control" id="storage_kw" name="storage_kw">
+                                                    </div>
+
+                                            </div>
+                                </div>
+                        </div>
+
+                </fieldset>
+
+                <fieldset class="name-form-container">
+                    <div class="three-form-container">
+                        {% for field in form %}
+                            <label for="{{ field.name }}">{{ field.label }}</label><br>
+                            {{ field }}<br><br>
+                        {% endfor %}
                     </div>
 
-            </fieldset>
+                </fieldset>
 
-            <fieldset class="name-form-container">
-                <div class="three-form-container">
-                    {% for field in form %}
-                        <label for="{{ field.name }}">{{ field.label }}</label><br>
-                        {{ field }}<br><br>
-                     {% endfor %}
+                <div class="my-submit-form">
+                    <button class="form-submit-button" type="reset" id="resetBtn">Διόρθωση</button>
+                    <button class="form-submit-button" type="submit" id="submitBtn">Υποβολή Στοιχείων</button>
                 </div>
 
-            </fieldset>
+            </form>
 
-            <div class="my-submit-form">
-                <button class="form-submit-button" type="reset" id="resetBtn">Διόρθωση</button>
-                <button class="form-submit-button" type="submit" id="submitBtn">Υποβολή Στοιχείων</button>
-            </div>
+            <div class="column-calculator-page"></div>
 
-        </form>
+        </div>
 
     </div>
+    
 
 {% endblock %}

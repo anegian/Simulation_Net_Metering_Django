@@ -22,8 +22,8 @@ p{
 
 .error {
 border: 2px solid hsla(0, 100%, 50%, 0.5);
-
 }
+
 #error-message-panel, #error-message-panel5, #error-message-panel6{
     display: none;
     font-weight: bold;
@@ -424,13 +424,28 @@ input[type="search"]:focus {
         border-width: 0.01px;
         color: #f2f2f2;
         font-weight: bold;
-        margin: 50px 0 0 15px;
+        margin: 20px 0 10px 15px;
     }
     .form-submit-button:hover{
         background-color: #2c3e50;
         opacity: 0.8;
         transform: scale(1.1);
     }
+      /* Positioning the radio buttons */
+    #east, #east-label { transform: translate(181px, -190px); }
+    #southEast, #southEast-label { transform: translate(164px, -121px); }
+    #south, #south-label { transform: translate(111px, -72px); }
+    #southWest, #southWest-label { transform: translate(60px, -68px); }
+    #west, #west-label { transform: translate(43px, -86px); }
+    #compass-photo { transform: translate(65px, -20px); }
+
+    .calculator-container{
+        display: flex
+    }
+    .column-calculator-page{
+        width: 200px;
+    }
+
 
  /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
 
@@ -587,6 +602,7 @@ input[type="search"]:focus {
 
 .other-links i:hover {
     color: #ed4901;
+    transform: scale3d(1.5, 1.5, 1.5);
 }
 
 .other-links {
@@ -641,8 +657,12 @@ footer .admin-info {
   .panels-container{
     height: 60vh;
     margin: 10px 0 10px 0;
-    width: 95%;
+    width:95%;
     background-color: #747272;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .container-icons{
     margin-top: 10px;
@@ -651,12 +671,20 @@ footer .admin-info {
     background-color: #747272;
     width: 30%;
   }
+  .container-icons-bottom{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: #747272;
+    width: 30%;
+    height: 240px;
+  }
 
   .right-container{
     flex-basis: 50%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;  
+    justify-content: space-between;  
   }
   .right-upper{
     display: flex;
@@ -669,13 +697,33 @@ footer .admin-info {
 
   .titles-panel{
     margin-top: 10px;
-    color: #ED4901;
+    color: #ed4901;
     font-size: 20px;
     font-weight: bold;
   }
   .info-title{
     color: #f2f2f2;
     font-weight: bold;
+  }
+  .go-back-button{
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #272A2A;
+  }
+  #change-data-button{
+    height: 40px;
+    width: 260px;
+    background-color: #ed4901;
+  }
+  #change-data-button a i, #change-data-button a{
+    margin: 0 10px 0 10px;
+    text-decoration: none;
+    color: #272A2A;
+    font-size: 20px;
+    font-weight: normal;
+    cursor: pointer;
   }
 
 
