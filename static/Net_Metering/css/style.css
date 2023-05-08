@@ -439,6 +439,13 @@ input[type="search"]:focus {
     #west, #west-label { transform: translate(43px, -86px); }
     #compass-photo { transform: translate(65px, -20px); }
 
+    .calculator-container{
+        display: flex
+    }
+    .column-calculator-page{
+        width: 200px;
+    }
+
 
  /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
 
@@ -650,8 +657,12 @@ footer .admin-info {
   .panels-container{
     height: 60vh;
     margin: 10px 0 10px 0;
-    width: 95%;
+    width:95%;
     background-color: #747272;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .container-icons{
     margin-top: 10px;
@@ -660,12 +671,20 @@ footer .admin-info {
     background-color: #747272;
     width: 30%;
   }
+  .container-icons-bottom{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: #747272;
+    width: 30%;
+    height: 240px;
+  }
 
   .right-container{
     flex-basis: 50%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;  
+    justify-content: space-between;  
   }
   .right-upper{
     display: flex;
