@@ -22,8 +22,8 @@ p{
 
 .error {
 border: 2px solid hsla(0, 100%, 50%, 0.5);
-
 }
+
 #error-message-panel, #error-message-panel5, #error-message-panel6{
     display: none;
     font-weight: bold;
@@ -678,7 +678,7 @@ footer .admin-info {
 
   .titles-panel{
     margin-top: 10px;
-    color: #ED4901;
+    color: #ed4901;
     font-size: 20px;
     font-weight: bold;
   }
@@ -696,12 +696,12 @@ footer .admin-info {
   #change-data-button{
     height: 40px;
     width: 260px;
-    background-color: coral;
+    background-color: #ed4901;
   }
   #change-data-button a i, #change-data-button a{
     margin: 0 10px 0 10px;
     text-decoration: none;
-    color: #2c3e50;
+    color: #272A2A;
     font-size: 20px;
     font-weight: normal;
     cursor: pointer;

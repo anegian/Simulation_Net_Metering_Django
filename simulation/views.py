@@ -9,115 +9,108 @@ from .models import *
 # Create your views here
 # App level
 
-def regulations(request):     # simulation/templates/regulations.html
-    try:
-        result = 'simulation/regulations.html'
-        return render(request, result)
-    except Http404:      # not use bare except
-        return Http404("404 Generic Error")
-
-def dashboardResults(request):   # simulation/templates/dashboard.html
+def dashboard_results(request):   # simulation/templates/dashboard.html
     try:
         district_key = int(request.session.get('district_key', 'N/A'))
         district_value = request.session.get('district_value', 'N/A')
-        placeOfInstallment = request.session.get('placeOfInstallment', 'N/A')
-        inclinationPV = request.session.get('inclinationPV', 'N/A')
-        azimuthValue = request.session.get('azimuthValue', 'N/A')
-        userPowerProfile = request.session.get('userPowerProfile', 'N/A')
-        phaseLoad = request.session.get('phaseLoad', 'N/A')
-        phaseLoadkVA = request.session.get('phaseLoadkVA', 'N/A')
-        recommendedPVinKwp = request.session.get('recommendedPVinKwp', 'N/A')
-        annualKwh = int(request.session.get('annualKwh', 'N/A'))
+        place_of_installment = request.session.get('place_of_installment', 'N/A')
+        inclination_PV = request.session.get('inclination_PV', 'N/A')
+        azimuth_value = request.session.get('azimuth_value', 'N/A')
+        userPower_profile = request.session.get('userPower_profile', 'N/A')
+        phase_load = request.session.get('phase_load', 'N/A')
+        phase_loadkVA = request.session.get('phase_loadkVA', 'N/A')
+        recommended_PV_in_Kwp = request.session.get('recommended_PV_in_Kwp', 'N/A')
+        annual_kwh = int(request.session.get('annual_kwh', 'N/A'))
         PV_kWp = int(request.session.get('PV_kWp', 'N/A'))
-        averageAnnualProduction = district_key * PV_kWp
-        hasStorage = request.session.get('hasStorage', 'N/A')
+        average_annual_production = district_key * PV_kWp
+        has_storage = request.session.get('has_storage', 'N/A')
         storage_kW = int(request.session.get('storage_kW', 'N/A'))
-        batteryCost = storage_kW * 700
+        battery_cost = storage_kW * 700
 
            
-        totalInvestment = calculateTotalInvestment(PV_kWp, batteryCost)
-        averageAnnualSavings, profitPercent, totalAnnualCost, otherEnergyCharges = calculateAnnualSavings(annualKwh, phaseLoadkVA, batteryCost, userPowerProfile, averageAnnualProduction)
-        payBackPeriod = calculatePayBackPeriod(totalInvestment, averageAnnualSavings)
+        total_investment = calculate_total_investment(PV_kWp, battery_cost)
+        average_annual_savings, profitPercent, totalAnnualCost, otherEnergyCharges = calculate_annual_savings(annual_kwh, phase_loadkVA, battery_cost, userPower_profile, average_annual_production)
+        payback_period = calculate_payback_period(total_investment, average_annual_savings)
 
         # dictionary with rendered variables
         context = {
         'district_key': district_key,
         'district_value': district_value,
-        'placeOfInstallment': placeOfInstallment,
-        'azimuthValue': azimuthValue,
-        'inclinationPV': inclinationPV,
-        'userPowerProfile': userPowerProfile,
-        'phaseLoad': phaseLoad,
-        'phaseLoadkVA': phaseLoadkVA,
-        'recommendedPVinKwp': recommendedPVinKwp,
-        'annualKwh': annualKwh,
+        'place_of_installment': place_of_installment,
+        'azimuth_value': azimuth_value,
+        'inclination_PV': inclination_PV,
+        'userPower_profile': userPower_profile,
+        'phase_load': phase_load,
+        'phase_loadkVA': phase_loadkVA,
+        'recommended_PV_in_Kwp': recommended_PV_in_Kwp,
+        'annual_kwh': annual_kwh,
         'PV_kWp': PV_kWp,
-        'hasStorage': hasStorage,
+        'has_storage': has_storage,
         'storage_kW': storage_kW,
-        'totalInvestment': totalInvestment,
-        'payBackPeriod': payBackPeriod,
-        'averageAnnualSavings': averageAnnualSavings,
+        'total_investment': total_investment,
+        'payback_period': payback_period,
+        'average_annual_savings': average_annual_savings,
         'profitPercent': profitPercent,
         'totalAnnualCost': totalAnnualCost,
         'otherEnergyCharges': otherEnergyCharges,
         }
 
         result = 'simulation/dashboard.html'
-        print('Total Investment:', totalInvestment,"euro", '& Περίοδος Απόσβεσης:', payBackPeriod, "Ετήσιο κόστος ρεύματος: ", totalAnnualCost, "& ετήσια μείωση: ", averageAnnualSavings, "Ρυθμιζόμενες χρεώσεις: ", otherEnergyCharges, )  # Add this line for debugging
+        print('Total Investment:', total_investment,"euro", '& Περίοδος Απόσβεσης:', payback_period, "Ετήσιο κόστος ρεύματος: ", totalAnnualCost, "& ετήσια μείωση: ", average_annual_savings, "Ρυθμιζόμενες χρεώσεις: ", otherEnergyCharges, )  # Add this line for debugging
         return render(request, result, context)
 
     except Http404:
         return Http404("404 Generic Error")
     
-def calculatorFormsOptions(request):    # simulation/templates/calculator.html
+def calculator_forms_choice(request):    # simulation/templates/calculator.html
 
     if request.method == 'POST':
         # changes the name of variable to calculator_form because form was fault --> shadow name 'form' out of scope
-        formDistrict = PlaceOfInstallationForm(request.POST)
-        formAnnualKwh = EnergyConsumptionForm(request.POST)
-        formPhaseLoad = PhaseLoad(request.POST)
+        form_district = PlaceOfInstallationForm(request.POST)
+        form_annual_kwh = EnergyConsumptionForm(request.POST)
+        form_phase_load = PhaseLoad(request.POST)
         
         
-        if formDistrict.is_valid() and formAnnualKwh.is_valid() and formPhaseLoad.is_valid():
+        if form_district.is_valid() and form_annual_kwh.is_valid() and form_phase_load.is_valid():
             try:
                 # initialization of variables
                 district_key = request.POST.get('select_district')
                 district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_key)
-                placeOfInstallment = request.POST.get('installation')
-                azimuthValue = request.POST.get('azimuth')
-                inclinationPV = request.POST.get('inclination')
-                userPowerProfile = request.POST.get('power_option')
+                place_of_installment = request.POST.get('installation')
+                azimuth_value = request.POST.get('azimuth')
+                inclination_PV = request.POST.get('inclination')
+                userPower_profile = request.POST.get('power_option')
 
-                phaseLoad = request.POST.get('select_phase')
+                phase_load = request.POST.get('select_phase')
 
-                if phaseLoad == "single_phase":
-                    phaseLoadkVA = 8
+                if phase_load == "single_phase":
+                    phase_loadkVA = 8
                 else:
-                    phaseLoadkVA = 25
+                    phase_loadkVA = 25
 
-                recommendedPVinKwp = request.POST.get('select_kwh')
+                recommended_PV_in_Kwp = request.POST.get('select_kwh')
                 # get the value of the energy consumption dict, where key is the kWh selected
-                annualKwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommendedPVinKwp) 
+                annual_kwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommended_PV_in_Kwp) 
                 
                 PV_kWp = request.POST.get('myRangeSlider')
-                hasStorage = request.POST.get('storage')
+                has_storage = request.POST.get('storage')
                 storage_kW = request.POST.get('storage_kw')
 
                 # print the variables to check
                 print(f"District key: {district_key}")
                 print(f"District value: {district_value}")
-                print(f"The selected phase load is: {phaseLoad}")
-                print(f"Agreed kVA is: {phaseLoadkVA}")
-                print(f"AnnualKwh is: {annualKwh}")
-                print(f"Recommended Kwp is: {recommendedPVinKwp}" )
-                print(f"Place of installment is: {placeOfInstallment}")
-                print(f"Azimuth of PV: {azimuthValue}")
-                print(f"Degrees of PV inclination: {inclinationPV}" )
-                print(f"Users prefer to use: {userPowerProfile}" )
+                print(f"The selected phase load is: {phase_load}")
+                print(f"Agreed kVA is: {phase_loadkVA}")
+                print(f"Annual kWh is: {annual_kwh}")
+                print(f"Recommended Kwp is: {recommended_PV_in_Kwp}" )
+                print(f"Place of installment is: {place_of_installment}")
+                print(f"Azimuth of PV: {azimuth_value}")
+                print(f"Degrees of PV inclination: {inclination_PV}" )
+                print(f"Users prefer to use: {userPower_profile}" )
                 print(f"kWp of PV value: {PV_kWp}")
-                print(f"Did User select Battery storage: {hasStorage}")
+                print(f"Did User select Battery storage: {has_storage}")
 
-                if hasStorage == 'with_storage':
+                if has_storage == 'with_storage':
                     print(f"Battery kWh value: {storage_kW}")
                 else:
                     storage_kW = 0
@@ -128,52 +121,52 @@ def calculatorFormsOptions(request):    # simulation/templates/calculator.html
 
             request.session['district_key'] = district_key
             request.session['district_value'] = district_value
-            request.session['placeOfInstallment'] = placeOfInstallment
-            request.session['inclinationPV'] = inclinationPV
-            request.session['userPowerProfile'] = userPowerProfile
-            request.session['recommendedPVinKwp'] = recommendedPVinKwp
-            request.session['annualKwh'] = annualKwh
+            request.session['place_of_installment'] = place_of_installment
+            request.session['inclination_PV'] = inclination_PV
+            request.session['userPower_profile'] = userPower_profile
+            request.session['recommended_PV_in_Kwp'] = recommended_PV_in_Kwp
+            request.session['annual_kwh'] = annual_kwh
             request.session['PV_kWp'] = PV_kWp
-            request.session['hasStorage'] = hasStorage
+            request.session['has_storage'] = has_storage
             request.session['storage_kW'] = storage_kW
-            request.session['phaseLoadkVA'] = phaseLoadkVA
+            request.session['phase_loadkVA'] = phase_loadkVA
 
         return redirect(reverse('simulation:dashboard'))  # redirect to function calculator
 
     else:
-        formDistrict = PlaceOfInstallationForm()
-        formAnnualKwh = EnergyConsumptionForm()
-        formPhaseLoad = PhaseLoad()
-    return render(request, 'simulation/calculator.html', context={'formDistrict': formDistrict, 
-         'formAnnualKwh': formAnnualKwh,'formPhaseLoad': formPhaseLoad,})
+        form_district = PlaceOfInstallationForm()
+        form_annual_kwh = EnergyConsumptionForm()
+        form_phase_load = PhaseLoad()
+    return render(request, 'simulation/calculator.html', context={'form_district': form_district, 
+         'form_annual_kwh': form_annual_kwh,'form_phase_load': form_phase_load,})
 
 
 # Calculation functions
 
 # Calculate total investment
-def calculateTotalInvestment(PV_kWp, batteryCost):
-    PvCost = PV_kWp * 1500
-    installationCost = 400
+def calculate_total_investment(PV_kWp, battery_cost):
+    Pv_cost = PV_kWp * 1500
+    installation_cost = 400
     
-    return PvCost + installationCost + batteryCost
+    return Pv_cost + installation_cost + battery_cost
 
 # Calculate annual savings and percentage
-def calculateAnnualSavings(annualKwh, phaseLoadkVA, batteryCost, userPowerProfile, averageAnnualProduction):
-    annualConsumption = annualKwh
+def calculate_annual_savings(annual_kwh, phase_loadkVA, battery_cost, userPower_profile, average_annual_production):
+    annualConsumption = annual_kwh
     energyCost = 0.19 # €/kWh today
-    annualkWhCost = annualConsumption * energyCost
+    annual_kWhCost = annualConsumption * energyCost
     # Ρυθμιζόμενες Χρεώσεις
-    otherEnergyCharges = (phaseLoadkVA * 0.52) + (annualKwh * 0.0213) + (phaseLoadkVA * 1) + (annualKwh * 0.00844) + (annualKwh*0.017) + (annualKwh*energyCost*0.06)
-    totalAnnualCost = annualkWhCost + otherEnergyCharges
+    otherEnergyCharges = (phase_loadkVA * 0.52) + (annual_kwh * 0.0213) + (phase_loadkVA * 1) + (annual_kwh * 0.00844) + (annual_kwh*0.017) + (annual_kwh*energyCost*0.06)
+    totalAnnualCost = annual_kWhCost + otherEnergyCharges
 
     # cases with battery storage and use profile to calculate self-consumption rate
-    if batteryCost == 0 and userPowerProfile == "day-power":
+    if battery_cost == 0 and userPower_profile == "day-power":
         selfConsumptionRate = 0.75
-    elif batteryCost > 0 and userPowerProfile == "day-power":
+    elif battery_cost > 0 and userPower_profile == "day-power":
         selfConsumptionRate = 0.9
-    elif batteryCost == 0 and userPowerProfile == "night-power":
+    elif battery_cost == 0 and userPower_profile == "night-power":
         selfConsumptionRate = 0.5
-    elif batteryCost > 0 and userPowerProfile == "night-power":
+    elif battery_cost > 0 and userPower_profile == "night-power":
         selfConsumptionRate = 0.7
     else:
         selfConsumptionRate = 0.5
@@ -181,25 +174,25 @@ def calculateAnnualSavings(annualKwh, phaseLoadkVA, batteryCost, userPowerProfil
     # Μειωμένο Ποσό Ρυθμιζόμενων Χρεώσεων
     discountOtherEnergyCharges = otherEnergyCharges * selfConsumptionRate
     
-    if averageAnnualProduction >= annualKwh:
-        averageAnnualSavings = round( annualkWhCost + discountOtherEnergyCharges )
+    if average_annual_production >= annual_kwh:
+        average_annual_savings = round( annual_kWhCost + discountOtherEnergyCharges )
     else:
-        averageAnnualSavings = round( ( (annualkWhCost - (annualConsumption - averageAnnualProduction ) * energyCost) )  + discountOtherEnergyCharges)
+        average_annual_savings = round( ( (annual_kWhCost - (annualConsumption - average_annual_production ) * energyCost) )  + discountOtherEnergyCharges)
 
-    profitPercent =  round(averageAnnualSavings / totalAnnualCost * 100, 1)
+    profitPercent =  round(average_annual_savings / totalAnnualCost * 100, 1)
 
-    return averageAnnualSavings, profitPercent, totalAnnualCost, otherEnergyCharges
+    return average_annual_savings, profitPercent, totalAnnualCost, otherEnergyCharges
 
 # Payback Period
-def calculatePayBackPeriod(totalInvestment, averageAnnualSavings):    
-    payBackPeriod = totalInvestment / averageAnnualSavings
-    years = int(payBackPeriod)
-    months = round((payBackPeriod - years) * 12)
+def calculate_payback_period(total_investment, average_annual_savings):    
+    payback_period = total_investment / average_annual_savings
+    years = int(payback_period)
+    months = round((payback_period - years) * 12)
 
     return f"{years} έτη & {months} μήνες"
 
 
-def calculate_production(system, inclination):
+def calculate_production(PV_kWp, azimuth_value, inclination_PV):
     # Calculate the annual production of the PV system
     # based on the system's specifications and the inclination
     # Return the result
@@ -217,13 +210,13 @@ def calculate_npv(total_profit, total_cost):
     # Return the result
     pass;
 
-def calculate_roi(payoff, total_cost):
+def calculate_roi(payback_period, total_cost):
     # Calculate the return on investment
     # based on the payoff period and the total cost
     # Return the result
     pass;
 
-def calculate_lcoe(total_cost, production, usage):
+def calculate_lcoe(total_investment, average_annual_production, annual_kwh):
     # Calculate the levelized cost of electricity
     # based on the total cost, the annual production, and the user's annual usage
     # Return the result
@@ -231,7 +224,7 @@ def calculate_lcoe(total_cost, production, usage):
     # lifetimePv = 25
     # discountRate = 0.05
     # annualreservationCost = 400 * 12
-    # lcoe = ( totalInvestment + (annualreservationCost * lifetimePv) ) / discountRate
+    # lcoe = ( total_investment + (annualreservationCost * lifetimePv) ) / discountRate
     pass;
 
 def signup(request):
@@ -267,8 +260,16 @@ def signupJsonResponse(request):
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
     
-
-def info(request):           # simulation/templates/info.html
+# simulation/templates/regulations.html
+def regulations(request):     
+    try:
+        result = 'simulation/regulations.html'
+        return render(request, result)
+    except Http404:      # not use bare except
+        return Http404("404 Generic Error")
+    
+# simulation/templates/info.html    
+def info(request):          
     try:
         result = 'simulation/info.html'
         return render(request, result)
@@ -276,7 +277,7 @@ def info(request):           # simulation/templates/info.html
         return Http404("404 Generic Error")
 
 # FUNCTION FOR THE CALCULATOR FORM SUBMIT
-def submit_form(request):
+def user_form(request):
 
     if request.method == 'POST':
         form = CustomerForm(request.POST)

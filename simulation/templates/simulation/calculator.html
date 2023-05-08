@@ -66,9 +66,9 @@
                             <div class="option-selector-margin">
                                 <input type="hidden" name="select_district" id="select_district" required>
                                 
-                                <p>{{ formDistrict.select_district.label_tag }}</p>
+                                <p>{{ form_district.select_district.label_tag }}</p>
                                 <p  title="Παρακαλούμε, επιλέξτε Περιφέρεια εγκατάστασης" id="option-selector-margin-label" >
-                                    {{ formDistrict.select_district }}</p>
+                                    {{ form_district.select_district }}</p>
                                 <span id="error-message-panel">Please enter a valid value</span>
                             </div>
                     </div>
@@ -209,12 +209,12 @@
 
                                     <div class="option-selector-margin" >
 
-                                        <p>{{ formAnnualKwh.select_kwh.label_tag }}</p>
+                                        <p>{{ form_annual_kwh.select_kwh.label_tag }}</p>
 
                                         <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος">
                                         <input type="hidden" name="phase_load" id="phase_load" required>
 
-                                                {{ formPhaseLoad.select_phase }}
+                                                {{ form_phase_load.select_phase }}
                                                 
                                             <i class="fas fa-question-circle" id="phase-load-info" title="Συμβουλευτείτε το λογαριασμό παρόχου ρεύματος:
     -> Μονοφασική παροχή εάν η συμφωνημένη ισχύς είναι: 8-12kVΑ!
@@ -225,7 +225,7 @@
                                         
 
                                         
-                                        <p title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">{{ formAnnualKwh.select_kwh }}
+                                        <p title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">{{ form_annual_kwh.select_kwh }}
                                             <i class="fas fa-question-circle" id="annual-consumption-info" 
 title="Συμπληρώστε πρώτα το είδος της παροχής, 
 Υπολογίστε κατά προσέγγιση την ετήσια κατανάλωση"></i>
