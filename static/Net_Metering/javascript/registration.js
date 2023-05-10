@@ -1,28 +1,3 @@
-// $(document).ready(function() {
-//     $('#signup-form').on('submit', function(event) {
-//         event.preventDefault();
-//         $.ajax({
-//             url: '/signup/',
-//             type: 'post',
-//             dataType: 'json',
-//             data: $('#signup-form').serialize(),
-//             success: function(data) {
-//                 if (data.success) {
-//                     // handle successful signup
-//                     alert('Sign up successful!');
-//                 } else {
-//                     // handle signup error
-//                     alert(data.error);
-//                 }
-//             },
-//             error: function(xhr, status, error) {
-//                 // handle AJAX error
-//                 alert('Error: ' + error);
-//             }
-//         });
-//     });
-// });
-
 const mainContent = document.getElementById("signup-main-content");
 let isTermsArticleOpen = false;
 const termsArticle = document.getElementById('termsOfUseArticle');

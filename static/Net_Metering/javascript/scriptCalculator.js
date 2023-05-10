@@ -36,6 +36,8 @@ slider.oninput = function() {
 selectDistrict.addEventListener("change", function(event){
     errorMessage.style.display = "none";
     selectDistrict.classList.remove('error');
+
+    console.log("The District is: " + selectDistrict.value);
 })
 
 // Listen for changes in the phase load input and store the selected option
@@ -75,6 +77,7 @@ selectPhase.addEventListener("change", function(event){
             storageSelect.disabled = true;
         }
     }
+    console.log(selectPhase.value);
 });
 
 // Reset the output element value to the initial value when the reset button is clicked
@@ -110,34 +113,17 @@ selectAnnualKwh.addEventListener("change", function(event){
     storageKW.min = 1;
     console.log(selectAnnualKwh.value);
 
-    switch (selectAnnualKwh.value) {
-        case '2':
-            slider.value = 2;
-            break;
-        case '3':
-            slider.value = 3;
-            break;
-        case '4':
-            slider.value = 4;
-            break;
-        case '5':
-            slider.value = 5;
-            break;
-        case '6':
-            slider.value = 6;
-            break;
-        case '10':
-            slider.value = 10;
-            break;
-        default:
-            
-            slider.value = 0;
-            slider.disabled = true;
-            storageSelect
-            storageSelect.disabled = true;
-            storageKW.disabled = true;
-            noStorage.checked = true;
+    if (selectAnnualKwh.value !=0) {
+        slider.value = selectAnnualKwh.value
+    } else {
+        slider.value = 0;
+        slider.disabled = true;
+        storageSelect
+        storageSelect.disabled = true;
+        storageKW.disabled = true;
+        noStorage.checked = true;
     }
+
     output.innerHTML = slider.value; 
     storageKW.value = slider.value;
     storageKW.max = slider.value;
@@ -179,12 +165,11 @@ function validateForm() {
     return true;
 };
 
-console.log("The District is: " + selectDistrict.value + "\nThe installation place is: " + slider.value);
 
 // loop through the radio buttons and add an event listener to each one
 radioButtons.forEach(radioButton => {
     radioButton.addEventListener('click', () => {
     // log the value of the selected radio button
-    console.log(radioButton.value);
+    console.log("Selected radio field is: " + radioButton.value);
     });
 });
