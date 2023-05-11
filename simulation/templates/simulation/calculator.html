@@ -220,19 +220,29 @@
 
                                                     {{ form_phase_load.select_phase }}
                                                     
-                                                <i class="fas fa-question-circle" id="phase-load-info" title="Συμβουλευτείτε το λογαριασμό παρόχου ρεύματος:
-        -> Μονοφασική παροχή εάν η συμφωνημένη ισχύς είναι: 8-12kVΑ!
-        -> Τριφασική παροχή εάν η συμφωνημένη ισχύς είναι: > 15 kVΑ!
-                                                    "></i>
-                                                    
+                                                    <button class="help-popper" id="1button" type="button">
+                                                        <i class="fas fa-question-circle" id="phase-load-info"></i>
+                                                    </button>
+                                                    <div class="help-container">
+                                                        <span class="help-text" id="1text">
+                                                            <strong>Παρακαλώ, συμβουλευτείτε το λογαριασμό παρόχου ρεύματος!!</strong><br><br>
+                                                            &#8226; <strong>Μονοφασική παροχή</strong>, εάν η συμφωνημένη ισχύς είναι: 8 ή 12 kVΑ!<br>
+                                                            &#8226; <strong>Τριφασική παροχή</strong>, εάν η συμφωνημένη ισχύς είναι:  > 15 kVΑ!</span>
+                                                        <span class="close-help">&times;</span>
+                                                    </div>
+
                                             </div>
                                             
 
                                             
                                             <p title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">{{ form_annual_kwh.select_kwh }}
-                                                <i class="fas fa-question-circle" id="annual-consumption-info" 
-    title="Συμπληρώστε πρώτα το είδος της παροχής, 
-    Υπολογίστε κατά προσέγγιση την ετήσια κατανάλωση"></i>
+
+                                                <button class="help-popper" type="button">
+                                                    <i class="fas fa-question-circle" id="annual-consumption-info" title="Συμπληρώστε πρώτα το είδος της παροχής, 
+                                                        Υπολογίστε κατά προσέγγιση την ετήσια κατανάλωση"></i>
+                                                    <span class="close-help">&times;</span>
+                                                </button>
+                                                
                                             </p>
 
                                             <span id="error-message-panel5">Please enter a valid value</span>

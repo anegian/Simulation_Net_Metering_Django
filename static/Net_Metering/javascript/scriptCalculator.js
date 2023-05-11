@@ -173,3 +173,35 @@ radioButtons.forEach(radioButton => {
     console.log("Selected radio field is: " + radioButton.value);
     });
 });
+
+const helpButton = document.querySelectorAll(".help-popper");
+let isClosed = true;
+const helpText = document.getElementById("1text");
+
+helpButton.forEach(helpButton => {
+    const closeIcons = helpText.nextElementSibling;
+    helpButton.addEventListener("click", () =>{
+
+        if (isClosed) {
+            helpText.style.display = "block";
+            helpText.classList.add('movePosition');
+            isClosed = false;
+            closeIcons.style.display = "block";
+            closeIcons.classList.add('movePosition');
+        } else {
+            helpText.style.display = "none";
+            helpText.classList.remove("movePosition");
+            closeIcons.style.display = "none";
+            closeIcons.classList.remove('movePosition');
+            isClosed = true;
+        }
+
+        closeIcons.addEventListener("click", () => {
+            helpText.style.display = "none";
+            helpText.classList.remove("movePosition");
+            closeIcons.style.display = "none";
+            closeIcons.classList.remove("movePosition");
+            isClosed = true;
+          });
+    });
+});
