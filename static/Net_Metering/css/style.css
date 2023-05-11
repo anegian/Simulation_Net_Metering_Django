@@ -88,7 +88,7 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
     .login a, .signup a, .logo a{
         margin: 0 10px 0 10px;
         text-decoration: none;
-        color: #2c3e50;
+        color: #393052;
         font-size: 20px;
         font-weight: bold;
         cursor: pointer;
@@ -102,7 +102,7 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
 .second-navbar{
     display: flex;
     justify-content: space-between;
-    background-color: #333333;
+    background-color: #393052;
     height: 50px;
     width: 100%;
 }
@@ -218,11 +218,11 @@ input[type="search"]:focus {
         background-color: transparent;
     }
     .calculator-page-content{
-        background-color: #747272;
+        background-color: #29233b;
         min-height: 100vh;
     }
     .dashboard-page-content{
-        background-color: #747272;
+        background-color: #29233b;
     }
     
 
@@ -317,7 +317,7 @@ input[type="search"]:focus {
 
     .spacer-in-main-content{
         height: 50px;
-        background-color: #2c3e50;
+        background-color: #393052;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -329,15 +329,16 @@ input[type="search"]:focus {
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
-
+        background-color: #29233b;
     }
     .calculator-fieldset .panel{
         width: 265px;
         height: 220px;
         margin: 10px 20px 10px 0;
         border-style: solid;
-        border-width: 1px;
-        border-color: #f2f2f2;
+        border-width: 1.5px;
+        border-color: #221e2e;
+        background-color: #393052;
     }
     .calculator-fieldset .panel .number{
         margin: 0 10px 0 10px;
@@ -371,14 +372,65 @@ input[type="search"]:focus {
     label{
         font-weight: bold;
     }
+    /* Calculator Form help question mark poppers */
+    .help-popper {
+        background: none;
+        border: none;
+        padding: 0;
+    }
+    .help-popper:focus {
+        outline: none;
+    }
+    .close-help {
+        display: none;
+    }
+    .movePosition {
+        position: absolute;
+        z-index: 1;
+       
+      }
+    .help-container {
+        position: relative;
+      }
+    .help-text{
+        position: absolute;
+        display: none;
+        outline: #000022;
+        background-color: goldenrod;
+        border: 1px solid grey;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        width: 500px;
+        height: auto;
+    }
+    .close-help {
+        position: absolute;
+        text-align: center;
+        width: 40px;
+        height: 40px;
+        left: 460px;
+        font-size: 30px;
+        color: rgba(44,62,80, 0.8);
+        cursor: pointer;
+        z-index: 2;
+    }
+    .close-help:hover {
+        background-color: rgba(44,62,80, 0.8);
+        color: #f2f2f2;
+    }
     #phase-load-info{
         color: #333333;
         opacity: 0.8;
+        cursor: pointer;
     }
     #phase-load-info:hover{
         color: #f2f2f2;
         opacity: 0.7;
     }
+   
     #annual-consumption-info{
         color: #333333;
         opacity: 0.8;
@@ -414,6 +466,7 @@ input[type="search"]:focus {
     }
     .my-submit-form{
         text-align: center;
+        background-color: #29233b;
     }
      /* ::: SUBMIT BUTTON ::: */
     .form-submit-button{
@@ -444,6 +497,7 @@ input[type="search"]:focus {
     }
     .column-calculator-page{
         width: 200px;
+        background-color: #29233b;
     }
 
 
@@ -594,7 +648,7 @@ input[type="search"]:focus {
     margin-top: auto;
     bottom: 0;
     width: 100%;
-    background-color: #333333;
+    background-color: #393052;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -635,7 +689,7 @@ footer .admin-info {
     min-height: 100vh;
     display: flex;
     flex-wrap: wrap;
-    background-color: #272A2A;
+    background-color: #29233b;
   }        
   .left-container{
     flex-basis: 50%;
@@ -658,8 +712,10 @@ footer .admin-info {
     height: 60vh;
     margin: 10px 0 10px 0;
     width:95%;
-    background-color: #747272;
-
+    background-color: #393052;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: #221e2e;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -668,16 +724,22 @@ footer .admin-info {
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: center;
-    background-color: #747272;
+    background-color: #393052;
     width: 30%;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: #221e2e;
   }
   .container-icons-bottom{
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: center;
-    background-color: #747272;
+    background-color: #393052;
     width: 30%;
     height: 240px;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: #221e2e;
   }
 
   .right-container{
@@ -701,7 +763,7 @@ footer .admin-info {
     font-size: 20px;
     font-weight: bold;
   }
-  .info-title{
+  .info-title, .go-back-button i{
     color: #f2f2f2;
     font-weight: bold;
   }
@@ -710,22 +772,21 @@ footer .admin-info {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #272A2A;
+    background-color: #29233b;
   }
   #change-data-button{
     height: 40px;
     width: 260px;
-    background-color: #ed4901;
+    background-color: #393052;
   }
   #change-data-button a i, #change-data-button a{
     margin: 0 10px 0 10px;
     text-decoration: none;
-    color: #272A2A;
+    color: #f2f2f2;
     font-size: 20px;
     font-weight: normal;
     cursor: pointer;
   }
-
 
 
   /* ::: INFO PAGE SECTION ::: */
