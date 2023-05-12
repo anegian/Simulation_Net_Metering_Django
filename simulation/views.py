@@ -27,11 +27,9 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             average_annual_production = district_key * PV_kWp
             has_storage = request.session.get('has_storage')
             storage_kW = int(request.session.get('storage_kW'))
-            battery_cost = storage_kW * 700
 
-            
-            total_investment = calculate_total_investment(PV_kWp, battery_cost)
-            average_annual_savings, profitPercent, totalAnnualCost, otherEnergyCharges = calculate_annual_savings(annual_kwh, phase_loadkVA, battery_cost, userPower_profile, average_annual_production)
+            total_investment = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW)
+            average_annual_savings, profitPercent, total_annual_cost, other_energy_charges = calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_profile, average_annual_production)
             payback_period = calculate_payback_period(total_investment, average_annual_savings)
 
             # dictionary with rendered variables
@@ -53,12 +51,13 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'payback_period': payback_period,
             'average_annual_savings': average_annual_savings,
             'profitPercent': profitPercent,
-            'totalAnnualCost': totalAnnualCost,
-            'otherEnergyCharges': otherEnergyCharges,
+            'total_annual_cost': total_annual_cost,
+            'other_energy_charges': other_energy_charges,
+            'has_storage': has_storage,
             }
 
             result = 'simulation/dashboard.html'
-            print('Total Investment:', total_investment,"euro", '& Περίοδος Απόσβεσης:', payback_period, "Ετήσιο κόστος ρεύματος: ", totalAnnualCost, "& ετήσια μείωση: ", average_annual_savings, "Ρυθμιζόμενες χρεώσεις: ", otherEnergyCharges, )  # Add this line for debugging
+            print('Total Investment:', total_investment,"euro", '& Περίοδος Απόσβεσης:', payback_period, "Ετήσιο κόστος ρεύματος: ", total_annual_cost, "& ετήσια μείωση: ", average_annual_savings, "Ρυθμιζόμενες χρεώσεις: ", other_energy_charges, )  # Add this line for debugging
             return render(request, result, context)
         except Http404:
             return Http404("404 Generic Error")
@@ -114,7 +113,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print(f"Place of installment is: {place_of_installment}")
                 print(f"Azimuth of PV: {azimuth_value}")
                 print(f"Degrees of PV inclination: {inclination_PV}" )
-                print(f"Users prefer to use: {userPower_profile}" )
+                print(f"Users use profile: {userPower_profile}" )
                 print(f"kWp of PV value: {PV_kWp}")
                 print(f"Did User select Battery storage: {has_storage}")
 
@@ -137,6 +136,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['has_storage'] = has_storage
             request.session['storage_kW'] = storage_kW
             request.session['phase_loadkVA'] = phase_loadkVA
+            request.session['phase_load'] = phase_load
 
         return redirect(reverse('simulation:dashboard'))  # redirect to function calculator
 
@@ -151,44 +151,77 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
 # Calculation functions
 
 # Calculate total investment
-def calculate_total_investment(PV_kWp, battery_cost):
-    Pv_cost = PV_kWp * 1500
-    installation_cost = 400
+def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
+    installation_cost = 400 # average cost in €
+
+    each_panel_kW = 0.4  # average 400W each panel
+    each_panel_average_cost = 250  # average in € for 400W panel
+    number_of_panels_required = round(PV_kWp / each_panel_kW)
+    panel_bases_cost = 90 * number_of_panels_required # bases for the panels on roof or taratsa, average cost per base
+    electric_materials = 100 # average cost in €
+    inverter_cost = 0
+    average_battery_cost_per_kW = 850 # average in €
+    Pv_cost = number_of_panels_required * each_panel_average_cost
     
-    return Pv_cost + installation_cost + battery_cost
+    # for 2 - 5 kWp
+    if phase_load == "single_phase":
+        # inverters cost -> 700€-1200€ prices, hybrid inverters are expensive
+        if has_storage == "with_storage":
+            inverter_cost = ( PV_kWp * 250 ) + ( (5 - PV_kWp) * 100 )  # 1-phase hybrid inverter for battery support
+            battery_cost = storage_kW * average_battery_cost_per_kW
+        else:
+            inverter_cost = ( PV_kWp * 150 ) + ( (5 - PV_kWp) * 100 )# simple 1-phase PV inverter
+            battery_cost = 0
+    # for 2 - 10 kWp
+    elif phase_load == "3_phase":
+        if has_storage == "with_storage":
+            inverter_cost = (PV_kWp * 300 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter for battery support
+            battery_cost = storage_kW * average_battery_cost_per_kW
+        else:
+            inverter_cost = ( PV_kWp * 150 )+ ( (10 - PV_kWp) * 100 ) # simple 3-phase PV inverter
+            battery_cost = 0
+    else:
+        battery_cost = 0
+
+
+    print(f"Inverter: {inverter_cost}")
+    print(f"Battery Cost: {battery_cost}")
+    print(f"Required Pv panels: {number_of_panels_required}")
+    print(f"PV Cost: {Pv_cost}")
+    return Pv_cost + installation_cost + battery_cost + inverter_cost + panel_bases_cost + electric_materials
 
 # Calculate annual savings and percentage
-def calculate_annual_savings(annual_kwh, phase_loadkVA, battery_cost, userPower_profile, average_annual_production):
-    annualConsumption = annual_kwh
-    energyCost = 0.19 # €/kWh today
-    annual_kWhCost = annualConsumption * energyCost
+def calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_profile, average_annual_production):
+    annual_consumption = annual_kwh
+    energy_cost = 0.19 # €/kWh today
+    annual_kWhCost = annual_consumption * energy_cost
     # Ρυθμιζόμενες Χρεώσεις
-    otherEnergyCharges = (phase_loadkVA * 0.52) + (annual_kwh * 0.0213) + (phase_loadkVA * 1) + (annual_kwh * 0.00844) + (annual_kwh*0.017) + (annual_kwh*energyCost*0.06)
-    totalAnnualCost = annual_kWhCost + otherEnergyCharges
+    other_energy_charges = (phase_loadkVA * 0.52) + (annual_kwh * 0.0213) + (phase_loadkVA * 1) + (annual_kwh * 0.00844) + (annual_kwh*0.017) + (annual_kwh*energy_cost*0.06)
+    total_annual_cost = annual_kWhCost + other_energy_charges
 
     # cases with battery storage and use profile to calculate self-consumption rate
-    if battery_cost == 0 and userPower_profile == "day-power":
-        selfConsumptionRate = 0.75
-    elif battery_cost > 0 and userPower_profile == "day-power":
-        selfConsumptionRate = 0.9
-    elif battery_cost == 0 and userPower_profile == "night-power":
-        selfConsumptionRate = 0.5
-    elif battery_cost > 0 and userPower_profile == "night-power":
-        selfConsumptionRate = 0.7
+    if has_storage == "with_storage":
+        if userPower_profile == "day-power":
+            self_consumption_rate = 0.9
+        else:
+            self_consumption_rate = 0.75
     else:
-        selfConsumptionRate = 0.5
+        if userPower_profile == "day-power":
+            self_consumption_rate = 0.7
+        else:
+            self_consumption_rate = 0.5
 
     # Μειωμένο Ποσό Ρυθμιζόμενων Χρεώσεων
-    discountOtherEnergyCharges = otherEnergyCharges * selfConsumptionRate
+    discountOther_energy_charges = other_energy_charges * self_consumption_rate
     
     if average_annual_production >= annual_kwh:
-        average_annual_savings = round( annual_kWhCost + discountOtherEnergyCharges )
+        average_annual_savings = round( annual_kWhCost + discountOther_energy_charges )
     else:
-        average_annual_savings = round( ( (annual_kWhCost - (annualConsumption - average_annual_production ) * energyCost) )  + discountOtherEnergyCharges)
+        average_annual_savings = round( ( (annual_kWhCost - (annual_consumption - average_annual_production ) * energy_cost) )  + discountOther_energy_charges)
 
-    profitPercent =  round(average_annual_savings / totalAnnualCost * 100, 1)
+    profitPercent =  round(average_annual_savings / total_annual_cost * 100, 1)
 
-    return average_annual_savings, profitPercent, totalAnnualCost, otherEnergyCharges
+    return average_annual_savings, profitPercent, total_annual_cost, other_energy_charges
 
 # Payback Period
 def calculate_payback_period(total_investment, average_annual_savings):    
