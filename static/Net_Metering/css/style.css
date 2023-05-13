@@ -812,11 +812,13 @@ footer .admin-info {
     background-color: #393052!important;
   }
   .card-body, .p-md-5, .form-label{
+    display: flex;
     color: #f2f2f2!important;
   }
   #signup-main-content{
     min-height: 100vh;
   }
+
 
   /* ::: INFO PAGE SECTION ::: */
   .info-body::before{
