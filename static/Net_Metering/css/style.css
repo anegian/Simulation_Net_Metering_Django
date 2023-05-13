@@ -788,7 +788,6 @@ footer .admin-info {
     cursor: pointer;
   }
 
-
   /* ::: INFO PAGE SECTION ::: */
   .info-body::before{
     background-image: url('../../images/lamp2.jpg');
