@@ -512,7 +512,7 @@ input[type="search"]:focus {
         display: flex
     }
     .column-calculator-page{
-        width: 200px;
+        width: 25%;
         background-color: #29233b;
     }
 
@@ -804,6 +804,19 @@ footer .admin-info {
     cursor: pointer;
   }
 
+    /* ::: SIGNUP PAGE SECTION ::: */
+  .vh-100{
+    background-color: #29233b!important;
+  }
+  .card, .text-black{
+    background-color: #393052!important;
+  }
+  .card-body, .p-md-5, .form-label{
+    color: #f2f2f2!important;
+  }
+  #signup-main-content{
+    min-height: 100vh;
+  }
 
   /* ::: INFO PAGE SECTION ::: */
   .info-body::before{
