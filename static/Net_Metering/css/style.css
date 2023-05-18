@@ -804,8 +804,6 @@ footer .admin-info {
     cursor: pointer;
   }
 
-<<<<<<< HEAD
-=======
     /* ::: SIGNUP PAGE SECTION ::: */
   .vh-100{
     background-color: #29233b!important;
@@ -822,7 +820,6 @@ footer .admin-info {
   }
 
 
->>>>>>> 198d0191992ee626b4051d4821b04918e7f69f57
   /* ::: INFO PAGE SECTION ::: */
   .info-body::before{
     background-image: url('../../images/lamp2.jpg');
