@@ -174,34 +174,49 @@ radioButtons.forEach(radioButton => {
     });
 });
 
-const helpButton = document.querySelectorAll(".help-popper");
-let isClosed = true;
-const helpText = document.getElementById("1text");
+// Help Poppers to give details about the form fields or selected values
+const helpButtons = document.getElementsByClassName('help-popper');
+const helpTexts = document.getElementsByClassName('help-text');
+const closeIcons = document.getElementsByClassName('close-help');
+const numberOfHelpButtons = helpButtons.length;
 
-helpButton.forEach(helpButton => {
-    const closeIcons = helpText.nextElementSibling;
-    helpButton.addEventListener("click", () =>{
+let isOpen = new Array(numberOfHelpButtons).fill(true);
 
-        if (isClosed) {
-            helpText.style.display = "block";
-            helpText.classList.add('movePosition');
-            isClosed = false;
-            closeIcons.style.display = "block";
-            closeIcons.classList.add('movePosition');
-        } else {
-            helpText.style.display = "none";
-            helpText.classList.remove("movePosition");
-            closeIcons.style.display = "none";
-            closeIcons.classList.remove('movePosition');
-            isClosed = true;
-        }
 
-        closeIcons.addEventListener("click", () => {
-            helpText.style.display = "none";
-            helpText.classList.remove("movePosition");
-            closeIcons.style.display = "none";
-            closeIcons.classList.remove("movePosition");
-            isClosed = true;
-          });
-    });
-});
+// for loop to check if the text element for each button is opened
+// if a text is opened and other button is pressed, previous text closes
+for (let i = 0; i < numberOfHelpButtons; i++) {
+  helpButtons[i].addEventListener('click', function() {
+    for (let j = 0; j < numberOfHelpButtons; j++) {
+      if (i !== j && !isOpen[j]) {
+        helpTexts[j].style.display = 'none';
+        helpTexts[j].classList.remove('movePosition');
+        closeIcons[j].style.display = 'none';
+        closeIcons[j].classList.remove('movePosition');
+        isOpen[j] = true;
+      }
+    }
+
+    if (isOpen[i]) {
+        helpTexts[i].style.display = 'block';
+        helpTexts[i].classList.add('movePosition');
+        closeIcons[i].style.display = 'block';
+        closeIcons[i].classList.add('movePosition');
+        isOpen[i] = false;
+    } else {
+        helpTexts[i].style.display = 'none';
+        helpTexts[i].classList.remove('movePosition');
+        closeIcons[i].style.display = 'none';
+        closeIcons[i].classList.remove('movePosition');
+        isOpen[i] = true;
+    }
+  });
+
+    closeIcons[i].addEventListener('click', function() {
+        helpTexts[i].style.display = 'none';
+        helpTexts[i].classList.remove('movePosition');
+        closeIcons[i].style.display = 'none';
+        closeIcons[i].classList.remove('movePosition');
+        isOpen[i] = true;
+  });
+}

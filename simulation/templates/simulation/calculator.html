@@ -216,34 +216,43 @@
                                             <p>{{ form_annual_kwh.select_kwh.label_tag }}</p>
 
                                             <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος">
-                                            <input type="hidden" name="phase_load" id="phase_load" required>
+                                                    <input type="hidden" name="phase_load" id="phase_load"  required>
 
                                                     {{ form_phase_load.select_phase }}
-                                                    
-                                                    <button class="help-popper" id="1button" type="button">
+                    
+                                                <button class="help-popper" type="button" title="">
                                                         <i class="fas fa-question-circle" id="phase-load-info"></i>
-                                                    </button>
-                                                    <div class="help-container">
-                                                        <span class="help-text" id="1text">
-                                                            <strong>Παρακαλώ, συμβουλευτείτε το λογαριασμό παρόχου ρεύματος!!</strong><br><br>
-                                                            &#8226; <strong>Μονοφασική παροχή</strong>, εάν η συμφωνημένη ισχύς είναι: 8 ή 12 kVΑ!<br>
-                                                            &#8226; <strong>Τριφασική παροχή</strong>, εάν η συμφωνημένη ισχύς είναι:  > 15 kVΑ!</span>
-                                                        <span class="close-help">&times;</span>
-                                                    </div>
-
+                                                </button>
+                                                        <div class="help-container" title="">
+                                                            <span class="help-text" id="phase-load-text">
+                                                                <strong>Παρακαλώ, συμβουλευτείτε το λογαριασμό παρόχου ρεύματος!!</strong><br><br>
+                                                                &#8226; <strong>Μονοφασική παροχή</strong>, εάν η συμφωνημένη ισχύς είναι: 8 ή 12 kVΑ!<br>
+                                                                &#8226; <strong>Τριφασική παροχή</strong>, εάν η συμφωνημένη ισχύς είναι:  > 15 kVΑ!</span>
+                                                            <span class="close-help">&times;</span>
+                                                        </div>
+                                            
                                             </div>
                                             
 
                                             
-                                            <p title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">{{ form_annual_kwh.select_kwh }}
+                                            <div>
+                                                <input type="hidden" name="annual_kwh-selector" id="phase_load" title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">
+                                                {{ form_annual_kwh.select_kwh }}
 
                                                 <button class="help-popper" type="button">
-                                                    <i class="fas fa-question-circle" id="annual-consumption-info" title="Συμπληρώστε πρώτα το είδος της παροχής, 
-                                                        Υπολογίστε κατά προσέγγιση την ετήσια κατανάλωση"></i>
-                                                    <span class="close-help">&times;</span>
+                                                    <i class="fas fa-question-circle" id="annual-consumption-info"></i>
                                                 </button>
+                                                    <div class="help-container">
+                                                        <span class="help-text" id="annual-consumption-text">
+                                                            <strong>Συμπληρώστε πρώτα το είδος της παροχής, για να σας επιτραπεί<br>
+                                                                 να συμπληρώσετε ετήσια κατανάλωση!</strong><br><br>
+                                                            &#8594; Υπολογίστε <strong>κατά προσέγγιση</strong>, την ετήσια <br>
+                                                            κατανάλωση ηλεκτρικού ρεύματος σε kWh.</span>
+                                                        <span class="close-help">&times;</span>
+                                                    </div>
                                                 
-                                            </p>
+                                                
+                                                </div>
 
                                             <span id="error-message-panel5">Please enter a valid value</span>
                                         
@@ -261,9 +270,23 @@
 
                             <div class="option-selector-margin">
                                 <div class="slide-container" title="Παρακαλούμε, επιλέξτε παροχή και ύστερα επιθυμητή ισχύς φωτοβολταϊκού σε kWp">
-                                    <p><label for="myRangeSlider">Επιλέξτε:</label></p>
+                                    <p><label for="myRangeSlider">Επιλέξτε: </label> <button class="help-popper" type="button" title="">
+                                        <i class="fas fa-question-circle" id="annual-consumption-info"></i>
+                                    </button>
+                                        <div class="help-container">
+                                            <span class="help-text" id="annual-consumption-text">
+                                                <strong>Συμπληρώστε πρώτα το είδος της παροχής και την ετήσια<br> κατανάλωση ρεύματος!</strong><br><br>
+                                                 Αυτόματα θα συμπληρωθoύν τα kWp του Φ/Β συστήματος που απαιτούνται για να εκμηδενίσετε την ετήσια κατανάλωση σας.<br>
+                                                 Μπορείτε ελεύθερα να αυξομειώσετε τη συνολική ισχύ σύμφωνα με τις εξατομικευμένες ανάγκες σας και τα επιτρεπτά όρια.<br><br>
+
+                                                 <b style="color: red;">Προσοχή</b>!<br>Για Μονοφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 5 kWp.<br>
+                                                 Για Τριφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 10 kWp.
+                                            </span>
+                                             <span class="close-help">&times;</span>
+                                        </div></p>
                                     <input type="range" min="0" max="25" step="1" value="0" id="myRangeSlider" name="myRangeSlider" required>
-                                    <p>Τιμή: <span id="slider-value"></span></p>
+                                    <p>Τιμή: <span id="slider-value"></span></p> 
+                                        
                                     <span id="error-message-panel6">Please select annual kWh & kWp.</span>
                                 </div>
                                 
@@ -278,7 +301,7 @@
                                 <span class="number"> 8 </span>
                                 <h4>Aποθήκευση</h4>
                             </div>
-                                <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
+                                <div class="option-selector-margin" title="Παρακαλούμε, πρώτα συμπληρώστε τα πεδία Κατανάλωση και Ισχύς και στη συνέχεια επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
                                     <label>Επιλέξτε:</label>
                                         
 

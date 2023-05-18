@@ -14,6 +14,22 @@ html, body {
 p{
     margin-bottom: 8px;
 }
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.disable-pointer-events {
+pointer-events: none;
+}
+.disable-pointer-events .close-icon {
+pointer-events: auto;
+}
 
 .blurred {
     background-color: hsla(0, 0%, 0%, 0.5); /* Set the background color to semi-transparent black */
@@ -386,7 +402,7 @@ input[type="search"]:focus {
     }
     .movePosition {
         position: absolute;
-        z-index: 1;
+        z-index: 2;
        
       }
     .help-container {
@@ -422,21 +438,21 @@ input[type="search"]:focus {
         color: #f2f2f2;
     }
     #phase-load-info{
-        color: #333333;
+        color: #f2f2f2;
         opacity: 0.8;
         cursor: pointer;
     }
     #phase-load-info:hover{
-        color: #f2f2f2;
+        color: goldenrod;
         opacity: 0.7;
     }
    
     #annual-consumption-info{
-        color: #333333;
+        color: #f2f2f2;
         opacity: 0.8;
     }
     #annual-consumption-info:hover{
-        color: #f2f2f2;
+        color: goldenrod;
         opacity: 0.7;
     }
     #myRangeSlider{
@@ -496,7 +512,7 @@ input[type="search"]:focus {
         display: flex
     }
     .column-calculator-page{
-        width: 200px;
+        width: 25%;
         background-color: #29233b;
     }
 
@@ -788,6 +804,25 @@ footer .admin-info {
     cursor: pointer;
   }
 
+<<<<<<< HEAD
+=======
+    /* ::: SIGNUP PAGE SECTION ::: */
+  .vh-100{
+    background-color: #29233b!important;
+  }
+  .card, .text-black{
+    background-color: #393052!important;
+  }
+  .card-body, .p-md-5, .form-label{
+    display: flex;
+    color: #f2f2f2!important;
+  }
+  #signup-main-content{
+    min-height: 100vh;
+  }
+
+
+>>>>>>> 198d0191992ee626b4051d4821b04918e7f69f57
   /* ::: INFO PAGE SECTION ::: */
   .info-body::before{
     background-image: url('../../images/lamp2.jpg');
