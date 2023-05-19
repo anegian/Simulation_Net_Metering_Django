@@ -1,6 +1,6 @@
 // variables initialization
 const slider = document.getElementById("myRangeSlider");
-const output = document.getElementById("slider-value");
+const PV_kW_output = document.getElementById("slider-value");
 const selectAnnualKwh = document.getElementById("id_select_kwh");
 // Get the initial value of the selectAnnualKwh element from the form
 const initialKwhValue = selectAnnualKwh.value;
@@ -17,9 +17,9 @@ const noStorage = document.getElementById("without_storage");
 const radioButtons = document.querySelectorAll('.form-check-input');
 
 
-// Set the initial value of the output element to 0
+// Set the initial value of the PV_kW_output element to 0
 slider.value = 0;
-output.innerHTML = slider.value;
+PV_kW_output.innerHTML = slider.value;
 slider.disabled = true;
 selectAnnualKwh.disabled = true;
 storageSelect.disabled = true;
@@ -29,7 +29,7 @@ storageKW.value = 0;
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
     slider.min = 1;
-    output.innerHTML = this.value;
+    PV_kW_output.innerHTML = this.value;
     errorMessage3.style = 'none';
 };      
 
@@ -47,7 +47,7 @@ selectPhase.addEventListener("change", function(event){
     slider.value = 0; // Update the slider value to 0 when the phase load is changed
     slider.max = event.target.value === 'single_phase' ? 5 : 10
     slider.disabled = event.target.value === 'phase_load';
-    output.innerHTML = slider.value; // Update the output element value to 0 when the phase load is changed
+    PV_kW_output.innerHTML = slider.value; // Update the PV_kW_output element value to 0 when the phase load is changed
     noStorage.checked = true;
     storageKW.disabled = true;
     
@@ -80,14 +80,14 @@ selectPhase.addEventListener("change", function(event){
     console.log(selectPhase.value);
 });
 
-// Reset the output element value to the initial value when the reset button is clicked
+// Reset the PV_kW_output element value to the initial value when the reset button is clicked
 document.querySelector('button[type="reset"]').addEventListener('click', function(event) {
     noStorage.checked = true;
     storageSelect.disabled = true;
     slider.disabled = true;
     selectAnnualKwh.disabled = true;
     slider.value = 0;
-    output.innerHTML = slider.value;
+    PV_kW_output.innerHTML = slider.value;
     selectDistrict.classList.remove('error');
     selectPhase.classList.remove('error');
     errorMessage.style.display = 'none';
@@ -107,10 +107,9 @@ selectAnnualKwh.addEventListener("change", function(event){
     slider.min =0;
     slider.disabled = false;
     slider.value = 0;
-    output.innerHTML = slider.value; // Update the output element value to 0 when the phase load is changed
+    PV_kW_output.innerHTML = slider.value; // Update the PV_kW_output element value to 0 when the phase load is changed
     storageSelect.disabled = false;
     storageKW.disabled = false;
-    storageKW.min = 1;
     console.log(selectAnnualKwh.value);
 
     if (selectAnnualKwh.value !=0) {
@@ -124,15 +123,16 @@ selectAnnualKwh.addEventListener("change", function(event){
         noStorage.checked = true;
     }
 
-    output.innerHTML = slider.value; 
+    PV_kW_output.innerHTML = slider.value; 
+    storageKW.min = slider.value;
     storageKW.value = slider.value;
-    storageKW.max = slider.value;
+    storageKW.max = 10;
 
     if(slider.addEventListener("change", function(event){
         storageKW.value = slider.value;
         storageKW.max = slider.value;
         console.log(storageKW.value);
-        output.innerHTML = slider.value; 
+        PV_kW_output.innerHTML = slider.value; 
     }))
     
     console.log(storageKW.value);
