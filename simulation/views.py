@@ -11,9 +11,9 @@ from .models import *
 
 def dashboard_results(request):   # simulation/templates/dashboard.html
  
-    if 'district_key' in request.session:
+    if 'district_irradiance' in request.session:
         try:
-            district_key = int(request.session.get('district_key'))
+            district_irradiance = int(request.session.get('district_irradiance'))
             district_value = request.session.get('district_value')
             place_of_installment = request.session.get('place_of_installment')
             inclination_PV = int(request.session.get('inclination_PV'))
@@ -24,7 +24,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             recommended_PV_in_Kwp = request.session.get('recommended_PV_in_Kwp')
             annual_kwh = int(request.session.get('annual_kwh'))
             PV_kWp = int(request.session.get('PV_kWp'))
-            average_annual_production = district_key * PV_kWp
+            average_annual_production = district_irradiance * PV_kWp
             has_storage = request.session.get('has_storage')
             storage_kW = int(request.session.get('storage_kW'))
 
@@ -34,7 +34,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
 
             # dictionary with rendered variables
             context = {
-            'district_key': district_key,
+            'district_irradiance': district_irradiance,
             'district_value': district_value,
             'place_of_installment': place_of_installment,
             'azimuth_value': azimuth_value,
@@ -81,8 +81,8 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
         if form_district.is_valid() and form_annual_kwh.is_valid() and form_phase_load.is_valid():
             try:
                 # initialization of variables
-                district_key = request.POST.get('select_district')
-                district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_key)
+                district_irradiance = request.POST.get('select_district')
+                district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_irradiance)
                 place_of_installment = request.POST.get('installation')
                 azimuth_value = request.POST.get('azimuth')
                 inclination_PV = request.POST.get('inclination')
@@ -104,7 +104,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 storage_kW = request.POST.get('storage_kw')
 
                 # print the variables to check
-                print(f"District key: {district_key}")
+                print(f"District key: {district_irradiance}")
                 print(f"District value: {district_value}")
                 print(f"The selected phase load is: {phase_load}")
                 print(f"Agreed kVA is: {phase_loadkVA}")
@@ -126,7 +126,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 # Handle the case where an invalid key is provided
                 return HttpResponse('Invalid request parameters')
 
-            request.session['district_key'] = district_key
+            request.session['district_irradiance'] = district_irradiance
             request.session['place_of_installment'] = place_of_installment
             request.session['inclination_PV'] = inclination_PV
             request.session['userPower_profile'] = userPower_profile
@@ -236,6 +236,7 @@ def calculate_production(PV_kWp, azimuth_value, inclination_PV):
     # Calculate the annual production of the PV system
     # based on the system's specifications and the inclination
     # Return the result
+
     pass;
 
 def calculate_total_profit(production):
