@@ -23,9 +23,9 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             phase_loadkVA = int(request.session.get('phase_loadkVA'))
             recommended_PV_in_Kwp = request.session.get('recommended_PV_in_Kwp')
             annual_kwh = int(request.session.get('annual_kwh'))
-            PV_kWp = int(request.session.get('PV_kWp'))
+            PV_kWp = float(request.session.get('PV_kWp'))
             has_storage = request.session.get('has_storage')
-            storage_kW = int(request.session.get('storage_kW'))
+            storage_kW = float(request.session.get('storage_kW'))
 
             total_investment = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW)
             average_annual_production, total_loss_percentage, percentage_production_loss, inclination_percentage, production_per_KW = calculate_average_annual_production(PV_kWp, district_irradiance, azimuth_value, inclination_PV)
@@ -63,7 +63,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print("Ετήσιο κόστος ρεύματος, μαζί με ρυθμιζόμενες χρεώσεις, χωρίς δημοτικούς φόρους: ", total_annual_cost, "& Ετήσιο Όφελος: ", average_annual_savings)
             print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges, "Μέση Ετήσια Παραγωγή:", average_annual_production)  # Add this line for debugging
             print('ideal Production kWh per kWp: ', production_per_KW)
-            print("Total production loss '%' due azimuth and inclination: ", total_loss_percentage, 'Inclination percent: ', inclination_percentage, 'Azimuth percent:', percentage_production_loss)
+            print("Total production loss percent, calculating azimuth and inclination: ", total_loss_percentage, 'Inclination percent: ', inclination_percentage, 'Azimuth percent:', percentage_production_loss, '\n')
             
             return render(request, result, context)
         except Http404:
@@ -116,7 +116,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print(f"The selected phase load is: {phase_load}")
                 print(f"Agreed kVA is: {phase_loadkVA}")
                 print(f"Annual kWh is: {annual_kwh}")
-                print(f"Recommended Kwp is: {recommended_PV_in_Kwp}" )
+                print(f"Minimum Kwp to reduce electric cosumption is: {recommended_PV_in_Kwp}" )
                 print(f"Place of installment is: {place_of_installment}")
                 print(f"Azimuth of PV: {azimuth_value}")
                 print(f"Degrees of PV inclination: {inclination_PV}" )
@@ -227,6 +227,7 @@ def calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_p
         annual_kWh_difference_cost = (annual_consumption -average_annual_production) * (energy_cost + 0.0213 + 0.00844)
         average_annual_savings = round(annual_kWh_cost + discount_regulated_charges - annual_kWh_difference_cost)
         total_annual_cost = annual_kWh_cost + regulated_charges + annual_kWh_difference_cost
+        print('\n^^^ User must pick a larger pv system in kWp, in order to reduce annual electricity costs!!! ^^^\n')
     else:
         annual_kWh_difference_cost = (average_annual_production - annual_consumption) * (0.0213 * 0.00844)
         difference_savings = (average_annual_production - annual_consumption) * energy_cost
