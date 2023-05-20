@@ -30,7 +30,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
 
             total_investment = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW)
             average_annual_savings, profitPercent, total_annual_cost, other_energy_charges = calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_profile, average_annual_production)
-            payback_period = calculate_payback_period(total_investment, average_annual_savings)
+            net_present_value, total_savings = calculate_npv(total_investment, average_annual_savings)
+            payback_period = calculate_payback_period(total_investment, total_savings)
 
             # dictionary with rendered variables
             context = {
@@ -54,10 +55,14 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'total_annual_cost': total_annual_cost,
             'other_energy_charges': other_energy_charges,
             'has_storage': has_storage,
+            'net_present_value': net_present_value, 
+            'total_savings': total_savings, 
             }
 
             result = 'simulation/dashboard.html'
             print('Total Investment:', total_investment,"euro", '& Περίοδος Απόσβεσης:', payback_period, "Ετήσιο κόστος ρεύματος: ", total_annual_cost, "& ετήσια μείωση: ", average_annual_savings, "Ρυθμιζόμενες χρεώσεις: ", other_energy_charges, )  # Add this line for debugging
+            print('Total savings after 25years: ', total_savings) 
+            print(f'Net Present value is {net_present_value} €') 
             return render(request, result, context)
         except Http404:
             return Http404("404 Generic Error")
@@ -224,8 +229,8 @@ def calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_p
     return average_annual_savings, profitPercent, total_annual_cost, other_energy_charges
 
 # Payback Period
-def calculate_payback_period(total_investment, average_annual_savings):    
-    payback_period = total_investment / average_annual_savings
+def calculate_payback_period(total_investment, total_savings):    
+    payback_period = total_investment / total_savings
     years = int(payback_period)
     months = round((payback_period - years) * 12)
 
@@ -238,17 +243,27 @@ def calculate_production(PV_kWp, azimuth_value, inclination_PV):
     # Return the result
     pass;
 
-def calculate_total_profit(production):
+def calculate_total_savings(average_annual_savings):
     # Calculate the total profit over 25 years
     # based on the annual production
     # Return the result
     pass;
-
-def calculate_npv(total_profit, total_cost):
+   
+   
+def calculate_npv(total_investment, average_annual_savings):
     # Calculate the net present value
-    # based on the total profit and the total cost
+    # based on the total savings and the total investment
     # Return the result
-    pass;
+    
+    total_savings = 0
+    annual_production_degradation = 0.06
+    annual_value_discount_rate = 0.3
+    annual_electricity_inflation = 0.2
+
+    for i in range(1, 26):
+        total_savings += average_annual_savings / (( 1+annual_production_degradation+annual_value_discount_rate-annual_electricity_inflation) ** i)) 
+      
+    return total_savings - total_investment,  total_savings
 
 def calculate_roi(payback_period, total_cost):
     # Calculate the return on investment
@@ -262,7 +277,7 @@ def calculate_lcoe(total_investment, average_annual_production, annual_kwh):
     # Return the result
 
     # lifetimePv = 25
-    # discountRate = 0.05
+    # discountRate = 0.06
     # annualreservationCost = 400 * 12
     # lcoe = ( total_investment + (annualreservationCost * lifetimePv) ) / discountRate
     pass;
