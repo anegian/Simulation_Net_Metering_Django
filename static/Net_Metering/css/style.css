@@ -11,8 +11,17 @@ html, body {
     width: 100%;
     height: 100%;
 }
-p{
-    margin-bottom: 8px;
+ul li{
+    margin-bottom: 10px;
+}
+.article-small-titles{
+    color: #f2f2f2;
+    font-size: 20px;
+}
+.article-big-titles{
+    color: #29233b;
+    font-size: 30px;
+    margin-top: 10px;
 }
 .overlay {
     position: fixed;
@@ -59,10 +68,9 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    opacity: 0.7;
+    opacity: 0.6;
     z-index: -1;
-    filter: brightness(70%) contrast(120%);
-
+    filter: brightness(50%) contrast(110%);
 }
 
 
@@ -218,20 +226,22 @@ input[type="search"]:focus {
     .main-page-section{
         display: flex;
         flex-direction: column;
-    }
-    .main-page-section {
         overflow-y: hidden;
     }
     .main-page-article{
         background: transparent;
-        width: 400px;
-        height: 150px;
+        display: flex;
+        flex-direction: column;
         color: #000022;
         font-size: 16px;
         text-align: justify;
+        margin: 0 100px;
     }
-    .article-paragraph-body{
+    .article-body{
         background-color: transparent;
+        font-weight: bold;
+        display: flex;
+        flex-direction: column;
     }
     .calculator-page-content{
         background-color: #29233b;
@@ -835,7 +845,7 @@ footer .admin-info {
     background-size: cover;
     opacity: 0.7;
     z-index: -1;
-    filter: brightness(70%) contrast(120%);
+    filter: brightness(60%) contrast(140%);
   }
 
   .container-info{

@@ -1,10 +1,10 @@
-
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http.response import Http404, HttpResponse
 from django.http import JsonResponse
 from .forms import *
 from .models import *
+import json
 
 # Create your views here
 # App level
@@ -27,10 +27,19 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             has_storage = request.session.get('has_storage')
             storage_kW = float(request.session.get('storage_kW'))
 
-            total_investment = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW)
+            total_investment = round(calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW))
             average_annual_production, total_loss_percentage, percentage_production_loss, inclination_percentage, production_per_KW = calculate_average_annual_production(PV_kWp, district_irradiance, azimuth_value, inclination_PV)
             average_annual_savings, profitPercent, total_annual_cost, regulated_charges = calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_profile, average_annual_production)
+            
+            
+            total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
+            total_savings_array_json = json.dumps(total_savings_array)
+            total_production_kwh_array = calculate_total_production_kwh(average_annual_production)
+            total_production_kwh_array_json = json.dumps(total_production_kwh_array)
+
             payback_period = calculate_payback_period(total_investment, average_annual_savings)
+
+            net_present_value = calculate_npv(total_investment, total_savings)
 
             # dictionary with rendered variables
             context = {
@@ -54,12 +63,19 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'total_annual_cost': total_annual_cost,
             'regulated_charges': regulated_charges,
             'has_storage': has_storage,
-            'average_annual_production': average_annual_production,
+            'average_annual_production': average_annual_production,  
+            'total_savings': total_savings,
+            'total_savings_array': total_savings_array,
+            'total_savings_array_json': total_savings_array_json,
+            'total_production_kwh_array': total_production_kwh_array,
+            'total_production_kwh_array_json': total_production_kwh_array_json,
+            'net_present_value': net_present_value,
             }
 
             result = 'simulation/dashboard.html'
 
-            print('Total Investment:', total_investment,"euro", '& Περίοδος Απόσβεσης:', payback_period) 
+            print('Total Investment:', total_investment,"euro", 'Average annual Savings: ', average_annual_savings, '& Περίοδος Απόσβεσης:', payback_period) 
+            print(f'Total savings for 25 years: {total_savings}, NPV is: {total_savings} - {total_investment} = {net_present_value}')
             print("Ετήσιο κόστος ρεύματος, μαζί με ρυθμιζόμενες χρεώσεις, χωρίς δημοτικούς φόρους: ", total_annual_cost, "& Ετήσιο Όφελος: ", average_annual_savings)
             print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges, "Μέση Ετήσια Παραγωγή:", average_annual_production)  # Add this line for debugging
             print('ideal Production kWh per kWp: ', production_per_KW)
@@ -158,7 +174,6 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
 
 # Calculation functions
 
-# Calculate total investment
 def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
     installation_cost = 400 # average cost in €
 
@@ -239,14 +254,21 @@ def calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_p
 
     return average_annual_savings, profitPercent, total_annual_cost, regulated_charges
 
-# Payback Period
-def calculate_payback_period(total_investment, average_annual_savings):    
-    payback_period = total_investment / average_annual_savings
-    years = int(payback_period)
-    months = round((payback_period - years) * 12)
+def calculate_payback_period(total_investment, average_annual_savings): 
+    annual_production_degradation = 0.06   
+    years = 0
+    minimum_savings_needed = 0
+    element_index = 0
 
-    return f"{years} έτη & {months} μήνες"
+    while total_investment >= minimum_savings_needed and element_index < 26:
+        minimum_savings_needed += average_annual_savings / ( ( 1 + annual_production_degradation ) ** element_index)
+        element_index+=1
+        print(minimum_savings_needed, years, element_index)
 
+    payback_period = element_index
+    print('Period simple division:', total_investment / average_annual_savings)
+
+    return f"{payback_period} έτη"
 
 def calculate_average_annual_production(PV_kWp, district_irradiance, azimuth_value, inclination_PV):
     # Calculate the annual production of the PV system
@@ -281,17 +303,39 @@ def calculate_average_annual_production(PV_kWp, district_irradiance, azimuth_val
 
     return average_annual_production, total_loss_percentage, percentage_production_loss, inclination_percentage,production_per_KW   # in kWh
 
-def calculate_total_profit(average_annual_production):
+def calculate_total_production_kwh(average_annual_production):
+
+    total_production_kwh = 0
+    total_production_kwh_array =[]
+    annual_production_degradation = 0.06
+
+    for i in range(1, 26):
+        total_production_kwh += average_annual_production / ( ( 1+annual_production_degradation) ** i)
+        total_production_kwh_array.append(total_production_kwh)
+
+    return total_production_kwh_array
+
+def calculate_total_savings(average_annual_savings):
     # Calculate the total profit over 25 years
     # based on the annual production
     # Return the result
-    pass;
+    total_savings_array = []
+    total_savings = 0
+    annual_production_degradation = 0.06
+    
+    for i in range(1, 26):
+        total_savings += average_annual_savings / ( ( 1 + annual_production_degradation ) ** i)
+        total_savings_array.append(total_savings)
 
-def calculate_npv(total_profit, total_cost):
-    # Calculate the net present value
-    # based on the total profit and the total cost
+    return total_savings, total_savings_array
+
+def calculate_npv(total_investment, total_savings):
+    # Calculate the net present value without cash flow, only logistics
+    # based on the total savings and the total investment
+    # annual_value_discount_rate = 0.3, annual_electricity_inflation = 0.2
     # Return the result
-    pass;
+    
+    return total_savings - total_investment
 
 def calculate_roi(payback_period, total_cost):
     # Calculate the return on investment

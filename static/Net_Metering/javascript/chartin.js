@@ -31,25 +31,25 @@ new Chart("myChart1", {
 
 
 // DASHBOARD CHART 2
-const profitValues = [100,200,300,400,500,600,700,800,900,1000];
+const pv_lifetime = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
 
 new Chart("myChart2", {
   type: "line",
   data: {
-    labels: profitValues,
+    labels: pv_lifetime,
     datasets: [{
       label: "City",
       data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
       borderColor: "#5BBAD2",
       fill: false,
     }, { 
-      label: "Irradiance",
-      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
+      label: "Production in kWh",
+      data: totalProductionArray,
       borderColor: "#f2f2f2",
       fill: false
     }, { 
       label: "Profit",
-      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+      data: totalSavingsArray,
       borderColor: "#A457F2",
       fill: false
     }]
@@ -63,7 +63,8 @@ new Chart("myChart2", {
       },
       scales: {
       yAxes: [{ticks: { fontColor: "#f2f2f2" }}],
-      xAxes: [{ticks: { fontColor: "#f2f2f2" }}],
+      xAxes: [{ticks: { fontColor: "#f2f2f2" },
+              scaleLabel: { display: true,labelString: "Years"}}],
     },
     legend: {
       labels: {
