@@ -1,6 +1,5 @@
 // DASHBOARD CHART 1
 const monthValues = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-const sunValues = [900,950,1050,1100,1200,1200,1400,1350,1200,1000,950,850];
 
 new Chart("myChart1", {
   type: "line",
@@ -9,10 +8,10 @@ new Chart("myChart1", {
     datasets: [{
       fill: false,
       lineTension: 0,
+      data: monthProductionArray,
       backgroundColor: "#A457F2",
       borderColor: "rgba(91,186,210,0.1)",
-      data: sunValues
-    }]
+      }]
   },
   options: {
       title: {
@@ -23,7 +22,7 @@ new Chart("myChart1", {
     },
     legend: {display: false},
     scales: {
-      yAxes: [{ticks: {min: 800, max:1500, fontColor: "#f2f2f2" }}],
+      yAxes: [{ticks: {fontColor: "#f2f2f2" }}],
       xAxes: [{ticks: {min: 0, max:12, fontColor: "#f2f2f2"}}],
     }
   }
@@ -78,15 +77,15 @@ new Chart("myChart2", {
 var zValues = ["1", "2", "3", "4", "5"];
 var rValues = [55, 49, 44, 24, 15];
 var barColors = [
-  "#b91d47",
-  "#00aba9",
-  "#2b5797",
-  "#e8c3b9",
-  "#1e7145"
+  "#5BBAD2",
+  "#A457F2",
+  "#393052",
+  "#ed4901",
+  "#e8c3b9"
 ];
 
 new Chart("myChart3", {
-  type: "pie",
+  type: "polarArea",
   data: {
     labels: zValues,
     datasets: [{
@@ -98,7 +97,7 @@ new Chart("myChart3", {
     title: {
       display: true,
       fontColor: "#f2f2f2",
-      text: "Profitability",
+      text: "Οικονομικοί Δείκτες",
       fontSize: 18
     },
     legend: {

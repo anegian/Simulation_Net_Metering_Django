@@ -11,6 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" ></script>
 <script> let totalSavingsArray = JSON.parse( '{{ total_savings_array_json|safe }}' );
          let totalProductionArray = JSON.parse( '{{ total_production_kwh_array_json|safe }}' );
+         let monthProductionArray = JSON.parse( '{{ month_production_array_json|safe }}' );
  </script>
 {% endblock %}
 
@@ -19,7 +20,7 @@
     <li><a class="nav-link active" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-    <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
 
 {% block content %}

@@ -11,6 +11,6 @@ urlpatterns = [
     path('calculator/', views.calculator_forms_choice, name='calculator'),
     path('dashboard/', views.dashboard_results, name='dashboard'),
     path('regulations/', views.regulations, name='regulations'),
-    path('info/', views.info, name='info'), 
+    path('about/', views.about, name='about'), 
     path('signup/', views.signup, name='signup'),
 ]

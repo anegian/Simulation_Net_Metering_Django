@@ -12,7 +12,7 @@
     <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-    <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
 
 
@@ -28,12 +28,13 @@
        <div class="main-page-article">
 
           <div class="article-body">
-            <h2 class="article-big-titles">Το Net metering ως μια βιώσιμη λύση για την ενσωμάτωση ηλιακών συστημάτων
-            φωτοβολταϊκών στο δίκτυο ηλεκτρικής ενέργειας, μειώνοντας το κόστος ηλεκτρικής ενέργειας για τους καταναλωτές
-             και προωθώντας την υιοθέτηση ανανεώσιμων πηγών ενέργειας</h2>
+            <h2 class="article-first-title">Το Net metering ως βιώσιμη λύση ενσωμάτωσης Φ/Β συστημάτων
+            στο δίκτυο ηλεκτρικής ενέργειας. Μείωση κόστους ηλεκτρικής ενέργειας και υιοθέτηση 
+            ανανεώσιμων πηγών ενέργειας.</h2>
+             
           </div>
 
-          <div class="article-body">
+          <div class="article-body" >
             <h2 class="article-big-titles">Τι είναι το Net Metering;</h2>
             Ο ενεργειακός συμψηφισμός αυτοπαραγωγής με ιδιοκατανάλωση, είναι ένας μηχανισμός που επιτρέπει 
             στους κατόχους Φ/Β συστημάτων, να καταναλώνουν την ποσότητα ρεύματος τη στιγμή που παράγεται, 
@@ -42,7 +43,11 @@
             έναν μετρητή διπλής κατεύθυνσης, ο οποίος μετρά τόσο την ενέργεια που καταναλώνεται από το δίκτυο 
             όσο και αυτή που παράγεται από το Φ/Β και εγχύεται στο δίκτυο. Ο συμψηφισμός τελικά είναι λογιστικός, 
             στοχεύοντας στη μείωση έως μηδενισμό του λογαριασμού του ρεύματος. Μπορεί να αποδειχθεί εξαιρετικά 
-            κερδοφόρο, με ή χωρίς υποστήριξη συστήματος μπαταριών.
+            κερδοφόροw, με ή χωρίς υποστήριξη συστήματος μπαταριών.
+          </div>
+
+          <div class="img-div-home">
+            <img class="img-info" src="{% static 'images/Net1.png' %}" alt="No Image">
           </div>
 
           <div class="article-body">

@@ -43,6 +43,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             payback_period = calculate_payback_period(total_investment, average_annual_savings)
 
             net_present_value = calculate_npv(total_investment, total_savings)
+            lcoe = calculate_lcoe(total_investment, 2190, total_production_kwh)
+            roi = calculate_roi(net_present_value, total_investment, total_savings)
 
             # dictionary with rendered variables
             context = {
@@ -76,6 +78,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'month_production_array': month_production_array,
             'month_production_array_json': month_production_array_json,
             'net_present_value': net_present_value,
+            'lcoe': lcoe,
+            'roi': roi,
             }
 
             result = 'simulation/dashboard.html'
@@ -92,7 +96,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             return Http404("404 Generic Error")
     else:
         try:
-            result = 'simulation/dashboard.html'
+            result = 'simulation/dashboard_empty.html'
             return render(request, result)
         except Http404:      # not use bare except
             return Http404("404 Generic Error")
@@ -326,8 +330,10 @@ def calculate_month_production(average_annual_production):
     monthly_percentages = [5.2, 6, 8.1, 9.5, 10.5, 10.7, 11.6, 10.9, 9.8, 7.8, 5.4, 4.5]
     
     for percentage in monthly_percentages:
-        monthly_production = (percentage / 100) * average_annual_production
+        monthly_production = round((percentage / 100) * average_annual_production)
         month_production_array.append(monthly_production)
+
+    print('Each month production: ', month_production_array)
     
     return month_production_array 
    
@@ -363,8 +369,10 @@ def calculate_roi(net_present_value, total_investment, total_savings):
     roi = net_present_value / total_investment * 100
     annualized_roi = ((total_savings / total_investment) ** (1/25) -1) *100
     
+    print('Return On Investment: ', roi)
+    print('Annualized Return On Investment: ', annualized_roi)
+
     return roi, annualized_roi
-    pass;
 
 def calculate_lcoe(total_investment, maintenance_cost, total_production_kwh):
     # Calculate the levelized cost of electricity
@@ -376,8 +384,9 @@ def calculate_lcoe(total_investment, maintenance_cost, total_production_kwh):
     
     lcoe = ( total_investment + maintenance_cost ) / total_production_kwh
     
+    print('Levelized Cost of Electricity: ', lcoe)
+
     return lcoe
-    pass;
    
 def calculate_irr(net_present_value, total_investment, total_savings_array):
     # Calculate the return on investment
@@ -433,10 +442,10 @@ def regulations(request):
     except Http404:      # not use bare except
         return Http404("404 Generic Error")
     
-# simulation/templates/info.html    
-def info(request):          
+# simulation/templates/about.html    
+def about(request):          
     try:
-        result = 'simulation/info.html'
+        result = 'simulation/about.html'
         return render(request, result)
     except Http404:      # not use bare except
         return Http404("404 Generic Error")

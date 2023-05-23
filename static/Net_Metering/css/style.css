@@ -15,13 +15,22 @@ ul li{
     margin-bottom: 10px;
 }
 .article-small-titles{
-    color: #f2f2f2;
+    color: #393052;
     font-size: 20px;
 }
 .article-big-titles{
-    color: #29233b;
-    font-size: 30px;
+    color: #c446109c;
+    font-size: 25px;
     margin-top: 10px;
+    font-style: italic;
+    line-height: 1.5;
+}
+.article-first-title{
+    color: #393052;
+    font-size: 25px;
+    margin-top: 10px;
+    font-style: italic;
+    line-height: 1.5;
 }
 .overlay {
     position: fixed;
@@ -55,9 +64,11 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
     color: hsla(0, 100%, 50%, 0.5);
 }
 
-/* ::: Home Page Main image ::: */
+
+/* ::: Home Page Main image background: url('../../images/solar-cell.jpg');::: */
 .home-body::before{
-    background: url('../../images/solar-cell.jpg');
+    
+    background-color: #f2f2f2;
     content: "";
     position: fixed;
     top: 0;
@@ -68,9 +79,9 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    opacity: 0.6;
+    /* opacity: 0.7;filter: brightness(80%) contrast(100%); */
     z-index: -1;
-    filter: brightness(50%) contrast(110%);
+    
 }
 
 
@@ -139,7 +150,7 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
     height: inherit;
     display: flex;
     align-items: center;
-    padding-top: 15px;
+    padding-top: 25px;
 }
 .second-navbar-right-container{
     height: inherit;
@@ -220,13 +231,13 @@ input[type="search"]:focus {
         min-height: 200vh;
         display: flex;
         justify-content: center;
-        flex: initial;
         flex: 1;
     }
     .main-page-section{
         display: flex;
         flex-direction: column;
         overflow-y: hidden;
+        align-items: center;
     }
     .main-page-article{
         background: transparent;
@@ -234,14 +245,40 @@ input[type="search"]:focus {
         flex-direction: column;
         color: #000022;
         font-size: 16px;
-        text-align: justify;
-        margin: 0 100px;
+        justify-content: center;
+        width: 60%;
     }
     .article-body{
         background-color: transparent;
-        font-weight: bold;
+        font-weight: 500;
         display: flex;
         flex-direction: column;
+        line-height: 2;
+        color: #393052;
+    }
+    .img-div-home{
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #29233b;
+
+    }
+    .img-div-dash-empty{
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 20%;
+    }
+    
+    .img-info{
+        width: 600px;
+        height: 300px;
+    }
+    .img-dash-nodata{
+        width: 300px;
+        height: 300px;
     }
     .calculator-page-content{
         background-color: #29233b;
@@ -364,6 +401,7 @@ input[type="search"]:focus {
         border-style: solid;
         border-width: 1.5px;
         border-color: #221e2e;
+        border-radius: 5px;
         background-color: #393052;
     }
     .calculator-fieldset .panel .number{
@@ -500,6 +538,7 @@ input[type="search"]:focus {
         height: 60px;
         background-color: royalblue;
         border-color: #553f33;
+        border-radius: 5px;
         border-width: 0.01px;
         color: #f2f2f2;
         font-weight: bold;
@@ -805,6 +844,10 @@ footer .admin-info {
     width: 260px;
     background-color: #393052;
   }
+  #change-data-button:hover{
+    background-color: #ed4901;
+  }
+
   #change-data-button a i, #change-data-button a{
     margin: 0 10px 0 10px;
     text-decoration: none;
@@ -812,6 +855,34 @@ footer .admin-info {
     font-size: 20px;
     font-weight: normal;
     cursor: pointer;
+  }
+  .dashboard-empty-info{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 18px;
+    background-color: #393052;
+    color: #f2f2f2;
+    margin: 20px 0;
+    width: 80%;
+    font-style: italic;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #29233b;
+  }
+  .fa-exclamation-circle, .fa-copyright{
+    color: #ed4901;
+  }
+
+  .full-container-empty{
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
   }
 
     /* ::: SIGNUP PAGE SECTION ::: */
@@ -830,7 +901,7 @@ footer .admin-info {
   }
 
 
-  /* ::: INFO PAGE SECTION ::: */
+  /* ::: ABOUT PAGE SECTION ::: */
   .info-body::before{
     background-image: url('../../images/lamp2.jpg');
     content: "";
@@ -843,12 +914,28 @@ footer .admin-info {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    opacity: 0.7;
+    opacity: 0.9;
     z-index: -1;
-    filter: brightness(60%) contrast(140%);
+    filter: brightness(90%) contrast(110%);
   }
 
   .container-info{
     min-height: 100vh;
+  }
+  .about-text{
+    color: #f2f2f2;
+    font-size: 14px;
+    font-weight: 600;
+    width: 50%;
+    text-align: justify;
+  }
+  .about-title{
+    color: #ed4901;
+    font-size: 24px;
+    font-weight: 600;
+    width: 60%;
+    text-align: justify;
+    margin: 40px 0 20px 0;
+    font-style: italic;
   }
 

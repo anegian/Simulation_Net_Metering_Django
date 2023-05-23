@@ -1,0 +1,51 @@
+{% extends "index.html" %}
+
+{% load static %}
+
+{% block title %}
+<title>Dashboard</title>
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block menu_list %}
+    <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
+    <li><a class="nav-link active" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
+    <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+    <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
+    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
+{% endblock %}
+
+{% block content %}
+
+    <div class="dashboard-page-content">
+
+      <section class="full-container-empty">
+
+          <div class="img-div-dash-empty">
+            <img class="img-dash-nodata" src="{% static 'images/nodata.png' %}" alt="No Image">
+          </div>
+
+          
+        <div class="dashboard-empty-info"> 
+          
+            <span> <i class="fas fa-exclamation-circle"></i> Δεν υπάρχουν διαθέσιμα δεδομένα. Παρακαλώ πατήστε την επιλογή "Νέος Υπολογισμός"
+            για να μεταβείτε στη φόρμα συμπλήρωσης.
+            </span>
+        </div>
+          <div class="go-back-button">
+                <div>
+                  <button id="change-data-button">
+                      <i class="fas fa-calculator"></i><a href="{% url 'simulation:calculator' %}">Νέος Υπολογισμός</a>
+                  </button>
+                </div>
+                
+            </div>
+      </section>
+
+      
+
+    </div>
+
+{% endblock %}

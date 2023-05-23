@@ -7,12 +7,11 @@
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" href=" {% static 'Net_Metering/css/regulationCss.css' %}"/>
+    <link rel="stylesheet" href=" {% static 'Net_Metering/css/regulations.css' %}"/>
 {% endblock %}
 
 {% block script %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" ></script>
-<script src="{% static 'Net_Metering/javascript/chart.js' %}" defer></script>
+
 {% endblock %}
 
 {% block menu_list %}
@@ -20,7 +19,7 @@
     <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
     <li><a class="nav-link active" href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-    <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
 
 {% block content %}
@@ -52,7 +51,13 @@
                           </h2>
                           <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                              <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                              <ol>
+                                <li>
+                                  <a href="{% static 'pdf/Βεβαίωση Υποβολής 3ης Αναφοράς Προόδου_ΠΛΣΔΕ.pdf' %}" class="pdf-link" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-file-pdf"></i> Βεβαίωση Υποβολής
+                                  </a>
+                                </li> 
+                              </ol>
                             </div>
                           </div>
                         </div>
@@ -64,7 +69,8 @@
                           </h2>
                           <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                              <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                              <strong>This is the second item's accordion body.</strong>
+                              
                             </div>
                           </div>
                         </div>
@@ -76,7 +82,13 @@
                           </h2>
                           <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                              <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                              <ol>
+                                <li>
+                                  <a href="{% static 'pdf/FEK_Net_Metering_31Dec2014.pdf' %}" class="pdf-link" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-file-pdf"></i> <strong>ΦΕΚ 3583Β/31-12-2014:</strong> “Εγκατάσταση μονάδων ΑΠΕ από αυτοπαραγωγούς με συμψηφισμό ενέργειας” 
+                                  </a>
+                                </li> 
+                              </ol>
                             </div>
                           </div>
                         </div>
