@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from .forms import *
 from .models import *
 import json
+import numpy as np
 
 # Create your views here
 # App level
@@ -34,8 +35,10 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             
             total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
             total_savings_array_json = json.dumps(total_savings_array)
-            total_production_kwh_array = calculate_total_production_kwh(average_annual_production)
+            total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(average_annual_production)
             total_production_kwh_array_json = json.dumps(total_production_kwh_array)
+            month_production_array = calculate_month_production(average_annual_production)
+            month_production_array_json = json.dumps(month_production_array)
 
             payback_period = calculate_payback_period(total_investment, average_annual_savings)
 
@@ -67,8 +70,11 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'total_savings': total_savings,
             'total_savings_array': total_savings_array,
             'total_savings_array_json': total_savings_array_json,
+            'total_production_kwh': total_production_kwh, 
             'total_production_kwh_array': total_production_kwh_array,
             'total_production_kwh_array_json': total_production_kwh_array_json,
+            'month_production_array': month_production_array,
+            'month_production_array_json': month_production_array_json,
             'net_present_value': net_present_value,
             }
 
@@ -313,8 +319,18 @@ def calculate_total_production_kwh(average_annual_production):
         total_production_kwh += average_annual_production / ( ( 1+annual_production_degradation) ** i)
         total_production_kwh_array.append(total_production_kwh)
 
-    return total_production_kwh_array
+    return total_production_kwh_array, total_production_kwh
 
+def calculate_month_production(average_annual_production):
+    month_production_array = []
+    monthly_percentages = [5.2, 6, 8.1, 9.5, 10.5, 10.7, 11.6, 10.9, 9.8, 7.8, 5.4, 4.5]
+    
+    for percentage in monthly_percentages:
+        monthly_production = (percentage / 100) * average_annual_production
+        month_production_array.append(monthly_production)
+    
+    return month_production_array 
+   
 def calculate_total_savings(average_annual_savings):
     # Calculate the total profit over 25 years
     # based on the annual production
@@ -328,6 +344,10 @@ def calculate_total_savings(average_annual_savings):
         total_savings_array.append(total_savings)
 
     return total_savings, total_savings_array
+   
+def calculate_maintenance_cost():
+    #new_inverter_cost = 1000
+    pass;
 
 def calculate_npv(total_investment, total_savings):
     # Calculate the net present value without cash flow, only logistics
@@ -337,22 +357,40 @@ def calculate_npv(total_investment, total_savings):
     
     return total_savings - total_investment
 
-def calculate_roi(payback_period, total_cost):
+def calculate_roi(net_present_value, total_investment, total_savings):
     # Calculate the return on investment
-    # based on the payoff period and the total cost
     # Return the result
+    roi = net_present_value / total_investment * 100
+    annualized_roi = ((total_savings / total_investment) ** (1/25) -1) *100
+    
+    return roi, annualized_roi
     pass;
 
-def calculate_lcoe(total_investment, average_annual_production, annual_kwh):
+def calculate_lcoe(total_investment, maintenance_cost, total_production_kwh):
     # Calculate the levelized cost of electricity
     # based on the total cost, the annual production, and the user's annual usage
     # Return the result
 
-    # lifetimePv = 25
-    # discountRate = 0.05
-    # annualreservationCost = 400 * 12
-    # lcoe = ( total_investment + (annualreservationCost * lifetimePv) ) / discountRate
+    lifetimePv = 25
+    discountRate = 0.05
+    
+    lcoe = ( total_investment + maintenance_cost ) / total_production_kwh
+    
+    return lcoe
     pass;
+   
+def calculate_irr(net_present_value, total_investment, total_savings_array):
+    # Calculate the return on investment
+    # Return the result
+    initial_investment = -total_investment
+    saving_flows = []
+    
+    saving_flows = total_savings_array[0].append(initial_investment)
+    
+    irr = round(np.irr(saving_flows),25)
+   
+    return irr
+    pass;   
 
 def signup(request):
     try:
