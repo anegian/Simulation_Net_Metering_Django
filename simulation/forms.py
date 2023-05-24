@@ -15,7 +15,7 @@ class PlaceForm(ModelForm):
 
 class PlaceOfInstallationForm(forms.Form):
     DISTRICT_CHOICES = [
-        ('0', 'Περιφέρεια'),
+        ('district', 'Περιφέρεια'),
         ('1590', 'Αττική'),
         ('1360', 'Ανατολική Μακεδονία & Θράκη'),
         ('1410', 'Βόρειο Αιγαίο'),
@@ -31,7 +31,7 @@ class PlaceOfInstallationForm(forms.Form):
         ('1550', 'Στερεά Ελλάδα'),
     ]
     select_district = forms.ChoiceField(choices=DISTRICT_CHOICES, label='Επιλέξτε Περιφέρεια',
-                                        initial='0')
+                                        initial='district')
     
 
 class PhaseLoad(forms.Form):
