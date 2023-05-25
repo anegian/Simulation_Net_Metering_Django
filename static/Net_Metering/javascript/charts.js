@@ -52,7 +52,7 @@ new Chart("myChart2", {
       title: {
       display: true,
       fontColor: "#f2f2f2", 
-      text: "Return On Investement",
+      text: "Αποδοτικότητα Φ/Β",
       fontSize: 18
       },
       scales: {

@@ -107,6 +107,7 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
     }
     h4{
         font-weight: bold;
+        font-size: 18px;
         color: #f2f2f2;
     }
 
@@ -306,13 +307,21 @@ input[type="search"]:focus {
     .dashboard-page-content{
         background-color: #29233b;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+    }
+    .dashboard-empty-page-content{
+        background-color: #29233b;
+>>>>>>> f7fc32c9abb5d8629aa655d17ff302c037555bb4
         display: flex;
         flex-wrap: wrap;
-
-        align-content: center;
         justify-content: center;
+<<<<<<< HEAD
 >>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
+=======
+        align-items: center;
+>>>>>>> f7fc32c9abb5d8629aa655d17ff302c037555bb4
     }
     
 
@@ -326,6 +335,7 @@ input[type="search"]:focus {
                     color: #f2f2f2;
                     cursor: pointer;
                     display: none;
+                    margin-top: 10px;
                 }
                 #check-navbar{
                     display: none;
@@ -339,6 +349,7 @@ input[type="search"]:focus {
                     color: #f2f2f2;
                     cursor: pointer;
                     display: none;
+                    margin-top: 10px;
                 }
                 .small-screen-show-search-button:hover {
                     color: #ed4901;
@@ -397,6 +408,7 @@ input[type="search"]:focus {
     .padding-article{
         padding-left: 5%;
         padding-right: 32%;
+        font-size: 14px;
     }
     .spacer{
 <<<<<<< HEAD
@@ -434,11 +446,16 @@ input[type="search"]:focus {
         border-color: #221e2e;
         border-radius: 5px;
         background-color: #393052;
+        font-size: 14px;
     }
     .calculator-fieldset .panel .number{
         margin: 0 10px 0 10px;
         font-size: 40px;
         color: #ed4901;
+    }
+    .calculator-fieldset label{
+        color: #bbb;
+
     }
     .title-panel{
         display: flex;
@@ -581,9 +598,9 @@ input[type="search"]:focus {
         transform: scale(1.1);
     }
       /* Positioning the radio buttons */
-    #east, #east-label { transform: translate(181px, -190px); }
-    #southEast, #southEast-label { transform: translate(164px, -121px); }
-    #south, #south-label { transform: translate(111px, -72px); }
+    #east, #east-label { transform: translate(181px, -175px); }
+    #southEast, #southEast-label { transform: translate(164px, -113px); }
+    #south, #south-label { transform: translate(112px, -66px); }
     #southWest, #southWest-label { transform: translate(60px, -68px); }
     #west, #west-label { transform: translate(43px, -86px); }
     #compass-photo { transform: translate(65px, -20px); }
@@ -611,6 +628,8 @@ input[type="search"]:focus {
                     min-height: 100vh;
                     display: flex;
                     flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
                 }  
                 .panels-container{
                     height: 80vh!important; /* Set a minimum height for the elements inside */
@@ -618,11 +637,11 @@ input[type="search"]:focus {
                 }
                 .panels-container canvas{
                     height: 70vh!important; /* Set a minimum height for the elements inside */
-                    width: 90%!important;
+                    width: 80%!important;
                 }
                 #myChart3{
-                    height: 70px!important; /* Set a minimum height for the elements inside */
-                    width: 90%!important;
+                    height: 40vh!important; /* Set a minimum height for the elements inside */
+                    width: 70%!important;
                 }
                 .section-before-calculator {
                     -webkit-flex-direction: column;
@@ -643,13 +662,17 @@ input[type="search"]:focus {
                  /* Check-button transformed in bars when small (600px) and
                     in times icon (x) when checkbutton is checked */
                 #menu-nav-button{
-                    padding-left: 10px;
+                  padding-left: 10px;
                     display: block;
                 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
             }
 >>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
+=======
+            
+>>>>>>> f7fc32c9abb5d8629aa655d17ff302c037555bb4
 
 
                 /* ::: MENU NAVBAR HIDDEN::: */
@@ -680,7 +703,7 @@ input[type="search"]:focus {
                     color: #f2f2f2;
                     font-size: 14px;
                     text-transform: uppercase;
-            }
+                 }
                 /*  color in active anchor reference */
                 #nav-list a:hover, #nav-list li a.active{
                     background: none;
@@ -717,13 +740,18 @@ input[type="search"]:focus {
 
                 }
 
-            }
+            } /* End media  */
+
+
+
             @media (max-width: 836px) {
                 #myChart3{
                     height: 70vh!important; /* Set a minimum height for the elements inside */
                     width: 90%!important;
                 } 
             }
+
+
             /* ::: EXTRA ZOOM IN ::: */
             @media (max-width: 420px) {
                 .titles-panel{
@@ -762,12 +790,17 @@ input[type="search"]:focus {
                     height: 300vh;
                 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 .go-back-button{
+=======
+                .go-back-button-dash-empty{
+>>>>>>> f7fc32c9abb5d8629aa655d17ff302c037555bb4
                     margin: 60px 0 60px 0;
                   }
 >>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
             }
+
 
                 /* ::: EXTRA ZOOM IN ::: */
                 @media (max-width: 330px) {
@@ -850,7 +883,6 @@ footer .admin-info {
 
 /* ::: DASHBOARD CHARTS SECTION ::: */
 .full-container{
-    width: 100%;
     min-height: 100vh;
     display: flex;
     flex-wrap: wrap;
@@ -858,7 +890,6 @@ footer .admin-info {
   }        
   .left-container{
     flex-basis: 50%;
-    width: 100%;
     display: flex;
     flex-direction: column;
   }
@@ -875,21 +906,25 @@ footer .admin-info {
     justify-content: space-evenly;  
   }
   .panels-container{
-    height: 60vh;
+    min-height: 60vh;
     margin: 10px 0 10px 0;
-    width:95%;
+    width: 95%;
     background-color: #393052;
     border-style: solid;
     border-width: 1.5px;
     border-color: #221e2e;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
   }
   .panels-container canvas{
-    min-height: 40vh!important; /* Set a minimum height for the elements inside */
-    min-width: 90%!important;
-  }
+    height: 55vh!important; /* Set a minimum height for the elements inside */
+    width: 95%!important;
+}
+#myChart3{
+    height: 50vh!important; /* Set a minimum height for the elements inside */
+    width: 90%!important;
+}
   .container-icons{
     margin-top: 10px;
     margin-bottom: 10px;
@@ -913,7 +948,6 @@ footer .admin-info {
   }
 
   .right-container{
-    width: 100%;
     flex-basis: 50%;
     display: flex;
     flex-direction: column;
@@ -937,15 +971,22 @@ footer .admin-info {
   .info-title, .go-back-button i{
     color: #f2f2f2;
     font-weight: bold;
+    font-size: 16px;
   }
   .go-back-button{
     height: 60px;
+<<<<<<< HEAD
 <<<<<<< HEAD
     display: flex;
     align-items: center;
     justify-content: center;
 =======
 >>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
+=======
+    display: flex;
+    align-items: center;
+    justify-content: center;
+>>>>>>> f7fc32c9abb5d8629aa655d17ff302c037555bb4
     background-color: #29233b;
   }
   #change-data-button{
@@ -953,11 +994,7 @@ footer .admin-info {
     width: 260px;
     background-color: #393052;
   }
-  #change-data-button:hover{
-    background-color: #6951ab;
-  }
-
-  #change-data-button a i, #change-data-button a{
+  #change-data-button, #change-data-button a{
     margin: 0 10px 0 10px;
     text-decoration: none;
     color: #f2f2f2;
