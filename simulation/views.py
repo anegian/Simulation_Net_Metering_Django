@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from .forms import *
 from .models import *
 import json
-import numpy as np
+import numpy_financial as npf
 
 # Create your views here
 # App level
@@ -28,7 +28,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             has_storage = request.session.get('has_storage')
             storage_kW = float(request.session.get('storage_kW'))
 
-            total_investment = round(calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW))
+            total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW)
             average_annual_production, total_loss_percentage, percentage_production_loss, inclination_percentage, production_per_KW = calculate_average_annual_production(PV_kWp, district_irradiance, azimuth_value, inclination_PV)
             average_annual_savings, profitPercent, total_annual_cost, regulated_charges = calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_profile, average_annual_production)
             
@@ -43,8 +43,10 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             payback_period = calculate_payback_period(total_investment, average_annual_savings)
 
             net_present_value = calculate_npv(total_investment, total_savings)
-            lcoe = calculate_lcoe(total_investment, 2190, total_production_kwh)
-            roi = calculate_roi(net_present_value, total_investment, total_savings)
+            maintenance_cost = calculate_maintenance_cost(total_investment, inverter_cost)
+            lcoe = calculate_lcoe(total_investment, maintenance_cost , total_production_kwh)
+            roi, annualized_roi = calculate_roi(net_present_value, total_investment, total_savings)
+            irr = calculate_irr(total_investment, total_savings_array)
 
             # dictionary with rendered variables
             context = {
@@ -80,6 +82,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'net_present_value': net_present_value,
             'lcoe': lcoe,
             'roi': roi,
+            'annualized_roi': annualized_roi,
+            'irr': irr,
             }
 
             result = 'simulation/dashboard.html'
@@ -188,7 +192,7 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
     installation_cost = 400 # average cost in €
 
     each_panel_kW = 0.4  # average 400W each panel
-    each_panel_average_cost = 300  # average in € for 400W panel
+    each_panel_average_cost = 250  # average in € for 400W panel
     number_of_panels_required = round(PV_kWp / each_panel_kW)
     panel_bases_cost = 90 * number_of_panels_required # bases for the panels on roof or taratsa, average cost per base
     electric_materials = 100 # average cost in €
@@ -200,15 +204,15 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
     if phase_load == "single_phase":
         # inverters cost -> 700€-1200€ prices, hybrid inverters are expensive
         if has_storage == "with_storage":
-            inverter_cost = ( PV_kWp * 250 ) + ( (5 - PV_kWp) * 100 )  # 1-phase hybrid inverter for battery support
+            inverter_cost = ( PV_kWp * 200 ) + ( (5 - PV_kWp) * 100 )  # 1-phase hybrid inverter for battery support
             battery_cost = storage_kW * average_battery_cost_per_kW
         else:
-            inverter_cost = ( PV_kWp * 150 ) + ( (5 - PV_kWp) * 100 )# simple 1-phase PV inverter
+            inverter_cost = ( PV_kWp * 100 ) + ( (5 - PV_kWp) * 100 )# simple 1-phase PV inverter
             battery_cost = 0
     # for 2 - 10 kWp
     elif phase_load == "3_phase":
         if has_storage == "with_storage":
-            inverter_cost = (PV_kWp * 300 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter for battery support
+            inverter_cost = (PV_kWp * 250 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter for battery support
             battery_cost = storage_kW * average_battery_cost_per_kW
         else:
             inverter_cost = ( PV_kWp * 150 )+ ( (10 - PV_kWp) * 100 ) # simple 3-phase PV inverter
@@ -221,7 +225,10 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
     print(f"Battery Cost: {battery_cost}")
     print(f"Required Pv panels: {number_of_panels_required}")
     print(f"PV panels' Cost: {Pv_cost}")
-    return Pv_cost + installation_cost + battery_cost + inverter_cost + panel_bases_cost + electric_materials
+
+    total_investment = Pv_cost + installation_cost + battery_cost + inverter_cost + panel_bases_cost + electric_materials
+
+    return total_investment, inverter_cost
 
 # Calculate annual savings and percentage
 def calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_profile, average_annual_production):
@@ -317,11 +324,13 @@ def calculate_total_production_kwh(average_annual_production):
 
     total_production_kwh = 0
     total_production_kwh_array =[]
-    annual_production_degradation = 0.06
+    annual_production_degradation = 0.006
 
     for i in range(1, 26):
         total_production_kwh += average_annual_production / ( ( 1+annual_production_degradation) ** i)
         total_production_kwh_array.append(total_production_kwh)
+
+    print("Total kWh production after 25 years: ", total_production_kwh)
 
     return total_production_kwh_array, total_production_kwh
 
@@ -343,7 +352,7 @@ def calculate_total_savings(average_annual_savings):
     # Return the result
     total_savings_array = []
     total_savings = 0
-    annual_production_degradation = 0.06
+    annual_production_degradation = 0.006
     
     for i in range(1, 26):
         total_savings += average_annual_savings / ( ( 1 + annual_production_degradation ) ** i)
@@ -351,9 +360,10 @@ def calculate_total_savings(average_annual_savings):
 
     return total_savings, total_savings_array
    
-def calculate_maintenance_cost():
-    #new_inverter_cost = 1000
-    pass;
+def calculate_maintenance_cost(total_investment, inverter_cost):
+    cost_rate = (1.5 / 100) * 25 # 1.5% της συνολικής επένδυσης ανά έτος
+
+    return total_investment * cost_rate
 
 def calculate_npv(total_investment, total_savings):
     # Calculate the net present value without cash flow, only logistics
@@ -366,8 +376,8 @@ def calculate_npv(total_investment, total_savings):
 def calculate_roi(net_present_value, total_investment, total_savings):
     # Calculate the return on investment
     # Return the result
-    roi = net_present_value / total_investment * 100
-    annualized_roi = ((total_savings / total_investment) ** (1/25) -1) *100
+    roi = round(net_present_value / total_investment * 100, 2)
+    annualized_roi = round(((total_savings / total_investment) ** (1/25) -1) *100, 2)
     
     print('Return On Investment: ', roi)
     print('Annualized Return On Investment: ', annualized_roi)
@@ -376,30 +386,28 @@ def calculate_roi(net_present_value, total_investment, total_savings):
 
 def calculate_lcoe(total_investment, maintenance_cost, total_production_kwh):
     # Calculate the levelized cost of electricity
-    # based on the total cost, the annual production, and the user's annual usage
+    # based on the total cost, and the user's annual usage
     # Return the result
 
-    lifetimePv = 25
-    discountRate = 0.05
-    
-    lcoe = ( total_investment + maintenance_cost ) / total_production_kwh
+    lcoe = round(( total_investment + maintenance_cost ) / total_production_kwh, 3)
     
     print('Levelized Cost of Electricity: ', lcoe)
 
     return lcoe
    
-def calculate_irr(net_present_value, total_investment, total_savings_array):
+def calculate_irr(total_investment, total_savings_array):
     # Calculate the return on investment
     # Return the result
     initial_investment = -total_investment
-    saving_flows = []
+    saving_flows = total_savings_array.copy()  # Create a copy of the total_savings_array
     
-    saving_flows = total_savings_array[0].append(initial_investment)
+    saving_flows.insert(0, initial_investment)  # Insert the initial investment at index 0
     
-    irr = round(np.irr(saving_flows),25)
-   
-    return irr
-    pass;   
+    irr = round(npf.irr(saving_flows), 25)
+
+    print('Internal Rate: ', irr)
+    
+    return irr   
 
 def signup(request):
     try:

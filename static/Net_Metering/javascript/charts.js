@@ -36,12 +36,7 @@ new Chart("myChart2", {
   type: "line",
   data: {
     labels: pv_lifetime,
-    datasets: [{
-      label: "City",
-      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-      borderColor: "#5BBAD2",
-      fill: false,
-    }, { 
+    datasets: [ { 
       label: "Production in kWh",
       data: totalProductionArray,
       borderColor: "#f2f2f2",
@@ -74,8 +69,8 @@ new Chart("myChart2", {
 });
 
 // DASHBOARD CHART 3
-var zValues = ["1", "2", "3", "4", "5"];
-var rValues = [55, 49, 44, 24, 15];
+var zValues = ["Return on Investment", "Net P.V.", "Levelized Cost", "Internal Rate", "Annualized R.O.I."];
+var rValues = [roi, npv, lcoe, irr, annual_roi];
 var barColors = [
   "#5BBAD2",
   "#A457F2",
@@ -85,7 +80,7 @@ var barColors = [
 ];
 
 new Chart("myChart3", {
-  type: "polarArea",
+  type: "pie",
   data: {
     labels: zValues,
     datasets: [{

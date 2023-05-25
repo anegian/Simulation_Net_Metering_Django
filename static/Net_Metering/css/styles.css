@@ -19,7 +19,7 @@ ul li{
     font-size: 20px;
 }
 .article-big-titles{
-    color: #c446109c;
+    color: #e34c0cbf;
     font-size: 25px;
     margin-top: 10px;
     font-style: italic;
@@ -67,18 +67,17 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
 
 /* ::: Home Page Main image background: url('../../images/solar-cell.jpg');::: */
 .home-body::before{
-    
-    background-color: #f2f2f2;
+    background: url('../../images/home.jpg');
     content: "";
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    -webkit-background-size: 100% 130%;
+    -moz-background-size: 100% 130%;
+    -o-background-size: 100% 130%;
+    background-size: 100% 130%;
     /* opacity: 0.7;filter: brightness(80%) contrast(100%); */
     z-index: -1;
     
@@ -228,7 +227,7 @@ input[type="search"]:focus {
         display: flex;
     }
     .main-page-content{
-        min-height: 200vh;
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         flex: 1;
@@ -261,8 +260,6 @@ input[type="search"]:focus {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #29233b;
-
     }
     .img-div-dash-empty{
         margin: 20px 0;
@@ -275,6 +272,7 @@ input[type="search"]:focus {
     .img-info{
         width: 600px;
         height: 300px;
+        border-radius: 10px;
     }
     .img-dash-nodata{
         width: 300px;
@@ -572,7 +570,24 @@ input[type="search"]:focus {
 
  /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
             @media (max-width: 1040px) {
-
+                .full-container{
+                    width: 100%;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }  
+                .panels-container{
+                    height: 80vh!important; /* Set a minimum height for the elements inside */
+                    min-width: 80%!important;
+                }
+                .panels-container canvas{
+                    height: 70vh!important; /* Set a minimum height for the elements inside */
+                    width: 90%!important;
+                }
+                #myChart3{
+                    height: 70px!important; /* Set a minimum height for the elements inside */
+                    width: 90%!important;
+                }
                 .section-before-calculator {
                     -webkit-flex-direction: column;
                     flex-direction: column;
@@ -663,8 +678,33 @@ input[type="search"]:focus {
                 }
 
             }
+            @media (max-width: 836px) {
+                #myChart3{
+                    height: 70vh!important; /* Set a minimum height for the elements inside */
+                    width: 90%!important;
+                } 
+            }
             /* ::: EXTRA ZOOM IN ::: */
             @media (max-width: 420px) {
+                .titles-panel{
+                    font-size: 11px!important;
+                }  
+                .panels-container{
+                    height: 80vh!important; /* Set a minimum height for the elements inside */
+                    min-width: 80%!important;
+                }
+                .panels-container canvas{
+                    height: 40vh!important; /* Set a minimum height for the elements inside */
+                    width: 90%!important;
+                }
+                #myChart3{
+                    height: 70vh!important; /* Set a minimum height for the elements inside */
+                    width: 100%!important;
+                } 
+                .lord-icon-small{
+                    width: 80px!important;
+                    height:80px!important;
+                }
                 .login a, .signup a, .logo a {
                     color: #2c3e50;
                     font-size: 15px;
@@ -685,6 +725,15 @@ input[type="search"]:focus {
 
                 /* ::: EXTRA ZOOM IN ::: */
                 @media (max-width: 330px) {
+                    .panels-container{
+                        height: 80vh!important; /* Set a minimum height for the elements inside */
+                        min-width: 80%!important;
+                    }
+                    .panels-container canvas{
+                        height: 40vh!important; /* Set a minimum height for the elements inside */
+                        width: 90%!important;
+                      }
+                      
                     .login a, .signup a {
                         padding: 0;
                         color: #2c3e50;
@@ -751,6 +800,7 @@ footer .admin-info {
 
 /* ::: DASHBOARD CHARTS SECTION ::: */
 .full-container{
+    width: 100%;
     min-height: 100vh;
     display: flex;
     flex-wrap: wrap;
@@ -758,6 +808,7 @@ footer .admin-info {
   }        
   .left-container{
     flex-basis: 50%;
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
@@ -782,8 +833,12 @@ footer .admin-info {
     border-width: 1.5px;
     border-color: #221e2e;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+  }
+  .panels-container canvas{
+    min-height: 40vh!important; /* Set a minimum height for the elements inside */
+    min-width: 90%!important;
   }
   .container-icons{
     margin-top: 10px;
@@ -808,6 +863,7 @@ footer .admin-info {
   }
 
   .right-container{
+    width: 100%;
     flex-basis: 50%;
     display: flex;
     flex-direction: column;
@@ -845,7 +901,7 @@ footer .admin-info {
     background-color: #393052;
   }
   #change-data-button:hover{
-    background-color: #ed4901;
+    background-color: #6951ab;
   }
 
   #change-data-button a i, #change-data-button a{

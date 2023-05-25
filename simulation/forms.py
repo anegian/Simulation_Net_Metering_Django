@@ -15,7 +15,7 @@ class PlaceForm(ModelForm):
 
 class PlaceOfInstallationForm(forms.Form):
     DISTRICT_CHOICES = [
-        ('0', 'Περιφέρεια'),
+        ('district', 'Περιφέρεια'),
         ('1590', 'Αττική'),
         ('1360', 'Ανατολική Μακεδονία & Θράκη'),
         ('1410', 'Βόρειο Αιγαίο'),
@@ -31,7 +31,7 @@ class PlaceOfInstallationForm(forms.Form):
         ('1550', 'Στερεά Ελλάδα'),
     ]
     select_district = forms.ChoiceField(choices=DISTRICT_CHOICES, label='Επιλέξτε Περιφέρεια',
-                                        initial='0')
+                                        initial='district')
     
 
 class PhaseLoad(forms.Form):
@@ -41,26 +41,9 @@ class PhaseLoad(forms.Form):
     select_phase = forms.ChoiceField(choices=PHASE_LOAD, initial='phase_load')
 
 
-""""
-    class Meta:
-        model = PlaceOfInstallation
-        fields = ('district_name', 'city_name', 'district_code')
-        widgets = {
-            'district_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'city_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'district_code': forms.TextInput(attrs={'class': 'form-control'}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['district_name'].label = 'District Name'
-        self.fields['city_name'].label = 'City Name'
-        self.fields['district_code'].label = 'District Code'
-"""""
-
 class EnergyConsumptionForm(forms.Form):
     KWh_CHOICES = [
-        ('0', 'KWh σε ετήσια βάση'),
+        ('kWh', 'KWh σε ετήσια βάση'),
         ('3000', '3000'),
         ('4500', '4500'),
         ('6000', '6000'),
@@ -70,7 +53,7 @@ class EnergyConsumptionForm(forms.Form):
         ('11000', '11000'),
         ('12000', '12000'),
     ]
-    select_kwh = forms.ChoiceField(choices=KWh_CHOICES, label='Επιλέξτε Παροχή και KWh', initial = '0')
+    select_kwh = forms.ChoiceField(choices=KWh_CHOICES, label='Επιλέξτε Παροχή και KWh', initial = 'kWh')
 
 
 class RegistrationForm(UserCreationForm):

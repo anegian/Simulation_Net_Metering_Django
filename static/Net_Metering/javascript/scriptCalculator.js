@@ -6,6 +6,8 @@ const select_annual_Kwh = document.getElementById("id_select_kwh");
 // Get the initial value of the select_annual_Kwh element from the form
 const initial_Kwh_value = select_annual_Kwh.value;
 const district_average_irradiance = document.getElementById("id_select_district");
+// Get the initial value of the district
+const initial_district = district_average_irradiance.value;
 
 const phase_load_selected = document.getElementById("id_select_phase");
 const form_submit_button = document.getElementById("submitBtn");
@@ -19,100 +21,85 @@ const no_storage_selection = document.getElementById("without_storage");
 const radio_buttons = document.querySelectorAll('.form-check-input');
 
 
-// Set the initial value of the PV_kW_output element to 0
-slider.value = 0;
-slider.step = 0.1;
-PV_kW_output.innerHTML = slider.value;
-slider.disabled = true;
-select_annual_Kwh.disabled = true;
-storage_selection.disabled = true;
-storage_kW.disabled = true;
-storage_kW.value = 0;
+// Set the initial values of all elements to 0
+disableElements();
+
 
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
-    slider.min = 1;
+    slider.min = 1.0;
     PV_kW_output.innerHTML = this.value;
     error_message3.style = 'none';
 };      
 
 district_average_irradiance.addEventListener("change", function(event){
-
-    let district_array = district_average_irradiance.textContent;
-
-    if (district_average_irradiance.value != '0' && select_annual_Kwh.value !== '0') {
-        error_message.style.display = "none";
-        district_average_irradiance.classList.remove('error');
-
-        slider.disabled = false;
-        slider_value = select_annual_Kwh.value / district_average_irradiance.value;
-        slider.value = slider_value;
-        
-        console.log("There is kwh, so average irradiance is: " + district_average_irradiance.value);
-        console.log(select_annual_Kwh.value);
-        console.log(slider.value);
-    } else {
-        console.log("average irradiance is: " + district_average_irradiance.value);
-        slider.value = 0
+    if ( district_average_irradiance.value === 'district' ) {
+        disableAnnualkWh();
+    }else{
         error_message.style.display = "none";
         district_average_irradiance.classList.remove('error');
     }
 
-    PV_kW_output.innerHTML = slider.value;
+    check_selection_kwh_conditions();
     console.log("average irradiance is: " + district_average_irradiance.value);
-})
+       
+});
 
 // Listen for changes in the phase load input and store the selected option
 phase_load_selected.addEventListener("change", function(event){
-    console.log(slider.value);
-    slider.min =0;
-    select_annual_Kwh.value = initial_Kwh_value; // Set the value of the select_annual_Kwh element to the initial value
-    slider.value = 0; // Update the slider value to 0 when the phase load is changed
-    slider.max = event.target.value === 'single_phase' ? 5 : 10
-    slider.disabled = event.target.value === 'phase_load';
-    PV_kW_output.innerHTML = slider.value; // Update the PV_kW_output element value to 0 when the phase load is changed
-    no_storage_selection.checked = true;
-    storage_kW.disabled = true;
-    console.log(slider.value);
     
-    select_annual_Kwh.disabled = event.target.value === 'phase_load';
-    error_message2.style.display = "none";
-    phase_load_selected.classList.remove('error');
-    
-    if (event.target.value === 'single_phase') {
-        
-        // Enable the first two options and disable the rest
-        select_annual_Kwh.options[0].disabled = false;
-        select_annual_Kwh.options[1].disabled = false;
-        for (let i = 3; i < select_annual_Kwh.options.length; i++) {
-            select_annual_Kwh.options[i].disabled = true;
+    if (event.target.value === 'single_phase' || event.target.value === '3_phase'){
+        error_message2.style.display = "none";
+        phase_load_selected.classList.remove('error')
+        select_annual_Kwh.value = initial_Kwh_value;  // Resetting select_annual_Kwh to initial value
+        enableAnnualkWh();
+        slider.max = event.target.value === 'single_phase' ? 5 : 10
+        showAnnualKwh();
+    }else{
+        disableElements();
+    } 
+
+    check_selection_kwh_conditions();
+    console.log(phase_load_selected.value);
+});
+
+select_annual_Kwh.addEventListener("change", function(event){
+    if(event.target.value === 'kWh'){
+        disableSlider();
+        disableStorage();
+        console.log(select_annual_Kwh.value)
+    }else{
+        console.log('Annual consumption in kWh: ', select_annual_Kwh.value);
+        enableSlider();  
+        enableStorage();  
+    } 
+});
+
+slider.addEventListener("change", function(event){
+
+	if (Number(slider.value) > '0' && Number(slider.value) <= '10'){
+        if(storage_kW.disabled == true){
+             enableStorage(); 
         }
-    } else {
-        // Enable all options
-        for (let i = 0; i < select_annual_Kwh.options.length; i++) {
-            select_annual_Kwh.options[i].disabled = false;
-        }
+
+        disableErrorMessages();
+        PV_kW_output.innerHTML = slider.value; 
+        storage_kW.min = slider.value;
+        storage_kW.value = slider.value;
     }
+
     console.log(slider.value);
 
-    
-    console.log(phase_load_selected.value);
-    console.log(slider.value);
+});
+
+storage_kW.addEventListener("change", function(){
+    console.log(storage_kW.value);
 });
 
 // Reset the PV_kW_output element value to the initial value when the reset button is clicked
-document.querySelector('button[type="reset"]').addEventListener('click', function(event) {
-    no_storage_selection.checked = true;
-    storage_selection.disabled = true;
-    slider.disabled = true;
-    select_annual_Kwh.disabled = true;
-    slider.value = 0;
-    PV_kW_output.innerHTML = slider.value;
-    district_average_irradiance.classList.remove('error');
-    phase_load_selected.classList.remove('error');
-    error_message.style.display = 'none';
-    error_message2.style.display = 'none';
-    error_message3.style.display = 'none';
+document.querySelector('button[type="reset"]').addEventListener('click', function() {
+    disableElements();
+    disableErrorMessages();  
 });
 
 // Add an event listener to the submit button
@@ -123,60 +110,18 @@ form_submit_button.addEventListener('click', function(event) {
   }
 });
 
-select_annual_Kwh.addEventListener("change", function(event){
-    console.log(slider.value);
-    slider.min =0;
-    slider.disabled = false;
-    slider.value = 0;
-    PV_kW_output.innerHTML = slider.value; // Update the PV_kW_output element value to 0 when the phase load is changed
-    storage_selection.disabled = false;
-    storage_kW.disabled = false;
-    console.log(slider.value);
-    console.log(select_annual_Kwh.value);
-    
-
-    if (select_annual_Kwh.value !== '0' && district_average_irradiance.value !== '0') {
-        slider.value = select_annual_Kwh.value / district_average_irradiance.value;
-        slider.disabled = false;
-    } else {
-        slider.value = 0;
-        slider.disabled = true;
-
-        storage_selection.disabled = true;
-        storage_kW.disabled = true;
-        no_storage_selection.checked = true;
-    }
-    console.log(slider.value);
-    PV_kW_output.innerHTML = slider.value; 
-    storage_kW.min = slider.value;
-    storage_kW.value = slider.value;
-    storage_kW.max = 10;
-    console.log(slider.value);
-
-    if(slider.addEventListener("change", function(event){
-        storage_kW.value = slider.value;
-        storage_kW.max = slider.value;
-        console.log(storage_kW.value);
-        PV_kW_output.innerHTML = slider.value; 
-    }))
-    
-    console.log(storage_kW.value);
-    console.log(slider.value);
-});
-
 // Used to validate that the calculator form has been filled by the user
 function validateForm() {
 
-    if(phase_load_selected.value === 'phase_load' && district_average_irradiance.value === "0"){
+    if(phase_load_selected.value === 'phase_load' && district_average_irradiance.value === "district"){
         slider.classList.add('error');
         phase_load_selected.classList.add('error');
         error_message2.style.display = 'block';
         district_average_irradiance.classList.add('error'); 
         error_message.style.display = 'block';
         return false;
-    }else if(district_average_irradiance.value === "0"){
+    }else if(district_average_irradiance.value === "district"){
         district_average_irradiance.classList.add('error'); // Add the error class to the district_average_irradiance element
-        district_average_irradiance.classList.add('error'); 
         error_message.style.display = 'block';
         return false;
     }else if (phase_load_selected.value === 'phase_load') {
@@ -190,7 +135,6 @@ function validateForm() {
     }
     return true;
 };
-
 
 // loop through the radio buttons and add an event listener to each one
 radio_buttons.forEach(radioButton => {
@@ -207,7 +151,6 @@ const closeIcons = document.getElementsByClassName('close-help');
 const numberOfHelpButtons = helpButtons.length;
 
 let isOpen = new Array(numberOfHelpButtons).fill(true);
-
 
 // for loop to check if the text element for each button is opened
 // if a text is opened and other button is pressed, previous text closes
@@ -245,4 +188,91 @@ for (let i = 0; i < numberOfHelpButtons; i++) {
         closeIcons[i].classList.remove('movePosition');
         isOpen[i] = true;
   });
+}
+
+function disableElements() {
+    slider.disabled = true;
+    slider.value = 0.0;
+    slider.min = 0.0;
+    PV_kW_output.innerHTML = slider.value;
+    storage_selection.disabled = true;
+    storage_kW.disabled = true;
+    select_annual_Kwh.disabled = true;
+    select_annual_Kwh.value = initial_Kwh_value;  // Resetting select_annual_Kwh to initial value
+} 
+function enableSlider() {
+    slider.disabled = false;
+    slider.min = 0.0;
+    slider.step = 0.1;
+    slider.value = select_annual_Kwh.value / district_average_irradiance.value;
+    PV_kW_output.innerHTML = slider.value;
+    console.log("Minimun PV system's kWp: ", slider.value)
+}
+function disableSlider(){
+    slider.disabled = true;
+    slider.value = 0.0;
+    slider.min = 0.0;
+    if (select_annual_Kwh.value === 'kWh') {
+        slider.value = 0.0;
+      } else {
+        slider.value = select_annual_Kwh.value / district_average_irradiance.value;
+        console.log("Minimum PV system's kWp: ", slider.value);
+      }
+    
+    PV_kW_output.innerHTML = slider.value;
+}
+function enableAnnualkWh(){
+    select_annual_Kwh.disabled = false;
+}
+function disableAnnualkWh() {
+    select_annual_Kwh.disabled = true;
+}
+function enableStorage() {
+    no_storage_selection.checked = true;
+    storage_selection.disabled = false;
+    storage_kW.disabled = false;
+    storage_kW.min = slider.value;
+    storage_kW.max = 10.0;
+    storage_kW.step = 0.1;
+    storage_kW.value = slider.value;
+}
+function disableStorage() {
+    no_storage_selection.checked = true;
+    storage_kW.disabled = true;
+    storage_selection.disabled = true;
+    storage_kW.min = slider.value;
+    storage_kW.value = 0.0;
+    storage_kW.value = slider.value;
+}
+function disableErrorMessages() {
+    district_average_irradiance.classList.remove('error');
+    phase_load_selected.classList.remove('error');
+    error_message.style.display = 'none';
+    error_message2.style.display = 'none';
+    error_message3.style.display = 'none';
+}         
+function showAnnualKwh() { 
+    if (phase_load_selected.value === 'single_phase') {
+        // Enable the first two options and disable the rest
+        select_annual_Kwh.options[0].disabled = false;
+        select_annual_Kwh.options[1].disabled = false;
+        for (let i = 3; i < select_annual_Kwh.options.length; i++) {
+            select_annual_Kwh.options[i].disabled = true;
+        }
+    } else {
+        // Enable all options
+        for (let i = 0; i < select_annual_Kwh.options.length; i++) {
+            select_annual_Kwh.options[i].disabled = false;
+                }
+    }
+}
+function check_selection_kwh_conditions(){
+    if (phase_load_selected.value !== 'phase_load' && district_average_irradiance.value !== 'district'){
+        enableAnnualkWh();
+        disableErrorMessages();
+    }else{ 
+        disableAnnualkWh();
+        disableElements();
+        disableStorage();
+    }
 }
