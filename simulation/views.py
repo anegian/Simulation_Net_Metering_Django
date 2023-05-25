@@ -48,6 +48,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             roi, annualized_roi = calculate_roi(net_present_value, total_investment, total_savings)
             irr = calculate_irr(total_investment, total_savings_array)
             average_CO2 = calculate_CO2_emissions_reduced(average_annual_production)
+            trees_planted = calculate_equivalent_trees_planted(average_annual_production)
 
             # dictionary with rendered variables
             context = {
@@ -86,6 +87,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'annualized_roi': annualized_roi,
             'irr': irr,
             'average_CO2': average_CO2,
+            'trees_planted': trees_planted,
             }
 
             result = 'simulation/dashboard.html'
@@ -416,7 +418,11 @@ def calculate_CO2_emissions_reduced(average_annual_production):
    average_CO2 = 0.04 # ~ 40 g CO2 eq/kWh for a year
    
    return average_CO2 * average_annual_production # kg per year
+  
+def calculate_equivalent_trees_planted(average_annual_production):
+   percentage_trees_per_kWh = 0.02
    
+   return average_annual_production * percentage_trees_per_kWh 
 
 def signup(request):
     try:
