@@ -582,8 +582,6 @@ input[type="search"]:focus {
 
  /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
 
-d
-
  /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
             @media (max-width: 1040px) {
                 .full-container{
@@ -626,6 +624,7 @@ d
                     padding-left: 10px;
                     display: block;
                 }
+            }
 
 
                 /* ::: MENU NAVBAR HIDDEN::: */
