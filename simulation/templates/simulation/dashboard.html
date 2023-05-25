@@ -102,7 +102,7 @@
                       trigger="hover"
                       style="width:120px;height:120px">
                   </lord-icon>
-                 <p class="info-title" id="trees" data-value="{{ trees|default:'0' }}">{{trees|default:'0' }}νέα δέντρα </p>
+                 <p class="info-title" id="trees" data-value="{{ trees_planted|default:'0' }}">{{trees_planted|default:'0' }} νέα δέντρα </p>
               </div>
               
               <div class="container-icons-bottom">
@@ -113,7 +113,7 @@
                       trigger="hover"
                       style="width:100px;height:120px">
                   </lord-icon>
-                <p class="info-title" id="other_energy" data-value="{{ other_energy|default:'0' }}">Ενέργεια ίση με {{other_energy|default:'0' }}kWh </p>
+                <p class="info-title" id="other_energy" data-value="{{ annual_kwh|default:'0' }}">{{annual_kwh|default:'0' }}kWh άλλων πηγών</p>
               </div>
           
             </div>
