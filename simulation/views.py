@@ -47,6 +47,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             lcoe = calculate_lcoe(total_investment, maintenance_cost , total_production_kwh)
             roi, annualized_roi = calculate_roi(net_present_value, total_investment, total_savings)
             irr = calculate_irr(total_investment, total_savings_array)
+            average_CO2 = calculate_CO2_emissions_reduced(average_annual_production)
 
             # dictionary with rendered variables
             context = {
@@ -84,6 +85,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'roi': roi,
             'annualized_roi': annualized_roi,
             'irr': irr,
+            'average_CO2': average_CO2,
             }
 
             result = 'simulation/dashboard.html'
@@ -408,6 +410,13 @@ def calculate_irr(total_investment, total_savings_array):
     print('Internal Rate: ', irr)
     
     return irr   
+   
+def calculate_CO2_emissions_reduced(average_annual_production):
+   # Calculate the equivalent CO2 emissions, reduced due to solar production
+   average_CO2 = 0.04 # ~ 40 g CO2 eq/kWh for a year
+   
+   return average_CO2 * average_annual_production # kg per year
+   
 
 def signup(request):
     try:
