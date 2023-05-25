@@ -325,16 +325,7 @@
 
                 </fieldset>
 
-                <fieldset class="name-form-container">
-                    <div class="three-form-container">
-                        {% for field in form %}
-                            <label for="{{ field.name }}">{{ field.label }}</label><br>
-                            {{ field }}<br><br>
-                        {% endfor %}
-                    </div>
-
-                </fieldset>
-
+                
                 <div class="my-submit-form">
                     <button class="form-submit-button" type="reset" id="resetBtn">Διόρθωση</button>
                     <button class="form-submit-button" type="submit" id="submitBtn">Υποβολή Στοιχείων</button>
