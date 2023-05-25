@@ -44,7 +44,11 @@
     font-weight: bold;
     color: #393052;
   }
+<<<<<<< HEAD
 <<<<<<< HEAD:static/Net_Metering/css/regulationCss.css
+=======
+<<<<<<<< HEAD:static/Net_Metering/css/regulationCss.css
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
   .accordion-button:hover{
     color: #f2f2f2;
   }
@@ -56,7 +60,11 @@
   }
   .accordion-button {
     --bs-accordion-active-color: #393052;
+<<<<<<< HEAD
 =======
+=======
+========
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
   .accordion-button:active{
     color: #393052!important;
   }
@@ -71,5 +79,9 @@
   .fa-file-pdf{
     text-decoration: none;
     color: red;
+<<<<<<< HEAD
 >>>>>>> b1894a92164f7dc4dcb75d0379dcd631ab47ac58:static/Net_Metering/css/regulations.css
+=======
+>>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206:static/Net_Metering/css/regulations.css
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
   }

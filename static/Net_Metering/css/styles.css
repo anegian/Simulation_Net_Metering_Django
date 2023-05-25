@@ -82,6 +82,15 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
     z-index: -1;
     
 }
+<<<<<<< HEAD
+=======
+.carousel-inner {
+    border: 2px solid #59419b;
+    border-radius: 2px;
+    padding: 10px;
+    margin: 0 auto;
+  }
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
 
 
     /* ::: HEADINGS ::: */
@@ -266,7 +275,15 @@ input[type="search"]:focus {
         display: flex;
         justify-content: center;
         align-items: center;
+<<<<<<< HEAD
         width: 20%;
+=======
+    }
+    .img-equipment{
+        width: 600px;
+        height: 400px;
+        border-radius: 10px;
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
     }
     
     .img-info{
@@ -278,12 +295,24 @@ input[type="search"]:focus {
         width: 300px;
         height: 300px;
     }
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
     .calculator-page-content{
         background-color: #29233b;
         min-height: 100vh;
     }
     .dashboard-page-content{
         background-color: #29233b;
+<<<<<<< HEAD
+=======
+        display: flex;
+        flex-wrap: wrap;
+
+        align-content: center;
+        justify-content: center;
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
     }
     
 
@@ -370,7 +399,11 @@ input[type="search"]:focus {
         padding-right: 32%;
     }
     .spacer{
+<<<<<<< HEAD
         min-height: 1000px;
+=======
+        min-height: 100px;
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
     }
 
 
@@ -566,8 +599,11 @@ input[type="search"]:focus {
 
  /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
  /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
             @media (max-width: 1040px) {
                 .full-container{
@@ -610,6 +646,10 @@ input[type="search"]:focus {
                     padding-left: 10px;
                     display: block;
                 }
+<<<<<<< HEAD
+=======
+            }
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
 
 
                 /* ::: MENU NAVBAR HIDDEN::: */
@@ -721,6 +761,12 @@ input[type="search"]:focus {
                 .main-page-content {
                     height: 300vh;
                 }
+<<<<<<< HEAD
+=======
+                .go-back-button{
+                    margin: 60px 0 60px 0;
+                  }
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
             }
 
                 /* ::: EXTRA ZOOM IN ::: */
@@ -754,6 +800,10 @@ input[type="search"]:focus {
                     .main-page-content {
                         height: 500vh;
                     }
+<<<<<<< HEAD
+=======
+                                        
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
                 }
 
 
@@ -890,9 +940,12 @@ footer .admin-info {
   }
   .go-back-button{
     height: 60px;
+<<<<<<< HEAD
     display: flex;
     align-items: center;
     justify-content: center;
+=======
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
     background-color: #29233b;
   }
   #change-data-button{
@@ -913,20 +966,37 @@ footer .admin-info {
     cursor: pointer;
   }
   .dashboard-empty-info{
+<<<<<<< HEAD
+=======
+    height: 20%;
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+<<<<<<< HEAD
+=======
+    text-align: center;
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
     font-weight: 500;
     font-size: 18px;
     background-color: #393052;
     color: #f2f2f2;
+<<<<<<< HEAD
     margin: 20px 0;
     width: 80%;
+=======
+    width: 70%;
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
     font-style: italic;
     border-radius: 5px;
     border-style: solid;
     border-color: #29233b;
+<<<<<<< HEAD
+=======
+    line-height: 1.5;
+    margin-bottom: 40px;
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
   }
   .fa-exclamation-circle, .fa-copyright{
     color: #ed4901;
@@ -938,7 +1008,12 @@ footer .admin-info {
     flex-wrap: wrap;
     flex-direction: column;
     align-items: center;
+<<<<<<< HEAD
     justify-content: start;
+=======
+    justify-content: flex-start;
+
+>>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
   }
 
     /* ::: SIGNUP PAGE SECTION ::: */

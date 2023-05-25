@@ -15,7 +15,7 @@
     <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a class="nav-link active" href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-    <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
 
 
@@ -89,7 +89,7 @@
                                         
 
                                             <div class="form-check" >
-                                            <input type="radio" class="form-check-input" id="roof" name="installation" value="roof">
+                                            <input type="radio" class="form-check-input" id="roof" name="installation" value="roof" checked>
                                             <label class="form-check-label" for="roof">Στέγη</label>
                                             </div>
 
@@ -236,7 +236,7 @@
 
                                             
                                             <div>
-                                                <input type="hidden" name="annual_kwh-selector" id="phase_load" title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">
+                                                <input type="hidden" name="annual_kwh-selector" id="kWh" title="Παρακαλούμε, επιλέξτε εκτιμώμενη ετήσια κατανάλωση σε kW">
                                                 {{ form_annual_kwh.select_kwh }}
 
                                                 <button class="help-popper" type="button">
@@ -325,16 +325,7 @@
 
                 </fieldset>
 
-                <fieldset class="name-form-container">
-                    <div class="three-form-container">
-                        {% for field in form %}
-                            <label for="{{ field.name }}">{{ field.label }}</label><br>
-                            {{ field }}<br><br>
-                        {% endfor %}
-                    </div>
-
-                </fieldset>
-
+                
                 <div class="my-submit-form">
                     <button class="form-submit-button" type="reset" id="resetBtn">Διόρθωση</button>
                     <button class="form-submit-button" type="submit" id="submitBtn">Υποβολή Στοιχείων</button>

@@ -7,8 +7,18 @@
 {% endblock %}
 
 {% block script %}
-<script src="{% static 'Net_Metering/javascript/chartin.js' %}" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" ></script>
+<script> let totalSavingsArray = JSON.parse( '{{ total_savings_array_json|safe }}' );
+         let totalProductionArray = JSON.parse( '{{ total_production_kwh_array_json|safe }}' );
+         let monthProductionArray = JSON.parse( '{{ month_production_array_json|safe }}' );
+         let roi = '{{ roi }}';
+         let annual_roi = '{{ annualized_roi }}';
+         console.log('ROI: ', roi, 'An.ROI: ', annual_roi);
+         let lcoe = '{{ lcoe }}';
+         let irr = '{{ irr }}';
+         let npv = '{{ net_present_value }}'
+ </script>
+ <script src="{% static 'Net_Metering/javascript/charts.js' %}" defer></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" ></script>
 {% endblock %}
 
 {% block menu_list %}
@@ -16,7 +26,7 @@
     <li><a class="nav-link active" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-    <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
 
 {% block content %}
@@ -32,7 +42,7 @@
               <div class="container-icons">
                 <div class="titles-panel">Επένδυση</div>
                 <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-                <lord-icon src="https://cdn.lordicon.com/ftjtyaku.json"
+                <lord-icon class="lord-icon-small" src="https://cdn.lordicon.com/ftjtyaku.json"
                     trigger="hover"
                     style="width:120px;height:120px">
                 </lord-icon>
@@ -66,7 +76,7 @@
             <div class="left-middle">
             
                  <div class="panels-container" id="second-panel" title="profit">
-                     <canvas id="myChart2" ></canvas>
+                     <canvas class="panels-element-size" id="myChart2" ></canvas>
                  </div>
             
              </div>
