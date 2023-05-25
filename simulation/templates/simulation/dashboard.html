@@ -46,7 +46,7 @@
                     trigger="hover"
                     style="width:120px;height:120px">
                 </lord-icon>
-                <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">Σύνολο: {{total_investment|default:'0' }} €</p>
+                <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">Σύνολο: {{total_investment|default:'0' }} €</p>    
               </div>
 
               <div class="container-icons">
@@ -91,16 +91,18 @@
                       trigger="hover"
                       style="width:120px;height:120px">
                   </lord-icon>
+                <p class="info-title" id="CO2" data-value="{{ average_CO2|default:'0' }}">{{average_CO2|default:'0' }}kg CO2 eq/kWh </p>
               </div>
               
               <div class="container-icons-bottom">
-                <div class="titles-panel">Αντίστοιχα Φυτεμένα Δέντρα</div>
+                <div class="titles-panel">Ισοδύναμα Φυτεμένα Δέντρα</div>
                 <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
                   <lord-icon
                       src="https://cdn.lordicon.com/azbllxpx.json"
                       trigger="hover"
                       style="width:120px;height:120px">
                   </lord-icon>
+                 <p class="info-title" id="trees" data-value="{{ trees|default:'0' }}">{{trees|default:'0' }}νέα δέντρα </p>
               </div>
               
               <div class="container-icons-bottom">
@@ -111,6 +113,7 @@
                       trigger="hover"
                       style="width:100px;height:120px">
                   </lord-icon>
+                <p class="info-title" id="other_energy" data-value="{{ other_energy|default:'0' }}">Ενέργεια ίση με {{other_energy|default:'0' }}kWh </p>
               </div>
           
             </div>
