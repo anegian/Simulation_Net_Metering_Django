@@ -16,9 +16,9 @@ class PlaceForm(ModelForm):
 class PlaceOfInstallationForm(forms.Form):
     DISTRICT_CHOICES = [
         ('district', 'Περιφέρεια'),
-        ('1600', 'Αττική'),
-        ('1350', 'Ανατολική Μακεδονία & Θράκη'),
-        ('1400', 'Βόρειο Αιγαίο'),
+        ('1590', 'Αττική'),
+        ('1360', 'Ανατολική Μακεδονία & Θράκη'),
+        ('1410', 'Βόρειο Αιγαίο'),
         ('1450', 'Δυτική Ελλάδα'),
         ('1350', 'Δυτική Μακεδονία'),
         ('1400', 'Ήπειρος'),
@@ -26,7 +26,7 @@ class PlaceOfInstallationForm(forms.Form):
         ('1500', 'Ιόνιοι Νήσοι'),
         ('1380', 'Κεντρική Μακεδονία'),
         ('1650', 'Κρήτη'),
-        ('1550', 'Νότιο Αιγαίο'),
+        ('1570', 'Νότιο Αιγαίο'),
         ('1600', 'Πελοπόννησος'),
         ('1550', 'Στερεά Ελλάδα'),
     ]
@@ -41,36 +41,19 @@ class PhaseLoad(forms.Form):
     select_phase = forms.ChoiceField(choices=PHASE_LOAD, initial='phase_load')
 
 
-""""
-    class Meta:
-        model = PlaceOfInstallation
-        fields = ('district_name', 'city_name', 'district_code')
-        widgets = {
-            'district_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'city_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'district_code': forms.TextInput(attrs={'class': 'form-control'}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['district_name'].label = 'District Name'
-        self.fields['city_name'].label = 'City Name'
-        self.fields['district_code'].label = 'District Code'
-"""""
-
 class EnergyConsumptionForm(forms.Form):
     KWh_CHOICES = [
-        ('annual_kW', 'KWh σε ετήσια βάση'),
-        ('2', '3000'),
-        ('3', '4500'),
-        ('4', '6000'),
-        ('5', '7500'),
-        ('6', '9000'),
-        ('7', '10000'),
-        ('8', '11000'),
-        ('10', '12000'),
+        ('kWh', 'KWh σε ετήσια βάση'),
+        ('3000', '3000'),
+        ('4500', '4500'),
+        ('6000', '6000'),
+        ('7500', '7500'),
+        ('9000', '9000'),
+        ('10000', '10000'),
+        ('11000', '11000'),
+        ('12000', '12000'),
     ]
-    select_kwh = forms.ChoiceField(choices=KWh_CHOICES, label='Επιλέξτε Παροχή και KWh', initial = 'annual_kW')
+    select_kwh = forms.ChoiceField(choices=KWh_CHOICES, label='Επιλέξτε Παροχή και KWh', initial = 'kWh')
 
 
 class RegistrationForm(UserCreationForm):

@@ -12,7 +12,7 @@
     <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-    <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
 
 
@@ -27,37 +27,80 @@
   <section class="main-page-section">
        <div class="main-page-article">
 
-          <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-          </p>
+          <div class="article-body">
+            <h2 class="article-first-title">Το Net metering ως βιώσιμη λύση ενσωμάτωσης Φ/Β συστημάτων
+            στο δίκτυο ηλεκτρικής ενέργειας. Μείωση κόστους ηλεκτρικής ενέργειας και υιοθέτηση 
+            ανανεώσιμων πηγών ενέργειας.</h2>
+             
+          </div>
 
-          <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-          </p>
+          <div class="article-body" >
+            <h2 class="article-big-titles">Τι είναι το Net Metering;</h2>
+            Ο ενεργειακός συμψηφισμός αυτοπαραγωγής με ιδιοκατανάλωση, είναι ένας μηχανισμός που επιτρέπει 
+            στους κατόχους Φ/Β συστημάτων, να καταναλώνουν την ποσότητα ρεύματος τη στιγμή που παράγεται, 
+            καθώς και να επιστρέφουν την πλεονάζουσα ηλεκτρική ενέργεια πίσω στο δίκτυο. Αυτή η ηλεκτρική 
+            ενέργεια αποθηκεύεται στο δίκτυο έως ότου απαιτηθεί και μέχρι τα 3 έτη. Αυτό επιτυγχάνεται με 
+            έναν μετρητή διπλής κατεύθυνσης, ο οποίος μετρά τόσο την ενέργεια που καταναλώνεται από το δίκτυο 
+            όσο και αυτή που παράγεται από το Φ/Β και εγχύεται στο δίκτυο. Ο συμψηφισμός τελικά είναι λογιστικός, 
+            στοχεύοντας στη μείωση έως μηδενισμό του λογαριασμού του ρεύματος. Μπορεί να αποδειχθεί εξαιρετικά 
+            κερδοφόροw, με ή χωρίς υποστήριξη συστήματος μπαταριών.
+          </div>
 
-          <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-          </p>
+          <div class="img-div-home">
+            <img class="img-info" src="{% static 'images/Net1.1.png' %}" alt="No Image">
+          </div>
 
-          <p class="article-paragraph-body">"Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-          </p>
+          <div class="article-body">
+            <h2 class="article-big-titles">Η κερδοφορία του ενεργειακού συμψηφισμού αυτοπαραγωγής εξαρτάται άμεσα από:</h2>
+
+            <ul>
+                <li>
+                    <h3 class="article-small-titles">Μέγεθος και χωρητικότητα του συστήματος: </h3>
+                    Το μέγεθος και η χωρητικότητα του ηλιακού συστήματος επηρεάζουν απευθείας την κερδοφορία του. 
+                    Μεγαλύτερα συστήματα μπορούν να παράξουν περισσότερη  ηλεκτρική ενέργεια, μεγιστοποιώντας την 
+                    εξοικονόμηση μέσω ενεργειακού συμψηφισμού.
+                </li>
+                <li>
+                    <h3 class="article-small-titles">Ηλιοφάνεια περιοχής εγκατάστασης και προσανατολισμός Φ/Β συστήματος: </h3>
+                    Η ποσότητα ηλιακής ακτινοβολίας της περιοχής εγκατάστασης, επηρεάζουν 
+                    την παραγωγή ενέργειας του φωτοβολταϊκού συστήματος, άρα την απόδοση του. 
+                    Περιοχές με υψηλότερη ηλιακή ακτινοβολία θεωρούνται πιο επωφελείς για την 
+                    εγκατάσταση των συστημάτων Net Metering. Επιπλέον, το αζιμούθιο και η κλίσης 
+                    των ηλιακών πάνελ είναι σημαντικοί για την απόδοση του συστήματος. Το αζιμούθιο 
+                    αναφέρεται στην κατεύθυνση προς την οποία είναι στραμμένο το σύστημα σε σχέση με 
+                    τον γεωγραφικό βορρά, ενώ η κλίση αναφέρεται στη γωνία υπό την οποία τα πάνελ 
+                    τοποθετούνται ανάλογα με το οριζόντιο επίπεδο. Η ιδανικές ρυθμίσεις για τα 
+                    φωτοβολταϊκά πάνελ είναι να έχουν Νότιο προσανατολισμό και κλίση 30°.
+                </li>
+                <li>
+                    <h3 class="article-small-titles">Προφίλ κατανάλωσης ηλεκτρικής ενέργειας: </h3>
+                     Ο τρόπος κατανάλωσης της ηλεκτρικής ενέργειας επηρεάζει σημαντικά την κερδοφορία 
+                     του ενεργειακού συμψηφισμού αυτοπαραγωγής. Η ευνοϊκή εκμετάλλευση των ωρών αιχμής 
+                     παραγωγής ηλιακής ενέργειας επιτρέπει τη μέγιστη ιδιοκατανάλωση και, κατ' επέκταση,
+                     μεγαλύτερες εξοικονομήσεις.
+                </li>
+            </ul>
+            
+             <div>
+                <h2 class="article-big-titles">Ενσωμάτωση συσσωρευτών για αποθήκευση ενέργειας:</h2>
+
+                <div>Παρόλο που ο ενεργειακός συμψηφισμός αυτοπαραγωγής μπορεί να υλοποιηθεί και χωρίς 
+                  την υποστήριξη μπαταριών, η ενσωμάτωση συστημάτων αποθήκευσης ενέργειας προσφέρει 
+                  επιπλέον οφέλη. Οι μπαταρίες επιτρέπουν στους κατόχους Φ/Β να αποθηκεύουν ενέργεια, 
+                  για την καλυψη βασικών αναγκών του συστήματος, κατά τις ώρες χωρίς ηλιακή παραγωγή
+                   ή περίπτωση διακοπής ρεύματος.
+                </div>
+                  
+                        
+                   <ul> <h3 class="article-small-titles">Οφέλη</h3>
+                    <li>Αύξηση ιδιοκατανάλωσης</li>
+                    <li>Εξασφάλιση σταθερότητας παροχής</li>
+                    <li>Μείωση εξάρτησης από το δίκτυο</li>
+                   </ul>
+             </div>
+             
+            
+          </div>   
 
       </div>
   </section>

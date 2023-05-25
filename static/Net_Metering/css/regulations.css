@@ -50,3 +50,15 @@
   .accordion-button:active{
     color: #393052!important;
   }
+  .pdf-link{
+    text-decoration: none;
+    color: black;
+  }
+  .pdf-link:hover{
+    text-decoration: underline;
+    color: #393052;
+  }
+  .fa-file-pdf{
+    text-decoration: none;
+    color: red;
+  }

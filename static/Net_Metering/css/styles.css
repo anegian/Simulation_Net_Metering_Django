@@ -11,8 +11,26 @@ html, body {
     width: 100%;
     height: 100%;
 }
-p{
-    margin-bottom: 8px;
+ul li{
+    margin-bottom: 10px;
+}
+.article-small-titles{
+    color: #393052;
+    font-size: 20px;
+}
+.article-big-titles{
+    color: #e34c0cbf;
+    font-size: 25px;
+    margin-top: 10px;
+    font-style: italic;
+    line-height: 1.5;
+}
+.article-first-title{
+    color: #393052;
+    font-size: 25px;
+    margin-top: 10px;
+    font-style: italic;
+    line-height: 1.5;
 }
 .overlay {
     position: fixed;
@@ -46,23 +64,23 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
     color: hsla(0, 100%, 50%, 0.5);
 }
 
-/* ::: Home Page Main image ::: */
+
+/* ::: Home Page Main image background: url('../../images/solar-cell.jpg');::: */
 .home-body::before{
-    background: url('../../images/solar-cell.jpg');
+    background: url('../../images/home.jpg');
     content: "";
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    opacity: 0.7;
+    -webkit-background-size: 100% 130%;
+    -moz-background-size: 100% 130%;
+    -o-background-size: 100% 130%;
+    background-size: 100% 130%;
+    /* opacity: 0.7;filter: brightness(80%) contrast(100%); */
     z-index: -1;
-    filter: brightness(70%) contrast(120%);
-
+    
 }
 
 
@@ -131,7 +149,7 @@ border: 2px solid hsla(0, 100%, 50%, 0.5);
     height: inherit;
     display: flex;
     align-items: center;
-    padding-top: 15px;
+    padding-top: 25px;
 }
 .second-navbar-right-container{
     height: inherit;
@@ -209,29 +227,56 @@ input[type="search"]:focus {
         display: flex;
     }
     .main-page-content{
-        min-height: 200vh;
+        min-height: 100vh;
         display: flex;
         justify-content: center;
-        flex: initial;
         flex: 1;
     }
     .main-page-section{
         display: flex;
         flex-direction: column;
-    }
-    .main-page-section {
         overflow-y: hidden;
+        align-items: center;
     }
     .main-page-article{
         background: transparent;
-        width: 400px;
-        height: 150px;
+        display: flex;
+        flex-direction: column;
         color: #000022;
         font-size: 16px;
-        text-align: justify;
+        justify-content: center;
+        width: 60%;
     }
-    .article-paragraph-body{
+    .article-body{
         background-color: transparent;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        line-height: 2;
+        color: #393052;
+    }
+    .img-div-home{
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .img-div-dash-empty{
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 20%;
+    }
+    
+    .img-info{
+        width: 600px;
+        height: 300px;
+        border-radius: 10px;
+    }
+    .img-dash-nodata{
+        width: 300px;
+        height: 300px;
     }
     .calculator-page-content{
         background-color: #29233b;
@@ -354,6 +399,7 @@ input[type="search"]:focus {
         border-style: solid;
         border-width: 1.5px;
         border-color: #221e2e;
+        border-radius: 5px;
         background-color: #393052;
     }
     .calculator-fieldset .panel .number{
@@ -490,6 +536,7 @@ input[type="search"]:focus {
         height: 60px;
         background-color: royalblue;
         border-color: #553f33;
+        border-radius: 5px;
         border-width: 0.01px;
         color: #f2f2f2;
         font-weight: bold;
@@ -523,7 +570,24 @@ input[type="search"]:focus {
 
  /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
             @media (max-width: 1040px) {
-
+                .full-container{
+                    width: 100%;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }  
+                .panels-container{
+                    height: 80vh!important; /* Set a minimum height for the elements inside */
+                    min-width: 80%!important;
+                }
+                .panels-container canvas{
+                    height: 70vh!important; /* Set a minimum height for the elements inside */
+                    width: 90%!important;
+                }
+                #myChart3{
+                    height: 70px!important; /* Set a minimum height for the elements inside */
+                    width: 90%!important;
+                }
                 .section-before-calculator {
                     -webkit-flex-direction: column;
                     flex-direction: column;
@@ -614,8 +678,33 @@ input[type="search"]:focus {
                 }
 
             }
+            @media (max-width: 836px) {
+                #myChart3{
+                    height: 70vh!important; /* Set a minimum height for the elements inside */
+                    width: 90%!important;
+                } 
+            }
             /* ::: EXTRA ZOOM IN ::: */
             @media (max-width: 420px) {
+                .titles-panel{
+                    font-size: 11px!important;
+                }  
+                .panels-container{
+                    height: 80vh!important; /* Set a minimum height for the elements inside */
+                    min-width: 80%!important;
+                }
+                .panels-container canvas{
+                    height: 40vh!important; /* Set a minimum height for the elements inside */
+                    width: 90%!important;
+                }
+                #myChart3{
+                    height: 70vh!important; /* Set a minimum height for the elements inside */
+                    width: 100%!important;
+                } 
+                .lord-icon-small{
+                    width: 80px!important;
+                    height:80px!important;
+                }
                 .login a, .signup a, .logo a {
                     color: #2c3e50;
                     font-size: 15px;
@@ -636,6 +725,15 @@ input[type="search"]:focus {
 
                 /* ::: EXTRA ZOOM IN ::: */
                 @media (max-width: 330px) {
+                    .panels-container{
+                        height: 80vh!important; /* Set a minimum height for the elements inside */
+                        min-width: 80%!important;
+                    }
+                    .panels-container canvas{
+                        height: 40vh!important; /* Set a minimum height for the elements inside */
+                        width: 90%!important;
+                      }
+                      
                     .login a, .signup a {
                         padding: 0;
                         color: #2c3e50;
@@ -702,6 +800,7 @@ footer .admin-info {
 
 /* ::: DASHBOARD CHARTS SECTION ::: */
 .full-container{
+    width: 100%;
     min-height: 100vh;
     display: flex;
     flex-wrap: wrap;
@@ -709,6 +808,7 @@ footer .admin-info {
   }        
   .left-container{
     flex-basis: 50%;
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
@@ -733,8 +833,12 @@ footer .admin-info {
     border-width: 1.5px;
     border-color: #221e2e;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+  }
+  .panels-container canvas{
+    min-height: 40vh!important; /* Set a minimum height for the elements inside */
+    min-width: 90%!important;
   }
   .container-icons{
     margin-top: 10px;
@@ -759,6 +863,7 @@ footer .admin-info {
   }
 
   .right-container{
+    width: 100%;
     flex-basis: 50%;
     display: flex;
     flex-direction: column;
@@ -795,6 +900,10 @@ footer .admin-info {
     width: 260px;
     background-color: #393052;
   }
+  #change-data-button:hover{
+    background-color: #6951ab;
+  }
+
   #change-data-button a i, #change-data-button a{
     margin: 0 10px 0 10px;
     text-decoration: none;
@@ -802,6 +911,34 @@ footer .admin-info {
     font-size: 20px;
     font-weight: normal;
     cursor: pointer;
+  }
+  .dashboard-empty-info{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 18px;
+    background-color: #393052;
+    color: #f2f2f2;
+    margin: 20px 0;
+    width: 80%;
+    font-style: italic;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #29233b;
+  }
+  .fa-exclamation-circle, .fa-copyright{
+    color: #ed4901;
+  }
+
+  .full-container-empty{
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
   }
 
     /* ::: SIGNUP PAGE SECTION ::: */
@@ -820,7 +957,7 @@ footer .admin-info {
   }
 
 
-  /* ::: INFO PAGE SECTION ::: */
+  /* ::: ABOUT PAGE SECTION ::: */
   .info-body::before{
     background-image: url('../../images/lamp2.jpg');
     content: "";
@@ -833,12 +970,28 @@ footer .admin-info {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    opacity: 0.7;
+    opacity: 0.9;
     z-index: -1;
-    filter: brightness(70%) contrast(120%);
+    filter: brightness(90%) contrast(110%);
   }
 
   .container-info{
     min-height: 100vh;
+  }
+  .about-text{
+    color: #f2f2f2;
+    font-size: 14px;
+    font-weight: 600;
+    width: 50%;
+    text-align: justify;
+  }
+  .about-title{
+    color: #ed4901;
+    font-size: 24px;
+    font-weight: 600;
+    width: 60%;
+    text-align: justify;
+    margin: 40px 0 20px 0;
+    font-style: italic;
   }
 
