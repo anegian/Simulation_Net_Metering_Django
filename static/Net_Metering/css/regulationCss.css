@@ -42,11 +42,17 @@
     background-color: #949393!important;
     font-size: 14px;
     font-weight: bold;
-    color: #f2f2f2;
-  }
-  .accordion-button:hover{
     color: #393052;
   }
-  .accordion-button:active{
-    color: #393052!important;
+  .accordion-button:hover{
+    color: #f2f2f2;
+  }
+  .accordion-button:focus-visible,
+  .accordion-button:focus  {
+    color: #393052;
+    font-weight: bolder;
+    text-decoration: underline;
+  }
+  .accordion-button {
+    --bs-accordion-active-color: #393052;
   }
