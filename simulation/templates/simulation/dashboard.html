@@ -113,7 +113,7 @@
                       trigger="hover"
                       style="width:100px;height:120px">
                   </lord-icon>
-                <p class="info-title" id="other_energy" data-value="{{ annual_kwh|default:'0' }}">{{annual_kwh|default:'0' }}kWh άλλων πηγών</p>
+                <p class="info-title" id="other_energy" data-value="{{ annual_kwh|default:'0' }}">{{annual_kwh|default:'0' }}kWh/έτος</p>
               </div>
           
             </div>
@@ -142,16 +142,15 @@
         </div> 
         
       </section>
-
-      <div class="go-back-button">
-          <div>
-            <button id="change-data-button">
-                <i class="fas fa-calculator"></i><a href="{% url 'simulation:calculator' %}">Νέος Υπολογισμός</a>
-            </button>
+      <div class="little-spacer-dash">
+          <div class='go-back-button-dash-empty'>
+            <a href="{% url 'simulation:calculator' %}">
+              <button id="change-data-button">
+               <i class="fas fa-calculator"></i>
+               Νέος Υπολογισμός</button>
+           </a>
           </div>
-          
       </div>
-
     </div>
 
 {% endblock %}

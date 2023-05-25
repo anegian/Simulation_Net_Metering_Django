@@ -47,8 +47,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             lcoe = calculate_lcoe(total_investment, maintenance_cost , total_production_kwh)
             roi, annualized_roi = calculate_roi(net_present_value, total_investment, total_savings)
             irr = calculate_irr(total_investment, total_savings_array)
-            average_CO2 = calculate_CO2_emissions_reduced(average_annual_production)
-            trees_planted = calculate_equivalent_trees_planted(average_annual_production)
+            average_CO2 = round(calculate_CO2_emissions_reduced(average_annual_production))
+            trees_planted = round(calculate_equivalent_trees_planted(average_annual_production))
 
             # dictionary with rendered variables
             context = {

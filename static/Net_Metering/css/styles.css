@@ -284,6 +284,7 @@ input[type="search"]:focus {
         width: 600px;
         height: 300px;
         border-radius: 10px;
+        margin: 20px 0;
     }
     .img-dash-nodata{
         width: 300px;
@@ -296,6 +297,7 @@ input[type="search"]:focus {
     }
     .dashboard-page-content{
         background-color: #29233b;
+        min-height: 100vh;
     }
     .dashboard-empty-page-content{
         background-color: #29233b;
@@ -567,6 +569,7 @@ input[type="search"]:focus {
         border-width: 0.01px;
         color: #f2f2f2;
         font-weight: bold;
+        font-size: 14px;
         margin: 20px 0 10px 15px;
     }
     .form-submit-button:hover{
@@ -873,12 +876,12 @@ footer .admin-info {
     align-items: center;
   }
   .panels-container canvas{
-    height: 55vh!important; /* Set a minimum height for the elements inside */
+    height: 50vh!important; /* Set a minimum height for the elements inside */
     width: 95%!important;
 }
 #myChart3{
-    height: 50vh!important; /* Set a minimum height for the elements inside */
-    width: 90%!important;
+    height: 48vh!important; /* Set a minimum height for the elements inside */
+    width: 95%!important;
 }
   .container-icons{
     margin-top: 10px;
@@ -920,33 +923,35 @@ footer .admin-info {
   .titles-panel{
     margin-top: 10px;
     color: #ed4901;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
   }
   .info-title, .go-back-button i{
     color: #f2f2f2;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
   }
-  .go-back-button{
+  .go-back-button-dash-empty{
     height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #29233b;
   }
+
   #change-data-button{
     height: 40px;
     width: 260px;
     background-color: #393052;
   }
   #change-data-button, #change-data-button a{
-    margin: 0 10px 0 10px;
     text-decoration: none;
     color: #f2f2f2;
-    font-size: 20px;
-    font-weight: normal;
+    font-size: 18px;
     cursor: pointer;
+  }
+  #change-data-button:hover, #change-data-button a:hover, .go-back-button-div i:hover{
+    color: #ed4901;
   }
   .dashboard-empty-info{
     height: 20%;
@@ -1034,4 +1039,32 @@ footer .admin-info {
     margin: 40px 0 20px 0;
     font-style: italic;
   }
+  .italics{
+    font-style: italic;
+    text-decoration: underline;
+  }
+  .spacer-text{
+    margin-right: 5px;
+  }
+  .little-spacer{
+    margin: 10px 0;
+  }
+  .little-spacer a{
+    text-decoration: none;
+  }
+  .little-spacer-dash{
+    display: flex;
+    background-color: #29233b;
+    height: 80px;
+    justify-content: center;
+  }
+  .link-mid-position a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+  }
+
+
 

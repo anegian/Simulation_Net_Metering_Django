@@ -37,12 +37,12 @@ new Chart("myChart2", {
   data: {
     labels: pv_lifetime,
     datasets: [ { 
-      label: "Production in kWh",
+      label: "Συνολική Παραγωγή (kWh)",
       data: totalProductionArray,
       borderColor: "#f2f2f2",
       fill: false
     }, { 
-      label: "Profit",
+      label: "Κέρδος",
       data: totalSavingsArray,
       borderColor: "#A457F2",
       fill: false
@@ -52,7 +52,7 @@ new Chart("myChart2", {
       title: {
       display: true,
       fontColor: "#f2f2f2", 
-      text: "Αποδοτικότητα Φ/Β",
+      text: "Αποδοτικότητα Φ/Β (25 έτη)",
       fontSize: 18
       },
       scales: {
