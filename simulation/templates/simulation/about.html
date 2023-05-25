@@ -1,0 +1,57 @@
+{% extends "index.html" %}
+
+{% load static %}
+
+{% block title %}
+<title>About</title>
+{% endblock %}
+
+{% block body_class %} info-body {% endblock%}
+
+{% block menu_list %}
+    <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
+    <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
+    <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+    <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
+    <li><a class="nav-link active" href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
+{% endblock %}
+
+{% block content %}
+
+    <section class="info-page-content">
+
+
+
+      <div class="container-info">
+        <div class="main-page-content">
+
+          <section class="main-page-section">
+               <div class="main-page-article">
+
+                  <div class="article-body">
+                    <h2 class="about-title" >Κίνητρα Δημιουργίας Εφαρμογής</h2>
+                        <div class="about-text">Ένα βαθύ ενδιαφέρον για την εξερεύνηση νέων τεχνολογιών, η ανάγκη για μετάβαση σε εναλλακτικές 
+                            μορφές ενέργειας και η ανάγκη μείωσης ετήσιων δαπανών ηλεκτρικής ενέργειας, αποτέλεσαν το έναυσμα για την ανάπτυξη 
+                            αυτής της εφαρμογής. Αυτή η προσπάθεια είναι η συνέχεια προηγούμενης μελέτης μου,
+                            που είχε πραγματοποιηθεί για την πτυχιακή εργασία μου, σχετικά με την τεχνολογία των φωτοβολταϊκών.<br><br>
+                                Η ευκαιρία να δημιουργηθεί μια διαδικτυακή εφαρμογή με έμφαση στο Net Metering ήταν συναρπαστική.
+                            Ο σκοπός ήταν να συμβάλλει στην προώθηση ανανεώσιμων πηγών ενέργειας, συγκεκριμένα την ηλιακή.
+                            Η εφαρμογή στοχεύει να ενημερώσει τους χρήστες σχετικά με την έννοια του Net Metering σε φωτοβολταϊκά (PV) 
+                            συστήματα και τους επιτρέπει να υπολογίσουν την αποδοτικότητα ενός τέτοιου συστήματος, προσομοιάζοντας μία οικιακή εγκατάσταση 
+                            για χρονικό διάστημα 25 ετών.<br>
+                        </div> 
+                  </div>
+
+
+
+              </div>
+          </section>
+
+          <div class="spacer"></div>
+      </div>
+
+      </div>
+
+    </section>
+
+{% endblock %}

@@ -1,0 +1,75 @@
+.accordion-title{
+    font-size: 22px;
+    font-weight: bold;
+    color: #f2f2f2;
+  }
+  .blurred {
+    background-color: hsla(0, 0%, 0%, 0.5); /* Set the background color to semi-transparent black */
+    filter: brightness(40%); /* Adjust the brightness of the background to 50% */
+  }
+  .spacer-before-main-content, .spacer-after-main-content{
+    height: 50px;
+  }
+  .regulations-page-content{
+    background-color: #29233b;
+      min-height: 100vh;
+  }
+  .flex-section-regulations{
+      display: flex;
+      min-height:inherit;
+  }
+  
+  .regulations-left-column{
+      border-width: 3px;
+      flex-basis: 10%;
+  }
+  .regulations-middle-column{
+      flex-basis: 80%;
+  }
+  .carousel-middle-section{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #2c3e50;
+  }
+  .regulations-right-column{
+      flex-basis: 10%;
+  }
+  
+  .accordion-item{ 
+    background-color: #f2f2f2!important;
+  }
+  .accordion-button{ 
+    background-color: #949393!important;
+    font-size: 14px;
+    font-weight: bold;
+    color: #393052;
+  }
+<<<<<<< HEAD:static/Net_Metering/css/regulationCss.css
+  .accordion-button:hover{
+    color: #f2f2f2;
+  }
+  .accordion-button:focus-visible,
+  .accordion-button:focus  {
+    color: #393052;
+    font-weight: bolder;
+    text-decoration: underline;
+  }
+  .accordion-button {
+    --bs-accordion-active-color: #393052;
+=======
+  .accordion-button:active{
+    color: #393052!important;
+  }
+  .pdf-link{
+    text-decoration: none;
+    color: black;
+  }
+  .pdf-link:hover{
+    text-decoration: underline;
+    color: #393052;
+  }
+  .fa-file-pdf{
+    text-decoration: none;
+    color: red;
+>>>>>>> b1894a92164f7dc4dcb75d0379dcd631ab47ac58:static/Net_Metering/css/regulations.css
+  }
