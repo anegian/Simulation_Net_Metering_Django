@@ -10,8 +10,8 @@
 
 {% block menu_list %}
     <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
-    <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+    <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
     <li><a class="nav-link active" href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
@@ -19,9 +19,6 @@
 {% block content %}
 
     <section class="info-page-content">
-
-
-
       <div class="container-info">
         <div class="main-page-content">
 
@@ -38,19 +35,29 @@
                             Ο σκοπός ήταν να συμβάλλει στην προώθηση ανανεώσιμων πηγών ενέργειας, συγκεκριμένα την ηλιακή.
                             Η εφαρμογή στοχεύει να ενημερώσει τους χρήστες σχετικά με την έννοια του Net Metering σε φωτοβολταϊκά (PV) 
                             συστήματα και τους επιτρέπει να υπολογίσουν την αποδοτικότητα ενός τέτοιου συστήματος, προσομοιάζοντας μία οικιακή εγκατάσταση 
-                            για χρονικό διάστημα 25 ετών.<br>
-<<<<<<< HEAD
-                        </div> 
-                  </div>
-
-=======
-                             </div> 
-                  </div>
-                  <span>Για να κάνετε μία δοκιμή πατήστε τον παρακάτω σύνδεσμο: <br> <a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> Υπολογιστής αποδοτικότητας</a></li>
-                  </span>
->>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
-
-
+                            για χρονικό διάστημα 25 ετών.
+                                 <div class="little-spacer">
+                                  <span class="italics">Για να κάνετε μία δοκιμή της προσομοίωσης, πατήστε τον παρακάτω σύνδεσμο: <br> </span>
+                                  <div class="link-mid-position">
+                                    <a href="{% url 'simulation:calculator' %}">
+                                    <i class="fas fa-calculator spacer-text"></i> Υπολογιστής αποδοτικότητας </a>
+                                  </div>
+                                    
+                                </div>
+                                <div class="little-spacer"> 
+                                      Για περισσότερες πληροφορίες σχετικά με το Net Metering, καθώς και για νέα προγράμματ, μπορείτε να ενημερωθείτε μέσω των 
+                                      παρακάτω συνδέσμων: 
+                                        <ul>
+                                            <li>
+                                                <a href="https://helapco.gr/"> Σύνδεσμος Εταιρειών Φωτοβολταϊκών </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://www.dei.gr/el/gia-to-spiti/myenergy/myenergy-solar/myenergy-solarnet/"> Δ.Ε.Η </a>  
+                                            </li>
+                                       </ul>
+                                 </div>
+                         </div>             
+                  </div>   
               </div>
           </section>
 

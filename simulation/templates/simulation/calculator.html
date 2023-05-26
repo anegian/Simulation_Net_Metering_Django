@@ -12,8 +12,8 @@
 
 {% block menu_list %}
     <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
-    <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a class="nav-link active" href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+    <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
     <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
@@ -180,11 +180,11 @@
                             </div>
                         </div>
                         
-                        <!-- PANEL 55 -->
+                        <!-- PANEL 5 -->
                         <!-- Here you select consumption profile -->
                         <div class="panel">
                             <div class="title-panel">
-                                <span class="number"> 6 </span>
+                                <span class="number"> 5 </span>
                                 <h4>Προφίλ Χρήσης</h4>
                             </div>
                             <div class="option-selector-margin" title="Πότε εντοπίζετε τις μεγαλύτερες ανάγκες σας για οικιακό ρεύμα;">
@@ -244,7 +244,7 @@
                                                 </button>
                                                     <div class="help-container">
                                                         <span class="help-text" id="annual-consumption-text">
-                                                            <strong>Συμπληρώστε πρώτα το είδος της παροχής, για να σας επιτραπεί<br>
+                                                            <strong>Συμπληρώστε πρώτα την Περιφέρεια εγκατάστασης και το είδος της παροχής, για να σας επιτραπεί<br>
                                                                  να συμπληρώσετε ετήσια κατανάλωση!</strong><br><br>
                                                             &#8594; Υπολογίστε <strong>κατά προσέγγιση</strong>, την ετήσια <br>
                                                             κατανάλωση ηλεκτρικού ρεύματος σε kWh.</span>
@@ -284,7 +284,7 @@
                                             </span>
                                              <span class="close-help">&times;</span>
                                         </div></p>
-                                    <input type="range" min="0" max="25" step="1" value="0" id="myRangeSlider" name="myRangeSlider" required>
+                                    <input type="range" id="myRangeSlider" name="myRangeSlider" required>
                                     <p>Τιμή: <span id="slider-value"></span></p> 
                                         
                                     <span id="error-message-panel6">Please select annual kWh & kWp.</span>

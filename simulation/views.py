@@ -40,16 +40,15 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             month_production_array = calculate_month_production(average_annual_production)
             month_production_array_json = json.dumps(month_production_array)
 
-            total_investment = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW)
-            average_annual_savings, profitPercent, total_annual_cost, other_energy_charges = calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_profile, average_annual_production)
-            net_present_value, total_savings = calculate_npv(total_investment, average_annual_savings)
-            payback_period = calculate_payback_period(total_investment, total_savings)
+            payback_period = calculate_payback_period(total_investment, average_annual_savings)
 
             net_present_value = calculate_npv(total_investment, total_savings)
             maintenance_cost = calculate_maintenance_cost(total_investment, inverter_cost)
             lcoe = calculate_lcoe(total_investment, maintenance_cost , total_production_kwh)
             roi, annualized_roi = calculate_roi(net_present_value, total_investment, total_savings)
             irr = calculate_irr(total_investment, total_savings_array)
+            average_CO2 = round(calculate_CO2_emissions_reduced(average_annual_production))
+            trees_planted = round(calculate_equivalent_trees_planted(average_annual_production))
 
             # dictionary with rendered variables
             context = {
@@ -73,16 +72,6 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'total_annual_cost': total_annual_cost,
             'regulated_charges': regulated_charges,
             'has_storage': has_storage,
-            'net_present_value': net_present_value, 
-            'total_savings': total_savings, 
-            }
-
-            result = 'simulation/dashboard.html'
-            print('Total Investment:', total_investment,"euro", '& Περίοδος Απόσβεσης:', payback_period, "Ετήσιο κόστος ρεύματος: ", total_annual_cost, "& ετήσια μείωση: ", average_annual_savings, "Ρυθμιζόμενες χρεώσεις: ", other_energy_charges, )  # Add this line for debugging
-            print('Total savings after 25years: ', total_savings) 
-            print(f'Net Present value is {net_present_value} €') 
-            
-            context ={
             'average_annual_production': average_annual_production,  
             'total_savings': total_savings,
             'total_savings_array': total_savings_array,
@@ -97,7 +86,10 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'roi': roi,
             'annualized_roi': annualized_roi,
             'irr': irr,
+            'average_CO2': average_CO2,
+            'trees_planted': trees_planted,
             }
+
             result = 'simulation/dashboard.html'
 
             print('Total Investment:', total_investment,"euro", 'Average annual Savings: ', average_annual_savings, '& Περίοδος Απόσβεσης:', payback_period) 
@@ -106,7 +98,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges, "Μέση Ετήσια Παραγωγή:", average_annual_production)  # Add this line for debugging
             print('ideal Production kWh per kWp: ', production_per_KW)
             print("Total production loss percent, calculating azimuth and inclination: ", total_loss_percentage, 'Inclination percent: ', inclination_percentage, 'Azimuth percent:', percentage_production_loss, '\n')
-
+            
             return render(request, result, context)
         except Http404:
             return Http404("404 Generic Error")
@@ -142,7 +134,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 if phase_load == "single_phase":
                     phase_loadkVA = 8
                 else:
-                    phase_loadkVA = 25
+                    phase_loadkVA = 15
 
                 recommended_PV_in_Kwp = request.POST.get('select_kwh')
                 # get the value of the energy consumption dict, where key is the kWh selected
@@ -232,7 +224,6 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
     else:
         battery_cost = 0
 
-
     print(f"Inverter: {inverter_cost}")
     print(f"Battery Cost: {battery_cost}")
     print(f"Required Pv panels: {number_of_panels_required}")
@@ -283,11 +274,11 @@ def calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_p
 
     return average_annual_savings, profitPercent, total_annual_cost, regulated_charges
 
-# Payback Period
-def calculate_payback_period(total_investment, total_savings):    
-    payback_period = total_investment / total_savings
-    years = int(payback_period)
-    months = round((payback_period - years) * 12)
+def calculate_payback_period(total_investment, average_annual_savings): 
+    annual_production_degradation = 0.06   
+    years = 0
+    minimum_savings_needed = 0
+    element_index = 0
 
     while total_investment >= minimum_savings_needed and element_index < 26:
         minimum_savings_needed += average_annual_savings / ( ( 1 + annual_production_degradation ) ** element_index)
@@ -303,29 +294,87 @@ def calculate_average_annual_production(PV_kWp, district_irradiance, azimuth_val
     # Calculate the annual production of the PV system
     # based on the system's specifications and the inclination
     # Return the result
-    pass;
 
+    if azimuth_value == '90':
+        percentage_production_loss = 1.14
+    elif azimuth_value == '45':
+        percentage_production_loss = 1.04
+    elif azimuth_value == '-90':
+        percentage_production_loss = 1.13
+    elif azimuth_value == '-45':
+        percentage_production_loss = 1.03
+    else:
+        percentage_production_loss = 1 # ideal azimuth is south so no loss
+
+    if inclination_PV == '30': # ideal inclination
+        inclination_percentage = 1
+    elif inclination_PV == '45':
+        inclination_percentage = 1.018
+    elif inclination_PV == '15':
+        inclination_percentage = 1.025
+    elif inclination_PV == '0':
+        inclination_percentage = 1.12
+    else:
+        inclination_percentage = 1
+
+    production_per_KW = district_irradiance * PV_kWp 
+    total_loss_percentage = percentage_production_loss * inclination_percentage
+    average_annual_production = production_per_KW / total_loss_percentage
+
+    return average_annual_production, total_loss_percentage, percentage_production_loss, inclination_percentage,production_per_KW   # in kWh
+
+def calculate_total_production_kwh(average_annual_production):
+
+    total_production_kwh = 0
+    total_production_kwh_array =[]
+    annual_production_degradation = 0.006
+
+    for i in range(1, 26):
+        total_production_kwh += average_annual_production / ( ( 1+annual_production_degradation) ** i)
+        total_production_kwh_array.append(total_production_kwh)
+
+    print("Total kWh production after 25 years: ", total_production_kwh)
+
+    return total_production_kwh_array, total_production_kwh
+
+def calculate_month_production(average_annual_production):
+    month_production_array = []
+    monthly_percentages = [5.2, 6, 8.1, 9.5, 10.5, 10.7, 11.6, 10.9, 9.8, 7.8, 5.4, 4.5]
+    
+    for percentage in monthly_percentages:
+        monthly_production = round((percentage / 100) * average_annual_production)
+        month_production_array.append(monthly_production)
+
+    print('Each month production: ', month_production_array)
+    
+    return month_production_array 
+   
 def calculate_total_savings(average_annual_savings):
     # Calculate the total profit over 25 years
     # based on the annual production
     # Return the result
-    pass;
+    total_savings_array = []
+    total_savings = 0
+    annual_production_degradation = 0.006
+    
+    for i in range(1, 26):
+        total_savings += average_annual_savings / ( ( 1 + annual_production_degradation ) ** i)
+        total_savings_array.append(total_savings)
+
+    return total_savings, total_savings_array
    
-   
-def calculate_npv(total_investment, average_annual_savings):
-    # Calculate the net present value
+def calculate_maintenance_cost(total_investment, inverter_cost):
+    cost_rate = (1.5 / 100) * 25 # 1.5% της συνολικής επένδυσης ανά έτος
+
+    return total_investment * cost_rate
+
+def calculate_npv(total_investment, total_savings):
+    # Calculate the net present value without cash flow, only logistics
     # based on the total savings and the total investment
+    # annual_value_discount_rate = 0.3, annual_electricity_inflation = 0.2
     # Return the result
     
-    total_savings = 0
-    annual_production_degradation = 0.06
-    annual_value_discount_rate = 0.3
-    annual_electricity_inflation = 0.2
-
-    for i in range(1, 26):
-        total_savings += average_annual_savings / (( 1+annual_production_degradation+annual_value_discount_rate-annual_electricity_inflation) ** i) 
-      
-    return total_savings - total_investment,  total_savings
+    return total_savings - total_investment
 
 def calculate_roi(net_present_value, total_investment, total_savings):
     # Calculate the return on investment
@@ -362,6 +411,17 @@ def calculate_irr(total_investment, total_savings_array):
     print('Internal Rate: ', irr)
     
     return irr   
+   
+def calculate_CO2_emissions_reduced(average_annual_production):
+   # Calculate the equivalent CO2 emissions, reduced due to solar production
+   average_CO2 = 0.04 # ~ 40 g CO2 eq/kWh for a year
+   
+   return average_CO2 * average_annual_production # kg per year
+  
+def calculate_equivalent_trees_planted(average_annual_production):
+   percentage_trees_per_kWh = 0.02
+   
+   return average_annual_production * percentage_trees_per_kWh 
 
 def signup(request):
     try:

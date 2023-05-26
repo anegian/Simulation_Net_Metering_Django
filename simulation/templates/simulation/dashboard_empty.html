@@ -11,8 +11,8 @@
 
 {% block menu_list %}
     <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
-    <li><a class="nav-link active" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+    <li><a class="nav-link active" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
     <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
@@ -30,21 +30,18 @@
           
         <div class="dashboard-empty-info"> 
           
-<<<<<<< HEAD
-            <span> <i class="fas fa-exclamation-circle"></i> Δεν υπάρχουν διαθέσιμα δεδομένα. Παρακαλώ πατήστε την επιλογή "Νέος Υπολογισμός"
-            για να μεταβείτε στη φόρμα συμπλήρωσης.
-            </span>
-=======
             <div class="no-data-dash-text"> <i class="fas fa-exclamation-circle"></i> <span class="title-no-data">Δεν υπάρχουν διαθέσιμα δεδομένα.</span> <br>
               Παρακαλώ πατήστε την επιλογή "Νέος Υπολογισμός" για να μεταβείτε στη φόρμα συμπλήρωσης.
             </div>
->>>>>>> 9efebc3e0cf52b6b9846fc70959fe0703a9f1206
         </div>
           <div class="go-back-button-dash-empty">
                 <div>
-                  <button id="change-data-button">
-                      <i class="fas fa-calculator"></i><a href="{% url 'simulation:calculator' %}">Νέος Υπολογισμός</a>
-                  </button>
+                  <a href="{% url 'simulation:calculator' %}">
+                     <button id="change-data-button">
+                      <i class="fas fa-calculator"></i>
+                      Νέος Υπολογισμός</button>
+                  </a>
+                
                 </div>
                 
             </div>

@@ -23,8 +23,8 @@
 
 {% block menu_list %}
     <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
-    <li><a class="nav-link active" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+    <li><a class="nav-link active" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
     <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
@@ -46,7 +46,7 @@
                     trigger="hover"
                     style="width:120px;height:120px">
                 </lord-icon>
-                <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">Σύνολο: {{total_investment|default:'0' }} €</p>
+                <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">Σύνολο: {{total_investment|default:'0' }} €</p>    
               </div>
 
               <div class="container-icons">
@@ -91,16 +91,18 @@
                       trigger="hover"
                       style="width:120px;height:120px">
                   </lord-icon>
+                <p class="info-title" id="CO2" data-value="{{ average_CO2|default:'0' }}">{{average_CO2|default:'0' }}kg CO2 eq/kWh </p>
               </div>
               
               <div class="container-icons-bottom">
-                <div class="titles-panel">Αντίστοιχα Φυτεμένα Δέντρα</div>
+                <div class="titles-panel">Ισοδύναμα Φυτεμένα Δέντρα</div>
                 <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
                   <lord-icon
                       src="https://cdn.lordicon.com/azbllxpx.json"
                       trigger="hover"
                       style="width:120px;height:120px">
                   </lord-icon>
+                 <p class="info-title" id="trees" data-value="{{ trees_planted|default:'0' }}">{{trees_planted|default:'0' }} νέα δέντρα </p>
               </div>
               
               <div class="container-icons-bottom">
@@ -111,6 +113,7 @@
                       trigger="hover"
                       style="width:100px;height:120px">
                   </lord-icon>
+                <p class="info-title" id="other_energy" data-value="{{ annual_kwh|default:'0' }}">{{annual_kwh|default:'0' }}kWh/έτος</p>
               </div>
           
             </div>
@@ -139,16 +142,15 @@
         </div> 
         
       </section>
-
-      <div class="go-back-button">
-          <div>
-            <button id="change-data-button">
-                <i class="fas fa-calculator"></i><a href="{% url 'simulation:calculator' %}">Νέος Υπολογισμός</a>
-            </button>
+      <div class="little-spacer-dash">
+          <div class='go-back-button-dash-empty'>
+            <a href="{% url 'simulation:calculator' %}">
+              <button id="change-data-button">
+               <i class="fas fa-calculator"></i>
+               Νέος Υπολογισμός</button>
+           </a>
           </div>
-          
       </div>
-
     </div>
 
 {% endblock %}
