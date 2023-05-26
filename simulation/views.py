@@ -224,6 +224,7 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
     else:
         battery_cost = 0
 
+    print(inverter_cost)
 
     print(f"Inverter: {inverter_cost}")
     print(f"Battery Cost: {battery_cost}")
