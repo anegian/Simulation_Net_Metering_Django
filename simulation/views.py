@@ -134,7 +134,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 if phase_load == "single_phase":
                     phase_loadkVA = 8
                 else:
-                    phase_loadkVA = 25
+                    phase_loadkVA = 15
 
                 recommended_PV_in_Kwp = request.POST.get('select_kwh')
                 # get the value of the energy consumption dict, where key is the kWh selected
@@ -223,8 +223,6 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
             battery_cost = 0
     else:
         battery_cost = 0
-
-    print(inverter_cost)
 
     print(f"Inverter: {inverter_cost}")
     print(f"Battery Cost: {battery_cost}")
