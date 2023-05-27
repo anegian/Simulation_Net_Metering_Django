@@ -913,11 +913,11 @@ footer .admin-info {
   }
   .right-upper{
     display: flex;
-    align-items: center;
+    justify-content: center;
   }
   .right-below{
     display: flex;
-    align-items: center;
+    justify-content: center;
   }
 
   .titles-panel{
