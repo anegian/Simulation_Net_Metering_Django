@@ -6,6 +6,7 @@ from .forms import *
 from .models import *
 import json
 import numpy_financial as npf
+import datetime as datetime
 
 # Create your views here
 # App level
@@ -145,6 +146,8 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 storage_kW = request.POST.get('storage_kw')
 
                 # print the variables to check
+                now = datetime.now()
+                print("\n ######### Start of session of USER'S form: ", now, "#########")
                 print(f"District key: {district_irradiance}")
                 print(f"District value: {district_value}")
                 print(f"The selected phase load is: {phase_load}")
