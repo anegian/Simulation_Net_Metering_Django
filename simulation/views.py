@@ -6,7 +6,7 @@ from .forms import *
 from .models import *
 import json
 import numpy_financial as npf
-import datetime as datetime
+from datetime import datetime
 
 # Create your views here
 # App level
