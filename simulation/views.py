@@ -6,6 +6,7 @@ from .forms import *
 from .models import *
 import json
 import numpy_financial as npf
+from datetime import datetime
 
 # Create your views here
 # App level
@@ -98,7 +99,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges, "Μέση Ετήσια Παραγωγή:", average_annual_production)  # Add this line for debugging
             print('ideal Production kWh per kWp: ', production_per_KW)
             print("Total production loss percent, calculating azimuth and inclination: ", total_loss_percentage, 'Inclination percent: ', inclination_percentage, 'Azimuth percent:', percentage_production_loss, '\n')
-            
+            now = datetime.now()
+            print("######### End time of this session: ", now, "#########\n")
             return render(request, result, context)
         except Http404:
             return Http404("404 Generic Error")
@@ -145,6 +147,8 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 storage_kW = request.POST.get('storage_kw')
 
                 # print the variables to check
+                now = datetime.now()
+                print("\n ######### Start of session of USER'S form: ", now, "#########")
                 print(f"District key: {district_irradiance}")
                 print(f"District value: {district_value}")
                 print(f"The selected phase load is: {phase_load}")
