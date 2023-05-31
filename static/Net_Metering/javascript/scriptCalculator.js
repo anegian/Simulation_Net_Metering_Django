@@ -1,19 +1,22 @@
 // variables initialization
 let slider = document.getElementById("myRangeSlider");
 const PV_kW_output = document.getElementById("slider-value");
-const select_annual_Kwh = document.getElementById("id_select_kwh");
-
+// const select_annual_Kwh = document.getElementById("id_select_kwh");
+let select_annual_Kwh = document.getElementById("annual_kwh");
 // Get the initial value of the select_annual_Kwh element from the form
-const initial_Kwh_value = select_annual_Kwh.value;
+
+
 const district_average_irradiance = document.getElementById("id_select_district");
 // Get the initial value of the district
 const initial_district = district_average_irradiance.value;
 
 const phase_load_selected = document.getElementById("id_select_phase");
 const form_submit_button = document.getElementById("submitBtn");
+const reset_button = document.getElementById("resetBtn")
 const error_message = document.getElementById('error-message-panel');
 const error_message2 = document.getElementById('error-message-panel5');
 const error_message3 = document.getElementById('error-message-panel6');
+const max_message = document.getElementById("max-message")
 const storage_selection = document.getElementById("with_storage");
 const storage_kW = document.getElementById("storage_kw");
 const no_storage_selection = document.getElementById("without_storage");
@@ -27,7 +30,7 @@ disableElements();
 
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
-    slider.min = 1.0;
+    slider.min = 0.1;
     PV_kW_output.innerHTML = this.value;
     error_message3.style = 'none';
 };      
@@ -48,13 +51,13 @@ district_average_irradiance.addEventListener("change", function(event){
 // Listen for changes in the phase load input and store the selected option
 phase_load_selected.addEventListener("change", function(event){
     
+
     if (event.target.value === 'single_phase' || event.target.value === '3_phase'){
-        error_message2.style.display = "none";
-        phase_load_selected.classList.remove('error')
-        select_annual_Kwh.value = initial_Kwh_value;  // Resetting select_annual_Kwh to initial value
+        disableErrorMessages();
         enableAnnualkWh();
+        select_annual_Kwh.value = " "
         slider.max = event.target.value === 'single_phase' ? 5 : 10
-        showAnnualKwh();
+        enableSlider();
     }else{
         disableElements();
     } 
@@ -63,30 +66,35 @@ phase_load_selected.addEventListener("change", function(event){
     console.log(phase_load_selected.value);
 });
 
-select_annual_Kwh.addEventListener("change", function(event){
-    if(event.target.value === 'kWh'){
-        disableSlider();
-        disableStorage();
-        console.log(select_annual_Kwh.value)
-    }else{
-        console.log('Annual consumption in kWh: ', select_annual_Kwh.value);
-        enableSlider();  
-        enableStorage();  
-    } 
+select_annual_Kwh.addEventListener("input", function(){
+    enableSlider();
+    enableStorage();
+    let enteredValue = parseInt (select_annual_Kwh.value)
+    const maxValue = parseInt (select_annual_Kwh.max)
+    
+    if (enteredValue > maxValue) {
+        enteredValue = maxValue;
+        select_annual_Kwh.value = enteredValue;
+        max_message.style.display = "block";
+    } else {
+        max_message.style.display = "none";
+    }
+
+    console.log(enteredValue, select_annual_Kwh.value)
+});
+
+select_annual_Kwh.addEventListener("keypress", function(event){
+    if (isNaN(event.key) || event.key === " " ){
+        event.preventDefault();
+    }
 });
 
 slider.addEventListener("change", function(event){
-
-	if (Number(slider.value) > '0' && Number(slider.value) <= '10'){
-        if(storage_kW.disabled == true){
-             enableStorage(); 
-        }
 
         disableErrorMessages();
         PV_kW_output.innerHTML = slider.value; 
         storage_kW.min = slider.value;
         storage_kW.value = slider.value;
-    }
 
     console.log(slider.value);
 
@@ -99,11 +107,14 @@ storage_kW.addEventListener("change", function(){
 // Reset the PV_kW_output element value to the initial value when the reset button is clicked
 document.querySelector('button[type="reset"]').addEventListener('click', function() {
     disableElements();
-    disableErrorMessages();  
+    disableErrorMessages(); 
+     
+    console.log("Slider value: ", slider.value)
 });
 
 // Add an event listener to the submit button
 form_submit_button.addEventListener('click', function(event) {
+    
   // Prevent the form from submitting and reloading the page when it's not valid
   if (!validateForm()) {
     event.preventDefault();
@@ -191,14 +202,14 @@ for (let i = 0; i < numberOfHelpButtons; i++) {
 }
 
 function disableElements() {
-    slider.disabled = true;
-    slider.value = 0.0;
-    slider.min = 0.0;
-    PV_kW_output.innerHTML = slider.value;
-    storage_selection.disabled = true;
-    storage_kW.disabled = true;
     select_annual_Kwh.disabled = true;
-    select_annual_Kwh.value = initial_Kwh_value;  // Resetting select_annual_Kwh to initial value
+    slider.min = 0.0;
+    slider.value = 0;
+    PV_kW_output.innerHTML = slider.value;
+    slider.disabled = true;
+    select_annual_Kwh.value = " "
+    storage_selection.disabled = true;
+    storage_kW.disabled = true; 
 } 
 function enableSlider() {
     slider.disabled = false;
@@ -212,7 +223,7 @@ function disableSlider(){
     slider.disabled = true;
     slider.value = 0.0;
     slider.min = 0.0;
-    if (select_annual_Kwh.value === 'kWh') {
+    if (select_annual_Kwh.value === '0') {
         slider.value = 0.0;
       } else {
         slider.value = select_annual_Kwh.value / district_average_irradiance.value;
@@ -223,6 +234,9 @@ function disableSlider(){
 }
 function enableAnnualkWh(){
     select_annual_Kwh.disabled = false;
+    select_annual_Kwh.max = phase_load_selected.value === 'single_phase' ? 7000 : 15000;
+    select_annual_Kwh.step = 100;
+    select_annual_Kwh.min = 0;
 }
 function disableAnnualkWh() {
     select_annual_Kwh.disabled = true;
@@ -250,22 +264,9 @@ function disableErrorMessages() {
     error_message.style.display = 'none';
     error_message2.style.display = 'none';
     error_message3.style.display = 'none';
+    max_message.style.display = 'none';
 }         
-function showAnnualKwh() { 
-    if (phase_load_selected.value === 'single_phase') {
-        // Enable the first two options and disable the rest
-        select_annual_Kwh.options[0].disabled = false;
-        select_annual_Kwh.options[1].disabled = false;
-        for (let i = 3; i < select_annual_Kwh.options.length; i++) {
-            select_annual_Kwh.options[i].disabled = true;
-        }
-    } else {
-        // Enable all options
-        for (let i = 0; i < select_annual_Kwh.options.length; i++) {
-            select_annual_Kwh.options[i].disabled = false;
-                }
-    }
-}
+
 function check_selection_kwh_conditions(){
     if (phase_load_selected.value !== 'phase_load' && district_average_irradiance.value !== 'district'){
         enableAnnualkWh();
@@ -276,3 +277,38 @@ function check_selection_kwh_conditions(){
         disableStorage();
     }
 }
+
+// Map
+let map = L.map('map').setView([37.983917, 23.72936], 8);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+
+// Settings for tilt images
+const radio_tilt = document.querySelectorAll('input[name="inclination"]');
+const images = document.querySelectorAll('.img-tilt');
+
+radio_tilt.forEach(function(radio) {
+  radio.addEventListener('change', function(event) {
+    const selectedValue = event.target.value;
+
+    images.forEach(function(image) {
+      const tiltValue = image.getAttribute('data-tilt');
+      image.style.display = tiltValue === selectedValue ? 'block' : 'none';
+    });
+  });
+
+  if (radio.value === '30') {
+    radio.checked = true;
+    images.forEach(function(image) {
+      const tiltValue = image.getAttribute('data-tilt');
+      image.style.display = tiltValue === '30' ? 'block' : 'none';
+    });
+  }
+});
+
+
+
+

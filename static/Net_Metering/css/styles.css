@@ -58,7 +58,7 @@ pointer-events: auto;
 border: 2px solid hsla(0, 100%, 50%, 0.5);
 }
 
-#error-message-panel, #error-message-panel5, #error-message-panel6{
+#error-message-panel, #error-message-panel5, #error-message-panel6, #max-message{
     display: none;
     font-weight: bold;
     color: hsla(0, 100%, 50%, 0.5);
@@ -400,6 +400,28 @@ input[type="search"]:focus {
 
 /* ::: CALCULATOR FORM Panels ::: */
 
+    #map{
+        margin-left: 10px;
+        height: 60%;
+        width: 95%;
+    }
+    .panel-selection-height{
+        height: 30px!important;
+    }
+    .img-div-calculator{
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .img-info-panel-icon{
+        width: 100px;
+        height: 100px;
+    }
+    .img-tilt{
+        width: 200px;
+        height: 200px;
+    }
     .spacer-in-main-content{
         height: 50px;
         background-color: #393052;
@@ -416,9 +438,9 @@ input[type="search"]:focus {
         flex-wrap: wrap;
         background-color: #29233b;
     }
-    .calculator-fieldset .panel{
-        width: 265px;
-        height: 220px;
+    .calculator-fieldset .panel-calculator{
+        width: 500px;
+        height: 420px;
         margin: 10px 20px 10px 0;
         border-style: solid;
         border-width: 1.5px;
@@ -427,7 +449,7 @@ input[type="search"]:focus {
         background-color: #393052;
         font-size: 14px;
     }
-    .calculator-fieldset .panel .number{
+    .calculator-fieldset .panel-calculator .number{
         margin: 0 10px 0 10px;
         font-size: 40px;
         color: #ed4901;
@@ -578,12 +600,12 @@ input[type="search"]:focus {
         transform: scale(1.1);
     }
       /* Positioning the radio buttons */
-    #east, #east-label { transform: translate(181px, -175px); }
-    #southEast, #southEast-label { transform: translate(164px, -113px); }
-    #south, #south-label { transform: translate(112px, -66px); }
-    #southWest, #southWest-label { transform: translate(60px, -68px); }
-    #west, #west-label { transform: translate(43px, -86px); }
-    #compass-photo { transform: translate(65px, -20px); }
+    #east, #east-label { transform: translate(370px, -198px); }
+    #southEast, #southEast-label { transform: translate(330px, -85px); }
+    #south, #south-label { transform: translate(232px, -20px); }
+    #southWest, #southWest-label { transform: translate(130px, -45px); }
+    #west, #west-label { transform: translate(90px, -105px); }
+    #compass-photo { transform: translate(120px, 20px); }
 
     .calculator-container{
         display: flex

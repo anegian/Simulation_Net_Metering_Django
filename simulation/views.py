@@ -23,13 +23,12 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             userPower_profile = request.session.get('userPower_profile')
             phase_load = request.session.get('phase_load')
             phase_loadkVA = int(request.session.get('phase_loadkVA'))
-            recommended_PV_in_Kwp = request.session.get('recommended_PV_in_Kwp')
             annual_kwh = int(request.session.get('annual_kwh'))
             PV_kWp = float(request.session.get('PV_kWp'))
             has_storage = request.session.get('has_storage')
-            storage_kW = float(request.session.get('storage_kW'))
+            storage_kw = float(request.session.get('storage_kw'))
 
-            total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW)
+            total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw)
             average_annual_production, total_loss_percentage, percentage_production_loss, inclination_percentage, production_per_KW = calculate_average_annual_production(PV_kWp, district_irradiance, azimuth_value, inclination_PV)
             average_annual_savings, profitPercent, total_annual_cost, regulated_charges = calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_profile, average_annual_production)
             
@@ -61,11 +60,10 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'userPower_profile': userPower_profile,
             'phase_load': phase_load,
             'phase_loadkVA': phase_loadkVA,
-            'recommended_PV_in_Kwp': recommended_PV_in_Kwp,
             'annual_kwh': annual_kwh,
             'PV_kWp': PV_kWp,
             'has_storage': has_storage,
-            'storage_kW': storage_kW,
+            'storage_kw': storage_kw,
             'total_investment': total_investment,
             'payback_period': payback_period,
             'average_annual_savings': average_annual_savings,
@@ -115,13 +113,13 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
 def calculator_forms_choice(request):    # simulation/templates/calculator.html
 
     if request.method == 'POST':
+        print(request.POST)
         # changes the name of variable to calculator_form because form was fault --> shadow name 'form' out of scope
         form_district = PlaceOfInstallationForm(request.POST)
-        form_annual_kwh = EnergyConsumptionForm(request.POST)
         form_phase_load = PhaseLoad(request.POST)
         
         
-        if form_district.is_valid() and form_annual_kwh.is_valid() and form_phase_load.is_valid():
+        if form_district.is_valid() and form_phase_load.is_valid():
             try:
                 # initialization of variables
                 district_irradiance = request.POST.get('select_district')
@@ -130,6 +128,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 azimuth_value = request.POST.get('azimuth')
                 inclination_PV = request.POST.get('inclination')
                 userPower_profile = request.POST.get('power_option')
+                annual_kwh = request.POST.get('annual_kwh')
 
                 phase_load = request.POST.get('select_phase')
 
@@ -138,13 +137,9 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 else:
                     phase_loadkVA = 15
 
-                recommended_PV_in_Kwp = request.POST.get('select_kwh')
-                # get the value of the energy consumption dict, where key is the kWh selected
-                annual_kwh = dict(EnergyConsumptionForm.KWh_CHOICES).get(recommended_PV_in_Kwp)
-                
                 PV_kWp = request.POST.get('myRangeSlider')
                 has_storage = request.POST.get('storage')
-                storage_kW = request.POST.get('storage_kw')
+                storage_kw = request.POST.get('storage_kw')
 
                 # print the variables to check
                 now = datetime.now()
@@ -154,7 +149,6 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print(f"The selected phase load is: {phase_load}")
                 print(f"Agreed kVA is: {phase_loadkVA}")
                 print(f"Annual kWh is: {annual_kwh}")
-                print(f"Minimum Kwp to reduce electric cosumption is: {recommended_PV_in_Kwp}" )
                 print(f"Place of installment is: {place_of_installment}")
                 print(f"Azimuth of PV: {azimuth_value}")
                 print(f"Degrees of PV inclination: {inclination_PV}" )
@@ -163,9 +157,9 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print(f"Did User select Battery storage: {has_storage}")
 
                 if has_storage == 'with_storage':
-                    print(f"Battery kWh value: {storage_kW}")
+                    print(f"Battery kWh value: {storage_kw}")
                 else:
-                    storage_kW = 0
+                    storage_kw = 0
                     print('No storage selected')
             except KeyError:
                 # Handle the case where an invalid key is provided
@@ -176,11 +170,10 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['inclination_PV'] = inclination_PV
             request.session['azimuth_value'] = azimuth_value
             request.session['userPower_profile'] = userPower_profile
-            request.session['recommended_PV_in_Kwp'] = recommended_PV_in_Kwp
             request.session['annual_kwh'] = annual_kwh
             request.session['PV_kWp'] = PV_kWp
             request.session['has_storage'] = has_storage
-            request.session['storage_kW'] = storage_kW
+            request.session['storage_kw'] = storage_kw
             request.session['phase_loadkVA'] = phase_loadkVA
             request.session['phase_load'] = phase_load
 
@@ -188,15 +181,14 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
 
     else:
         form_district = PlaceOfInstallationForm()
-        form_annual_kwh = EnergyConsumptionForm()
         form_phase_load = PhaseLoad()
     return render(request, 'simulation/calculator.html', context={'form_district': form_district, 
-         'form_annual_kwh': form_annual_kwh,'form_phase_load': form_phase_load,})
+        'form_phase_load': form_phase_load,})
 
 
 # Calculation functions
 
-def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
+def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw):
     installation_cost = 400 # average cost in €
 
     each_panel_kW = 0.4  # average 400W each panel
@@ -213,7 +205,7 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
         # inverters cost -> 700€-1200€ prices, hybrid inverters are expensive
         if has_storage == "with_storage":
             inverter_cost = ( PV_kWp * 200 ) + ( (5 - PV_kWp) * 100 )  # 1-phase hybrid inverter for battery support
-            battery_cost = storage_kW * average_battery_cost_per_kW
+            battery_cost = storage_kw * average_battery_cost_per_kW
         else:
             inverter_cost = ( PV_kWp * 100 ) + ( (5 - PV_kWp) * 100 )# simple 1-phase PV inverter
             battery_cost = 0
@@ -221,7 +213,7 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kW):
     elif phase_load == "3_phase":
         if has_storage == "with_storage":
             inverter_cost = (PV_kWp * 250 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter for battery support
-            battery_cost = storage_kW * average_battery_cost_per_kW
+            battery_cost = storage_kw * average_battery_cost_per_kW
         else:
             inverter_cost = ( PV_kWp * 150 )+ ( (10 - PV_kWp) * 100 ) # simple 3-phase PV inverter
             battery_cost = 0

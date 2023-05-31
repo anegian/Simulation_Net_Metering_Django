@@ -41,21 +41,6 @@ class PhaseLoad(forms.Form):
     select_phase = forms.ChoiceField(choices=PHASE_LOAD, initial='phase_load')
 
 
-class EnergyConsumptionForm(forms.Form):
-    KWh_CHOICES = [
-        ('kWh', 'KWh σε ετήσια βάση'),
-        ('3000', '3000'),
-        ('4500', '4500'),
-        ('6000', '6000'),
-        ('7500', '7500'),
-        ('9000', '9000'),
-        ('10000', '10000'),
-        ('11000', '11000'),
-        ('12000', '12000'),
-    ]
-    select_kwh = forms.ChoiceField(choices=KWh_CHOICES, label='Επιλέξτε Παροχή και KWh', initial = 'kWh')
-
-
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
