@@ -15,7 +15,7 @@
      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="website icon" type="png" href="{% static 'images/panel_128x107.png'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"/>
-    <link rel="stylesheet" href=" {% static 'Net_Metering/css/styles.css' %}"/>
+    <link rel="stylesheet" href=" {% static 'Net_Metering/css/style.css' %}"/>
     <link rel="stylesheet" href=" {% static 'Net_Metering/css/register.css' %}"/>
 
     {% block css %} 
@@ -43,7 +43,11 @@
                 <label class="logo"><a class="text-decoration-none" href="{% url 'home' %}">Simulation - <b style="color: #ed4901;">N</b>et Metering</a></label>
             </div>
             <div class="header-container-right">
+                {% block color_theme %}
+                  
+                  {% endblock %}
                 <label class="signup"><a href="{% url 'simulation:signup' %}" title="Νέα Εγγραφή"><i class="fas fa-user"></i></a></label>
+                
 
                 <form method="POST" id="signup-form-test">
                     {% csrf_token %}
@@ -188,6 +192,7 @@
             <i class="fas fa-copyright"> 2023 Anestis Giannakosian. All rights reserved</i>
 
         </span>
+        
 </footer>
 
 

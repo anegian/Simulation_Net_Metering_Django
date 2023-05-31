@@ -89,12 +89,12 @@ select_annual_Kwh.addEventListener("keypress", function(event){
     }
 });
 
-slider.addEventListener("change", function(event){
+slider.addEventListener("change", function(){
 
-        disableErrorMessages();
-        PV_kW_output.innerHTML = slider.value; 
-        storage_kW.min = slider.value;
-        storage_kW.value = slider.value;
+    disableErrorMessages();
+    PV_kW_output.innerHTML = slider.value; 
+    storage_kW.min = slider.value;
+    storage_kW.value = slider.value;
 
     console.log(slider.value);
 
@@ -203,13 +203,13 @@ for (let i = 0; i < numberOfHelpButtons; i++) {
 
 function disableElements() {
     select_annual_Kwh.disabled = true;
-    slider.min = 0.0;
+    slider.min = 0;
     slider.value = 0;
     PV_kW_output.innerHTML = slider.value;
-    slider.disabled = true;
     select_annual_Kwh.value = " "
     storage_selection.disabled = true;
     storage_kW.disabled = true; 
+    slider.disabled = true;
 } 
 function enableSlider() {
     slider.disabled = false;
@@ -311,4 +311,38 @@ radio_tilt.forEach(function(radio) {
 
 
 
+const themeSlider = document.getElementById('theme-slider');
+
+document.documentElement.style.setProperty('--bg-color', '#29233b');
+document.documentElement.style.setProperty('--text-color', '#f2f2f2');
+document.documentElement.style.setProperty('--bg-color-panel', '#393052');
+document.documentElement.style.setProperty('--label-color', '#bbb');
+document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
+document.documentElement.style.setProperty('--slider-color', '#738725');
+selectedValue = 0;
+
+themeSlider.addEventListener('input', function(event) {
+  const selectedValue = event.target.value;    
+        
+        if (selectedValue === '0') {
+          document.documentElement.style.setProperty('--bg-color', '#29233b');
+          document.documentElement.style.setProperty('--text-color', '#f2f2f2');
+          document.documentElement.style.setProperty('--bg-color-panel', '#393052');
+          document.documentElement.style.setProperty('--label-color', '#bbb');
+          document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
+          document.documentElement.style.setProperty('--slider-color', '#738725');
+          document.documentElement.style.setProperty('--slider-value-kW-color', '#f2f2f2');
+          document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
+        } else if (selectedValue === '1') {
+          document.documentElement.style.setProperty('--bg-color', '#f2f2f2');
+          document.documentElement.style.setProperty('--text-color', '#333');
+          document.documentElement.style.setProperty('--bg-color-panel', '#f2f2f2');
+          document.documentElement.style.setProperty('--text-color-panel', '#c6ccd2'); 
+          document.documentElement.style.setProperty('--label-color', '#334d68'); 
+          document.documentElement.style.setProperty('--title-panel-color', '#538bc7');
+          document.documentElement.style.setProperty('--slider-color', '#738725');
+          document.documentElement.style.setProperty('--slider-value-kW-color', '#334d68');
+          document.documentElement.style.setProperty('--bg-color-calculator-page', '#f2f2f2');
+        }
+    });
 
