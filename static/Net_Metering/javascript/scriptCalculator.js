@@ -286,6 +286,41 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
+// Create the popup with offset
+var popup = L.popup({
+    closeButton: true,
+    offset: [1, -20] // Adjust the second value (-20) to move the popup higher
+});
+let marker;
+latitude = document.getElementById('latitude')
+longitude = document.getElementById('longitude')
+
+function onMapClick(e) {
+    latitude.value = e.latlng.lat.toFixed(6);
+    longitude.value = e.latlng.lng.toFixed(6);
+    console.log(latitude.value);
+    console.log(longitude.value);
+
+    if (marker) {
+        map.removeLayer(marker); // Remove previous marker if it exists
+    }
+
+    marker = L.marker(e.latlng).addTo(map); // Add a new marker at the clicked location
+
+
+    popup
+        .setLatLng(e.latlng)
+        .setContent(e.latlng.toString())
+        .openOn(map);
+}
+
+map.on('click', onMapClick);
+
+latitude.addEventListener('change', function(){
+    latitude.value = latitude.value
+})
+
+
 // Settings for tilt images
 const radio_tilt = document.querySelectorAll('input[name="inclination"]');
 const images = document.querySelectorAll('.img-tilt');
@@ -310,16 +345,22 @@ radio_tilt.forEach(function(radio) {
 });
 
 
-
+// Setings for theme toggler
 const themeSlider = document.getElementById('theme-slider');
+set_initial_properties_theme_toggler();
 
-document.documentElement.style.setProperty('--bg-color', '#29233b');
-document.documentElement.style.setProperty('--text-color', '#f2f2f2');
-document.documentElement.style.setProperty('--bg-color-panel', '#393052');
-document.documentElement.style.setProperty('--label-color', '#bbb');
-document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
-document.documentElement.style.setProperty('--slider-color', '#738725');
-selectedValue = 0;
+function set_initial_properties_theme_toggler(){
+    themeSlider.value = '0';
+    document.documentElement.style.setProperty('--bg-color', '#29233b');
+    document.documentElement.style.setProperty('--text-color', '#f2f2f2');
+    document.documentElement.style.setProperty('--bg-color-panel', '#393052');
+    document.documentElement.style.setProperty('--label-color', '#bbb');
+    document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
+    document.documentElement.style.setProperty('--slider-color', '#74b1f2');
+    document.documentElement.style.setProperty('--thumb-color', '#393052');
+    document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
+    document.documentElement.style.setProperty('--bg-color-submit-button', '#738725'); 
+}
 
 themeSlider.addEventListener('input', function(event) {
   const selectedValue = event.target.value;    
@@ -330,9 +371,11 @@ themeSlider.addEventListener('input', function(event) {
           document.documentElement.style.setProperty('--bg-color-panel', '#393052');
           document.documentElement.style.setProperty('--label-color', '#bbb');
           document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
-          document.documentElement.style.setProperty('--slider-color', '#738725');
+          document.documentElement.style.setProperty('--slider-color', '#74b1f2');
           document.documentElement.style.setProperty('--slider-value-kW-color', '#f2f2f2');
           document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
+          document.documentElement.style.setProperty('--thumb-color', '#393052');
+          document.documentElement.style.setProperty('--bg-color-submit-button', '#738725');
         } else if (selectedValue === '1') {
           document.documentElement.style.setProperty('--bg-color', '#f2f2f2');
           document.documentElement.style.setProperty('--text-color', '#333');
@@ -340,9 +383,11 @@ themeSlider.addEventListener('input', function(event) {
           document.documentElement.style.setProperty('--text-color-panel', '#c6ccd2'); 
           document.documentElement.style.setProperty('--label-color', '#334d68'); 
           document.documentElement.style.setProperty('--title-panel-color', '#538bc7');
-          document.documentElement.style.setProperty('--slider-color', '#738725');
+          document.documentElement.style.setProperty('--slider-color', '#393052');
           document.documentElement.style.setProperty('--slider-value-kW-color', '#334d68');
           document.documentElement.style.setProperty('--bg-color-calculator-page', '#f2f2f2');
+          document.documentElement.style.setProperty('--thumb-color', '#74b1f2');
+          document.documentElement.style.setProperty('--bg-color-submit-button', '#74b1f2');
         }
     });
 

@@ -6,10 +6,70 @@ from .forms import *
 from .models import *
 import json
 import numpy_financial as npf
+import numpy as np
 from datetime import datetime
+import pvlib.iotools
+from pvlib.iotools import get_pvgis_hourly
+import pandas as pd
 
 # Create your views here
 # App level
+
+# Dictionary mapping PVGIS names to pvlib names
+VARIABLE_MAP = {
+    'G(h)': 'ghi',
+    'Gb(n)': 'dni',
+    'Gd(h)': 'dhi',
+    'G(i)': 'poa_global',
+    'Gb(i)': 'poa_direct',
+    'Gd(i)': 'poa_sky_diffuse',
+    'Gr(i)': 'poa_ground_diffuse',
+    'H_sun': 'solar_elevation',
+    'T2m': 'temp_air',
+    'RH': 'relative_humidity',
+    'SP': 'pressure',
+    'WS10m': 'wind_speed',
+    'WD10m': 'wind_direction',
+}
+
+def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value):
+
+    print(latitude_value,longitude_value)
+
+    poa_data_2020, meta, input = pvlib.iotools.get_pvgis_hourly(latitude=latitude_value, longitude=longitude_value, 
+                    start=2020, end=2020, raddatabase= 'PVGIS-SARAH2', components=True, 
+                    surface_tilt=inclination_value, surface_azimuth=azimuth_value, outputformat='json', 
+                    usehorizon=True, userhorizon=None, pvcalculation=False, 
+                    peakpower=None, pvtechchoice='crystSi', mountingplace='free', 
+                    loss=0, trackingtype=0, optimal_surface_tilt=False, optimalangles=False, 
+                    url='https://re.jrc.ec.europa.eu/api/v5_2/', map_variables=True, timeout=30)
+
+
+    poa_data_2020['poa_diffuse'] = poa_data_2020['poa_sky_diffuse'] + poa_data_2020['poa_ground_diffuse']
+    poa_data_2020['poa_global'] = poa_data_2020['poa_direct'] + poa_data_2020['poa_diffuse']
+
+    # Convert the index (time) to a separate column named 'time'
+    poa_data_2020['time'] = poa_data_2020.index.strftime('%Y-%m-%d-%H:%M:%S')
+
+    # Resample the data to monthly frequency and calculate the sum
+    monthly_irradiance = poa_data_2020['poa_global'].resample('M').sum()
+
+    # Convert the monthly_irradiance Series to an array and divide by 1000 to convert from Wh/m2 to kWh/m2
+    monthly_irradiance_array = np.array(monthly_irradiance / 1000)
+
+    # Convert the NumPy array to a nested Python list
+    monthly_irradiance_list = monthly_irradiance_array.tolist()
+
+    # Print the list of monthly irradiance
+    print(monthly_irradiance_list)
+
+    # Convert the list to JSON format
+    monthly_irradiance_json = json.dumps(monthly_irradiance_list)
+
+    return monthly_irradiance_json
+    
+
+
 
 def dashboard_results(request):   # simulation/templates/dashboard.html
  
@@ -17,6 +77,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         try:
             district_irradiance = int(request.session.get('district_irradiance'))
             district_value = request.session.get('district_value')
+            latitude_coords = float(request.session.get('latitude_coords'))
+            longitude_coords = float(request.session.get('longitude_coords'))
             place_of_installment = request.session.get('place_of_installment')
             inclination_PV = request.session.get('inclination_PV')
             azimuth_value = request.session.get('azimuth_value')
@@ -38,7 +100,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(average_annual_production)
             total_production_kwh_array_json = json.dumps(total_production_kwh_array)
             month_production_array = calculate_month_production(average_annual_production)
-            month_production_array_json = json.dumps(month_production_array)
+            month_production_array_json = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
 
             payback_period = calculate_payback_period(total_investment, average_annual_savings)
 
@@ -54,6 +116,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             context = {
             'district_irradiance': district_irradiance,
             'district_value': district_value,
+            'latitude_coords': latitude_coords,
+            'longitude_coords': longitude_coords,
             'place_of_installment': place_of_installment,
             'azimuth_value': azimuth_value,
             'inclination_PV': inclination_PV,
@@ -97,6 +161,9 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges, "Μέση Ετήσια Παραγωγή:", average_annual_production)  # Add this line for debugging
             print('ideal Production kWh per kWp: ', production_per_KW)
             print("Total production loss percent, calculating azimuth and inclination: ", total_loss_percentage, 'Inclination percent: ', inclination_percentage, 'Azimuth percent:', percentage_production_loss, '\n')
+            
+            
+            
             now = datetime.now()
             print("######### End time of this session: ", now, "#########\n")
             return render(request, result, context)
@@ -122,6 +189,8 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
         if form_district.is_valid() and form_phase_load.is_valid():
             try:
                 # initialization of variables
+                latitude_coords = request.POST.get('latitude')
+                longitude_coords = request.POST.get('longitude')
                 district_irradiance = request.POST.get('select_district')
                 district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_irradiance)
                 place_of_installment = request.POST.get('installation')
@@ -146,6 +215,8 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print("\n ######### Start of session of USER'S form: ", now, "#########")
                 print(f"District key: {district_irradiance}")
                 print(f"District value: {district_value}")
+                print(f"Latitude: {latitude_coords}")
+                print(f"Longitude: {longitude_coords}")
                 print(f"The selected phase load is: {phase_load}")
                 print(f"Agreed kVA is: {phase_loadkVA}")
                 print(f"Annual kWh is: {annual_kwh}")
@@ -166,6 +237,8 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 return HttpResponse('Invalid request parameters')
 
             request.session['district_irradiance'] = district_irradiance
+            request.session['latitude_coords'] = latitude_coords
+            request.session['longitude_coords'] = longitude_coords
             request.session['place_of_installment'] = place_of_installment
             request.session['inclination_PV'] = inclination_PV
             request.session['azimuth_value'] = azimuth_value
