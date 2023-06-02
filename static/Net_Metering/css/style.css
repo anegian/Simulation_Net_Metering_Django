@@ -737,6 +737,12 @@ input[type="search"]:focus {
                     height: 40vh!important; /* Set a minimum height for the elements inside */
                     width: 70%!important;
                 }
+                .right-upper{
+
+                    width: 770px;
+                    display: flex;
+                    justify-content: center;
+                  }
                 .section-before-calculator {
                     -webkit-flex-direction: column;
                     flex-direction: column;

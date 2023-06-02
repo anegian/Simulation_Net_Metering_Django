@@ -3,8 +3,12 @@ let slider = document.getElementById("myRangeSlider");
 const PV_kW_output = document.getElementById("slider-value");
 // const select_annual_Kwh = document.getElementById("id_select_kwh");
 let select_annual_Kwh = document.getElementById("annual_kwh");
-// Get the initial value of the select_annual_Kwh element from the form
-
+// Get panel parameters
+const panelParamsSelect = document.getElementById('panelParams');
+const panelWpInput = document.getElementById('panelWpInput');
+const panelEfficiencyInput = document.getElementById('panelEfficiencyInput');
+const panelAreaInput = document.getElementById('panelAreaInput');
+const panelCostInput = document.getElementById('panelCostInput');
 
 const district_average_irradiance = document.getElementById("id_select_district");
 // Get the initial value of the district
@@ -34,6 +38,30 @@ slider.oninput = function() {
     PV_kW_output.innerHTML = this.value;
     error_message3.style = 'none';
 };      
+
+// Set default values for panel parameters
+panelWpInput.value = panelParamsSelect.options[0].value;
+panelEfficiencyInput.value = panelParamsSelect.options[0].dataset.efficiency;
+panelAreaInput.value = panelParamsSelect.options[0].dataset.panel_area;
+panelCostInput.value = panelParamsSelect.options[0].dataset.panel_cost;
+
+
+// Parameters from panels
+panelParamsSelect.addEventListener('change', function() {
+    const selectedOption = panelParamsSelect.options[panelParamsSelect.selectedIndex];
+    const wp = selectedOption.value;
+    const efficiency = selectedOption.dataset.efficiency;
+    const panel_area = selectedOption.dataset.panel_area;
+    const panel_cost = selectedOption.dataset.panel_cost;
+  
+    panelWpInput.value = wp;
+    panelEfficiencyInput.value = efficiency;
+    panelAreaInput.value = panel_area;
+    panelCostInput.value = panel_cost;
+
+    console.log(panelAreaInput.value)
+});
+
 
 district_average_irradiance.addEventListener("change", function(event){
     if ( district_average_irradiance.value === 'district' ) {

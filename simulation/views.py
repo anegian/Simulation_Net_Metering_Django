@@ -54,22 +54,24 @@ def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_v
     # Resample the data to monthly frequency and calculate the sum
     monthly_irradiance = poa_data_2020['poa_global'].resample('M').sum()
 
-    # Convert the monthly_irradiance Series to an array and divide by 1000 to convert from Wh/m2 to kWh/m2
+      # Calculate the annual solar irradiance
+    annual_irradiance = monthly_irradiance.sum()
+
+    # Convert the monthly irradiance Series to an array, annual as a sum and divide them by 1000 to convert from Wh/m2 to kWh/m2
     monthly_irradiance_array = np.array(monthly_irradiance / 1000)
+    annual_irradiance_kWh = float(annual_irradiance / 1000)
 
     # Convert the NumPy array to a nested Python list
     monthly_irradiance_list = monthly_irradiance_array.tolist()
 
     # Print the list of monthly irradiance
-    print(monthly_irradiance_list)
+    print(f"Monthly irradiance: {monthly_irradiance_list}, Annual irradiance:  {annual_irradiance_kWh}")
 
     # Convert the list to JSON format
     monthly_irradiance_json = json.dumps(monthly_irradiance_list)
 
-    return monthly_irradiance_json
+    return monthly_irradiance_json, annual_irradiance_kWh, monthly_irradiance_list
     
-
-
 
 def dashboard_results(request):   # simulation/templates/dashboard.html
  
@@ -85,22 +87,30 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             userPower_profile = request.session.get('userPower_profile')
             phase_load = request.session.get('phase_load')
             phase_loadkVA = int(request.session.get('phase_loadkVA'))
-            annual_kwh = int(request.session.get('annual_kwh'))
+            annual_consumption = int(request.session.get('annual_consumption'))
+            panel_wp = float(request.session.get('panel_wp'))
+            panel_efficiency = float(request.session.get('panel_efficiency'))
+            panel_cost = int(request.session.get('panel_cost'))
+            panel_area = float(request.session.get('panel_area'))
+
             PV_kWp = float(request.session.get('PV_kWp'))
             has_storage = request.session.get('has_storage')
             storage_kw = float(request.session.get('storage_kw'))
 
-            total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw)
-            average_annual_production, total_loss_percentage, percentage_production_loss, inclination_percentage, production_per_KW = calculate_average_annual_production(PV_kWp, district_irradiance, azimuth_value, inclination_PV)
-            average_annual_savings, profitPercent, total_annual_cost, regulated_charges = calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_profile, average_annual_production)
+            monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
+
+            total_investment, inverter_cost, number_of_panels_required = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost)
+            annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required)
+
+            average_annual_savings, profitPercent, total_annual_cost, regulated_charges = calculate_annual_savings(annual_consumption, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced)
             
-            
+           
             total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
             total_savings_array_json = json.dumps(total_savings_array)
-            total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(average_annual_production)
+            total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced)
             total_production_kwh_array_json = json.dumps(total_production_kwh_array)
-            month_production_array = calculate_month_production(average_annual_production)
-            month_production_array_json = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
+            # month_production_array = calculate_month_production(annual_PV_energy_produced)
+            
 
             payback_period = calculate_payback_period(total_investment, average_annual_savings)
 
@@ -109,25 +119,32 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             lcoe = calculate_lcoe(total_investment, maintenance_cost , total_production_kwh)
             roi, annualized_roi = calculate_roi(net_present_value, total_investment, total_savings)
             irr = calculate_irr(total_investment, total_savings_array)
-            average_CO2 = round(calculate_CO2_emissions_reduced(average_annual_production))
-            trees_planted = round(calculate_equivalent_trees_planted(average_annual_production))
+            average_CO2 = round(calculate_CO2_emissions_reduced(annual_PV_energy_produced))
+            trees_planted = round(calculate_equivalent_trees_planted(annual_PV_energy_produced))
 
             # dictionary with rendered variables
             context = {
+             # form values
             'district_irradiance': district_irradiance,
             'district_value': district_value,
             'latitude_coords': latitude_coords,
             'longitude_coords': longitude_coords,
             'place_of_installment': place_of_installment,
+            'panel_wp': panel_wp,
+            'panel_efficiency': panel_efficiency,
+            'panel_area': panel_area,
+            'panel_cost': panel_cost,
             'azimuth_value': azimuth_value,
             'inclination_PV': inclination_PV,
             'userPower_profile': userPower_profile,
             'phase_load': phase_load,
             'phase_loadkVA': phase_loadkVA,
-            'annual_kwh': annual_kwh,
+            'annual_consumption': annual_consumption,
             'PV_kWp': PV_kWp,
             'has_storage': has_storage,
             'storage_kw': storage_kw,
+
+             # calculated values
             'total_investment': total_investment,
             'payback_period': payback_period,
             'average_annual_savings': average_annual_savings,
@@ -135,15 +152,20 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'total_annual_cost': total_annual_cost,
             'regulated_charges': regulated_charges,
             'has_storage': has_storage,
-            'average_annual_production': average_annual_production,  
             'total_savings': total_savings,
             'total_savings_array': total_savings_array,
             'total_savings_array_json': total_savings_array_json,
             'total_production_kwh': total_production_kwh, 
             'total_production_kwh_array': total_production_kwh_array,
             'total_production_kwh_array_json': total_production_kwh_array_json,
-            'month_production_array': month_production_array,
-            'month_production_array_json': month_production_array_json,
+            # 'month_production_array': month_production_array,
+            'monthly_panel_energy_produced_list': monthly_panel_energy_produced_list,
+            'monthly_irradiance_json': monthly_irradiance_json,
+            'annual_irradiance': annual_irradiance,
+            'annual_PV_energy_produced': annual_PV_energy_produced,
+            'monthly_panel_energy_produced_json': monthly_panel_energy_produced_json,
+
+             # economic models values
             'net_present_value': net_present_value,
             'lcoe': lcoe,
             'roi': roi,
@@ -158,11 +180,10 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print('Total Investment:', total_investment,"euro", 'Average annual Savings: ', average_annual_savings, '& Περίοδος Απόσβεσης:', payback_period) 
             print(f'Total savings for 25 years: {total_savings}, NPV is: {total_savings} - {total_investment} = {net_present_value}')
             print("Ετήσιο κόστος ρεύματος, μαζί με ρυθμιζόμενες χρεώσεις, χωρίς δημοτικούς φόρους: ", total_annual_cost, "& Ετήσιο Όφελος: ", average_annual_savings)
-            print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges, "Μέση Ετήσια Παραγωγή:", average_annual_production)  # Add this line for debugging
-            print('ideal Production kWh per kWp: ', production_per_KW)
-            print("Total production loss percent, calculating azimuth and inclination: ", total_loss_percentage, 'Inclination percent: ', inclination_percentage, 'Azimuth percent:', percentage_production_loss, '\n')
-            
-            
+            print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges, "Μέση Ετήσια Παραγωγή:", annual_PV_energy_produced)  # Add this line for debugging
+            print(f"Annual Irradiance: {annual_irradiance}, Annual Panel Energy Produced: {annual_PV_energy_produced}")
+            print(f"Each Panel monthly produced energy{monthly_panel_energy_produced_list}")
+           
             
             now = datetime.now()
             print("######### End time of this session: ", now, "#########\n")
@@ -197,7 +218,11 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 azimuth_value = request.POST.get('azimuth')
                 inclination_PV = request.POST.get('inclination')
                 userPower_profile = request.POST.get('power_option')
-                annual_kwh = request.POST.get('annual_kwh')
+                annual_consumption = request.POST.get('annual_consumption')
+                panel_wp = request.POST.get('panel_wp') 
+                panel_efficiency = request.POST.get('panel_efficiency')
+                panel_area = request.POST.get('panel_area')
+                panel_cost = request.POST.get('panel_cost')
 
                 phase_load = request.POST.get('select_phase')
 
@@ -217,15 +242,18 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print(f"District value: {district_value}")
                 print(f"Latitude: {latitude_coords}")
                 print(f"Longitude: {longitude_coords}")
+                print(f"Panel parameters are: {panel_wp}Wp, {panel_area}m², {panel_efficiency}(%) & {panel_cost}€") 
                 print(f"The selected phase load is: {phase_load}")
                 print(f"Agreed kVA is: {phase_loadkVA}")
-                print(f"Annual kWh is: {annual_kwh}")
+                print(f"Annual kWh consumed is: {annual_consumption}")
                 print(f"Place of installment is: {place_of_installment}")
                 print(f"Azimuth of PV: {azimuth_value}")
                 print(f"Degrees of PV inclination: {inclination_PV}" )
                 print(f"Users use profile: {userPower_profile}" )
                 print(f"kWp of PV value: {PV_kWp}")
                 print(f"Did User select Battery storage: {has_storage}")
+                   
+                
 
                 if has_storage == 'with_storage':
                     print(f"Battery kWh value: {storage_kw}")
@@ -243,12 +271,16 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['inclination_PV'] = inclination_PV
             request.session['azimuth_value'] = azimuth_value
             request.session['userPower_profile'] = userPower_profile
-            request.session['annual_kwh'] = annual_kwh
+            request.session['annual_consumption'] = annual_consumption
             request.session['PV_kWp'] = PV_kWp
             request.session['has_storage'] = has_storage
             request.session['storage_kw'] = storage_kw
             request.session['phase_loadkVA'] = phase_loadkVA
             request.session['phase_load'] = phase_load
+            request.session['panel_wp'] = panel_wp
+            request.session['panel_efficiency'] = panel_efficiency
+            request.session['panel_cost'] = panel_cost
+            request.session['panel_area'] = panel_area
 
         return redirect(reverse('simulation:dashboard'))  # redirect to function calculator
 
@@ -261,17 +293,15 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
 
 # Calculation functions
 
-def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw):
+def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost):
     installation_cost = 400 # average cost in €
-
-    each_panel_kW = 0.4  # average 400W each panel
-    each_panel_average_cost = 250  # average in € for 400W panel
-    number_of_panels_required = round(PV_kWp / each_panel_kW)
+    number_of_panels_required = round(PV_kWp / panel_wp)
     panel_bases_cost = 90 * number_of_panels_required # bases for the panels on roof or taratsa, average cost per base
     electric_materials = 100 # average cost in €
     inverter_cost = 0
     average_battery_cost_per_kW = 850 # average in €
-    Pv_cost = number_of_panels_required * each_panel_average_cost
+    # Cost of PV system is total panels * cost
+    Pv_cost = number_of_panels_required * panel_cost
     
     # for 2 - 5 kWp
     if phase_load == "single_phase":
@@ -300,17 +330,31 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw):
 
     total_investment = Pv_cost + installation_cost + battery_cost + inverter_cost + panel_bases_cost + electric_materials
 
-    return total_investment, inverter_cost
+    return total_investment, inverter_cost, number_of_panels_required
+
+def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required):
+    performance_ratio = 0.75  # υπολογίζει κατά προσέγγιση απώλειες σε αστάθμητους παράγοντες, σκιάσεις, σκόνη, σύννεφα κτλ
+    monthly_panel_energy_produced_list = []
+    annual_PV_energy_produced = (panel_area * panel_efficiency * performance_ratio * annual_irradiance) * number_of_panels_required
+
+    for irradiance_month in monthly_irradiance_list:
+        monthly_energy_produced = irradiance_month * panel_area * panel_efficiency * 0.75
+        monthly_panel_energy_produced_list.append(monthly_energy_produced)
+
+    monthly_panel_energy_produced_json = json.dumps(monthly_panel_energy_produced_list)
+    
+    return annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list
+
 
 # Calculate annual savings and percentage
-def calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_profile, average_annual_production):
-    annual_consumption = annual_kwh
+def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced):
+    annual_consumption = annual_kWh
     energy_cost = 0.19 # €/kWh today
-    annual_kWh_cost = annual_consumption * energy_cost
+    annual_consumption = annual_consumption * energy_cost
     # Ρυθμιζόμενες Χρεώσεις
     regulated_charges = (phase_loadkVA * 0.52) + (annual_consumption * 0.0213) + (phase_loadkVA * 1) + (annual_consumption * 0.00844) + (annual_consumption*0.017) + (annual_consumption*energy_cost*0.06)
     # Συνολική Χρέωση καταναλισκόμενου ρεύματος χωρίς net metering
-    total_annual_cost = annual_kWh_cost + regulated_charges
+    total_annual_cost = annual_consumption + regulated_charges
 
     # cases with battery storage and use profile to calculate self-consumption rate
     if has_storage == "with_storage":
@@ -327,16 +371,16 @@ def calculate_annual_savings(annual_kwh, phase_loadkVA, has_storage, userPower_p
     # Μειωμένο Ποσό Ρυθμιζόμενων Χρεώσεων
     discount_regulated_charges = regulated_charges * self_consumption_rate
 
-    if annual_consumption > average_annual_production:
-        annual_kWh_difference_cost = (annual_consumption -average_annual_production) * (energy_cost + 0.0213 + 0.00844)
-        average_annual_savings = round(annual_kWh_cost + discount_regulated_charges - annual_kWh_difference_cost)
-        total_annual_cost = annual_kWh_cost + regulated_charges + annual_kWh_difference_cost
+    if annual_consumption > annual_PV_energy_produced:
+        annual_kWh_difference_cost = (annual_consumption - annual_PV_energy_produced) * (energy_cost + 0.0213 + 0.00844)
+        average_annual_savings = round(annual_consumption + discount_regulated_charges - annual_kWh_difference_cost)
+        total_annual_cost = annual_consumption + regulated_charges + annual_kWh_difference_cost
         print('\n^^^ User must pick a larger pv system in kWp, in order to reduce annual electricity costs!!! ^^^\n')
     else:
-        annual_kWh_difference_cost = (average_annual_production - annual_consumption) * (0.0213 * 0.00844)
-        difference_savings = (average_annual_production - annual_consumption) * energy_cost
-        average_annual_savings = round(annual_kWh_cost + discount_regulated_charges + difference_savings - annual_kWh_difference_cost)
-        total_annual_cost = annual_kWh_cost + regulated_charges
+        annual_kWh_difference_cost = (annual_PV_energy_produced - annual_consumption) * (0.0213 * 0.00844)
+        difference_savings = (annual_PV_energy_produced - annual_consumption) * energy_cost
+        average_annual_savings = round(annual_consumption + discount_regulated_charges + difference_savings - annual_kWh_difference_cost)
+        total_annual_cost = annual_consumption + regulated_charges
         
 
     profitPercent =  round(average_annual_savings / total_annual_cost * 100, 1)
@@ -359,7 +403,7 @@ def calculate_payback_period(total_investment, average_annual_savings):
 
     return f"{payback_period} έτη"
 
-def calculate_average_annual_production(PV_kWp, district_irradiance, azimuth_value, inclination_PV):
+# def calculate_annual_PV_energy_produced(PV_kWp, district_irradiance, azimuth_value, inclination_PV):
     # Calculate the annual production of the PV system
     # based on the system's specifications and the inclination
     # Return the result
@@ -388,35 +432,35 @@ def calculate_average_annual_production(PV_kWp, district_irradiance, azimuth_val
 
     production_per_KW = district_irradiance * PV_kWp 
     total_loss_percentage = percentage_production_loss * inclination_percentage
-    average_annual_production = production_per_KW / total_loss_percentage
+    annual_PV_energy_produced = production_per_KW / total_loss_percentage
 
-    return average_annual_production, total_loss_percentage, percentage_production_loss, inclination_percentage,production_per_KW   # in kWh
+    return annual_PV_energy_produced, total_loss_percentage, percentage_production_loss, inclination_percentage,production_per_KW   # in kWh
 
-def calculate_total_production_kwh(average_annual_production):
+def calculate_total_production_kwh(annual_PV_energy_produced):
 
     total_production_kwh = 0
     total_production_kwh_array =[]
     annual_production_degradation = 0.006
 
     for i in range(1, 26):
-        total_production_kwh += average_annual_production / ( ( 1+annual_production_degradation) ** i)
+        total_production_kwh += annual_PV_energy_produced / ( ( 1+annual_production_degradation) ** i)
         total_production_kwh_array.append(total_production_kwh)
 
     print("Total kWh production after 25 years: ", total_production_kwh)
 
     return total_production_kwh_array, total_production_kwh
 
-def calculate_month_production(average_annual_production):
-    month_production_array = []
-    monthly_percentages = [5.2, 6, 8.1, 9.5, 10.5, 10.7, 11.6, 10.9, 9.8, 7.8, 5.4, 4.5]
+# def calculate_month_production(annual_PV_energy_produced):
+#     month_production_array = []
+#     monthly_percentages = [5.2, 6, 8.1, 9.5, 10.5, 10.7, 11.6, 10.9, 9.8, 7.8, 5.4, 4.5]
     
-    for percentage in monthly_percentages:
-        monthly_production = round((percentage / 100) * average_annual_production)
-        month_production_array.append(monthly_production)
+#     for percentage in monthly_percentages:
+#         monthly_production = round((percentage / 100) * annual_PV_energy_produced)
+#         month_production_array.append(monthly_production)
 
-    print('Each month production: ', month_production_array)
+#     print('Each month production: ', month_production_array)
     
-    return month_production_array 
+#     return month_production_array 
    
 def calculate_total_savings(average_annual_savings):
     # Calculate the total profit over 25 years
@@ -481,16 +525,16 @@ def calculate_irr(total_investment, total_savings_array):
     
     return irr   
    
-def calculate_CO2_emissions_reduced(average_annual_production):
+def calculate_CO2_emissions_reduced(annual_PV_energy_produced):
    # Calculate the equivalent CO2 emissions, reduced due to solar production
    average_CO2 = 0.04 # ~ 40 g CO2 eq/kWh for a year
    
-   return average_CO2 * average_annual_production # kg per year
+   return average_CO2 * annual_PV_energy_produced # kg per year
   
-def calculate_equivalent_trees_planted(average_annual_production):
+def calculate_equivalent_trees_planted(annual_PV_energy_produced):
    percentage_trees_per_kWh = 0.02
    
-   return average_annual_production * percentage_trees_per_kWh 
+   return annual_PV_energy_produced * percentage_trees_per_kWh 
 
 def signup(request):
     try:

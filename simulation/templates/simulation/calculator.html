@@ -128,13 +128,18 @@
                                             <div class="spacer-in-calculator-panel">
                                             </div>
 
-                                        <select  class="panel-selection-height">
-                                            <option value="305">Mονοκρυσταλλικό Πάνελ <strong>305Wp</strong> (Βαθμός απόδοσης : ≥18,3%)</option>
-                                            <option value="340">Πολυκρυσταλλικό Πάνελ <strong>340Wp</strong> (Βαθμός απόδοσης : 16,5%) </option>
-                                            <option value="370">Πολυκρυσταλλικό Πάνελ <strong>370Wp</strong> (Βαθμός απόδοσης : 19,1%) </option>
-                                            <option value="410">Πολυκρυσταλλικό Πάνελ <strong>410Wp</strong> (Βαθμός απόδοσης : 21,0%) </option>
-                                            <option value="450">Πολυκρυσταλλικό Πάνελ <strong>450Wp</strong> (Βαθμός απόδοσης : 19,9%) </option>
+                                        <select  class="panel-selection-height" name="panel_params" id="panelParams"> 
+                                            <option value="0.305" data-efficiency="0.183" data-panel_area="1.67" data-panel_cost="167">Mονοκρυσταλλικό Πάνελ <strong>305Wp</strong> (Βαθμός απόδοσης : ≥18,3%)</option>
+                                            <option value="0.340" data-efficiency="0.165" data-panel_area="2.06" data-panel_cost="188">Πολυκρυσταλλικό Πάνελ <strong>340Wp</strong> (Βαθμός απόδοσης : 16,5%) </option>
+                                            <option value="0.370" data-efficiency="0.191" data-panel_area="1.94" data-panel_cost="199">Πολυκρυσταλλικό Πάνελ <strong>370Wp</strong> (Βαθμός απόδοσης : 19,1%) </option>
+                                            <option value="0.410" data-efficiency="0.21" data-panel_area="1.95" data-panel_cost="248">Πολυκρυσταλλικό Πάνελ <strong>410Wp</strong> (Βαθμός απόδοσης : 21,0%) </option>
+                                            <option value="0.450" data-efficiency="0.199" data-panel_area="2.2" data-panel_cost="272">Πολυκρυσταλλικό Πάνελ <strong>450Wp</strong> (Βαθμός απόδοσης : 19,9%) </option>
                                         </select>
+                                            <input type="hidden" name="panel_wp" id="panelWpInput">
+                                            <input type="hidden" name="panel_efficiency" id="panelEfficiencyInput">
+                                            <input type="hidden" name="panel_area" id="panelAreaInput">
+                                            <input type="hidden" name="panel_cost" id="panelCostInput">
+
 
                                         
                                     </div>
@@ -224,10 +229,10 @@
                                 </div>
 
                                 <div class="img-div-calculator" id="image-container">
-                                    <img class="img-tilt" src="{% static 'images/0.png' %}" alt="No Image" data-tilt="0">
-                                    <img class="img-tilt" src="{% static 'images/151.png' %}" alt="No Image" data-tilt="15">
-                                    <img class="img-tilt" src="{% static 'images/Εικόνα2.png' %}" alt="No Image" data-tilt="30">
-                                    <img class="img-tilt" src="{% static 'images/451.png' %}" alt="No Image" data-tilt="45">
+                                    <img class="img-tilt" src="{% static 'images/0.png' %}" alt="No Image" tilt="0">
+                                    <img class="img-tilt" src="{% static 'images/151.png' %}" alt="No Image" tilt="15">
+                                    <img class="img-tilt" src="{% static 'images/Εικόνα2.png' %}" alt="No Image" tilt="30">
+                                    <img class="img-tilt" src="{% static 'images/451.png' %}" alt="No Image" tilt="45">
                                 </div>
                             </div>
                         </div>
@@ -304,7 +309,7 @@
                                             </div>
                                             
                                             <div>
-                                                <input class="panel-selection-height" type="number" name="annual_kwh" id="annual_kwh" title="Παρακαλούμε, συμπληρώστε εκτιμώμενη ετήσια κατανάλωση σε kW" >
+                                                <input class="panel-selection-height" type="number" name="annual_consumption" id="annual_kwh" title="Παρακαλούμε, συμπληρώστε εκτιμώμενη ετήσια κατανάλωση σε kW" >
                                                 <label>kWh</label>
                                             
                                                 <button class="help-popper" type="button">
