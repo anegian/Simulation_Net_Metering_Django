@@ -4,15 +4,18 @@ const PV_kW_output = document.getElementById("slider-value");
 // const select_annual_Kwh = document.getElementById("id_select_kwh");
 let select_annual_Kwh = document.getElementById("annual_kwh");
 // Get panel parameters
+const placeSelected = document.getElementById('regionInput');
+const latitudeInput = document.getElementById('latitude');
+const longitudeInput = document.getElementById('longitude');
 const panelParamsSelect = document.getElementById('panelParams');
 const panelWpInput = document.getElementById('panelWpInput');
 const panelEfficiencyInput = document.getElementById('panelEfficiencyInput');
 const panelAreaInput = document.getElementById('panelAreaInput');
 const panelCostInput = document.getElementById('panelCostInput');
 
-const district_average_irradiance = document.getElementById("id_select_district");
+// const district_average_irradiance = document.getElementById("id_select_district");
 // Get the initial value of the district
-const initial_district = district_average_irradiance.value;
+// const initial_district = district_average_irradiance.value;
 
 const phase_load_selected = document.getElementById("id_select_phase");
 const form_submit_button = document.getElementById("submitBtn");
@@ -63,18 +66,18 @@ panelParamsSelect.addEventListener('change', function() {
 });
 
 
-district_average_irradiance.addEventListener("change", function(event){
-    if ( district_average_irradiance.value === 'district' ) {
-        disableAnnualkWh();
-    }else{
-        error_message.style.display = "none";
-        district_average_irradiance.classList.remove('error');
-    }
+// district_average_irradiance.addEventListener("change", function(event){
+//     if ( district_average_irradiance.value === 'district' ) {
+//         disableAnnualkWh();
+//     }else{
+//         error_message.style.display = "none";
+//         district_average_irradiance.classList.remove('error');
+//     }
 
-    check_selection_kwh_conditions();
-    console.log("average irradiance is: " + district_average_irradiance.value);
+//     check_selection_kwh_conditions();
+//     console.log("average irradiance is: " + district_average_irradiance.value);
        
-});
+// });
 
 // Listen for changes in the phase load input and store the selected option
 phase_load_selected.addEventListener("change", function(event){
@@ -143,30 +146,36 @@ document.querySelector('button[type="reset"]').addEventListener('click', functio
 // Add an event listener to the submit button
 form_submit_button.addEventListener('click', function(event) {
     
-  // Prevent the form from submitting and reloading the page when it's not valid
-  if (!validateForm()) {
-    event.preventDefault();
-  }
+    // Validate the form inputs
+    if (!validateForm()) {
+      // Submit the form programmatically
+      event.preventDefault();
+    }else{
+        form.submit();
+    }
 });
 
 // Used to validate that the calculator form has been filled by the user
 function validateForm() {
 
-    if(phase_load_selected.value === 'phase_load' && district_average_irradiance.value === "district"){
+    if(phase_load_selected.value === 'phase_load' ){ //&& district_average_irradiance.value === "district"){
         slider.classList.add('error');
         phase_load_selected.classList.add('error');
         error_message2.style.display = 'block';
-        district_average_irradiance.classList.add('error'); 
+        // district_average_irradiance.classList.add('error'); 
         error_message.style.display = 'block';
         return false;
-    }else if(district_average_irradiance.value === "district"){
-        district_average_irradiance.classList.add('error'); // Add the error class to the district_average_irradiance element
-        error_message.style.display = 'block';
+    }else if (placeSelected.value === '' || latitudeInput.value === '' || longitudeInput.value === '') {
+        alert("Επιλέξτε μία τοποθεσία στο χάρτη");
         return false;
-    }else if (phase_load_selected.value === 'phase_load') {
-        phase_load_selected.classList.add('error');
-        error_message2.style.display = 'block';
-        return false; // return false to indicate that the form was not submitted
+    // }else if(district_average_irradiance.value === "district"){
+    //     district_average_irradiance.classList.add('error'); // Add the error class to the district_average_irradiance element
+    //     error_message.style.display = 'block';
+    //     return false;
+    // }else if (phase_load_selected.value === 'phase_load') {
+    //     phase_load_selected.classList.add('error');
+    //     error_message2.style.display = 'block';
+    //     return false; // return false to indicate that the form was not submitted
     }else if (slider.value === '0') {
         slider.classList.add('error'); // Add the error class to the slider element
         error_message3.style.display = 'block';
@@ -243,7 +252,7 @@ function enableSlider() {
     slider.disabled = false;
     slider.min = 0.0;
     slider.step = 0.1;
-    slider.value = select_annual_Kwh.value / district_average_irradiance.value;
+    slider.value = select_annual_Kwh.value / 1500; //district_average_irradiance.value;
     PV_kW_output.innerHTML = slider.value;
     console.log("Minimun PV system's kWp: ", slider.value)
 }
@@ -254,7 +263,7 @@ function disableSlider(){
     if (select_annual_Kwh.value === '0') {
         slider.value = 0.0;
       } else {
-        slider.value = select_annual_Kwh.value / district_average_irradiance.value;
+        slider.value = select_annual_Kwh.value /1500; // district_average_irradiance.value;
         console.log("Minimum PV system's kWp: ", slider.value);
       }
     
@@ -287,7 +296,7 @@ function disableStorage() {
     storage_kW.value = slider.value;
 }
 function disableErrorMessages() {
-    district_average_irradiance.classList.remove('error');
+    //district_average_irradiance.classList.remove('error');
     phase_load_selected.classList.remove('error');
     error_message.style.display = 'none';
     error_message2.style.display = 'none';
@@ -296,7 +305,7 @@ function disableErrorMessages() {
 }         
 
 function check_selection_kwh_conditions(){
-    if (phase_load_selected.value !== 'phase_load' && district_average_irradiance.value !== 'district'){
+    if (phase_load_selected.value !== 'phase_load'){  //&& district_average_irradiance.value !== 'district'){
         enableAnnualkWh();
         disableErrorMessages();
     }else{ 
@@ -306,116 +315,74 @@ function check_selection_kwh_conditions(){
     }
 }
 
-// Map
-let map = L.map('map').setView([37.983917, 23.72936], 8);
 
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+        // Settings for tilt images
+        const radio_tilt = document.querySelectorAll('input[name="inclination"]');
+        const images = document.querySelectorAll('.img-tilt');
 
+        radio_tilt.forEach(function(radio) {
+        radio.addEventListener('change', function(event) {
+            const selectedValue = event.target.value;
 
-// Create the popup with offset
-var popup = L.popup({
-    closeButton: true,
-    offset: [1, -20] // Adjust the second value (-20) to move the popup higher
-});
-let marker;
-latitude = document.getElementById('latitude')
-longitude = document.getElementById('longitude')
+            images.forEach(function(image) {
+            const tiltValue = image.getAttribute('data-tilt');
+            image.style.display = tiltValue === selectedValue ? 'block' : 'none';
+            });
+        });
 
-function onMapClick(e) {
-    latitude.value = e.latlng.lat.toFixed(6);
-    longitude.value = e.latlng.lng.toFixed(6);
-    console.log(latitude.value);
-    console.log(longitude.value);
-
-    if (marker) {
-        map.removeLayer(marker); // Remove previous marker if it exists
-    }
-
-    marker = L.marker(e.latlng).addTo(map); // Add a new marker at the clicked location
-
-
-    popup
-        .setLatLng(e.latlng)
-        .setContent(e.latlng.toString())
-        .openOn(map);
-}
-
-map.on('click', onMapClick);
-
-latitude.addEventListener('change', function(){
-    latitude.value = latitude.value
-})
-
-
-// Settings for tilt images
-const radio_tilt = document.querySelectorAll('input[name="inclination"]');
-const images = document.querySelectorAll('.img-tilt');
-
-radio_tilt.forEach(function(radio) {
-  radio.addEventListener('change', function(event) {
-    const selectedValue = event.target.value;
-
-    images.forEach(function(image) {
-      const tiltValue = image.getAttribute('data-tilt');
-      image.style.display = tiltValue === selectedValue ? 'block' : 'none';
-    });
-  });
-
-  if (radio.value === '30') {
-    radio.checked = true;
-    images.forEach(function(image) {
-      const tiltValue = image.getAttribute('data-tilt');
-      image.style.display = tiltValue === '30' ? 'block' : 'none';
-    });
-  }
-});
-
-
-// Setings for theme toggler
-const themeSlider = document.getElementById('theme-slider');
-set_initial_properties_theme_toggler();
-
-function set_initial_properties_theme_toggler(){
-    themeSlider.value = '0';
-    document.documentElement.style.setProperty('--bg-color', '#29233b');
-    document.documentElement.style.setProperty('--text-color', '#f2f2f2');
-    document.documentElement.style.setProperty('--bg-color-panel', '#393052');
-    document.documentElement.style.setProperty('--label-color', '#bbb');
-    document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
-    document.documentElement.style.setProperty('--slider-color', '#74b1f2');
-    document.documentElement.style.setProperty('--thumb-color', '#393052');
-    document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
-    document.documentElement.style.setProperty('--bg-color-submit-button', '#738725'); 
-}
-
-themeSlider.addEventListener('input', function(event) {
-  const selectedValue = event.target.value;    
-        
-        if (selectedValue === '0') {
-          document.documentElement.style.setProperty('--bg-color', '#29233b');
-          document.documentElement.style.setProperty('--text-color', '#f2f2f2');
-          document.documentElement.style.setProperty('--bg-color-panel', '#393052');
-          document.documentElement.style.setProperty('--label-color', '#bbb');
-          document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
-          document.documentElement.style.setProperty('--slider-color', '#74b1f2');
-          document.documentElement.style.setProperty('--slider-value-kW-color', '#f2f2f2');
-          document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
-          document.documentElement.style.setProperty('--thumb-color', '#393052');
-          document.documentElement.style.setProperty('--bg-color-submit-button', '#738725');
-        } else if (selectedValue === '1') {
-          document.documentElement.style.setProperty('--bg-color', '#f2f2f2');
-          document.documentElement.style.setProperty('--text-color', '#333');
-          document.documentElement.style.setProperty('--bg-color-panel', '#f2f2f2');
-          document.documentElement.style.setProperty('--text-color-panel', '#c6ccd2'); 
-          document.documentElement.style.setProperty('--label-color', '#334d68'); 
-          document.documentElement.style.setProperty('--title-panel-color', '#538bc7');
-          document.documentElement.style.setProperty('--slider-color', '#393052');
-          document.documentElement.style.setProperty('--slider-value-kW-color', '#334d68');
-          document.documentElement.style.setProperty('--bg-color-calculator-page', '#f2f2f2');
-          document.documentElement.style.setProperty('--thumb-color', '#74b1f2');
-          document.documentElement.style.setProperty('--bg-color-submit-button', '#74b1f2');
+        if (radio.value === '30') {
+            radio.checked = true;
+            images.forEach(function(image) {
+            const tiltValue = image.getAttribute('data-tilt');
+            image.style.display = tiltValue === '30' ? 'block' : 'none';
+            });
         }
-    });
+        });
+
+
+        // Setings for theme toggler
+        const themeSlider = document.getElementById('theme-slider');
+        set_initial_properties_theme_toggler();
+
+        function set_initial_properties_theme_toggler(){
+            themeSlider.value = '0';
+            document.documentElement.style.setProperty('--bg-color', '#29233b');
+            document.documentElement.style.setProperty('--text-color', '#f2f2f2');
+            document.documentElement.style.setProperty('--bg-color-panel', '#393052');
+            document.documentElement.style.setProperty('--label-color', '#bbb');
+            document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
+            document.documentElement.style.setProperty('--slider-color', '#74b1f2');
+            document.documentElement.style.setProperty('--thumb-color', '#393052');
+            document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
+            document.documentElement.style.setProperty('--bg-color-submit-button', '#738725'); 
+        }
+
+        themeSlider.addEventListener('input', function(event) {
+        const selectedValue = event.target.value;    
+                
+                if (selectedValue === '0') {
+                document.documentElement.style.setProperty('--bg-color', '#29233b');
+                document.documentElement.style.setProperty('--text-color', '#f2f2f2');
+                document.documentElement.style.setProperty('--bg-color-panel', '#393052');
+                document.documentElement.style.setProperty('--label-color', '#bbb');
+                document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
+                document.documentElement.style.setProperty('--slider-color', '#74b1f2');
+                document.documentElement.style.setProperty('--slider-value-kW-color', '#f2f2f2');
+                document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
+                document.documentElement.style.setProperty('--thumb-color', '#393052');
+                document.documentElement.style.setProperty('--bg-color-submit-button', '#738725');
+                } else if (selectedValue === '1') {
+                document.documentElement.style.setProperty('--bg-color', '#f2f2f2');
+                document.documentElement.style.setProperty('--text-color', '#333');
+                document.documentElement.style.setProperty('--bg-color-panel', '#f2f2f2');
+                document.documentElement.style.setProperty('--text-color-panel', '#c6ccd2'); 
+                document.documentElement.style.setProperty('--label-color', '#334d68'); 
+                document.documentElement.style.setProperty('--title-panel-color', '#538bc7');
+                document.documentElement.style.setProperty('--slider-color', '#393052');
+                document.documentElement.style.setProperty('--slider-value-kW-color', '#334d68');
+                document.documentElement.style.setProperty('--bg-color-calculator-page', '#f2f2f2');
+                document.documentElement.style.setProperty('--thumb-color', '#74b1f2');
+                document.documentElement.style.setProperty('--bg-color-submit-button', '#74b1f2');
+                }
+            });
 

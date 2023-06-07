@@ -13,6 +13,10 @@
 {% block script %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="{% static 'Net_Metering/javascript/scriptCalculator.js' %}" defer></script>
+<script> let geojsonPath = "{% static 'Net_Metering/json/Prefectures_boundaries.geojson' %}";</script>
+<script src="{% static 'Net_Metering/javascript/leaflet_map.js' %}" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
 {% endblock %}
 
 {% block menu_list %}
@@ -76,23 +80,34 @@
                                 <span class="number"> 1 </span>
                                 <h4>Τοποθεσία</h4>
                             </div>
-                            <div class='coords-inline'>
-                                <div class="coords-map-latitude">
-                                    <input type="number" name="latitude" id="latitude" step="0.000001" required>
-                                </div>
-                                <div class="coords-map-longitude">
-                                    <input type="number" name="longitude" id="longitude" step="0.000001" required>
-                                </div>
-
-                            </div>
+                            
                                 
                                 <div class="option-selector-margin">
                                     <input class="panel-selection-height" type="hidden" name="select_district" id="select_district" required >
                                     
-                                    <label class="spacer-label">Επιλέξτε Περιφέρεια:</label>
+                                    <label class="spacer-label">Επιλέξτε Τοποθεσία στο Χάρτη:</label>
                                     <!-- <p class="spacer-label">{{ form_district.select_district.label_tag }}</p> -->
-                                    <p title="Παρακαλούμε, επιλέξτε Περιφέρεια εγκατάστασης" id="option-selector-margin-label">
-                                        {{ form_district.select_district }}</p>
+                                    <p  title="Παρακαλούμε, επιλέξτε Περιφέρεια εγκατάστασης" id="option-selector-margin-label">{{ form_district.select_district }}</p>
+                                    
+                                    <div class='coords-inline'>
+
+                                        <div class="coords-map-latitude">
+                                            <label for="regionInput">Νομός:</label>
+                                            <input type="text" name="placeInput" id="regionInput" readonly required>
+                                        </div>
+                                        
+
+                                        <div class="coords-map-latitude">
+                                            <label for="latitude">Πλάτος &deg;:</label>
+                                            <input type="number" name="latitude" id="latitude" step="0.000001" readonly required>
+                                        </div>
+                                        <div class="coords-map-longitude">
+                                            <label for="longitude">Μήκος &deg;:</label>
+                                            <input type="number" name="longitude" id="longitude" step="0.000001" readonly required>
+                                        </div>
+                                        
+                                    </div>
+
                                     <span id="error-message-panel">Please enter a valid value</span>
                                 </div>
                                 <div id="map"></div>

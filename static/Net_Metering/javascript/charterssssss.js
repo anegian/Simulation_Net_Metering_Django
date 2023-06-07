@@ -54,7 +54,7 @@ new Chart("myChart1", {
       borderColor: "rgba(91, 186, 210,0.3)",
       fill: false
     }, { 
-      label: "Μηνιαία Παραγωγή / ΦΒ πάνελ",
+      label: "Μηνιαία Παραγωγή kWh / ΦΒ πάνελ",
       data: monthlyPanelEnergy,
       backgroundColor: "#A457F2",
       borderColor: "rgba(186, 204, 209,0.4)",

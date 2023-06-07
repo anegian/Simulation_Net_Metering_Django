@@ -11,6 +11,8 @@ from datetime import datetime
 import pvlib.iotools
 from pvlib.iotools import get_pvgis_hourly
 import pandas as pd
+from django.conf import settings
+import os
 
 # Create your views here
 # App level
@@ -31,6 +33,7 @@ VARIABLE_MAP = {
     'WS10m': 'wind_speed',
     'WD10m': 'wind_direction',
 }
+
 
 def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value):
 
@@ -75,10 +78,10 @@ def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_v
 
 def dashboard_results(request):   # simulation/templates/dashboard.html
  
-    if 'district_irradiance' in request.session:
+    if 'annual_consumption' in request.session:
         try:
-            district_irradiance = int(request.session.get('district_irradiance'))
-            district_value = request.session.get('district_value')
+            # district_irradiance = int(request.session.get('district_irradiance'))
+            # district_value = request.session.get('district_value')
             latitude_coords = float(request.session.get('latitude_coords'))
             longitude_coords = float(request.session.get('longitude_coords'))
             place_of_installment = request.session.get('place_of_installment')
@@ -125,8 +128,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             # dictionary with rendered variables
             context = {
              # form values
-            'district_irradiance': district_irradiance,
-            'district_value': district_value,
+            # 'district_irradiance': district_irradiance,
+            # 'district_value': district_value,
             'latitude_coords': latitude_coords,
             'longitude_coords': longitude_coords,
             'place_of_installment': place_of_installment,
@@ -207,13 +210,13 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
         form_phase_load = PhaseLoad(request.POST)
         
         
-        if form_district.is_valid() and form_phase_load.is_valid():
+        if form_phase_load.is_valid(): # form_district.is_valid() and
             try:
                 # initialization of variables
                 latitude_coords = request.POST.get('latitude')
                 longitude_coords = request.POST.get('longitude')
-                district_irradiance = request.POST.get('select_district')
-                district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_irradiance)
+                # district_irradiance = request.POST.get('select_district')
+                # district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_irradiance)
                 place_of_installment = request.POST.get('installation')
                 azimuth_value = request.POST.get('azimuth')
                 inclination_PV = request.POST.get('inclination')
@@ -238,8 +241,8 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 # print the variables to check
                 now = datetime.now()
                 print("\n ######### Start of session of USER'S form: ", now, "#########")
-                print(f"District key: {district_irradiance}")
-                print(f"District value: {district_value}")
+                # print(f"District key: {district_irradiance}")
+                # print(f"District value: {district_value}")
                 print(f"Latitude: {latitude_coords}")
                 print(f"Longitude: {longitude_coords}")
                 print(f"Panel parameters are: {panel_wp}Wp, {panel_area}m², {panel_efficiency}(%) & {panel_cost}€") 
@@ -264,7 +267,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 # Handle the case where an invalid key is provided
                 return HttpResponse('Invalid request parameters')
 
-            request.session['district_irradiance'] = district_irradiance
+            # request.session['district_irradiance'] = district_irradiance
             request.session['latitude_coords'] = latitude_coords
             request.session['longitude_coords'] = longitude_coords
             request.session['place_of_installment'] = place_of_installment
@@ -282,13 +285,13 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['panel_cost'] = panel_cost
             request.session['panel_area'] = panel_area
 
-        return redirect(reverse('simulation:dashboard'))  # redirect to function calculator
+        return redirect(reverse('simulation:dashboard'))  # redirect to dashboard html
 
     else:
-        form_district = PlaceOfInstallationForm()
+        # form_district = PlaceOfInstallationForm()
         form_phase_load = PhaseLoad()
-    return render(request, 'simulation/calculator.html', context={'form_district': form_district, 
-        'form_phase_load': form_phase_load,})
+    return render(request, 'simulation/calculator.html', context={'form_phase_load': form_phase_load,}) 
+    #'form_district': form_district, 
 
 
 # Calculation functions

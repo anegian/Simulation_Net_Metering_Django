@@ -544,12 +544,17 @@ input[type="search"]:focus {
         justify-content: start;
     }
     .option-selector-margin {
-       margin: 20px 0 20px 10px;
+       margin: 20px 10px;
     }
     /* Set the position of the label to absolute, and move it to the right by 5 pixels */
-    #option-selector-margin-label {
-        left: 25px;
+    #option-selector-margin-label, #regionInput {
         color: #000022;
+    }
+    #latitude, #longitude{
+        width: 75px;
+    }
+    .coords-map-longitude label, .coords-map-latitude label{
+        margin-left: 3px;
     }
     .option-selector-margin-select-phase{
         color: #000022;

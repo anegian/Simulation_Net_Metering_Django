@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
+
 urlpatterns = [
     # domain.com
     
@@ -26,4 +27,5 @@ urlpatterns = [
 
     # domain.com/calculator/
     path('simulation/', include('simulation.urls')),
+
 ]
