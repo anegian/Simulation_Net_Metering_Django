@@ -326,15 +326,25 @@ def calculate_power(request):
 
             
             special_production = annual_irradiance_kWh * panel_area * panel_efficiency * 0.75
-            minimum_PV_panels = (annual_Kwh_value / special_production) * annual_degradation_production
-            annual_production = ( minimum_PV_panels * special_production)
-            total_area = minimum_PV_panels * panel_area
+            total_consumption = annual_Kwh_value * 25 
+            total_production = 0
+            minimum_PV_panels = 1
+
+            while total_production < total_consumption:
+                minimum_PV_panels += 1
+                annual_production = minimum_PV_panels * special_production
+                total_production = annual_production * 25 /1.06
+                
             recommended_kWp = minimum_PV_panels * panel_Wp_value
+            total_area = minimum_PV_panels * panel_area    
+
             print("ANNUAL IRRADIANCE:", annual_irradiance_kWh)
             print('Annual Consumption:', annual_Kwh_value)
             print("Minimum Panels:", minimum_PV_panels)
             print("Total area for roof or taratsa:", total_area)
             print('Annual Production:', annual_production)
+            print(f"Total production after 25 years for {minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {round(panel_Wp_value*1000)}Wp is: {round(total_production)}")
+            print(f"Total consumption after 25 years: {total_consumption}")
 
 
             response_data = {
