@@ -1,7 +1,8 @@
+import logging
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http.response import Http404, HttpResponse
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, HttpResponseServerError, JsonResponse
 from .forms import *
 from .models import *
 import json
@@ -16,6 +17,8 @@ import os
 
 # Create your views here
 # App level
+
+annual_degradation_production = 1 + 0.06
 
 # Dictionary mapping PVGIS names to pvlib names
 VARIABLE_MAP = {
@@ -74,7 +77,6 @@ def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_v
     monthly_irradiance_json = json.dumps(monthly_irradiance_list)
 
     return monthly_irradiance_json, annual_irradiance_kWh, monthly_irradiance_list
-    
 
 def dashboard_results(request):   # simulation/templates/dashboard.html
  
@@ -200,15 +202,19 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         except Http404:      # not use bare except
             return Http404("404 Generic Error")
 
-    
 def calculator_forms_choice(request):    # simulation/templates/calculator.html
-
     if request.method == 'POST':
         print(request.POST)
         # changes the name of variable to calculator_form because form was fault --> shadow name 'form' out of scope
-        form_district = PlaceOfInstallationForm(request.POST)
+        # form_district = PlaceOfInstallationForm(request.POST)
         form_phase_load = PhaseLoad(request.POST)
-        
+
+        # required_keys = ['csrfmiddlewaretoken','latitude', 'longitude', 'inclination', 'azimuth', 'panel_area']
+        # if all(key in request.POST.getlist('data') for key in required_keys):
+        #     # Call the calculate_power function to get the JSON response
+        #     response = calculate_power(request)
+        #     print(response)
+        #     return HttpResponse(response, content_type='application/json')
         
         if form_phase_load.is_valid(): # form_district.is_valid() and
             try:
@@ -255,7 +261,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print(f"Users use profile: {userPower_profile}" )
                 print(f"kWp of PV value: {PV_kWp}")
                 print(f"Did User select Battery storage: {has_storage}")
-                   
+                
                 
 
                 if has_storage == 'with_storage':
@@ -284,9 +290,11 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['panel_efficiency'] = panel_efficiency
             request.session['panel_cost'] = panel_cost
             request.session['panel_area'] = panel_area
-
-        return redirect(reverse('simulation:dashboard'))  # redirect to dashboard html
-
+            # return redirect(reverse('simulation:dashboard'))  # redirect to dashboard html
+            return redirect(reverse('simulation:dashboard'))
+        else:
+            # Form is not valid, handle the error or display a message
+            return render(request, 'simulation/calculator.html', context={'form_phase_load': form_phase_load})
     else:
         # form_district = PlaceOfInstallationForm()
         form_phase_load = PhaseLoad()
@@ -294,11 +302,58 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
     #'form_district': form_district, 
 
 
+# Ajax Request Calculation    url = simulation/ajax/
+def calculate_power(request):
+
+    try:
+        if request.method == 'POST':
+                        # Retrieve values from the JSON data
+            data = json.loads(request.body)
+        
+            # Extract the values from the data object
+            latitude_value = float(data.get('latitude'))
+            longitude_value = float(data.get('longitude'))
+            inclination_value = float(data.get('inclination'))
+            azimuth_value = float(data.get('azimuth'))
+            panel_area = float(data.get('panel_area'))
+            panel_efficiency = float(data.get('panel_efficiency'))
+            annual_Kwh_value = int(data.get('annual_Kwh_value'))
+            panel_Wp_value = float(data.get('panel_Wp_value'))
+            print("DATA:", data)
+        
+                # Call the get_solar_data function and retrieve the results
+            _, annual_irradiance_kWh, _ = get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value)
+
+            
+            special_production = annual_irradiance_kWh * panel_area * panel_efficiency * 0.75
+            minimum_PV_panels = (annual_Kwh_value / special_production) * annual_degradation_production
+            annual_production = ( minimum_PV_panels * special_production)
+            total_area = minimum_PV_panels * panel_area
+            recommended_kWp = minimum_PV_panels * panel_Wp_value
+            print("ANNUAL IRRADIANCE:", annual_irradiance_kWh)
+            print('Annual Consumption:', annual_Kwh_value)
+            print("Minimum Panels:", minimum_PV_panels)
+            print("Total area for roof or taratsa:", total_area)
+            print('Annual Production:', annual_production)
+
+
+            response_data = {
+                'special_production': round(special_production),
+                'recommended_kWp': recommended_kWp,
+                'minimum_PV_panels': round(minimum_PV_panels),
+                'total_area': round(total_area, 2),
+            }
+        
+            return JsonResponse(response_data)
+    except Http404:      # not use bare except
+        return Http404("404 Generic Error")
+
+
 # Calculation functions
 
 def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost):
     installation_cost = 400 # average cost in €
-    number_of_panels_required = round(PV_kWp / panel_wp)
+    number_of_panels_required = round((PV_kWp / panel_wp)* annual_degradation_production)
     panel_bases_cost = 90 * number_of_panels_required # bases for the panels on roof or taratsa, average cost per base
     electric_materials = 100 # average cost in €
     inverter_cost = 0
@@ -348,8 +403,7 @@ def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, pan
     
     return annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list
 
-
-# Calculate annual savings and percentage
+# Calculate annual savings  profit Percentage, total_annual_cost, regulated_charges
 def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced):
     annual_consumption = annual_kWh
     energy_cost = 0.19 # €/kWh today
@@ -391,13 +445,12 @@ def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_p
     return average_annual_savings, profitPercent, total_annual_cost, regulated_charges
 
 def calculate_payback_period(total_investment, average_annual_savings): 
-    annual_production_degradation = 0.06   
     years = 0
     minimum_savings_needed = 0
     element_index = 0
 
     while total_investment >= minimum_savings_needed and element_index < 26:
-        minimum_savings_needed += average_annual_savings / ( ( 1 + annual_production_degradation ) ** element_index)
+        minimum_savings_needed += average_annual_savings / ( ( annual_degradation_production ) ** element_index)
         element_index+=1
         print(minimum_savings_needed, years, element_index)
 
@@ -443,38 +496,25 @@ def calculate_total_production_kwh(annual_PV_energy_produced):
 
     total_production_kwh = 0
     total_production_kwh_array =[]
-    annual_production_degradation = 0.006
+
 
     for i in range(1, 26):
-        total_production_kwh += annual_PV_energy_produced / ( ( 1+annual_production_degradation) ** i)
+        total_production_kwh += annual_PV_energy_produced / ( (annual_degradation_production) ** i)
         total_production_kwh_array.append(total_production_kwh)
 
     print("Total kWh production after 25 years: ", total_production_kwh)
 
     return total_production_kwh_array, total_production_kwh
 
-# def calculate_month_production(annual_PV_energy_produced):
-#     month_production_array = []
-#     monthly_percentages = [5.2, 6, 8.1, 9.5, 10.5, 10.7, 11.6, 10.9, 9.8, 7.8, 5.4, 4.5]
-    
-#     for percentage in monthly_percentages:
-#         monthly_production = round((percentage / 100) * annual_PV_energy_produced)
-#         month_production_array.append(monthly_production)
-
-#     print('Each month production: ', month_production_array)
-    
-#     return month_production_array 
-   
 def calculate_total_savings(average_annual_savings):
     # Calculate the total profit over 25 years
     # based on the annual production
     # Return the result
     total_savings_array = []
     total_savings = 0
-    annual_production_degradation = 0.006
     
     for i in range(1, 26):
-        total_savings += average_annual_savings / ( ( 1 + annual_production_degradation ) ** i)
+        total_savings += average_annual_savings / ( ( annual_degradation_production ) ** i)
         total_savings_array.append(total_savings)
 
     return total_savings, total_savings_array
