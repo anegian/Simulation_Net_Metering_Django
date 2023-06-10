@@ -345,6 +345,7 @@ def calculate_power(request):
             print('Annual Production:', annual_production)
             print(f"Total production after 25 years for {minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {round(panel_Wp_value*1000)}Wp is: {round(total_production)}")
             print(f"Total consumption after 25 years: {total_consumption}")
+            print("Recommended KWp PV system: ", recommended_kWp)
 
 
             response_data = {
