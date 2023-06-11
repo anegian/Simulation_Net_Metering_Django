@@ -21,6 +21,7 @@ const form = document.getElementById("calculatorForm");
 const phase_load_selected = document.getElementById("id_select_phase");
 const form_submit_button = document.getElementById("submitBtn");
 const reset_button = document.getElementById("resetBtn")
+const lastPanelField = document.getElementById('lastPanelField');
 const error_message = document.getElementById('error-message-panel');
 const error_message2 = document.getElementById('error-message-panel5');
 const error_message3 = document.getElementById('error-message-panel6');
@@ -45,13 +46,34 @@ const special_production_output = document.getElementById('placeProduction');
 const minimum_panels = document.getElementById('minimumPanels');
 const total_PV_area = document.getElementById('totalArea');
 
-
+const panels = document.getElementsByClassName("panel-calculator");
+const previousButton = document.getElementById("previous-button");
+const nextButton = document.getElementById("next-button");
 
 // Settings for tilt images
 const images = document.querySelectorAll('.img-tilt');
 
 // Set the initial values of all elements to 0
 disableElements();
+nextButton.disabled = true;
+console.log(placeSelected.value);
+
+
+// Function to simulate a change event on the input field
+function triggerButtonEnable() {
+    nextButton.disabled = false;
+    console.log("In trigger function:", placeSelected.value)
+    console.log(nextButton.disabled);
+    nextButton.classList.add('enabled-button') 
+}
+
+
+function triggerButtonDisable() {
+nextButton.disabled = true;
+nextButton.classList.remove ('enabled-button');
+console.log("In trigger function:", placeSelected.value);
+console.log(nextButton.disabled);
+}
 
 
 // Update the current slider value (each time you drag the slider handle)
@@ -85,7 +107,6 @@ panelParamsSelect.addEventListener('change', function() {
 });
 
 
-
 // Add event listener to each radio Azimuth input
 radioAzimuthInputs.forEach(function(input) {
   input.addEventListener('change', function() {
@@ -112,28 +133,26 @@ document.addEventListener('DOMContentLoaded', function() {
     tiltInput.value = '30'; // Set the value of tiltInput to 30
     autoPowerDiv.classList.add('hidden');
     azimuthInput.value = 0;
-
+    
     images.forEach(function(image) {
       const tiltValue = image.getAttribute('tilt');
       image.style.display = tiltValue === '30' ? 'block' : 'none';
     });
     
-    const panels = document.getElementsByClassName("panel-calculator");
-    const previousButton = document.getElementById("previous-button");
-    const nextButton = document.getElementById("next-button");
     let currentPanelIndex = 0;
 
+
+    
     function showPanel(index) {
-      for (let i = 0; i < panels.length; i++) {
-        if (i === index) {
-          panels[i].classList.add("active");
-        } else {
-          panels[i].classList.remove("active");
+        for (let i = 0; i < panels.length; i++) {
+          if (i === index) {
+            panels[i].classList.remove("hidden");
+          } else {
+            panels[i].classList.add("hidden");
+          }
         }
-      }
-      previousButton.disabled = index === 0;
-      nextButton.disabled = index === panels.length - 1;
     }
+
 
     function goToPreviousPanel() {
       if (currentPanelIndex > 0) {
@@ -149,11 +168,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
 
+    showPanel(currentPanelIndex);
+
     previousButton.addEventListener("click", goToPreviousPanel);
     nextButton.addEventListener("click", goToNextPanel);
 
-    showPanel(currentPanelIndex);
-  });
+});
 
 // Listen for changes in the phase load input and store the selected option
 phase_load_selected.addEventListener("change", function(event){
@@ -197,10 +217,12 @@ annual_Kwh_input.addEventListener("keypress", function(event){
 });
 
 annual_Kwh_input.addEventListener("change", function(event){
-    if (event.value === 0 || event.value === " " ){
+    if (event.value === 0 || event.value === "" ){
         disableSlider();
+        nextButton.disabled = true;
     }else{
         enableSlider();
+        nextButton.disabled = false;
     }
 });
 
@@ -220,11 +242,10 @@ storage_kW.addEventListener("change", function(){
 });
 
 // Reset the PV_kW_output element value to the initial value when the reset button is clicked
-document.querySelector('button[type="reset"]').addEventListener('click', function() {
+reset_button.addEventListener('click', function() {
     disableElements();
     disableErrorMessages(); 
-     
-    console.log("Slider value: ", slider.value)
+    azimuthInput.value = 0;
 });
 
 // Add an event listener to the submit button
@@ -325,12 +346,13 @@ function disableElements() {
     slider.disabled = true;
     manualPowerRadio.disabled = true;
     autoPowerRadio.disabled = true;
+    azimuthInput.value = '0';
+    form_submit_button.classList.add('hidden');
 } 
 function enableSlider() {
     slider.disabled = false;
     slider.min = 0.0;
     slider.step = 0.1;
-    // slider.value = annual_Kwh_input.value / 1500;
     PV_kW_output.innerHTML = slider.value;
     manualPowerRadio.disabled = false;
     autoPowerRadio.disabled = false;
@@ -343,7 +365,6 @@ function disableSlider(){
     if (annual_Kwh_input.value === '0') {
         slider.value = 0.0;
       } else {
-        // slider.value = annual_Kwh_input.value /1500;
         console.log("Minimum PV system's kWp: ", slider.value);
       }
     
@@ -400,51 +421,51 @@ function check_selection_kwh_conditions(){
 }
 
 
-        // Setings for theme toggler
-        const themeSlider = document.getElementById('theme-slider');
-        set_initial_properties_theme_toggler();
+// Setings for theme toggler
+const themeSlider = document.getElementById('theme-slider');
+set_initial_properties_theme_toggler();
 
-        function set_initial_properties_theme_toggler(){
-            themeSlider.value = '0';
-            document.documentElement.style.setProperty('--bg-color', '#29233b');
-            document.documentElement.style.setProperty('--text-color', '#f2f2f2');
-            document.documentElement.style.setProperty('--bg-color-panel', '#393052');
-            document.documentElement.style.setProperty('--label-color', '#bbb');
-            document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
-            document.documentElement.style.setProperty('--slider-color', '#74b1f2');
-            document.documentElement.style.setProperty('--thumb-color', '#393052');
-            document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
-            document.documentElement.style.setProperty('--bg-color-submit-button', '#738725'); 
+function set_initial_properties_theme_toggler(){
+    themeSlider.value = '0';
+    document.documentElement.style.setProperty('--bg-color', '#29233b');
+    document.documentElement.style.setProperty('--text-color', '#f2f2f2');
+    document.documentElement.style.setProperty('--bg-color-panel', '#393052');
+    document.documentElement.style.setProperty('--label-color', '#bbb');
+    document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
+    document.documentElement.style.setProperty('--slider-color', '#74b1f2');
+    document.documentElement.style.setProperty('--thumb-color', '#393052');
+    document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
+    document.documentElement.style.setProperty('--bg-color-submit-button', '#738725'); 
+}
+
+themeSlider.addEventListener('input', function(event) {
+const selectedValue = event.target.value;    
+        
+        if (selectedValue === '0') {
+        document.documentElement.style.setProperty('--bg-color', '#29233b');
+        document.documentElement.style.setProperty('--text-color', '#f2f2f2');
+        document.documentElement.style.setProperty('--bg-color-panel', '#393052');
+        document.documentElement.style.setProperty('--label-color', '#bbb');
+        document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
+        document.documentElement.style.setProperty('--slider-color', '#74b1f2');
+        document.documentElement.style.setProperty('--slider-value-kW-color', '#f2f2f2');
+        document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
+        document.documentElement.style.setProperty('--thumb-color', '#393052');
+        document.documentElement.style.setProperty('--bg-color-submit-button', '#738725');
+        } else if (selectedValue === '1') {
+        document.documentElement.style.setProperty('--bg-color', '#f2f2f2');
+        document.documentElement.style.setProperty('--text-color', '#333');
+        document.documentElement.style.setProperty('--bg-color-panel', '#f2f2f2');
+        document.documentElement.style.setProperty('--text-color-panel', '#c6ccd2'); 
+        document.documentElement.style.setProperty('--label-color', '#334d68'); 
+        document.documentElement.style.setProperty('--title-panel-color', '#538bc7');
+        document.documentElement.style.setProperty('--slider-color', '#393052');
+        document.documentElement.style.setProperty('--slider-value-kW-color', '#334d68');
+        document.documentElement.style.setProperty('--bg-color-calculator-page', '#f2f2f2');
+        document.documentElement.style.setProperty('--thumb-color', '#74b1f2');
+        document.documentElement.style.setProperty('--bg-color-submit-button', '#74b1f2');
         }
-
-        themeSlider.addEventListener('input', function(event) {
-        const selectedValue = event.target.value;    
-                
-                if (selectedValue === '0') {
-                document.documentElement.style.setProperty('--bg-color', '#29233b');
-                document.documentElement.style.setProperty('--text-color', '#f2f2f2');
-                document.documentElement.style.setProperty('--bg-color-panel', '#393052');
-                document.documentElement.style.setProperty('--label-color', '#bbb');
-                document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
-                document.documentElement.style.setProperty('--slider-color', '#74b1f2');
-                document.documentElement.style.setProperty('--slider-value-kW-color', '#f2f2f2');
-                document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
-                document.documentElement.style.setProperty('--thumb-color', '#393052');
-                document.documentElement.style.setProperty('--bg-color-submit-button', '#738725');
-                } else if (selectedValue === '1') {
-                document.documentElement.style.setProperty('--bg-color', '#f2f2f2');
-                document.documentElement.style.setProperty('--text-color', '#333');
-                document.documentElement.style.setProperty('--bg-color-panel', '#f2f2f2');
-                document.documentElement.style.setProperty('--text-color-panel', '#c6ccd2'); 
-                document.documentElement.style.setProperty('--label-color', '#334d68'); 
-                document.documentElement.style.setProperty('--title-panel-color', '#538bc7');
-                document.documentElement.style.setProperty('--slider-color', '#393052');
-                document.documentElement.style.setProperty('--slider-value-kW-color', '#334d68');
-                document.documentElement.style.setProperty('--bg-color-calculator-page', '#f2f2f2');
-                document.documentElement.style.setProperty('--thumb-color', '#74b1f2');
-                document.documentElement.style.setProperty('--bg-color-submit-button', '#74b1f2');
-                }
-            });
+    });
 
 
 // Add event listeners to the radio buttons and the calculation button
@@ -482,6 +503,9 @@ function calculateAutoPower(event) {
   const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
   const url = '/simulation/ajax/' ;  // Make sure this matches the URL pattern in your Django project's URLs
 
+  if (!annualKWhValue){
+    alert('Πρώτα πρέπει να επιλέξετε ετήσια κατανάλωση σε kWh στο προηγούμενο βήμα');
+  }
     // Create the data object
     let data = {
         latitude: latitudeValue,
@@ -521,6 +545,8 @@ function calculateAutoPower(event) {
       $('#placeProduction').val(specialProduction);
       slider.value = recommended_kWp;
       PV_kW_output.innerHTML = slider.value;
+      storage_kW.min = slider.value;
+      storage_kW.value = slider.value;
       $('#minimumPanels').val(minimum_panels);
       $('#totalArea').val(totalArea);
       
@@ -535,6 +561,5 @@ function calculateAutoPower(event) {
 }
 
 autoPowerButton.addEventListener('click', calculateAutoPower);
-
 
 

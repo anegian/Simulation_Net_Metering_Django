@@ -12,12 +12,13 @@
 
 {% block script %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>var calculatePowerURL = "{% url 'simulation:calculate_power' %}";</script>
 <script> let geojsonPath = "{% static 'Net_Metering/json/Prefectures_boundaries.geojson' %}";</script>
 <script src="{% static 'Net_Metering/javascript/leaflet_map.js' %}" defer></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="{% static 'Net_Metering/javascript/scriptCalculator.js' %}" defer></script>
-<script> var calculatePowerURL = "{% url 'simulation:calculate_power' %}"; </script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
 {% endblock %}
 
 {% block menu_list %}
@@ -53,8 +54,9 @@
             <article class="calculator-article">
                 <div class="padding-article">
                     Ο υπολογιστής απόδοσης οικιακού φωτοβολταϊκού συστήματος αυτοπαραγωγής με ενεργειακό συμψηφισμό
-                    (Net Metering), θα σας βοηθήσει να υπολογίσετε τον εκτιμώμενο χρόνο απόσβεσης της επένδυσής σας,
-                    όπως και τα οικονομικά οφέλη με βάση τις επιλογές εγκατάστασης και του καταναλωτικού σας προφίλ.
+                    (Net Metering), θα σας βοηθήσει να υπολογίσετε την απαραίτητη Ισχύ Φ/Β συστήματος, τον εκτιμώμενο 
+                    χρόνο απόσβεσης της επένδυσής σας, όπως και οικονομικές μετρικές, βάσει επιλογών εγκατάστασης 
+                    και καταναλωτικού σας προφίλ.
                 </div>
             </article>
 
@@ -67,7 +69,7 @@
         <!-- ::: CALCULATOR FORM ::: -->
         <div class="calculator-container">
 
-            <div class="column-calculator-page"></div>
+            <!-- <div class="column-calculator-page"></div> -->
 
             <form method="POST" class="my-form-control" id="calculatorForm" name="calculatorForm" action="{% url 'simulation:calculator' %}" onsubmit="validateForm()">
                 {% csrf_token %}
@@ -84,17 +86,18 @@
                             
                                 
                                 <div class="option-selector-margin">
-                                    <input class="panel-selection-height" type="hidden" name="select_district" id="select_district" required >
+                                    <input class="panel-selection-height" type="hidden" name="select_district" id="select_district" >
                                     
-                                    <p class="spacer-label">Επιλέξτε Τοποθεσία στο Χάρτη:</p>
+                                    <p><label for="regionInput" class="spacer-label">Επιλέξτε Τοποθεσία στο Χάρτη:</label></p>
                                     <!-- <p class="spacer-label">{{ form_district.select_district.label_tag }}</p> -->
-                                    <p  title="Παρακαλούμε, επιλέξτε Περιφέρεια εγκατάστασης" id="option-selector-margin-label">{{ form_district.select_district }}</p>
+                                    <p  title="Παρακαλούμε, επιλέξτε ένα σημείο εντός των γεωγραφικών συνόρων. Ο Νομός και οι συντεταγμένες
+                                    θα εμφανιστούν στα αντίστοιχα πεδία" id="option-selector-margin-label">{{ form_district.select_district }}</p>
                                     
                                     <div class='coords-inline'>
 
                                         <div class="coords-map-latitude">
                                             <label for="regionInput">Νομός:</label>
-                                            <input type="text" name="placeInput" id="regionInput" readonly required>
+                                            <input class="panel-field" type="text" name="placeInput" id="regionInput" readonly required>
                                         </div>
                                         
 
@@ -122,27 +125,27 @@
                                 <h4>Εγκατάσταση</h4>
                             </div>
                                 <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
-                                    <p class="spacer-label">Επιλέξτε θέση στην οικία σας:</p>
+                                    <p><label for="roof" class="spacer-label">Επιλέξτε θέση στην οικία σας: </label></p>
 
-                                            <div class="spacer-in-calculator-panel">
-                                            </div>
+                                    <div class="spacer-in-calculator-panel">
+                                    </div>
 
-                                            <div class="form-check" >
-                                            <input type="radio" class="form-check-input" id="roof" name="installation" value="roof" checked>
-                                            <label class="form-check-label" for="roof">Στέγη</label>
-                                            </div>
+                                    <div class="form-check" >
+                                    <input type="radio" class="form-check-input" id="roof" name="installation" value="roof" checked>
+                                    <label class="form-check-label" for="roof">Στέγη</label>
+                                    </div>
 
-                                            <div class="form-check">
-                                            <input type="radio" class="form-check-input option2" id="taratsa" name="installation" value="taratsa">
-                                            <label class="form-check-label" for="taratsa">Ταράτσα</label>
-                                            </div>
+                                    <div class="form-check">
+                                    <input type="radio" class="form-check-input option2" id="taratsa" name="installation" value="taratsa">
+                                    <label class="form-check-label" for="taratsa">Ταράτσα</label>
+                                    </div>
                                 </div>            
 
                                     <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε είδος Φ/Β πάνελ">
-                                        <p class="spacer-label">Επιλέξτε είδος Φ/Β πάνελ:</p>
+                                        <p><label for="panel_wp" class="spacer-label">Επιλέξτε είδος Φ/Β πάνελ:</label></p>
 
-                                            <div class="spacer-in-calculator-panel">
-                                            </div>
+                                        <div class="spacer-in-calculator-panel">
+                                        </div>
 
                                         <select  class="panel-selection-height" name="panel_params" id="panelParams"> 
                                             <option value="0.305" data-efficiency="0.183" data-panel_area="1.67" data-panel_cost="167">Mονοκρυσταλλικό Πάνελ <strong>305Wp</strong> (Βαθμός απόδοσης : ≥18,3%)</option>
@@ -151,16 +154,21 @@
                                             <option value="0.410" data-efficiency="0.21" data-panel_area="1.95" data-panel_cost="248">Πολυκρυσταλλικό Πάνελ <strong>410Wp</strong> (Βαθμός απόδοσης : 21,0%) </option>
                                             <option value="0.450" data-efficiency="0.199" data-panel_area="2.2" data-panel_cost="272">Πολυκρυσταλλικό Πάνελ <strong>450Wp</strong> (Βαθμός απόδοσης : 19,9%) </option>
                                         </select>
-                                            <input type="hidden" name="panel_wp" id="panelWpInput">
-                                            <input type="hidden" name="panel_efficiency" id="panelEfficiencyInput">
-                                            <input type="hidden" name="panel_area" id="panelAreaInput">
-                                            <input type="hidden" name="panel_cost" id="panelCostInput">
-
-
                                         
                                     </div>
-                        
-                                
+                                    <div class="panels_parameters">
+                                        <div>
+                                            <input type="hidden" name="panel_wp" id="panelWpInput">
+                                            <input type="hidden" name="panel_efficiency" id="panelEfficiencyInput">
+                                            <label for="panel_wp">Eμβαδόν Πάνελ: </label>
+                                            <input type="text" name="panel_area" id="panelAreaInput"><span class="metrics-special-calculation"> m²</span>
+                                        </div>
+                                        <div>
+                                            <label for="panel_wp">Κόστος Πάνελ: </label>
+                                            <input type="text" name="panel_cost" id="panelCostInput"><span class="metrics-special-calculation"> € </span>
+                                        </div>
+                                    </div>
+                             
                         </div>
 
                         <!-- PANEL 3 -->
@@ -175,7 +183,7 @@
                             
                             </div>
                             <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κατεύθυνση του PV συστήματος">
-                                <p class="spacer-label">Επιλέξτε προσανατολισμό Φ/Β πάνελ:</p> 
+                                <p> <label for="azimuthInput" class="spacer-label">Επιλέξτε προσανατολισμό Φ/Β πάνελ: </label></p> 
                             
                                 <div>
                                     <img id="compass-photo" src="{% static 'images/compass4.png'%}" alt="photo not found" style="width: 240px;">
@@ -209,7 +217,9 @@
                                 
                             </div>
                             <div>
-                                <input type="number" id="azimuthInput" readonly>
+                                <label for="azimuthInput" class="azimuth_label">Αζιμούθιο σε &deg; :  </label>
+                                <input class="panel-field" type="text" id="azimuthInput" readonly>
+                                <label for="azimuthInput" class="azimuth_label">   </label>
                             </div>
                         </div>
                         
@@ -222,7 +232,7 @@
                             </div>
 
                             <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κλίση του συστήματος PV">
-                                <p class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</p>
+                                <p> <label for="tiltInput" class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</label></p>
 
                                     <div class="spacer-in-calculator-panel">
                                     </div>
@@ -255,7 +265,7 @@
                                 </div>
 
                                 <div>
-                                    <input type="hidden" id="tiltInput" readonly>
+                                    <input class="panel-field" type="hidden" id="tiltInput" name="tiltInput" readonly>
                                 </div>
 
                             </div>
@@ -269,7 +279,7 @@
                                 <h4>Προφίλ Χρήσης</h4>
                             </div>
                             <div class="option-selector-margin" title="Πότε εντοπίζετε τις μεγαλύτερες ανάγκες σας για οικιακό ρεύμα;">
-                                <p class="spacer-label">Επιλέξτε προφίλ που σας καλύπτει:</p>
+                                <p><label for="power_option" class="spacer-label">Επιλέξτε προφίλ μεγαλύτερης κατανάλωσης ρεύματος:</label></p>
 
                                     <div class="spacer-in-calculator-panel">
                                     </div>
@@ -307,7 +317,7 @@
 
                                         <div class="option-selector-margin" >
 
-                                            <p class="spacer-label">Επιλέξτε Παροχή και KWh</p>
+                                            <p> <label for="phase_load" class="spacer-label">Επιλέξτε Παροχή και KWh</label> </p>
                                                 <div class="spacer-in-calculator-panel">
                                         
                                                 </div>
@@ -341,7 +351,7 @@
                                                 </button>
                                                     <div class="help-container">
                                                         <span class="help-text" id="annual-consumption-text">
-                                                            <strong>Συμπληρώστε πρώτα την Περιφέρεια εγκατάστασης και το είδος της παροχής, για να σας επιτραπεί<br>
+                                                            <strong>Συμπληρώστε πρώτα το είδος της παροχής, για να σας επιτραπεί<br>
                                                                  να συμπληρώσετε ετήσια κατανάλωση!</strong><br><br>
                                                             &#8594; Υπολογίστε <strong>κατά προσέγγιση</strong>, την ετήσια <br>
                                                             κατανάλωση ηλεκτρικού ρεύματος σε kWh.</span>
@@ -368,8 +378,8 @@
 
                             
                             <div class="option-selector-margin">
-                                <div class="slide-container" title="Παρακαλούμε, επιλέξτε παροχή και ύστερα επιθυμητή ισχύς φωτοβολταϊκού σε kWp">
-                                    <p><label for="myRangeSlider" class="spacer-label">Επιλέξτε: </label> <button class="help-popper" type="button" title="">
+                                <div class="slide-container" title="Παρακαλώ, επιλέξτε επιθυμητή ισχύς φωτοβολταϊκού σε kWp">
+                                    <p><label for="myRangeSlider" class="spacer-label">Επιλέξτε επιθυμητή Ισχύ: </label> <button class="help-popper" type="button" title="">
                                         <i class="fas fa-question-circle" id="annual-consumption-info"></i>
                                     </button>
                                         <div class="help-container">
@@ -377,7 +387,8 @@
                                                 <strong>Συμπληρώστε πρώτα το είδος της παροχής και την ετήσια<br> κατανάλωση ρεύματος!</strong><br><br>
                                                 
                                                  Μπορείτε ελεύθερα να αυξομειώσετε τη συνολική ισχύ σύμφωνα με τις εξατομικευμένες ανάγκες σας και τα επιτρεπτά όρια.<br><br>
-                                                 Αυτόματα θα συμπληρωθoύν τα kWp του Φ/Β συστήματος που απαιτούνται για να εκμηδενίσετε την ετήσια κατανάλωση σας.<br>
+                                                 Επιλέγοντας "Εύρεση βέλτιστης Ισχύος",θα εμφανιστεί κουμπί υπολογισμού και πατώντας το, 
+                                                 θα συμπληρωθoύν τα kWp του Φ/Β συστήματος που απαιτούνται για να εκμηδενίσετε την ετήσια κατανάλωση σας σε βάθος 25ετίας.<br>
 
                                                  <b style="color: red;">Προσοχή</b>!<br>Για Μονοφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 5 kWp.<br>
                                                  Για Τριφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 10 kWp.
@@ -404,13 +415,16 @@
                                     <input type="range" id="myRangeSlider" name="myRangeSlider" required>
                                     <p class="slider-label">Τιμή: <span id="slider-value"></span> kWp</p> 
                                         
-                                    <span id="error-message-panel6">Please select annual kWh & kWp.</span>
+                                    <span id="error-message-panel6">Παρακαλώ πρώτα επιλέξτε ετήσια κατανάλωση kWh & kWp.</span>
                                 </div>
                                 
                                 <div id="autoPower-button-input" >
-                                    <button class="autoPower-button" type="button" name="buttonClicked" id="calculateProductionButton">
-                                        Υπολογισμός Ειδικής Παραγωγής
-                                    </button>
+                                    <div class="button-auto-div">
+                                        <button class="autoPower-button" type="button" name="buttonClicked" id="calculateProductionButton">
+                                            Υπολογισμός Ειδικής Παραγωγής
+                                        </button>
+                                    </div>
+                                   
                                     
                                     <div>
                                         <label for="placeProduction">Ειδική Παραγωγή:</label>
@@ -433,53 +447,86 @@
 
                         <!-- PANEL 8 -->
                         <!-- Here you select battery kwh -->
-                        <div class="panel-calculator">
+                        <div class="panel-calculator" >
                             <div class="title-panel">
                                 <span class="number"> 8 </span>
                                 <h4>Aποθήκευση</h4>
                             </div>
-                                <div class="option-selector-margin" title="Παρακαλούμε, πρώτα συμπληρώστε τα πεδία Κατανάλωση και Ισχύς και στη συνέχεια επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
-                                    <p class="spacer-label">Επιλέξτε προσθήκη συσσωρευτή:</p>
-                                        
-                                        <div class="spacer-in-calculator-panel">
-                                        </div>
-
-                                            <div class="form-check" >
-                                            <input type="radio" class="form-check-input" id="without_storage" name="storage" value="without_storage" checked>
-                                            <label class="form-check-label" for="without_storage">Xωρίς</label>
-                                            </div>
-
-                                            <div class="form-check">
-                                            <input type="radio" class="form-check-input option2" id="with_storage" name="storage" value="with_storage">
-                                            <label class="form-check-label" for="with_storage">Με</label>
-
-                                                    <div class="hidden-storage">
-                                                        <label for="storage_kw">Iσχύς μπαταρίας (σε kWh):</label>
-                                                        <input type="number" class="form-control" id="storage_kw" name="storage_kw">
-                                                    </div>
-
-                                            </div>
+                            <div class="option-selector-margin" title="Παρακαλούμε, πρώτα συμπληρώστε τα πεδία Κατανάλωση και Ισχύς και στη συνέχεια επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
+                                <p><label for="storage" class="spacer-label">Επιλέξτε προσθήκη συσσωρευτή:</label></p>
+                                    
+                                <div class="spacer-in-calculator-panel">
+                                    
                                 </div>
+
+                                <div class="form-check" >
+                                    <input type="radio" class="form-check-input" id="without_storage" name="storage" value="without_storage" checked>
+                                    <label class="form-check-label" for="without_storage">Xωρίς</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input option2" id="with_storage" name="storage" value="with_storage">
+                                    <label class="form-check-label" for="with_storage">Με</label>
+
+                                    <div class="hidden-storage">
+                                        <label for="storage_kw">Iσχύς μπαταρίας (σε kWh):</label>
+                                        <input type="number" class="form-control" id="storage_kw" name="storage_kw">
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Previous and Next buttons -->
-                        <div>
-                            <button type="button" id="previous-button">Previous</button>
-                            <button type="button" id="next-button">Next</button>
+                        <!-- PANEL 9 -->
+                        <!-- Here you select battery kwh -->
+                        <div class="panel-calculator" >
+                            <div class="title-panel">
+                                <span class="number"> 9 </span>
+                                <h4>Επιδότηση - Έκπτωση</h4>
+                            </div>
+                            <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν είστε δικαιούχος έπκπτωσης ή επιδότησης και ποσοστά έκπτωσης">
+                                <p><label for="discount" class="spacer-label">Επιλέξτε εάν είστε δικαιούχος επιδότησης: </label></p>
+                                    
+                                <div class="spacer-in-calculator-panel">
+                                    
+                                </div>
+
+                                <div class="form-check" >
+                                    <input type="radio" class="form-check-input" id="no-discount" name="discount" value="no" checked>
+                                    <label class="form-check-label" for="no-discount">Όχι</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input option2" id="discount" name="discount" value="yes">
+                                    <label class="form-check-label" for="discount">Ναι</label>
+
+                                    <div class="hidden-storage">
+                                        <label for="discount_percent">Ποσοστό έκπτωσης (σε %):</label>
+                                        <input type="number" class="form-control" id="discount_percent" name="discount_percent">
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
-                    
+
+                                           
                     </fieldset>
 
-                
-
+                                
                 <div class="my-submit-form">
-                    <button class="form-submit-button" type="reset" id="resetBtn">Διόρθωση</button>
+                    <!-- Previous and Next buttons -->
+                    <div>
+                        <button class="form-reset-button" type="hidden" id="resetBtn">Διόρθωση</button>
+                        <button type="button" id="previous-button">Προηγούμενο</button>
+                        <button type="button" id="next-button">Επόμενο</button>
+                    </div>
+                    
                     <button class="form-submit-button" type="submit" id="submitBtn">Υποβολή Στοιχείων</button>
                 </div>
 
             </form>
 
-            <div class="column-calculator-page"></div>
+            <!-- <div class="column-calculator-page"></div> -->
 
         </div>
 

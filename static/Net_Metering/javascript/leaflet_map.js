@@ -6,6 +6,24 @@ let longitude = document.getElementById('longitude')
 let regionInput = document.getElementById('regionInput');
 let geojsonLayer;
 
+
+    // 1st layer, the map itself
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Creating a Marker
+    var markerOptions = {
+        title: "MyLocation",
+        clickable: true,
+    }
+    // Creating a marker
+    let marker = L.marker([37.983917, 23.72936], markerOptions);
+    
+    // Adding marker to the map
+    marker.addTo(map);
+
+
 //text prefecture identifier layer 
 function popUp(feature, layer) {
     if (feature.properties) {
@@ -21,22 +39,6 @@ function popUp(feature, layer) {
     }
 }
 
-
-// 1st layer, the map itself
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
-
-// Creating a Marker
-var markerOptions = {
-    title: "MyLocation",
-    clickable: true,
- }
- // Creating a marker
- let marker = L.marker([37.983917, 23.72936], markerOptions);
- 
- // Adding marker to the map
- marker.addTo(map);
 
 
 // 2nd layer reading GeoJSON data
@@ -64,6 +66,8 @@ fetch(geojsonPath)
 
     });
 
+    
+
     function onMapClick(e) {
         latitude.value = e.latlng.lat.toFixed(4);
         longitude.value = e.latlng.lng.toFixed(4);
@@ -73,17 +77,24 @@ fetch(geojsonPath)
         let isPointOutsideBounds = true;
        
         
+
         if (geojsonLayer) {
+            
             geojsonLayer.eachLayer(layer => {
                 const geometryType = layer.feature.geometry.type;
                 const polygons = layer.feature.geometry.coordinates;
                 
 
                 if (geometryType === 'MultiPolygon') {
+                    
                     polygons.forEach(polygon => {
                         if ( isPointInsidePolygon(longitude.value, latitude.value, polygon) ) {
                             console.log(layer.feature.properties.ΝΟΜΟΣ);
                             regionInput.value = layer.feature.properties.ΝΟΜΟΣ;
+                            placeSelected.value = regionInput.value;
+                            
+                            triggerButtonEnable();    
+                            
                             //layer.openPopup();
                             isPointOutsideBounds = false;
                              // Remove the existing marker from the map
@@ -94,9 +105,7 @@ fetch(geojsonPath)
                             marker = L.marker([latitude.value, longitude.value]).addTo(map);
                         }
                     });
-                    
                 }
-                
             });
         }
 
@@ -106,6 +115,7 @@ fetch(geojsonPath)
             longitude.value = '';
             regionInput.value = ''; // Clear the region input if the point is outside polygons
             marker.remove();
+            triggerButtonDisable();
         }
         
     }
