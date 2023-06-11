@@ -12,17 +12,12 @@
 
 {% block script %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script>
-    var calculatePowerURL = "{% url 'simulation:calculate_power' %}";
-  </script>
-
-<script src="{% static 'Net_Metering/javascript/calculatorTest.js' %}" defer></script>
 <script> let geojsonPath = "{% static 'Net_Metering/json/Prefectures_boundaries.geojson' %}";</script>
 <script src="{% static 'Net_Metering/javascript/leaflet_map.js' %}" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="{% static 'Net_Metering/javascript/scriptCalculator.js' %}" defer></script>
-
+<script> var calculatePowerURL = "{% url 'simulation:calculate_power' %}"; </script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 {% endblock %}
 
 {% block menu_list %}
