@@ -16,10 +16,12 @@
 <script>
     var calculatePowerURL = "{% url 'simulation:calculate_power' %}";
   </script>
-<script src="{% static 'Net_Metering/javascript/scriptCalculator.js' %}" defer></script>
+
+<script src="{% static 'Net_Metering/javascript/calculatorTest.js' %}" defer></script>
 <script> let geojsonPath = "{% static 'Net_Metering/json/Prefectures_boundaries.geojson' %}";</script>
 <script src="{% static 'Net_Metering/javascript/leaflet_map.js' %}" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script src="{% static 'Net_Metering/javascript/scriptCalculator.js' %}" defer></script>
 
 {% endblock %}
 
@@ -465,9 +467,16 @@
                                 </div>
                         </div>
 
-                </fieldset>
+                        <!-- Previous and Next buttons -->
+                        <div>
+                            <button type="button" id="previous-button">Previous</button>
+                            <button type="button" id="next-button">Next</button>
+                        </div>
+                    
+                    </fieldset>
 
                 
+
                 <div class="my-submit-form">
                     <button class="form-submit-button" type="reset" id="resetBtn">Διόρθωση</button>
                     <button class="form-submit-button" type="submit" id="submitBtn">Υποβολή Στοιχείων</button>

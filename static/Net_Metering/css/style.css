@@ -521,9 +521,27 @@ input[type="search"]:focus {
         flex-wrap: wrap;
 
     }
+    /* CAREFULLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL */
+    .panel-calculator {
+        flex: 1 1 50%;
+        display: none;
+        /* Adjust the width as needed based on your design */
+    }
+
+    .panel-calculator.active {
+        display: block;
+    }
+
+    /* Add a media query to adjust the layout for smaller screens */
+    @media (max-width: 768px) {
+        .panel-calculator {
+            flex: 1 1 100%;
+            /* Stack the panels one below the other for smaller screens */
+        }
+    }
     .calculator-fieldset .panel-calculator{
-        width: 530px;
-        height: 450px;
+        width: 700px;
+        height: 600px;
         margin: 20px 20px;
         border-color: #221e2e;
         border-radius: 5px;
