@@ -831,6 +831,22 @@ input[type="search"]:focus {
     .metrics-special-calculation{
         font-size: 12px;
     }
+    #loading-bar-container {
+    width: 100%;
+    height: 4px;
+    background-color: #f2f2f2;
+    }
+    
+    #loading-bar {
+    height: 100%;
+    width: 0;
+    background-color: #738725;
+    transition: width 0.3s ease-in-out;
+    text-align: center;
+    line-height: 30px;
+    color: #f2f2f2;
+    }
+    
 
 
  /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */

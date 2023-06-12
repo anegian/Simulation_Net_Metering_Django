@@ -483,10 +483,6 @@ function toggleAutoPowerDiv() {
   }
 }
 
-special_production_output.addEventListener('change', function(){
-    
-   
-});
 
 function calculateAutoPower(event) {
   event.preventDefault(); // Prevent the default form submission behavior
@@ -558,8 +554,27 @@ function calculateAutoPower(event) {
   });
     console.log("test");
 
+  var i = 0;
+
+  if (i == 0) {
+  i = 1;
+  var loadingBar = document.getElementById('loading-bar');
+  var width = 10;
+  var id = setInterval(frame, 10);
+  function frame() {
+    if (width >= 100) {
+      clearInterval(id);
+      i = 0;
+    } else {
+      width++;
+      loadingBar.style.width = width + "%";
+      loadingBar.innerHTML = width + "%";
+    }
+  }
+  }
+
+  
 }
 
 autoPowerButton.addEventListener('click', calculateAutoPower);
-
 

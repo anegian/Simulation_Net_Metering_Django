@@ -421,7 +421,7 @@
                                 <div id="autoPower-button-input" >
                                     <div class="button-auto-div">
                                         <button class="autoPower-button" type="button" name="buttonClicked" id="calculateProductionButton">
-                                            Υπολογισμός Ειδικής Παραγωγής
+                                            Υπολογισμός Απαιτούμενης Ισχύος
                                         </button>
                                     </div>
                                    
@@ -440,7 +440,12 @@
                                         <input type="text" id="totalArea" readonly><span class="metrics-special-calculation"> m²</span>
                                     </div>
                                     
+                                    <!-- Add the loading bar container -->
+                                    <div id="loading-bar-container">
+                                        <div id="loading-bar">0%</div>
+                                    </div>
                                 </div>
+                                
                             </div>
                             
                         </div>
@@ -470,6 +475,16 @@
 
                                     <div class="hidden-storage">
                                         <label for="storage_kw">Iσχύς μπαταρίας (σε kWh):</label>
+                                        <button class="help-popper" type="button" title="">
+                                            <i class="fas fa-question-circle" id="phase-load-info"></i>
+                                    </button>
+                                            <div class="help-container" title="">
+                                                <span class="help-text" id="storage-text">
+                                                    &#8226; Η <strong>ελάχιστη</strong> τιμή kWh για τον συσσωρευτή είναι ίση με τα kVA της Ισχύος Φ/Β!<br><br>
+                                                    &#8226; Η <strong>μέγιστη</strong> δυνατή τιμή, είναι 10 kWh<br>
+                                                    
+                                                <span class="close-help">&times;</span>
+                                            </div>
                                         <input type="number" class="form-control" id="storage_kw" name="storage_kw">
                                     </div>
 
