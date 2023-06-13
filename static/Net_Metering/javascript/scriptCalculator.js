@@ -14,10 +14,6 @@ const panelAreaInput = document.getElementById('panelAreaInput');
 const panelCostInput = document.getElementById('panelCostInput');
 const form = document.getElementById("calculatorForm");
 
-// const district_average_irradiance = document.getElementById("id_select_district");
-// Get the initial value of the district
-// const initial_district = district_average_irradiance.value;
-
 const phase_load_selected = document.getElementById("id_select_phase");
 const form_submit_button = document.getElementById("submitBtn");
 const reset_button = document.getElementById("resetBtn")
@@ -577,4 +573,26 @@ function calculateAutoPower(event) {
 }
 
 autoPowerButton.addEventListener('click', calculateAutoPower);
+const noDiscountRadio = document.getElementById('no-discount');
+const discountRadio = document.getElementById('discount');
+const discountPercentInput = document.getElementById('discount_percent');
 
+function updateSubmitButton() {
+  if (noDiscountRadio.checked || discountRadio.checked) {
+    form_submit_button.classList.remove('hidden');
+    lastPanelField.value = discountRadio.checked ? 'yes' : 'no';
+    if (discountRadio.checked) {
+      discountPercentContainer.style.display = 'block';
+    } else {
+      discountPercentContainer.style.display = 'none';
+    }
+  } else {
+    form_submit_button.add('hidden');
+    lastPanelField.value = '';
+    discountPercentContainer.style.display = 'none';
+  }
+}
+
+
+noDiscountRadio.addEventListener('change', updateSubmitButton);
+discountRadio.addEventListener('change', updateSubmitButton);

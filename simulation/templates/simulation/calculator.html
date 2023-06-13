@@ -507,7 +507,7 @@
                                 </div>
 
                                 <div class="form-check" >
-                                    <input type="radio" class="form-check-input" id="no-discount" name="discount" value="no" checked>
+                                    <input type="radio" class="form-check-input" id="no-discount" name="discount" value="no" >
                                     <label class="form-check-label" for="no-discount">Όχι</label>
                                 </div>
 
@@ -515,12 +515,13 @@
                                     <input type="radio" class="form-check-input option2" id="discount" name="discount" value="yes">
                                     <label class="form-check-label" for="discount">Ναι</label>
 
-                                    <div class="hidden-storage">
+                                    <div class="hidden-storage" id="discountPercentContainer" style="display: none;" >
                                         <label for="discount_percent">Ποσοστό έκπτωσης (σε %):</label>
                                         <input type="number" class="form-control" id="discount_percent" name="discount_percent">
                                     </div>
 
                                 </div>
+                                <input type="hidden" id="lastPanelField" readonly>
                             </div>
                         </div>
 

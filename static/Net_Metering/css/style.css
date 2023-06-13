@@ -748,6 +748,11 @@ input[type="search"]:focus {
         width: 100px;
         font-size: 16px;
     }
+    #discount_percent.form-control{
+        height: 25px!important;
+        width: 100px;
+        font-size: 16px;
+    }
     /* ::: Django forms.py form container::: */
     .name-form-container{
         display: flex;
