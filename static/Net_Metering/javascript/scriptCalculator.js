@@ -45,6 +45,7 @@ const total_PV_area = document.getElementById('totalArea');
 const panels = document.getElementsByClassName("panel-calculator");
 const previousButton = document.getElementById("previous-button");
 const nextButton = document.getElementById("next-button");
+const circleLinks = document.querySelectorAll('.circle-link');
 
 // Settings for tilt images
 const images = document.querySelectorAll('.img-tilt');
@@ -129,15 +130,15 @@ document.addEventListener('DOMContentLoaded', function() {
     tiltInput.value = '30'; // Set the value of tiltInput to 30
     autoPowerDiv.classList.add('hidden');
     azimuthInput.value = 0;
+    annual_Kwh_input.value = "";
     
     images.forEach(function(image) {
       const tiltValue = image.getAttribute('tilt');
       image.style.display = tiltValue === '30' ? 'block' : 'none';
     });
     
+    
     let currentPanelIndex = 0;
-
-
     
     function showPanel(index) {
         for (let i = 0; i < panels.length; i++) {
@@ -149,18 +150,58 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
     function goToPreviousPanel() {
+      
       if (currentPanelIndex > 0) {
-        currentPanelIndex--;
-        showPanel(currentPanelIndex);
+        const previousPanelIndex = currentPanelIndex - 1; // Calculate the previous panel index
+        showPanel(previousPanelIndex);
+    
+        // Update navigation active class based on panel change
+        const currentPanelLink = document.querySelector('.panel-field[href="#' + panels[currentPanelIndex].getAttribute('id') + '"]');
+        if (currentPanelLink) {
+          currentPanelLink.classList.remove('active');
+        }
+    
+        const previousId = panels[previousPanelIndex].getAttribute('id');
+        const previousPanelLink = document.querySelector('.panel-field[href="#' + previousId + '"]');
+        // Update circle links active class based on panel change
+        circleLinks[currentPanelIndex].classList.remove('active');
+    
+        console.log('Current Panel Index:', currentPanelIndex);
+        console.log('Number of Panels:', panels.length);
+    
+        if (previousPanelLink) {
+          previousPanelLink.classList.add('active');
+        } else {
+          console.error('Previous Panel Link not found:', previousId);
+        }
+    
+        currentPanelIndex = previousPanelIndex; // Update currentPanelIndex
       }
     }
 
     function goToNextPanel() {
+      
       if (currentPanelIndex < panels.length - 1) {
-        currentPanelIndex++;
+        currentPanelIndex++; // Update currentPanelIndex
         showPanel(currentPanelIndex);
+    
+        // Update circle links active class based on panel change
+        circleLinks[currentPanelIndex].classList.add('active');
+    
+        const nextPanelId = panels[currentPanelIndex].getAttribute('id');
+        const nextPanelLink = document.querySelector('.panel-field[href="#' + nextPanelId + '"]');
+        
+        
+        console.log('Current Panel Index:', currentPanelIndex+1);
+        console.log('Number of Panels:', panels.length);
+
+        if (nextPanelLink) {
+          nextPanelLink.classList.add('active');
+        } else {
+          console.error('Next Panel Link not found:', nextPanelId);
+        }
+    
       }
     }
 
@@ -203,22 +244,20 @@ annual_Kwh_input.addEventListener("input", function(){
         max_message.style.display = "none";
     }
 
+    if (annual_Kwh_input.value === '0' || annual_Kwh_input.value === "" ){
+      disableSlider();
+      triggerButtonDisable();
+  }else{
+      enableSlider();
+      triggerButtonEnable();
+  }
+
     console.log(enteredValue, annual_Kwh_input.value)
 });
 
 annual_Kwh_input.addEventListener("keypress", function(event){
     if (isNaN(event.key) || event.key === " " ){
         event.preventDefault();
-    }
-});
-
-annual_Kwh_input.addEventListener("change", function(event){
-    if (event.value === 0 || event.value === "" ){
-        disableSlider();
-        nextButton.disabled = true;
-    }else{
-        enableSlider();
-        nextButton.disabled = false;
     }
 });
 
@@ -596,3 +635,9 @@ function updateSubmitButton() {
 
 noDiscountRadio.addEventListener('change', updateSubmitButton);
 discountRadio.addEventListener('change', updateSubmitButton);
+
+
+
+
+
+
