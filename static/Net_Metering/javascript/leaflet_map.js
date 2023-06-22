@@ -6,7 +6,6 @@ let longitude = document.getElementById('longitude')
 let regionInput = document.getElementById('regionInput');
 let geojsonLayer;
 
-
     // 1st layer, the map itself
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -23,7 +22,6 @@ let geojsonLayer;
     // Adding marker to the map
     marker.addTo(map);
 
-
 //text prefecture identifier layer 
 function popUp(feature, layer) {
     if (feature.properties) {
@@ -38,8 +36,6 @@ function popUp(feature, layer) {
         layer.bindPopup(out.join('<br />'));
     }
 }
-
-
 
 // 2nd layer reading GeoJSON data
 fetch(geojsonPath)
@@ -66,8 +62,6 @@ fetch(geojsonPath)
 
     });
 
-    
-
     function onMapClick(e) {
         latitude.value = e.latlng.lat.toFixed(4);
         longitude.value = e.latlng.lng.toFixed(4);
@@ -75,26 +69,20 @@ fetch(geojsonPath)
         console.log(longitude.value);
     
         let isPointOutsideBounds = true;
-       
-        
 
         if (geojsonLayer) {
-            
             geojsonLayer.eachLayer(layer => {
                 const geometryType = layer.feature.geometry.type;
                 const polygons = layer.feature.geometry.coordinates;
-                
-
-                if (geometryType === 'MultiPolygon') {
-                    
+            
+                if (geometryType === 'MultiPolygon') { 
                     polygons.forEach(polygon => {
                         if ( isPointInsidePolygon(longitude.value, latitude.value, polygon) ) {
                             console.log(layer.feature.properties.ΝΟΜΟΣ);
                             regionInput.value = layer.feature.properties.ΝΟΜΟΣ;
                             placeSelected.value = regionInput.value;
-                            
                             triggerButtonEnable();    
-                            
+        
                             //layer.openPopup();
                             isPointOutsideBounds = false;
                              // Remove the existing marker from the map
@@ -108,8 +96,6 @@ fetch(geojsonPath)
                 }
             });
         }
-
-
         if (isPointOutsideBounds) {
             latitude.value = '';
             longitude.value = '';
@@ -117,16 +103,11 @@ fetch(geojsonPath)
             marker.remove();
             triggerButtonDisable();
         }
-        
     }
- 
-
     // Helper function to check if a point is inside a polygon using Turf.js
     function isPointInsidePolygon(lng, lat, polygon) {
-
         const turfPoint = turf.point([lng, lat]);
         const turfPolygon = turf.polygon(polygon);
-
         return turf.booleanPointInPolygon(turfPoint, turfPolygon);
     }
 

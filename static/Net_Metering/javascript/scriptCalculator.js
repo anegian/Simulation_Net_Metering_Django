@@ -54,7 +54,7 @@ const images = document.querySelectorAll('.img-tilt');
 disableElements();
 nextButton.disabled = true;
 console.log(placeSelected.value);
-
+// Set the readOnly property of the input elements to true
 
 // Function to simulate a change event on the input field
 function triggerButtonEnable() {

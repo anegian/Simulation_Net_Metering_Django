@@ -527,6 +527,12 @@ input[type="search"]:focus {
         content: "\21E8"; /* Unicode arrow symbol */
         margin-left: 5px; /* Adjust spacing */
       }
+    .panel-field {
+        cursor:default;
+    }
+    #theme-slider{
+        cursor: pointer;
+    }
       
     #map{
         margin-left: 13px;
