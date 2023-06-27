@@ -39,6 +39,7 @@
 //     }
 //   }
 // });
+
 // DASHBOARD CHART 1
 const monthValues = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 

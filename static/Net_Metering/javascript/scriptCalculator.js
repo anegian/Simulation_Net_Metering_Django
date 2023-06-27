@@ -126,6 +126,7 @@ radioTiltInputs.forEach(function(inputs) {
 });
 
 // Show the image corresponding to 30 degrees when the page starts or reloads
+// Go to next and previous panel calculator
 document.addEventListener('DOMContentLoaded', function() {
     tiltInput.value = '30'; // Set the value of tiltInput to 30
     autoPowerDiv.classList.add('hidden');
@@ -456,7 +457,7 @@ function check_selection_kwh_conditions(){
 }
 
 
-// Setings for theme toggler
+// Settings for theme toggler
 const themeSlider = document.getElementById('theme-slider');
 set_initial_properties_theme_toggler();
 
@@ -596,16 +597,16 @@ function calculateAutoPower(event) {
   var loadingBar = document.getElementById('loading-bar');
   var width = 10;
   var id = setInterval(frame, 10);
-  function frame() {
-    if (width >= 100) {
-      clearInterval(id);
-      i = 0;
-    } else {
-      width++;
-      loadingBar.style.width = width + "%";
-      loadingBar.innerHTML = width + "%";
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+        i = 0;
+      } else {
+        width++;
+        loadingBar.style.width = width + "%";
+        loadingBar.innerHTML = width + "%";
+      }
     }
-  }
   }
 
   

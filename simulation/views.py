@@ -1,4 +1,3 @@
-import logging
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http.response import Http404, HttpResponse
@@ -10,10 +9,7 @@ import numpy_financial as npf
 import numpy as np
 from datetime import datetime
 import pvlib.iotools
-from pvlib.iotools import get_pvgis_hourly
-import pandas as pd
 from django.conf import settings
-import os
 
 # Create your views here
 # App level
@@ -361,7 +357,6 @@ def calculate_power(request):
 
 
 # Calculation functions
-
 def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost):
     installation_cost = 400 # average cost in €
     number_of_panels_required = round((PV_kWp / panel_wp)* annual_degradation_production)
