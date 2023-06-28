@@ -6,21 +6,21 @@ let longitude = document.getElementById('longitude')
 let regionInput = document.getElementById('regionInput');
 let geojsonLayer;
 
-    // 1st layer, the map itself
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+// 1st layer, the map itself
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
 
-    // Creating a Marker
-    var markerOptions = {
-        title: "MyLocation",
-        clickable: true,
-    }
-    // Creating a marker
-    let marker = L.marker([37.983917, 23.72936], markerOptions);
-    
-    // Adding marker to the map
-    marker.addTo(map);
+// Creating Marker options
+var markerOptions = {
+    title: "MyLocation",
+    clickable: true,
+}
+// Creating a marker
+let marker = L.marker([37.983917, 23.72936], markerOptions);
+
+// Adding marker to the map
+marker.addTo(map);
 
 //text prefecture identifier layer 
 function popUp(feature, layer) {

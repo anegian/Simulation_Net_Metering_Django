@@ -7,13 +7,13 @@ const sideNavbarButton = document.getElementById("menu-nav-button");
 let originalButton = sideNavbarButton.innerHTML;
 let sideNavbarButtonIsOriginal = true;
 
- // Store the element's initial position
+// Store the element's initial position
 const initialPositionMenu = {top: '100px', left: '-240px' };
 const afterClickPositionMenu = {top: '100px', left: '0px' };
 
-    // Reset the elements' position to the initial position
-    menuNavbar.style.top = initialPositionMenu.top;
-    menuNavbar.style.left = initialPositionMenu.left;
+// Reset the elements' position to the initial position
+menuNavbar.style.top = initialPositionMenu.top;
+menuNavbar.style.left = initialPositionMenu.left;
 
 
 
@@ -43,10 +43,9 @@ sideNavbarButton.addEventListener('click', function(event) {
 
         }
 
-    });
+});
 
 // search button activity when zoomed in
-
 const searchButton = document.getElementById('small-screen-button');
 const originalSearchButton = searchButton.innerHTML;
 let searchButtonIsOriginal = true;
@@ -66,5 +65,5 @@ const searchInput = document.querySelector("[data-search]")
 searchInput.addEventListener("input", event => {
     const value = event.target.value
     console.log(value)
-   });
+});
 

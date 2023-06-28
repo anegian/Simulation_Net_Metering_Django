@@ -64,14 +64,12 @@ function triggerButtonEnable() {
     nextButton.classList.add('enabled-button') 
 }
 
-
 function triggerButtonDisable() {
 nextButton.disabled = true;
 nextButton.classList.remove ('enabled-button');
 console.log("In trigger function:", placeSelected.value);
 console.log(nextButton.disabled);
 }
-
 
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
@@ -216,19 +214,18 @@ document.addEventListener('DOMContentLoaded', function() {
 // Listen for changes in the phase load input and store the selected option
 phase_load_selected.addEventListener("change", function(event){
     
+  if (event.target.value === 'single_phase' || event.target.value === '3_phase'){
+      disableErrorMessages();
+      enableAnnualkWh();
+      annual_Kwh_input.value = " ";
+      slider.max = event.target.value === 'single_phase' ? 5 : 10.8;
+      enableSlider();
+  }else{
+      disableElements();
+  } 
 
-    if (event.target.value === 'single_phase' || event.target.value === '3_phase'){
-        disableErrorMessages();
-        enableAnnualkWh();
-        annual_Kwh_input.value = " "
-        slider.max = event.target.value === 'single_phase' ? 5 : 10
-        enableSlider();
-    }else{
-        disableElements();
-    } 
-
-    check_selection_kwh_conditions();
-    console.log(phase_load_selected.value);
+  check_selection_kwh_conditions();
+  console.log(phase_load_selected.value);
 });
 
 annual_Kwh_input.addEventListener("input", function(){
@@ -422,7 +419,7 @@ function enableStorage() {
     storage_selection.disabled = false;
     storage_kW.disabled = false;
     storage_kW.min = slider.value;
-    storage_kW.max = 10.0;
+    storage_kW.max = 10.8;
     storage_kW.step = 0.1;
     storage_kW.value = slider.value;
     
@@ -570,8 +567,6 @@ function calculateAutoPower(event) {
       const recommended_kWp = response.recommended_kWp;
       const minimum_panels = response.minimum_PV_panels;
       const totalArea = response.total_area;
-      
-      console.log(specialProduction);
 
       // Update the input field with the calculated power
       $('#placeProduction').val(specialProduction);
@@ -588,28 +583,32 @@ function calculateAutoPower(event) {
       console.log('Error:', errorThrown);
     }
   });
-    console.log("test");
+}
 
-  var i = 0;
+var loadingBar = document.getElementById('loading-bar');
+var containerWidth = loadingBar.parentElement.offsetWidth; // Get the width of the container element
+var width = 0;
+var id = null;
 
-  if (i == 0) {
-  i = 1;
-  var loadingBar = document.getElementById('loading-bar');
-  var width = 10;
-  var id = setInterval(frame, 10);
-    function frame() {
-      if (width >= 100) {
-        clearInterval(id);
-        i = 0;
-      } else {
-        width++;
-        loadingBar.style.width = width + "%";
-        loadingBar.innerHTML = width + "%";
-      }
-    }
+function frame() {
+  if (width >= 100) {
+    clearInterval(id);
+    id = null; // Reset the interval ID
+    width = 0; // Reset the width to 0
+  } else {
+    width++;
+    var newWidth = (width / 100) * containerWidth; // Calculate the new width based on the container width
+    loadingBar.style.width = newWidth + "px"; // Set the width in pixels
+    loadingBar.innerHTML = width + "%";
   }
+}
 
-  
+function startLoading() {
+  if (id === null) { // Check if animation is not already running
+    width = 0; // Reset the width to 0
+    loadingBar.style.width = '0'; // Reset the width style to 0
+    id = setInterval(frame, 20); // Adjust the interval duration for slower animation
+  }
 }
 
 autoPowerButton.addEventListener('click', calculateAutoPower);

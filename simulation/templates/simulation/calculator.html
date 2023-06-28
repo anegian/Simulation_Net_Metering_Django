@@ -70,11 +70,9 @@
                   <li><a class="panel-field" href="#panel2"><span class="circle-link">2</span> Εγκατάσταση</a></li>
                   <li><a class="panel-field" href="#panel3"><span class="circle-link">3</span> Αζιμούθιο</a></li>
                   <li><a class="panel-field" href="#panel4"><span class="circle-link">4</span> Κλίση</a></li>
-                  <li><a class="panel-field" href="#panel5"><span class="circle-link">5</span> Προφίλ</a></li>
-                  <li><a class="panel-field" href="#panel6"><span class="circle-link">6</span> Κατανάλωση</a></li>
-                  <li><a class="panel-field" href="#panel7"><span class="circle-link">7</span> Ισχύς</a></li>
-                  <li><a class="panel-field" href="#panel8"><span class="circle-link">8</span> Αποθήκευση</a></li>
-                  <li><a class="panel-field" href="#panel9"><span class="circle-link">9</span> Επιδότηση</a></li>
+                  <li><a class="panel-field" href="#panel5"><span class="circle-link">5</span> Κατανάλωση</a></li>
+                  <li><a class="panel-field" href="#panel6"><span class="circle-link">6</span> Ισχύς</a></li>
+                  <li><a class="panel-field" href="#panel7"><span class="circle-link">7</span> Αποθήκευση</a></li>
                 </ul>
             </div>
         </div>
@@ -286,11 +284,64 @@
                         
                         <!-- PANEL 5 -->
                         <!-- Here you select consumption profile -->
+                        <!-- Here you select 1) Phase Load & 2) the annual consumption of your house in kWh-->
                         <div class="panel-calculator" id="panel5">
                             <div class="title-panel">
                                 <span class="number"> 5 </span>
-                                <h4>Προφίλ Χρήσης</h4>
+                                <h4>Προφίλ κατανάλωσης</h4>
                             </div>
+
+                            <div class="option-selector-margin" >
+
+                                <p> <label for="phase_load" class="spacer-label">Επιλέξτε Παροχή και KWh</label> </p>
+                                    <div class="spacer-in-calculator-panel">
+                            
+                                    </div>
+                                <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος">
+                                        <input class="panel-selection-height" type="hidden" name="phase_load" id="phase_load"  required>
+
+                                        {{ form_phase_load.select_phase }}
+        
+                                    <button class="help-popper" type="button" title="">
+                                            <i class="fas fa-question-circle-link" id="phase-load-info"></i>
+                                    </button>
+                                            <div class="help-container" title="">
+                                                <span class="help-text" id="phase-load-text">
+                                                    <strong>Παρακαλώ, συμβουλευτείτε το λογαριασμό παρόχου ρεύματος!!</strong><br><br>
+                                                    &#8226; <strong>Μονοφασική παροχή</strong>, εάν η συμφωνημένη ισχύς είναι: 8 ή 12 kVΑ!<br>
+                                                    &#8226; <strong>Τριφασική παροχή</strong>, εάν η συμφωνημένη ισχύς είναι:  > 15 kVΑ!</span>
+                                                <span class="close-help">&times;</span>
+                                            </div>
+                                
+                                </div>
+                                
+                                <div class="spacer-in-calculator-panel">                                  
+                                </div>
+                                
+                                <div>
+                                    <input class="panel-selection-height" type="number" name="annual_consumption" id="annual_kwh" title="Παρακαλούμε, συμπληρώστε εκτιμώμενη ετήσια κατανάλωση σε kW" >
+                                    <span>kWh</span>
+                                
+                                    <button class="help-popper" type="button">
+                                        <i class="fas fa-question-circle-link" id="annual-consumption-info"></i>
+                                    </button>
+                                        <div class="help-container">
+                                            <span class="help-text" id="annual-consumption-text">
+                                                <strong>Συμπληρώστε πρώτα το είδος της παροχής, για να σας επιτραπεί<br>
+                                                     να συμπληρώσετε ετήσια κατανάλωση!</strong><br><br>
+                                                &#8594; Υπολογίστε <strong>κατά προσέγγιση</strong>, την ετήσια <br>
+                                                κατανάλωση ηλεκτρικού ρεύματος σε kWh.</span>
+                                            <span class="close-help">&times;</span>
+                                        </div>
+                                    
+                                    
+                                </div>
+
+                                <span id="max-message" style="display: none;">Max value</span>
+                                <span id="error-message-panel5">Please enter a valid value</span>
+                            
+                            </div>
+
                             <div class="option-selector-margin" title="Πότε εντοπίζετε τις μεγαλύτερες ανάγκες σας για οικιακό ρεύμα;">
                                 <p><label for="power_option" class="spacer-label">Επιλέξτε προφίλ μεγαλύτερης κατανάλωσης ρεύματος:</label></p>
 
@@ -321,75 +372,13 @@
                         </div>
 
                         <!-- PANEL 6 -->
-                        <!-- Here you select 1) Phase Load & 2) the annual consumption of your house in kWh-->
+                        <!-- Here you select the PV's kWp -->
                         <div class="panel-calculator" id="panel6">
                             <div class="title-panel">
                                 <span class="number"> 6 </span>
-                                <h4>Κατανάλωση</h4>
-                            </div>
-
-                                        <div class="option-selector-margin" >
-
-                                            <p> <label for="phase_load" class="spacer-label">Επιλέξτε Παροχή και KWh</label> </p>
-                                                <div class="spacer-in-calculator-panel">
-                                        
-                                                </div>
-                                            <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος">
-                                                    <input class="panel-selection-height" type="hidden" name="phase_load" id="phase_load"  required>
-
-                                                    {{ form_phase_load.select_phase }}
-                    
-                                                <button class="help-popper" type="button" title="">
-                                                        <i class="fas fa-question-circle-link" id="phase-load-info"></i>
-                                                </button>
-                                                        <div class="help-container" title="">
-                                                            <span class="help-text" id="phase-load-text">
-                                                                <strong>Παρακαλώ, συμβουλευτείτε το λογαριασμό παρόχου ρεύματος!!</strong><br><br>
-                                                                &#8226; <strong>Μονοφασική παροχή</strong>, εάν η συμφωνημένη ισχύς είναι: 8 ή 12 kVΑ!<br>
-                                                                &#8226; <strong>Τριφασική παροχή</strong>, εάν η συμφωνημένη ισχύς είναι:  > 15 kVΑ!</span>
-                                                            <span class="close-help">&times;</span>
-                                                        </div>
-                                            
-                                            </div>
-                                            
-                                            <div class="spacer-in-calculator-panel">                                  
-                                            </div>
-                                            
-                                            <div>
-                                                <input class="panel-selection-height" type="number" name="annual_consumption" id="annual_kwh" title="Παρακαλούμε, συμπληρώστε εκτιμώμενη ετήσια κατανάλωση σε kW" >
-                                                <span>kWh</span>
-                                            
-                                                <button class="help-popper" type="button">
-                                                    <i class="fas fa-question-circle-link" id="annual-consumption-info"></i>
-                                                </button>
-                                                    <div class="help-container">
-                                                        <span class="help-text" id="annual-consumption-text">
-                                                            <strong>Συμπληρώστε πρώτα το είδος της παροχής, για να σας επιτραπεί<br>
-                                                                 να συμπληρώσετε ετήσια κατανάλωση!</strong><br><br>
-                                                            &#8594; Υπολογίστε <strong>κατά προσέγγιση</strong>, την ετήσια <br>
-                                                            κατανάλωση ηλεκτρικού ρεύματος σε kWh.</span>
-                                                        <span class="close-help">&times;</span>
-                                                    </div>
-                                                
-                                                
-                                            </div>
-
-                                            <span id="max-message" style="display: none;">Max value</span>
-                                            <span id="error-message-panel5">Please enter a valid value</span>
-                                        
-                                        </div>
-
-                        </div>
-
-                        <!-- PANEL 7 -->
-                        <!-- Here you select the PV's kWp -->
-                        <div class="panel-calculator" id="panel7">
-                            <div class="title-panel">
-                                <span class="number"> 7 </span>
                                 <h4>Ισχύς (KWp)</h4>
                             </div>
 
-                            
                             <div class="option-selector-margin">
                                 <div class="slide-container" title="Παρακαλώ, επιλέξτε επιθυμητή ισχύς φωτοβολταϊκού σε kWp">
                                     <p><label for="myRangeSlider" class="spacer-label">Επιλέξτε επιθυμητή Ισχύ: </label> <button class="help-popper" type="button" title="">
@@ -433,7 +422,7 @@
                                 
                                 <div id="autoPower-button-input" >
                                     <div class="button-auto-div">
-                                        <button class="autoPower-button" type="button" name="buttonClicked" id="calculateProductionButton">
+                                        <button class="autoPower-button" type="button" name="buttonClicked" id="calculateProductionButton" onclick="startLoading()">
                                             Υπολογισμός Απαιτούμενης Ισχύος
                                         </button>
                                     </div>
@@ -463,13 +452,15 @@
                             
                         </div>
 
-                        <!-- PANEL 8 -->
+                        <!-- PANEL 7 -->
                         <!-- Here you select battery kwh -->
-                        <div class="panel-calculator" id="panel8">
+                        <!-- Here you select discount percentage -->
+                        <div class="panel-calculator" id="panel7">
                             <div class="title-panel">
-                                <span class="number"> 8 </span>
-                                <h4>Aποθήκευση</h4>
+                                <span class="number"> 7 </span>
+                                <h4>Aποθήκευση - Επιδότηση</h4>
                             </div>
+
                             <div class="option-selector-margin" title="Παρακαλούμε, πρώτα συμπληρώστε τα πεδία Κατανάλωση και Ισχύς και στη συνέχεια επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
                                 <p><label for="storage" class="spacer-label">Επιλέξτε προσθήκη συσσωρευτή:</label></p>
                                     
@@ -503,15 +494,7 @@
 
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- PANEL 9 -->
-                        <!-- Here you select battery kwh -->
-                        <div class="panel-calculator" id="panel9">
-                            <div class="title-panel">
-                                <span class="number"> 9 </span>
-                                <h4>Επιδότηση - Έκπτωση</h4>
-                            </div>
                             <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν είστε δικαιούχος έπκπτωσης ή επιδότησης και ποσοστά έκπτωσης">
                                 <p><label for="discount" class="spacer-label">Επιλέξτε εάν είστε δικαιούχος επιδότησης: </label></p>
                                     
@@ -536,8 +519,8 @@
                                 </div>
                                 <input type="hidden" id="lastPanelField" readonly>
                             </div>
-                        </div>
 
+                        </div>
                                            
                     </fieldset>
 
