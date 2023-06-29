@@ -193,7 +193,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
         console.log('Current Panel Index:', currentPanelIndex+1);
-        console.log('Number of Panels:', panels.length);
 
         if (nextPanelLink) {
           nextPanelLink.classList.add('active');
@@ -249,8 +248,6 @@ annual_Kwh_input.addEventListener("input", function(){
       enableSlider();
       triggerButtonEnable();
   }
-
-    console.log(enteredValue, annual_Kwh_input.value)
 });
 
 annual_Kwh_input.addEventListener("keypress", function(event){

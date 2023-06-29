@@ -124,8 +124,9 @@ new Chart("myChart2", {
   }
 });
 
+
 // DASHBOARD CHART 3
-var zValues = ["Return on Investment", "Net P.V.", "Levelized Cost", "Internal Rate", "Annualized R.O.I."];
+var zValues = ["Return on Investment %", "Net P.V. (€)", "Levelized Cost Electricity (€)", "Internal Rate %", "Annualized R.O.I. %"];
 var rValues = [roi, npv, lcoe, irr, annual_roi];
 var barColors = [
   "#5BBAD2",

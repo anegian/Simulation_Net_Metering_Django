@@ -568,7 +568,7 @@ def calculate_irr(total_investment, total_savings_array):
     
     saving_flows.insert(0, initial_investment)  # Insert the initial investment at index 0
     
-    irr = round(npf.irr(saving_flows), 25)
+    irr = round(npf.irr(saving_flows)* 100, 2) 
 
     print('Internal Rate: ', irr)
     
