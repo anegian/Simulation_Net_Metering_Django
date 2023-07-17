@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
+
 urlpatterns = [
     # domain.com
+    
     path('', views.simple_view, name="home"),
     path('admin/', admin.site.urls),
 
     # domain.com/calculator/
     path('simulation/', include('simulation.urls')),
+
 ]

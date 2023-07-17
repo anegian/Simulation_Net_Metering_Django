@@ -1,0 +1,82 @@
+#signup-form-test{
+    display: none;
+}
+
+.d-flex-spacer {
+    justify-content: space-between;
+}
+
+.blurred {
+    background-color: hsla(0, 0%, 0%, 0.5); /* Set the background color to semi-transparent black */
+    filter: brightness(40%); /* Adjust the brightness of the background to 50% */
+}
+
+.terms-of-use-article {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: aquamarine;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    position: fixed;
+    border-width: 5px;
+    border-style: solid;
+}
+
+#small-terms-times{
+    cursor: pointer;
+}
+
+#termsOfUseArticleh2{
+    font-size: 16px;
+    font-weight: bold;
+    color: #505050;
+}
+
+.terms-of-use-article h2 {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.form-check-label2 a{
+cursor: pointer;
+}
+
+#close-checkbox{
+    display: none;
+}
+
+.form-outline.flex-fill.mb-0{
+    border-width: 1px!important;
+    border-style: solid!important;
+    border-radius: 3px;
+    border-color: #747272;
+    position: relative; /* Add position relative to enable positioning of ::before pseudo-element */
+}
+
+.form-control{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: normal!important;
+}
+
+/*  */
+.form-outline label {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    color: gray;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.form-outline input:focus + label {
+    top: -20px;
+    left: 0;
+    font-size: 10px;
+    color: blue;
+}
+

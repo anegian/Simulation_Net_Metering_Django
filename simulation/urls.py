@@ -8,8 +8,11 @@ urlpatterns = [
     # path --> domain.com / simulation /
     # /my_apps --> PROJECT urls.py
 
-    path('calculator/', views.calculator, name='calculator'),
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('ajax/', views.calculate_power, name='calculate_power'),
+    path('calculator/', views.calculator_forms_choice, name='calculator'),
+    path('dashboard/', views.dashboard_results, name='dashboard'),
     path('regulations/', views.regulations, name='regulations'),
-    path('info/', views.info, name='info'),
+    path('about/', views.about, name='about'), 
+    path('signup/', views.signup, name='signup'),
+
 ]

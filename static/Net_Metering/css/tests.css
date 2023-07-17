@@ -1,0 +1,669 @@
+/* ::: General Page Settings ::: */
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.blurred {
+    background-color: hsla(0, 0%, 0%, 0.5); /* Set the background color to semi-transparent black */
+    filter: brightness(70%); /* Adjust the brightness of the background to 50% */
+  }
+
+/* ::: Home Page Main image ::: */
+.home-body::before{
+    background: url('../../images/solar-cell.jpg');
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    opacity: 0.7;
+    z-index: -1;
+    filter: brightness(70%) contrast(120%);
+
+}
+
+
+    /* ::: HEADINGS ::: */
+    h2{
+        font-size: 28px;
+        font-weight: bold;
+        color: #f2f2f2;
+    }
+
+    h3{
+        font-size: 20px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    h4{
+        font-weight: bold;
+        color: #f2f2f2;
+    }
+
+    /* ::: MAIN HEADER ::: */
+    .main-header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #f2f2f2;
+        height: 50px;
+        width: 100%;
+    }
+    .header-container-left{
+        height: inherit;
+        display: inherit;
+        align-items: center;
+    }
+    .sm-image{
+        width: 40px;
+        cursor: pointer;
+    }
+    .login a, .signup a, .logo a{
+        margin: 0 10px 0 10px;
+        text-decoration: none;
+        color: #2c3e50;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .login a:hover, .signup a:hover{
+        color: #ed4901;
+    }
+
+
+/* ::: NAVBAR ::: */
+.second-navbar{
+    display: flex;
+    justify-content: space-between;
+    background-color: #333333;
+    height: 50px;
+    width: 100%;
+}
+.second-navbar-left-container{
+    height: inherit;
+    display: flex;
+    align-items: center;
+}
+.second-navbar-left-container .nav-list{
+    height: inherit;
+    display: flex;
+    align-items: center;
+    padding-top: 15px;
+}
+.second-navbar-right-container{
+    height: inherit;
+    display: inherit;
+    align-items: center;
+}
+.nav-list li, .nav-list a{
+    padding: 0 10px 0 0;
+    list-style: none;
+    text-decoration: none;
+    color: #f2f2f2;
+    font-size: 15px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.nav-list a:hover{
+    color: #ed4901;
+    letter-spacing: 1px;
+}
+.nav-link.active{
+    color: #ed4901;
+}
+
+/* ::: SEARCH BOX POSITION ::: */
+
+.search-box-container{
+    padding-right: 5px;
+    display: flex;
+    align-items: center;
+}
+.search-box{
+    display: flex;
+    color: #f2f2f2;
+    border: 1px solid currentColor;
+    border-radius: 5px;
+    height: 40px;
+
+}
+input[type="search"] {
+  background: transparent;
+  margin: 0;
+  padding: 7px 8px;
+  font-size: 14px;
+  color: inherit;
+  border: 1px solid transparent;
+  border-radius: inherit;
+}
+input[type="search"]::placeholder {
+  color: #bbb;
+}
+.large-screen-search-button {
+    width: 40px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    background: transparent;
+    color: #f2f2f2;
+    cursor: pointer;
+    opacity: 0.7;
+}
+button[type="submit"]:hover {
+  opacity: 0.8;
+}
+input[type="search"]:focus {
+  border-color: #ed4901;
+  outline: none;
+}
+/* ::: END SEARCH BOX POSITION ::: */
+
+
+    /* ::: MAIN PAGE CONTENT GENERAL SETTINGS :::*/
+
+    .main-page-content{
+        min-height: 200vh;
+        display: flex;
+        justify-content: center;
+        flex: initial;
+        flex: 1;
+    }
+    .main-page-section{
+        display: flex;
+        flex-direction: column;
+    }
+    .main-page-section {
+        overflow-y: hidden;
+    }
+    .main-page-article{
+        background: transparent;
+        width: 400px;
+        height: 150px;
+        color: #000022;
+        font-size: 16px;
+        text-align: justify;
+    }
+    .article-paragraph-body{
+        background-color: transparent;
+    }
+    .calculator-page-content{
+        background-color: #747272;
+        min-height: 100vh;
+    }
+    .dashboard-page-content{
+        background-color: #747272;
+    }
+    
+
+
+
+                /* ::: CHECKBUTTON & Search Box ::: */
+
+
+                #menu-nav-button{
+                    font-size: 25px;
+                    color: #f2f2f2;
+                    cursor: pointer;
+                    display: none;
+                }
+                #check-navbar{
+                    display: none;
+                }
+                #menu-nav-button:hover{
+                    color: #ed4901;
+                }
+                /* Position and settings of search box button */
+                .small-screen-show-search-button {
+                    font-size: 19px;
+                    color: #f2f2f2;
+                    cursor: pointer;
+                    display: none;
+                }
+                .small-screen-show-search-button:hover {
+                    color: #ed4901;
+                }
+                /* Hide search-bar show-button */
+                #small-show-search-checkbox{
+                    display: none;
+                }
+
+
+
+
+
+        /* ::: MAIN CONTENT OF CALCULATOR PAGE ::: */
+
+ /* ::: SECTION BEFORE CALCULATOR FORM::: */
+
+    .section-before-calculator{
+        width: 100%;
+        height: 150px;
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        background: #f2f2f2;
+        border-bottom: solid 2px;
+        border-bottom-color: #000022 ;
+        flex-wrap: wrap;
+    }
+    .table-title{
+        height: inherit;
+        -webkit-flex: 0.5;
+        -ms-flex: 0.5;
+        flex: 0.5;
+        border-right: solid 2px;
+        border-right-color: #ed4901;
+        padding-right: 10px;
+    }
+    .table-title td i{
+        font-size: 40px;
+        margin: 0 20px 0 20px;
+        color: #2c3e50;
+    }
+    .icon-calculator{
+        padding-left: 20px;
+    }
+    .calculator-article{
+        height: inherit;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        -webkit-flex: 2;
+        -ms-flex: 2;
+        flex: 2;
+        color: #2c3e50;
+    }
+    .padding-article{
+        padding-left: 5%;
+        padding-right: 32%;
+    }
+    .spacer{
+        min-height: 1000px;
+    }
+
+
+/* ::: CALCULATOR FORM Panels ::: */
+
+    .spacer-in-main-content{
+        height: 50px;
+        background-color: #2c3e50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .calculator-fieldset{
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+
+    }
+    .calculator-fieldset .panel{
+        width: 265px;
+        height: 220px;
+        margin: 10px 20px 10px 0;
+        border-style: solid;
+        border-width: 1px;
+        border-color: #f2f2f2;
+    }
+    .calculator-fieldset .panel .number{
+        margin: 0 10px 0 10px;
+        font-size: 40px;
+        color: #ed4901;
+    }
+    .title-panel{
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        justify-content: start;
+    }
+    .option-selector-margin {
+       margin: 20px 0 20px 10px;
+    }
+    label{
+        font-weight: bold;
+    }
+    #phase-load-info{
+        color: #333333;
+        opacity: 0.8;
+    }
+    #phase-load-info:hover{
+        color: #f2f2f2;
+        opacity: 0.7;
+    }
+    #annual-consumption-info{
+        color: #333333;
+        opacity: 0.8;
+    }
+    #annual-consumption-info:hover{
+        color: #f2f2f2;
+        opacity: 0.7;
+    }
+    #myRangeSlider{
+        width: 90%;
+        color: #ed4901;
+    }
+    #slider-value{
+        color: #ed4901;
+        font-weight: bold;
+    }
+    .hidden-storage {
+    display: none;
+    }
+
+    #radio_option2:checked~.hidden-storage {
+    display: block;
+    }
+
+    /* ::: Django forms.py form container::: */
+    .name-form-container{
+        display: flex;
+        justify-content: center;
+    }
+    .my-submit-form{
+        text-align: center;
+    }
+     /* ::: SUBMIT BUTTON ::: */
+    .form-submit-button{
+        width: 180px;
+        height: 60px;
+        background-color: royalblue;
+        border-color: #553f33;
+        border-width: 0.01px;
+        color: #f2f2f2;
+        font-weight: bold;
+        margin: 50px 0 0 15px;
+    }
+    .form-submit-button:hover{
+        background-color: blue;
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+
+ /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
+
+
+
+ /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
+            @media (max-width: 1040px) {
+
+                .section-before-calculator {
+                    -webkit-flex-direction: column;
+                    flex-direction: column;
+                    height: 120%;
+                }
+                .table-title{
+                    -webkit-flex: 0.5;
+                    -ms-flex:0.5;
+                    flex: 0.5;
+                    border-right: none;
+                }
+                .padding-article{
+                    padding-left: 20%;
+                    padding-right: 15%;
+                    padding-bottom: 10px;
+                }
+                 /* Check-button transformed in bars when small (600px) and
+                    in times icon (x) when checkbutton is checked */
+                #menu-nav-button{
+                    padding-left: 10px;
+                    display: block;
+                }
+
+
+                /* ::: MENU NAVBAR HIDDEN::: */
+                /* settings & position of menu container left off the page */
+
+
+                /* settings & position of menu container left off the page */
+                #nav-list{
+                    position: absolute;
+                    display: flex;
+                    flex-direction: column;
+                    top: 100px;
+                    left: -240%;
+                    min-height: 100vh;
+                    width: 240px;
+                    transition: all .5s ease-out;
+                    /* :: The higher z-index is over other elements:: */
+                    z-index: 1;
+                    background-color: rgba(44,62,80, 0.8);
+
+                }
+                /* show menu container vertical */
+                #nav-list li{
+                    display: block;
+                }
+                /* settings for anchor references in menu */
+                #nav-list li a{
+                    color: #f2f2f2;
+                    font-size: 14px;
+                    text-transform: uppercase;
+            }
+                /*  color in active anchor reference */
+                #nav-list a:hover, #nav-list li a.active{
+                    background: none;
+                    color: #ed4901;
+                }
+                /* menu container in right position when check-button checked */
+                #check-navbar:checked ~ #nav-list{
+                    left: 0;
+                    transition: all .5s ease-in;
+                }
+
+                .second-navbar-left-container .nav-list li{
+                    padding-bottom: 50px;
+                    cursor: pointer;
+                }
+
+                /* ::: SEARCH BOX ::: */
+                .search-box {
+                    position: absolute;
+                    right: 10%;
+                    display: none;
+                }
+
+                
+
+                /* position of search box bar in menu navbar */
+                .small-screen-show-search-button {
+                    padding-right: 10px;
+                    display: block;
+                }
+
+                #small-show-search-checkbox:checked ~ .search-box{
+                    display: block;
+
+                }
+
+            }
+            /* ::: EXTRA ZOOM IN ::: */
+            @media (max-width: 420px) {
+                .login a, .signup a, .logo a {
+                    color: #2c3e50;
+                    font-size: 15px;
+                }
+
+                .sm-image {
+                    width: 25px;
+                }
+
+                #nav-list {
+                    min-height: 100vh;
+                }
+
+                .main-page-content {
+                    height: 300vh;
+                }
+            }
+
+                /* ::: EXTRA ZOOM IN ::: */
+                @media (max-width: 330px) {
+                    .login a, .signup a {
+                        padding: 0;
+                        color: #2c3e50;
+                        font-size: 15px;
+                    }
+                    .logo a{
+                        display: none;
+                    }
+
+                    .sm-image {
+                        width: 25px;
+                    }
+
+                    #nav-list {
+                        height: 400px;
+                    }
+
+                    .main-page-content {
+                        height: 500vh;
+                    }
+                }
+
+
+/* ::: FOOTER ::: */
+.footer {
+    margin-top: auto;
+    bottom: 0;
+    width: 100%;
+    background-color: #333333;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.other-links i:hover {
+    color: #ed4901;
+}
+
+.other-links {
+    display: inherit;
+    align-items: center;
+    justify-content: center;
+}
+
+.other-links a {
+    text-decoration: none;
+    color: cornflowerblue;
+    font-size: 15px;
+    margin: 10px 10px 0 10px;
+}
+
+footer .admin-info {
+    min-height: 60px;
+    display: inherit;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #f2f2f2;
+    font-size: 8px;
+    text-align: center;
+}
+
+
+/* ::: DASHBOARD CHARTS SECTION ::: */
+.full-container{
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #272A2A;
+  }        
+  .left-container{
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+  .left-upper{
+    display: flex;
+    justify-content: space-evenly;  
+  }
+  .left-middle{
+    display: flex;
+    justify-content: center;
+  }
+  .left-below{
+    display: flex;
+    justify-content: space-evenly;  
+  }
+  .panels-container{
+    height: 60vh;
+    margin: 10px 0 10px 0;
+    width: 95%;
+    background-color: #747272;
+  }
+  .container-icons{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: #747272;
+    width: 30%;
+  }
+
+  .right-container{
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;  
+  }
+  .right-upper{
+    display: flex;
+    align-items: center;
+  }
+  .right-below{
+    display: flex;
+    align-items: center;
+  }
+
+  .titles-panel{
+    margin-top: 10px;
+    color: #ED4901;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .info-title{
+    color: #f2f2f2;
+    font-weight: bold;
+  }
+
+
+
+  /* ::: INFO PAGE SECTION ::: */
+  .info-body::before{
+    background-image: url('../../images/lamp2.jpg');
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    opacity: 0.7;
+    z-index: -1;
+    filter: brightness(70%) contrast(120%);
+  }
+
+  .container-info{
+    min-height: 100vh;
+  }
+

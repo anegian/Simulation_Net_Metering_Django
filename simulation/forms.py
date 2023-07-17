@@ -16,54 +16,29 @@ class PlaceForm(ModelForm):
 class PlaceOfInstallationForm(forms.Form):
     DISTRICT_CHOICES = [
         ('district', 'Περιφέρεια'),
-        ('attiki', 'Αττική'),
-        ('anatoliki_makedonia_thraki', 'Ανατολική Μακεδονία & Θράκη'),
-        ('vorio_aigaio', 'Βόρειο Αιγαίο'),
-        ('dytiki_ellada', 'Δυτική Ελλάδα'),
-        ('dytiki_makedonia', 'Δυτική Μακεδονία'),
-        ('ipeiros', 'Ήπειρος'),
-        ('thessalia', 'Θεσσαλία'),
-        ('ionioi_nisoi', 'Ιόνιοι Νήσοι'),
-        ('kentriki_makedonia', 'Κεντρική Μακεδονία'),
-        ('kriti', 'Κρήτη'),
-        ('notio_aigaio', 'Νότιο Αιγαίο'),
-        ('peloponnisos', 'Πελοπόννησος'),
-        ('sterea_ellada', 'Στερεά Ελλάδα'),
+        ('1590', 'Αττική'),
+        ('1360', 'Ανατολική Μακεδονία & Θράκη'),
+        ('1410', 'Βόρειο Αιγαίο'),
+        ('1450', 'Δυτική Ελλάδα'),
+        ('1350', 'Δυτική Μακεδονία'),
+        ('1400', 'Ήπειρος'),
+        ('1450', 'Θεσσαλία'),
+        ('1500', 'Ιόνιοι Νήσοι'),
+        ('1380', 'Κεντρική Μακεδονία'),
+        ('1650', 'Κρήτη'),
+        ('1570', 'Νότιο Αιγαίο'),
+        ('1600', 'Πελοπόννησος'),
+        ('1550', 'Στερεά Ελλάδα'),
     ]
+    select_district = forms.ChoiceField(choices=DISTRICT_CHOICES, label='Επιλέξτε Περιφέρεια',
+                                        initial='district')
+    
 
+class PhaseLoad(forms.Form):
     PHASE_LOAD = [('phase_load', 'Παροχή'), ('single_phase', 'Μονοφασική'), ('3_phase', 'Τριφασική'), ]
 
-    select_district = forms.ChoiceField(choices=DISTRICT_CHOICES, label='Επιλέξτε Περιφέρεια και Παροχή',
-                                        initial='district')
+    
     select_phase = forms.ChoiceField(choices=PHASE_LOAD, initial='phase_load')
-
-
-""""
-    class Meta:
-        model = PlaceOfInstallation
-        fields = ('district_name', 'city_name', 'district_code')
-        widgets = {
-            'district_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'city_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'district_code': forms.TextInput(attrs={'class': 'form-control'}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['district_name'].label = 'District Name'
-        self.fields['city_name'].label = 'City Name'
-        self.fields['district_code'].label = 'District Code'
-"""""
-
-class EnergyConsumptionForm(forms.Form):
-    KWh_CHOICES = [
-        ('annual_kW', 'KWh σε ετήσια βάση'),
-        ('1500', '1500-2000'),
-        ('2000', '2000-2500'),
-        ('2500', '2500-3500'),
-        ('3000', '3500-4500'),
-    ]
-    select_kwh = forms.ChoiceField(choices=KWh_CHOICES, label='Επιλέξτε KWh', initial = 'annual_kW')
 
 
 class RegistrationForm(UserCreationForm):

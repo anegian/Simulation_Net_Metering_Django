@@ -1,4 +1,4 @@
-{% extends "index2.html" %}
+{% extends "index.html" %}
 
 {% load static %}
 
@@ -7,17 +7,26 @@
 {% endblock %}
 
 {% block script %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" ></script>
-    <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-    <script src="{% static 'Net_Metering/javascript/chart.js' %}" defer></script>
+<script> let totalSavingsArray = JSON.parse( '{{ total_savings_array_json|safe }}' );
+         let totalProductionArray = JSON.parse( '{{ total_production_kwh_array_json|safe }}' );
+         let monthIrradianceArray = JSON.parse( '{{ monthly_irradiance_json|safe }}' );
+         let monthlyPanelEnergy= JSON.parse('{{monthly_panel_energy_produced_json|safe }}' );
+         let roi = '{{ roi }}';
+         let annual_roi = '{{ annualized_roi }}';
+         let lcoe = '{{ lcoe }}';
+         let irr = '{{ irr }}';
+         let npv = '{{ net_present_value }}'
+ </script>
+ <script src="{% static 'Net_Metering/javascript/charterssssss.js' %}" defer></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" ></script>
 {% endblock %}
 
 {% block menu_list %}
     <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
-    <li><a class="nav-link active" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+    <li><a class="nav-link active" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-    <li><a href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
+    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
 
 {% block content %}
@@ -33,11 +42,11 @@
               <div class="container-icons">
                 <div class="titles-panel">Επένδυση</div>
                 <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-                <lord-icon src="https://cdn.lordicon.com/ftjtyaku.json"
+                <lord-icon class="lord-icon-small" src="https://cdn.lordicon.com/ftjtyaku.json"
                     trigger="hover"
-                    style="width:150px;height:150px">
+                    style="width:120px;height:120px">
                 </lord-icon>
-                <p class="info-title">10.000 euro</p>
+                <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">Σύνολο: {{total_investment|default:'0' }} €</p>    
               </div>
 
               <div class="container-icons">
@@ -46,9 +55,9 @@
                   <lord-icon
                       src="https://cdn.lordicon.com/uutnmngi.json"
                       trigger="hover"
-                      style="width:130px;height:150px">
+                      style="width:100px;height:120px">
                   </lord-icon>
-                <p class="info-title">7 χρόνια</p>
+                <p class="info-title"  id="paybackPeriod" data-value="{{ payback_period|default:'0' }}" >{{payback_period|default:'0 έτη'}}</p>
               </div>
 
               <div class="container-icons">
@@ -57,9 +66,9 @@
                   <lord-icon
                       src="https://cdn.lordicon.com/isdxbcqi.json"
                       trigger="hover"
-                      style="width:140px;height:150px">
+                      style="width:110px;height:120px">
                   </lord-icon>
-                <p class="info-title">70 %</p>
+                <p class="info-title" id="profit" >{{average_annual_savings|default:'0'}} €/έτος   ({{profitPercent|default:'0'}}%)</p>
               </div>
           
             </div>
@@ -67,41 +76,44 @@
             <div class="left-middle">
             
                  <div class="panels-container" id="second-panel" title="profit">
-                     <canvas id="myChart2" ></canvas>
+                     <canvas class="panels-element-size" id="myChart2" ></canvas>
                  </div>
             
              </div>
           
             <div class="left-below">
           
-              <div class="container-icons">
+              <div class="container-icons-bottom">
                 <div class="titles-panel">Μειωμένη Εκπομπή CO2</div>
                 <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
                   <lord-icon
                       src="https://cdn.lordicon.com/npfyliwp.json"
                       trigger="hover"
-                      style="width:150px;height:150px">
+                      style="width:120px;height:120px">
                   </lord-icon>
+                <p class="info-title" id="CO2" data-value="{{ average_CO2|default:'0' }}">{{average_CO2|default:'0' }}kg CO2 eq/kWh </p>
               </div>
               
-              <div class="container-icons">
-                <div class="titles-panel">Αντίστοιχα Φυτεμένα Δέντρα</div>
+              <div class="container-icons-bottom">
+                <div class="titles-panel">Ισοδύναμα Φυτεμένα Δέντρα</div>
                 <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
                   <lord-icon
                       src="https://cdn.lordicon.com/azbllxpx.json"
                       trigger="hover"
-                      style="width:150px;height:150px">
+                      style="width:120px;height:120px">
                   </lord-icon>
+                 <p class="info-title" id="trees" data-value="{{ trees_planted|default:'0' }}">{{trees_planted|default:'0' }} νέα δέντρα </p>
               </div>
               
-              <div class="container-icons">
+              <div class="container-icons-bottom">
                 <div class="titles-panel">Μικρότερο Ενεργειακό Αποτύπωμα</div>
                 <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
                   <lord-icon
                       src="https://cdn.lordicon.com/efdhjqgx.json"
                       trigger="hover"
-                      style="width:130px;height:150px">
+                      style="width:100px;height:120px">
                   </lord-icon>
+                <p class="info-title" id="other_energy" data-value="{{ annual_kwh|default:'0' }}">{{annual_kwh|default:'0' }}kWh/έτος</p>
               </div>
           
             </div>
@@ -112,9 +124,9 @@
           
            <div class="right-upper">
     
-                    <div class="panels-container" id="first-panel" title="production">
-                      <canvas id="myChart1"></canvas>
-                    </div>
+                <div class="panels-container" id="first-panel" title="production">
+                  <canvas class="panels-element-size" id="myChart1" ></canvas>
+              </div>
 
           
             </div>
@@ -122,7 +134,7 @@
             <div class="right-below">
 
              <div class="panels-container" id="third-panel">
-                  <canvas id="myChart3"></canvas>
+                  <canvas class="panels-element-size" id="myChart3"></canvas>
                 </div>
     
       </div>
@@ -130,7 +142,15 @@
         </div> 
         
       </section>
-
+      <div class="little-spacer-dash">
+          <div class='go-back-button-dash-empty'>
+            <a href="{% url 'simulation:calculator' %}">
+              <button id="change-data-button">
+               <i class="fas fa-calculator"></i>
+               Νέος Υπολογισμός</button>
+           </a>
+          </div>
+      </div>
     </div>
 
 {% endblock %}

@@ -4,93 +4,98 @@
 
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
- {% block title %}
-    <title>index</title>
-{% endblock %}
+    <meta charset="UTF-8">
+    {% block title %}
+    <title>Homepage</title>
+    {% endblock %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" 
+     integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="website icon" type="png" href="{% static 'images/panel_128x107.png'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"/>
     <link rel="stylesheet" href=" {% static 'Net_Metering/css/style.css' %}"/>
+    <link rel="stylesheet" href=" {% static 'Net_Metering/css/register.css' %}"/>
+
+    {% block css %} 
+    
+    {% endblock %}
+
+    <script src="{% static 'Net_Metering/javascript/scripts.js' %}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
+     integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    {% block script %}
+
+    {% endblock %}
 
 </head>
 
-<body class={% block bg %}"index-bg"{% endblock %}>
+<body class="{% block body_class %}{% endblock %} ">
+        <header class="main-header">         
+            <div class="header-container-left">
+                <a href="{% url 'home' %}"><img class="sm-image" src="{% static 'images/panel.png'%}" alt="photo not found"></a>
+                <p class="logo"><a class="text-decoration-none" href="{% url 'home' %}">
+                  Simulation - <b style="color: #ed4901;">N</b>et Metering</a></p>
+            </div>
+            <div class="header-container-right">
+                {% block color_theme %}
+                  
+                  {% endblock %}
+                <p class="signup"><a href="{% url 'simulation:signup' %}" title="Νέα Εγγραφή"><i class="fas fa-user"></i></a></p>
+                <p class="login"><a title="Σύνδεση" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in"></i></a></p>                             
+            </div>
+        </header>
 
-<header>
-    <nav class="first-navbar">
+        <nav class="second-navbar">
+            <div class="second-navbar-left-container" id="second-navbar-left-container">
+                <input type="checkbox" id="check-navbar">
+                <label  for="check-navbar" id="menu-nav-button" class="demo-class"><i class="fas fa-bars"></i></label>
 
-        <div class="first-navbar-left-container">
-            <a href="{% url 'home' %}"><img class="sm-image" src="{% static 'images/panel.png'%}" alt="photo not found"></a>
-            <label class="logo"><a class="text-decoration-none" href="{% url 'home' %}">Simulation - <b style="color: #ed4901;">N</b>et Metering</a></label>
+                <ul class="nav-list" id="nav-list">
+                    {% block menu_list %}
+                    <li><a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
+                    <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
+                    <li><a href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
+                    <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
+                    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
+                    {% endblock %}
+                </ul>         
+                        
+            </div>
+
+            <div class="second-navbar-right-container">
+                    <div class="search-box-container">
+                        <input type="checkbox" id="small-show-search-checkbox">
+                        <label  for="small-show-search-checkbox" id="small-screen-button" class="small-screen-show-search-button">
+                            <i class="fas fa-search"></i></label>
+
+                            <form action="{% url 'simulation:calculator' %}" class="search-box" id="search-box">
+                                    <input type="search" id="large-screen-search-button" placeholder="  Search here.." data-search>
+                                    <label for="large-screen-search-button"></label>
+                                    <button class="large-screen-search-button" type="submit"><i class="fas fa-search"></i></button>
+                            </form>
+                    </div>
+            </div >
+        </nav>
+        
+        <div id="main-index-content-for-all">
+            {% block content %}
+                       
+            {% endblock %}
         </div>
-
-        <label class="signup"><a href="http://127.0.0.1:8000/signup/"><i class="fas fa-user"></i></a></label>
-        <label class="login"><a href="http://127.0.0.1:8000/login/"><i class="fas fa-sign-in"></i></a></label>
-
-        <div class="first-nav-right-container">
-
-        </div>
-    </nav>
-</header>
-
-<nav class="menu-container">
-        <input type="checkbox" id="check">
-        <label for="check" class="checkbutton">
-            <i class="fas fa-bars" id="bars"></i>
-            <i class="fas fa-times" id="times"></i>
-        </label>
-
-{% block menu_list %}
-            <ul class="nav-list">
-                <li><a class="text-decoration-none active" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
-                <li><a class="text-decoration-none" href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
-                <li><a class="text-decoration-none" href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
-                <li><a class="text-decoration-none" href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-                <li><a class="text-decoration-none" href="{% url 'simulation:info' %}"><i class="fas fa-info-circle"></i> info</a></li>
-            </ul>
-{% endblock %}
-
-<input type="checkbox" id="small-show-search-checkbox">
-    <label  for="small-show-search-checkbox"  class="small-screen-show-search-button"><i class="fas fa-search"></i></label>
-        <form action="https://github.com/anegian/Simulation_Net_Metering_Django" class="search-box">
-            <input type="search" id="large-screen-search-button" placeholder="  Search here..">
-            <label for="large-screen-search-button"></label>
-            <button class="large-screen-search-button" type="submit"></button>
-        </form>
-
-</nav>
-
-<div class="page-container">
-    <div class="content-wrap">
-    {%block content%}
-    <p id="spacer-in body"></p>
-
-    {% endblock %}
-    </div>
-
-<footer class="footer">
-    <div class="other_links">
-        <a href="https://linkedin.com/in/anestis-giannakosian-880707220"><i class="fab fa-linkedin-in"></i> </a>
-        <a href="https://github.com/anegian"><i class="fab fa-github"></i></a>
-        <a href="https://youtube.com"><i class="fab fa-youtube"></i></a>
-    </div>
-
-        <p class="admin">
-            <i class="fas fa-copyright"></i>
-            2022 Anestis Giannakosian. All rights reserved
-        </p>
-</footer>
-
-</div>
-
-
-
-
-
-
+            
+  <footer class="footer">
+      <div class="other-links">
+          <a href="https://linkedin.com/in/anestis-giannakosian-880707220"><i class="fab fa-linkedin-in"></i> </a>
+          <a href="https://github.com/anegian"><i class="fab fa-github"></i></a>
+          <a href="https://youtube.com"><i class="fab fa-youtube"></i></a>
+      </div>
+          <span class="admin-info">
+              <i class="fas fa-copyright"> 2023 Anestis Giannakosian. All rights reserved</i>
+        </span>
+  </footer>
 </body>
-
 </html>
-
