@@ -9,26 +9,15 @@
 {% block script %}
 <script> let totalSavingsArray = JSON.parse( '{{ total_savings_array_json|safe }}' );
          let totalProductionArray = JSON.parse( '{{ total_production_kwh_array_json|safe }}' );
-<<<<<<< HEAD
          let monthIrradianceArray = JSON.parse( '{{ monthly_irradiance_json|safe }}' );
          let monthlyPanelEnergy= JSON.parse('{{monthly_panel_energy_produced_json|safe }}' );
          let roi = '{{ roi }}';
          let annual_roi = '{{ annualized_roi }}';
-=======
-         let monthProductionArray = JSON.parse( '{{ month_production_array_json|safe }}' );
-         let roi = '{{ roi }}';
-         let annual_roi = '{{ annualized_roi }}';
-         console.log('ROI: ', roi, 'An.ROI: ', annual_roi);
->>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
          let lcoe = '{{ lcoe }}';
          let irr = '{{ irr }}';
          let npv = '{{ net_present_value }}'
  </script>
-<<<<<<< HEAD
  <script src="{% static 'Net_Metering/javascript/charterssssss.js' %}" defer></script>
-=======
- <script src="{% static 'Net_Metering/javascript/charts.js' %}" defer></script>
->>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" ></script>
 {% endblock %}
 
