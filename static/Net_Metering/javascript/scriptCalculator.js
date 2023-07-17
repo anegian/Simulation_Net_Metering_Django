@@ -435,6 +435,7 @@ for (let i = 0; i < numberOfHelpButtons; i++) {
         closeIcons[j].style.display = 'none';
         closeIcons[j].classList.remove('movePosition');
         isOpen[j] = true;
+
       }
     }
 
@@ -585,6 +586,7 @@ function set_initial_properties_theme_toggler(){
     document.documentElement.style.setProperty('--thumb-color', '#393052');
     document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
     document.documentElement.style.setProperty('--bg-color-submit-button', '#738725'); 
+    document.documentElement.style.setProperty('--help-popper', 'f2f2f2');
 }
 
 themeSlider.addEventListener('input', function(event) {
@@ -601,6 +603,7 @@ const selectedValue = event.target.value;
         document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
         document.documentElement.style.setProperty('--thumb-color', '#393052');
         document.documentElement.style.setProperty('--bg-color-submit-button', '#738725');
+        document.documentElement.style.setProperty('--help-popper', 'f2f2f2');
         } else if (selectedValue === '1') {
         document.documentElement.style.setProperty('--bg-color', '#f2f2f2');
         document.documentElement.style.setProperty('--text-color', '#333');
@@ -613,6 +616,7 @@ const selectedValue = event.target.value;
         document.documentElement.style.setProperty('--bg-color-calculator-page', '#f2f2f2');
         document.documentElement.style.setProperty('--thumb-color', '#74b1f2');
         document.documentElement.style.setProperty('--bg-color-submit-button', '#74b1f2');
+        document.documentElement.style.setProperty('--help-popper', 'blue');
         }
     });
 

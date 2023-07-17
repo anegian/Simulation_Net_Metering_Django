@@ -678,13 +678,24 @@ input[type="search"]:focus {
         text-decoration: underline;
     }
     /* Calculator Form help question mark poppers */
-    .help-popper {
+    .help-popper, #phase-load-button, #phase-load-info {
         background: none;
         border: none;
         padding: 0;
+        color: #f2f2f2;
+        color: var(--help-popper);
+        opacity: 0.8;
+        cursor: pointer;
+    }
+    #phase-load-button{
+        color: #f2f2f2;
     }
     .help-popper:focus {
         outline: none;
+    }
+    .help-popper:hover{
+        color: goldenrod;
+        opacity: 0.7;
     }
     .close-help {
         display: none;
@@ -699,6 +710,7 @@ input[type="search"]:focus {
       }
     .help-text{
         position: absolute;
+        color: #000022;
         display: none;
         outline: #000022;
         background-color: goldenrod;
@@ -725,24 +737,6 @@ input[type="search"]:focus {
     .close-help:hover {
         background-color: rgba(44,62,80, 0.8);
         color: #f2f2f2;
-    }
-    #phase-load-info{
-        color: #f2f2f2;
-        opacity: 0.8;
-        cursor: pointer;
-    }
-    #phase-load-info:hover{
-        color: goldenrod;
-        opacity: 0.7;
-    }
-   
-    #annual-consumption-info{
-        color: #f2f2f2;
-        opacity: 0.8;
-    }
-    #annual-consumption-info:hover{
-        color: goldenrod;
-        opacity: 0.7;
     }
     #myRangeSlider{
         width: 90%;
