@@ -7,6 +7,7 @@ const sideNavbarButton = document.getElementById("menu-nav-button");
 let originalButton = sideNavbarButton.innerHTML;
 let sideNavbarButtonIsOriginal = true;
 
+<<<<<<< HEAD
 // Store the element's initial position
 const initialPositionMenu = {top: '100px', left: '-240px' };
 const afterClickPositionMenu = {top: '100px', left: '0px' };
@@ -14,6 +15,15 @@ const afterClickPositionMenu = {top: '100px', left: '0px' };
 // Reset the elements' position to the initial position
 menuNavbar.style.top = initialPositionMenu.top;
 menuNavbar.style.left = initialPositionMenu.left;
+=======
+ // Store the element's initial position
+const initialPositionMenu = {top: '100px', left: '-240px' };
+const afterClickPositionMenu = {top: '100px', left: '0px' };
+
+    // Reset the elements' position to the initial position
+    menuNavbar.style.top = initialPositionMenu.top;
+    menuNavbar.style.left = initialPositionMenu.left;
+>>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
 
 
 
@@ -43,9 +53,16 @@ sideNavbarButton.addEventListener('click', function(event) {
 
         }
 
+<<<<<<< HEAD
 });
 
 // search button activity when zoomed in
+=======
+    });
+
+// search button activity when zoomed in
+
+>>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
 const searchButton = document.getElementById('small-screen-button');
 const originalSearchButton = searchButton.innerHTML;
 let searchButtonIsOriginal = true;
@@ -65,5 +82,9 @@ const searchInput = document.querySelector("[data-search]")
 searchInput.addEventListener("input", event => {
     const value = event.target.value
     console.log(value)
+<<<<<<< HEAD
 });
+=======
+   });
+>>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
 

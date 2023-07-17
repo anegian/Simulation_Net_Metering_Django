@@ -22,6 +22,7 @@ urlpatterns = [
     # domain.com
     
     path('', views.simple_view, name="home"),
+   # path('signup/', views.signup_view, name="signup"),
     path('admin/', admin.site.urls),
 
     # domain.com/calculator/

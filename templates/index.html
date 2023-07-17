@@ -9,17 +9,28 @@
     <title>Homepage</title>
     {% endblock %}
 
+<<<<<<< HEAD
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+=======
+>>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" 
      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="website icon" type="png" href="{% static 'images/panel_128x107.png'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"/>
+<<<<<<< HEAD
     <link rel="stylesheet" href=" {% static 'Net_Metering/css/style.css' %}"/>
     <link rel="stylesheet" href=" {% static 'Net_Metering/css/register.css' %}"/>
 
     {% block css %} 
     
+=======
+    <link rel="stylesheet" href=" {% static 'Net_Metering/css/styles.css' %}"/>
+    <link rel="stylesheet" href=" {% static 'Net_Metering/css/register.css' %}"/>
+
+    {% block css %} 
+
+>>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
     {% endblock %}
 
     <script src="{% static 'Net_Metering/javascript/scripts.js' %}" defer></script>
@@ -34,6 +45,7 @@
 </head>
 
 <body class="{% block body_class %}{% endblock %} ">
+<<<<<<< HEAD
         <header class="main-header">         
             <div class="header-container-left">
                 <a href="{% url 'home' %}"><img class="sm-image" src="{% static 'images/panel.png'%}" alt="photo not found"></a>
@@ -54,6 +66,113 @@
                 <input type="checkbox" id="check-navbar">
                 <label  for="check-navbar" id="menu-nav-button" class="demo-class"><i class="fas fa-bars"></i></label>
 
+=======
+  
+
+        <header class="main-header">
+               
+            <div class="header-container-left">
+                <a href="{% url 'home' %}"><img class="sm-image" src="{% static 'images/panel.png'%}" alt="photo not found"></a>
+                <label class="logo"><a class="text-decoration-none" href="{% url 'home' %}">Simulation - <b style="color: #ed4901;">N</b>et Metering</a></label>
+            </div>
+            <div class="header-container-right">
+                <label class="signup"><a href="{% url 'simulation:signup' %}" title="Νέα Εγγραφή"><i class="fas fa-user"></i></a></label>
+
+                <form method="POST" id="signup-form-test">
+                    {% csrf_token %}
+                  
+                    <section class="vh-100" style="background-color: #eee;">
+                          <div class="container h-100">
+                            <div class="row d-flex justify-content-center align-items-center h-100">
+                              <div class="col-lg-12 col-xl-11">
+                                <div class="card text-black" style="border-radius: 25px;">
+                                  <div class="card-body p-md-5">
+                                    <div class="row justify-content-center">
+                                      <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                        
+                                        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+                        
+                                        <form class="mx-1 mx-md-4">
+                        
+                                          <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                              <input type="text" id="form3Example1c" class="form-control" />
+                                              <label class="form-label" for="form3Example1c">Your Name</label>
+                                            </div>
+                                          </div>
+                        
+                                          <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                              <input type="email" id="form3Example3c" class="form-control" />
+                                              <label class="form-label" for="form3Example3c">Your Email</label>
+                                            </div>
+                                          </div>
+                        
+                                          <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                              <input type="password" id="form3Example4c" class="form-control" />
+                                              <label class="form-label" for="form3Example4c">Password</label>
+                                            </div>
+                                          </div>
+                        
+                                          <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                              <input type="password" id="form3Example4cd" class="form-control" />
+                                              <label class="form-label" for="form3Example4cd">Repeat your password</label>
+                                            </div>
+                                          </div>
+                        
+                                          <div class="form-check d-flex justify-content-center mb-5">
+                                            <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                                            <label class="form-check-label" for="form2Example3">
+                                              I agree all statements in <a href="#!">Terms of service</a>
+                                            </label>
+                                          </div>
+                        
+                                          <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                            <button type="button" class="btn btn-primary btn-lg">Register</button>
+                                          </div>
+                        
+                                        </form>
+                        
+                                      </div>
+                                      <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                        
+                                        <img src="{% static 'images/pv-sun.png' %}"
+                                          class="img-fluid" alt="No image loaded">
+                        
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </section>
+                  
+                  </form>
+
+                <label class="login"><a title="Σύνδεση" data-toggle="modal" data-target="#loginModal">
+                    <i class="fas fa-sign-in"></i></a></label>
+                  
+               
+            </div>
+
+        </header>
+
+        <nav class="second-navbar">
+
+            <div class="second-navbar-left-container" id="second-navbar-left-container">
+
+                <input type="checkbox" id="check-navbar">
+                        <label  for="check-navbar" id="menu-nav-button" class="demo-class">
+                            <i class="fas fa-bars"></i></label>
+
+>>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
                 <ul class="nav-list" id="nav-list">
                     {% block menu_list %}
                     <li><a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
@@ -62,7 +181,11 @@
                     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
                     <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
                     {% endblock %}
+<<<<<<< HEAD
                 </ul>         
+=======
+                </ul>
+>>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
                         
             </div>
 
@@ -78,11 +201,19 @@
                                     <button class="large-screen-search-button" type="submit"><i class="fas fa-search"></i></button>
                             </form>
                     </div>
+<<<<<<< HEAD
             </div >
+=======
+
+            </div >
+
+
+>>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
         </nav>
         
         <div id="main-index-content-for-all">
             {% block content %}
+<<<<<<< HEAD
                        
             {% endblock %}
         </div>
@@ -97,5 +228,28 @@
               <i class="fas fa-copyright"> 2023 Anestis Giannakosian. All rights reserved</i>
         </span>
   </footer>
+=======
+
+                
+
+            {% endblock %}
+        </div>
+            
+<footer class="footer">
+    <div class="other-links">
+        <a href="https://linkedin.com/in/anestis-giannakosian-880707220"><i class="fab fa-linkedin-in"></i> </a>
+        <a href="https://github.com/anegian"><i class="fab fa-github"></i></a>
+        <a href="https://youtube.com"><i class="fab fa-youtube"></i></a>
+    </div>
+
+        <span class="admin-info">
+            <i class="fas fa-copyright"> 2023 Anestis Giannakosian. All rights reserved</i>
+
+        </span>
+</footer>
+
+
+
+>>>>>>> 8df12127ee48ab232b6828d149c92dcbf825a3d2
 </body>
 </html>
