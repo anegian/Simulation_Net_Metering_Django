@@ -105,14 +105,12 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
 
             average_annual_savings, profitPercent, total_annual_cost, regulated_charges = calculate_annual_savings(annual_consumption, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced)
             
-           
             total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
             total_savings_array_json = json.dumps(total_savings_array)
             total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced)
             total_production_kwh_array_json = json.dumps(total_production_kwh_array)
             # month_production_array = calculate_month_production(annual_PV_energy_produced)
             
-
             payback_period = calculate_payback_period(total_investment, average_annual_savings)
 
             net_present_value = calculate_npv(total_investment, total_savings)
@@ -185,7 +183,6 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print(f"Annual Irradiance: {annual_irradiance}, Annual Panel Energy Produced: {annual_PV_energy_produced}")
             print(f"Each Panel monthly produced energy{monthly_panel_energy_produced_list}")
            
-            
             now = datetime.now()
             print("######### End time of this session: ", now, "#########\n")
             return render(request, result, context)
@@ -287,7 +284,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['panel_cost'] = panel_cost
             request.session['panel_area'] = panel_area
             # return redirect(reverse('simulation:dashboard'))  # redirect to dashboard html
-            return redirect(reverse('simulation:dashboard'))
+            return dashboard_results(request)
         else:
             # Form is not valid, handle the error or display a message
             return render(request, 'simulation/calculator.html', context={'form_phase_load': form_phase_load})
@@ -296,7 +293,6 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
         form_phase_load = PhaseLoad()
     return render(request, 'simulation/calculator.html', context={'form_phase_load': form_phase_load,}) 
     #'form_district': form_district, 
-
 
 # Ajax Request Calculation    url = simulation/ajax/
 def calculate_power(request):
@@ -318,9 +314,8 @@ def calculate_power(request):
             print("DATA:", data)
         
                 # Call the get_solar_data function and retrieve the results
-            _, annual_irradiance_kWh, _ = get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value)
+            _ , annual_irradiance_kWh, _ = get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value)
 
-            
             special_production = annual_irradiance_kWh * panel_area * panel_efficiency * 0.75
             total_consumption = annual_Kwh_value * 25 
             total_production = 0
@@ -342,7 +337,6 @@ def calculate_power(request):
             print(f"Total production after 25 years for {minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {round(panel_Wp_value*1000)}Wp is: {round(total_production)}")
             print(f"Total consumption after 25 years: {total_consumption}")
             print("Recommended KWp PV system: ", recommended_kWp)
-
 
             response_data = {
                 'special_production': round(special_production),
@@ -651,5 +645,3 @@ def user_form(request):
     else:
         form = CustomerForm()
         return render(request, 'simulation/calculator.html', {'form': form})
-
-

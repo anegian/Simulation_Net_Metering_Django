@@ -27,7 +27,7 @@
     <li><a class="nav-link active" href="{% url 'simulation:calculator' %}"><i class="fas fa-calculator"></i> calculator</a></li>
     <li><a href="{% url 'simulation:dashboard' %}"><i class="fas fa-qrcode"></i> dashboard</a></li>
     <li><a href="{% url 'simulation:regulations' %}"><i class="fas fa-scale-unbalanced-flip"></i> regulations</a></li>
-    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-scale-unbalanced-flip"></i> about</a></li>
+    <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
 {% endblock %}
 
 {% block color_theme %}
@@ -69,11 +69,10 @@
                 <ul id="navigation-ul">
                   <li><a class="panel-field active" href="#panel1"><span class="circle-link active">1</span> Τοποθεσία</a></li>
                   <li><a class="panel-field" href="#panel2"><span class="circle-link">2</span> Εγκατάσταση</a></li>
-                  <li><a class="panel-field" href="#panel3"><span class="circle-link">3</span> Αζιμούθιο</a></li>
-                  <li><a class="panel-field" href="#panel4"><span class="circle-link">4</span> Κλίση</a></li>
-                  <li><a class="panel-field" href="#panel5"><span class="circle-link">5</span> Κατανάλωση</a></li>
-                  <li><a class="panel-field" href="#panel6"><span class="circle-link">6</span> Ισχύς</a></li>
-                  <li><a class="panel-field" href="#panel7"><span class="circle-link">7</span> Αποθήκευση</a></li>
+                  <li><a class="panel-field" href="#panel3"><span class="circle-link">3</span> Αζιμούθιο - Κλίση</a></li>
+                  <li><a class="panel-field" href="#panel4"><span class="circle-link">4</span> Κατανάλωση</a></li>
+                  <li><a class="panel-field" href="#panel5"><span class="circle-link">5</span> Ισχύς</a></li>
+                  <li><a class="panel-field" href="#panel6"><span class="circle-link">6</span> Αποθήκευση</a></li>
                 </ul>
             </div>
         </div>
@@ -186,109 +185,102 @@
 
                         <!-- PANEL 3 -->
                         <!-- Here you select Azimuth -->
+                        <!-- Here you select PV inclination -->
                         <div class="panel-calculator" id="panel3">
                             <div class="title-panel">
                                 <span class="number">3</span>
-                                <h4>Αζιμούθιο</h4>
+                                <h4>Αζιμούθιο - Κλίση</h4>
                             </div>
-
-                            <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κατεύθυνση του PV συστήματος">
-                                <p> <label for="azimuthInput" class="spacer-label">Επιλέξτε προσανατολισμό Φ/Β πάνελ: </label></p> 
-            
-                                <div>
-                                    <img id="compass-photo" src="{% static 'images/compass4.png'%}" alt="photo not found" style="width: 240px;">
-                                </div>
-
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="west" name="azimuth" value="90">
-                                    <label class="form-check-label" id="west-label" for="west"></label>
-                                </div>
-
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="southWest" name="azimuth" value="45">
-                                    <label class="form-check-label" id="southWest-label" for="southWest"></label>
-                                </div>
-
-                                <div class="form-check south">
-                                    <input type="radio" class="form-check-input" id="south" name="azimuth" value="0" checked>
-                                    <label class="form-check-label" id="south-label" for="south"></label>
-                                </div>
-
-                                <div class="form-check">
-                                <input type="radio" class="form-check-input" id="southEast" name="azimuth" value="-45">
-                                <label class="form-check-label" id="southEast-label" for="southEast"></label>
-                                </div>
-                                
-                                <div class="form-check">
-                                <input type="radio" class="form-check-input" id="east" name="azimuth" value="-90">
-                                <label class="form-check-label" id="east-label" for="east"></label>
-                                </div>
-                                
-                            </div>
-                            <div>
-                                <label for="azimuthInput" class="azimuth_label">Αζιμούθιο σε &deg; :  </label>
-                                <input class="panel-field" type="text" id="azimuthInput" readonly>
-                                <label for="azimuthInput" class="azimuth_label">   </label>
-                            </div>
-                        </div>
-                        
-                        
-                        <!-- PANEL 4 -->
-                        <!-- Here you select PV inclination -->
-                        <div class="panel-calculator" id="panel4">
-                            <div class="title-panel">
-                                <span class="number">4</span>
-                                <h4>Κλίση PV</h4>
-                            </div>
-
-
-                            <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κλίση του συστήματος PV">
-                                <p> <label for="tiltInput" class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</label></p>
-
-                                    <div class="spacer-in-calculator-panel">
+                            <div id="panel-azimuth-tilt">
+                                <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κατεύθυνση του PV συστήματος" id="panel-azimuth">
+                                    <p> <label for="azimuthInput" class="spacer-label">Επιλέξτε προσανατολισμό Φ/Β πάνελ: </label></p> 
+                
+                                    <div>
+                                        <img id="compass-photo" src="{% static 'images/compass4.png'%}" alt="photo not found" style="width: 240px;">
                                     </div>
 
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="inclination0" name="inclination" value='0'>
-                                    <label class="form-check-label" for="inclination0">0&deg;</label>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="west" name="azimuth" value="90">
+                                        <label class="form-check-label" id="west-label" for="west"></label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="southWest" name="azimuth" value="45">
+                                        <label class="form-check-label" id="southWest-label" for="southWest"></label>
+                                    </div>
+
+                                    <div class="form-check south">
+                                        <input type="radio" class="form-check-input" id="south" name="azimuth" value="0" checked>
+                                        <label class="form-check-label" id="south-label" for="south"></label>
+                                    </div>
+
+                                    <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="southEast" name="azimuth" value="-45">
+                                    <label class="form-check-label" id="southEast-label" for="southEast"></label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="east" name="azimuth" value="-90">
+                                    <label class="form-check-label" id="east-label" for="east"></label>
+                                    </div>
+
+                                    <div>
+                                    <label for="azimuthInput" class="azimuth_label">Αζιμούθιο σε &deg; :  </label>
+                                    <input class="panel-field" type="text" id="azimuthInput" readonly>
+                                    <label for="azimuthInput" class="azimuth_label">   </label>
                                 </div>
-
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="inclination15" name="inclination" value='15'>
-                                    <label class="form-check-label" for="inclination15">15&deg;</label>
+                                
                                 </div>
+                                
 
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="inclination30" name="inclination" value='30' checked>
-                                    <label class="form-check-label" for="inclination30">30&deg;</label>
-                                </div> 
-                                           
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="inclination45" name="inclination" value='45'>
-                                    <label class="form-check-label" for="inclination45">45&deg;</label>
-                                </div>
+                                <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κλίση του συστήματος PV" id="panel-tilt">
+                                    <p> <label for="tiltInput" class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</label></p>
 
-                                <div class="img-div-calculator" id="image-container">
-                                    <img class="img-tilt" src="{% static 'images/0.png' %}" alt="No Image" tilt="0">
-                                    <img class="img-tilt" src="{% static 'images/15.png' %}" alt="No Image" tilt="15">
-                                    <img class="img-tilt" src="{% static 'images/30.png' %}" alt="No Image" tilt="30">
-                                    <img class="img-tilt" src="{% static 'images/45.png' %}" alt="No Image" tilt="45">
+                                        <div class="spacer-in-calculator-panel">
+                                        </div>
 
-                                <div>
-                                    <input class="panel-field" type="hidden" id="tiltInput" name="tiltInput" readonly>
-                                </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="inclination0" name="inclination" value='0'>
+                                        <label class="form-check-label" for="inclination0">0&deg;</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="inclination15" name="inclination" value='15'>
+                                        <label class="form-check-label" for="inclination15">15&deg;</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="inclination30" name="inclination" value='30' checked>
+                                        <label class="form-check-label" for="inclination30">30&deg;</label>
+                                    </div> 
+                                            
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="inclination45" name="inclination" value='45'>
+                                        <label class="form-check-label" for="inclination45">45&deg;</label>
+                                    </div>
+
+                                    <div class="img-div-calculator" id="image-container">
+                                        <img class="img-tilt" src="{% static 'images/0.png' %}" alt="No Image" tilt="0">
+                                        <img class="img-tilt" src="{% static 'images/15.png' %}" alt="No Image" tilt="15">
+                                        <img class="img-tilt" src="{% static 'images/30.png' %}" alt="No Image" tilt="30">
+                                        <img class="img-tilt" src="{% static 'images/45.png' %}" alt="No Image" tilt="45">
+
+                                    <div>
+                                        <input class="panel-field" type="hidden" id="tiltInput" name="tiltInput" readonly>
+                                    </div>
 
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- PANEL 5 -->
+                                      
+                        <!-- PANEL 4 -->
                         <!-- Here you select consumption profile -->
                         <!-- Here you select 1) Phase Load & 2) the annual consumption of your house in kWh-->
-                        <div class="panel-calculator" id="panel5">
+                        <div class="panel-calculator" id="panel4">
                             <div class="title-panel">
-                                <span class="number"> 5 </span>
+                                <span class="number"> 4 </span>
                                 <h4>Προφίλ κατανάλωσης</h4>
                             </div>
 
@@ -367,11 +359,11 @@
                             </div>
                         </div>
 
-                        <!-- PANEL 6 -->
+                        <!-- PANEL 5 -->
                         <!-- Here you select the PV's kWp -->
-                        <div class="panel-calculator" id="panel6">
+                        <div class="panel-calculator" id="panel5">
                             <div class="title-panel">
-                                <span class="number"> 6 </span>
+                                <span class="number"> 5 </span>
                                 <h4>Ισχύς (KWp)</h4>
                             </div>
 
@@ -385,11 +377,11 @@
 
                                         <div class="help-container">
                                             <span class="help-text" id="power-text">
-                                                <strong>Προσέξτε να έχει συμπληρωθεί στο προηγούμενο βήμα, το είδος παροχής και η ετήσια κατανάλωση ρεύματος!</strong><br><br>
+                                                <strong>Προσέξτε να έχει συμπληρωθεί στο προηγούμενο βήμα, το είδος <br> παροχής και η ετήσια κατανάλωση ρεύματος!</strong><br><br>
                                                 
                                                 
                                                  Μπορείτε ελεύθερα να αυξομειώσετε τη συνολική ισχύ σύμφωνα με τις εξατομικευμένες ανάγκες σας και τα επιτρεπτά όρια.<br><br>
-                                                 Επιλέγοντας "Εύρεση βέλτιστης Ισχύος",θα εμφανιστεί κουμπί υπολογισμού και πατώντας το, 
+                                                 Επιλέγοντας "Εύρεση βέλτιστης Ισχύος", θα εμφανιστεί κουμπί υπολογισμού και πατώντας το, 
                                                  θα συμπληρωθoύν τα kWp του Φ/Β συστήματος που απαιτούνται για να εκμηδενίσετε την ετήσια κατανάλωση σας σε βάθος 25ετίας.<br>
                                                  <br>
 
@@ -421,7 +413,7 @@
                                     <span id="error-message-panel6">Παρακαλώ πρώτα επιλέξτε ετήσια κατανάλωση kWh & kWp.</span>
                                 </div>
                                 
-                                <div id="autoPower-button-input" >
+                                <div id="autoPower-button-input" class="">
                                     <div class="button-auto-div">
                                         <button class="autoPower-button" type="button" name="buttonClicked" id="calculateProductionButton" onclick="startLoading()">
                                             Υπολογισμός Απαιτούμενης Ισχύος
@@ -453,17 +445,17 @@
                             
                         </div>
 
-                        <!-- PANEL 7 -->
+                        <!-- PANEL 6 -->
                         <!-- Here you select battery kwh -->
                         <!-- Here you select discount percentage -->
-                        <div class="panel-calculator" id="panel7">
+                        <div class="panel-calculator" id="panel6">
                             <div class="title-panel">
-                                <span class="number"> 7 </span>
+                                <span class="number"> 6 </span>
                                 <h4>Aποθήκευση - Επιδότηση</h4>
                             </div>
 
                             <div class="option-selector-margin" title="Παρακαλούμε, πρώτα συμπληρώστε τα πεδία Κατανάλωση και Ισχύς και στη συνέχεια επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
-                                <p><label for="storage" class="spacer-label">Επιλέξτε προσθήκη συσσωρευτή:</label></p>
+                                <p><label for="storage" class="spacer-label">Επιθυμείτε προσθήκη συσσωρευτή:</label></p>
                                     
                                 <div class="spacer-in-calculator-panel">  
                                 </div>
@@ -497,14 +489,14 @@
                             </div>
 
                             <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν είστε δικαιούχος έπκπτωσης ή επιδότησης και ποσοστά έκπτωσης">
-                                <p><label for="discount" class="spacer-label">Επιλέξτε εάν είστε δικαιούχος επιδότησης: </label></p>
+                                <p><label for="discount" class="spacer-label">Είστε δικαιούχος επιδότησης: </label></p>
                                     
                                 <div class="spacer-in-calculator-panel">
                                     
                                 </div>
 
                                 <div class="form-check" >
-                                    <input type="radio" class="form-check-input" id="no-discount" name="discount" value="no" >
+                                    <input type="radio" class="form-check-input" id="no-discount" name="discount" value="no" checked >
                                     <label class="form-check-label" for="no-discount">Όχι</label>
                                 </div>
 
@@ -513,8 +505,11 @@
                                     <label class="form-check-label" for="discount">Ναι</label>
 
                                     <div class="hidden-storage" id="discountPercentContainer" style="display: none;" >
-                                        <label for="discount_percent">Ποσοστό έκπτωσης (σε %):</label>
+                                        <label for="discount_percent">Ποσοστό έκπτωσης ΦΒ Σταθμού (σε %):</label>
                                         <input type="number" class="form-control" id="discount_percent" name="discount_percent">
+
+                                        <label for="discount_percent_battery">Ποσοστό έκπτωσης Μπαταρίας (σε %):</label>
+                                        <input type="number" class="form-control" id="discount_percent_battery" name="discount_percent_battery">
                                     </div>
 
                                 </div>
@@ -528,20 +523,60 @@
                 <div class="my-submit-form">
                     <!-- Previous and Next buttons -->
                     <div>
-                        <button class="form-reset-button" type="hidden" id="resetBtn">Διόρθωση</button>
+                        <button type="reset" class="form-reset-button" id="resetBtn"><i class="fas fa-undo"></i> Διόρθωση</button>
                         <button type="button" id="previous-button"> &#11164; Προηγούμενο</button>
                         <button type="button" id="next-button">Επόμενο &#11166;</button>
                     </div>
                     
-                    <button class="form-submit-button" type="submit" id="submitBtn">Υποβολή <i class="fa fa-upload"></i></button>
+                    <button class="form-submit-button btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" type="button" id="submitBtn">Υποβολή <i class="fa fa-upload"></i></button>
                 </div>
-
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="modal-title fs-5" id="myModalLabel">Υποβολή Φόρμας</h2>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                    <div class="modal-body">
+                                        <p>Έχετε επιλέξει τα εξής δεδομένα:</p>
+                                        <label for="place_modal_value">Νομός:</label>
+                                        <input type="text" class="form-control" id="place_modal_value" readonly>
+                                        <label for="azimuth_modal_value">Αζιμούθιο (σε &deg;):</label>
+                                        <input type="number" class="form-control" id="azimuth_modal_value" readonly>
+                                        <label for="tilt_modal_value">Κλίση (σε &deg;):</label>
+                                        <input type="number" class="form-control" id="tilt_modal_value" readonly>
+                                        <label for="annual_Kwh_modal_value">Κατανάλωση (σε kWh):</label>
+                                        <input type="number" class="form-control" id="annual_Kwh_modal_value" readonly>
+                                        <label for="profile_modal_value">Προφίλ κατανάλωσης (ωράριο):</label>
+                                        <input type="text" class="form-control" id="profile_modal_value" readonly>
+                                        <label for="power_modal_value">Ισχύς (σε kWp):</label>
+                                        <input type="number" class="form-control" id="power_modal_value" readonly>
+                                        <label for="battery_modal_value">Μπαταρία (σε kWh):</label>
+                                        <input type="number" class="form-control" id="battery_modal_value" readonly>
+                                        <label for="discount_percent_modal_value">Ποσοστό έκπτωσης ΦΒ Σταθμού (σε %):</label>
+                                        <input type="number" class="form-control" id="discount_percent_modal_value" readonly>
+                                        <label for="discount_percent_battery_modal_value">Ποσοστό έκπτωσης Μπαταρίας (σε %):</label>
+                                        <input type="number" class="form-control" id="discount_percent_battery_modal_value" readonly>
+                                        <br>
+                                        Εάν συμφωνείτε πατήστε <strong>"Υποβολή"</strong>.
+                                    </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Επιστροφή</button>
+                                    <button type="button" class="btn btn-primary" id="submit_modal">Υποβολή</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
 
             <!-- <div class="column-calculator-page"></div> -->
         </div>
-
-    </div>
+        
     
+
+
 
 {% endblock %}
