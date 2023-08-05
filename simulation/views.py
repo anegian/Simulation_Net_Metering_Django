@@ -10,6 +10,7 @@ import numpy as np
 from datetime import datetime
 import pvlib.iotools
 from django.conf import settings
+from django.contrib.sessions.models import Session
 
 # Create your views here
 # App level
@@ -33,7 +34,7 @@ VARIABLE_MAP = {
     'WD10m': 'wind_direction',
 }
 
-
+# function using PVGIS API to get the solar data
 def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value):
 
     print(latitude_value,longitude_value)
@@ -61,20 +62,27 @@ def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_v
 
     # Convert the monthly irradiance Series to an array, annual as a sum and divide them by 1000 to convert from Wh/m2 to kWh/m2
     monthly_irradiance_array = np.array(monthly_irradiance / 1000)
-    annual_irradiance_kWh = float(annual_irradiance / 1000)
+    annual_irradiance = float(annual_irradiance / 1000)
 
     # Convert the NumPy array to a nested Python list
     monthly_irradiance_list = monthly_irradiance_array.tolist()
 
     # Print the list of monthly irradiance
-    print(f"Monthly irradiance: {monthly_irradiance_list}, Annual irradiance:  {annual_irradiance_kWh}")
+    print(f"Monthly irradiance: {monthly_irradiance_list}, Annual irradiance:  {annual_irradiance}")
 
     # Convert the list to JSON format
     monthly_irradiance_json = json.dumps(monthly_irradiance_list)
 
-    return monthly_irradiance_json, annual_irradiance_kWh, monthly_irradiance_list
+    return monthly_irradiance_json, annual_irradiance, monthly_irradiance_list
 
 def dashboard_results(request):   # simulation/templates/dashboard.html
+    # Check if the 'power_manually_calculated' flag is present in the session
+    power_manually_calculated = request.session.get('power_manually_calculated', True)
+    if not power_manually_calculated:
+        print("In dashboard_results function: manual flag is found FALSE")
+    else:
+        print("In dashboard_results function: manual flag is found TRUE")
+
  
     if 'annual_consumption' in request.session:
         try:
@@ -98,7 +106,29 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             has_storage = request.session.get('has_storage')
             storage_kw = float(request.session.get('storage_kw'))
 
-            monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
+            if not power_manually_calculated:
+                try:
+                    monthly_irradiance_json = request.session.get('monthly_irradiance_json')
+                    annual_irradiance = request.session.get('annual_irradiance')
+                    monthly_irradiance_list = request.session.get('monthly_irradiance_list')
+                    print("****************")
+                    print("\nThe PV power was auto generated with ajax request!!!!!!\n")
+                    print(f"annual_irradiance: {annual_irradiance}")
+                    print("****************")
+                    # If the power kWp was given as ajax response, set the flag and the local variable to TRUE for the next session (default manual)
+                    power_manually_calculated = True
+                    request.session['power_manually_calculated'] = True
+
+                except KeyError as e:
+                     return HttpResponse(f"Error while retrieving session data: {str(e)}")
+                except ValueError as e:
+                    return HttpResponse(f"Error while converting data: {str(e)}")
+            else:        
+                monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
+                print("****************")
+                print("\nThe PV power was manually given!!!!!!\n")
+                print(f"annual_irradiance: {annual_irradiance}")
+                print("****************")
 
             total_investment, inverter_cost, number_of_panels_required = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost)
             annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required)
@@ -176,12 +206,12 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
 
             result = 'simulation/dashboard.html'
 
-            print('Total Investment:', total_investment,"euro", 'Average annual Savings: ', average_annual_savings, '& Περίοδος Απόσβεσης:', payback_period) 
-            print(f'Total savings for 25 years: {total_savings}, NPV is: {total_savings} - {total_investment} = {net_present_value}')
-            print("Ετήσιο κόστος ρεύματος, μαζί με ρυθμιζόμενες χρεώσεις, χωρίς δημοτικούς φόρους: ", total_annual_cost, "& Ετήσιο Όφελος: ", average_annual_savings)
-            print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges, "Μέση Ετήσια Παραγωγή:", annual_PV_energy_produced)  # Add this line for debugging
-            print(f"Annual Irradiance: {annual_irradiance}, Annual Panel Energy Produced: {annual_PV_energy_produced}")
-            print(f"Each Panel monthly produced energy{monthly_panel_energy_produced_list}")
+            # print('Total Investment:', total_investment,"euro", 'Average annual Savings: ', average_annual_savings, '& Περίοδος Απόσβεσης:', payback_period) 
+            # print(f'Total savings for 25 years: {total_savings}, NPV is: {total_savings} - {total_investment} = {net_present_value}')
+            # print("Ετήσιο κόστος ρεύματος, μαζί με ρυθμιζόμενες χρεώσεις, χωρίς δημοτικούς φόρους: ", total_annual_cost, "& Ετήσιο Όφελος: ", average_annual_savings)
+            # print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges, "Μέση Ετήσια Παραγωγή:", annual_PV_energy_produced)  # Add this line for debugging
+            # print(f"Annual Irradiance: {annual_irradiance}, Annual Panel Energy Produced: {annual_PV_energy_produced}")
+            # print(f"Each Panel monthly produced energy{monthly_panel_energy_produced_list}")
            
             now = datetime.now()
             print("######### End time of this session: ", now, "#########\n")
@@ -208,7 +238,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
         #     response = calculate_power(request)
         #     print(response)
         #     return HttpResponse(response, content_type='application/json')
-        
+
         if form_phase_load.is_valid(): # form_district.is_valid() and
             try:
                 # initialization of variables
@@ -242,18 +272,18 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print("\n ######### Start of session of USER'S form: ", now, "#########")
                 # print(f"District key: {district_irradiance}")
                 # print(f"District value: {district_value}")
-                print(f"Latitude: {latitude_coords}")
-                print(f"Longitude: {longitude_coords}")
-                print(f"Panel parameters are: {panel_wp}Wp, {panel_area}m², {panel_efficiency}(%) & {panel_cost}€") 
-                print(f"The selected phase load is: {phase_load}")
-                print(f"Agreed kVA is: {phase_loadkVA}")
-                print(f"Annual kWh consumed is: {annual_consumption}")
-                print(f"Place of installment is: {place_of_installment}")
-                print(f"Azimuth of PV: {azimuth_value}")
-                print(f"Degrees of PV inclination: {inclination_PV}" )
-                print(f"Users use profile: {userPower_profile}" )
-                print(f"kWp of PV value: {PV_kWp}")
-                print(f"Did User select Battery storage: {has_storage}")
+                # print(f"Latitude: {latitude_coords}")
+                # print(f"Longitude: {longitude_coords}")
+                # print(f"Panel parameters are: {panel_wp}Wp, {panel_area}m², {panel_efficiency}(%) & {panel_cost}€") 
+                # print(f"The selected phase load is: {phase_load}")
+                # print(f"Agreed kVA is: {phase_loadkVA}")
+                # print(f"Annual kWh consumed is: {annual_consumption}")
+                # print(f"Place of installment is: {place_of_installment}")
+                # print(f"Azimuth of PV: {azimuth_value}")
+                # print(f"Degrees of PV inclination: {inclination_PV}" )
+                # print(f"Users use profile: {userPower_profile}" )
+                # print(f"kWp of PV value: {PV_kWp}")
+                # print(f"Did User select Battery storage: {has_storage}")
                 
                 
 
@@ -283,6 +313,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['panel_efficiency'] = panel_efficiency
             request.session['panel_cost'] = panel_cost
             request.session['panel_area'] = panel_area
+
             # return redirect(reverse('simulation:dashboard'))  # redirect to dashboard html
             return dashboard_results(request)
         else:
@@ -311,12 +342,21 @@ def calculate_power(request):
             panel_efficiency = float(data.get('panel_efficiency'))
             annual_Kwh_value = int(data.get('annual_Kwh_value'))
             panel_Wp_value = float(data.get('panel_Wp_value'))
-            print("DATA:", data)
+            print("PARAMETERS FOR CALCULATING THE REQUEST:", data)
         
-                # Call the get_solar_data function and retrieve the results
-            _ , annual_irradiance_kWh, _ = get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value)
+            # Call the get_solar_data function and retrieve the results
+            monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value)
 
-            special_production = annual_irradiance_kWh * panel_area * panel_efficiency * 0.75
+            # Store the monthly_irradiance_list in the session and set a flag to true
+            request.session['monthly_irradiance_json'] = monthly_irradiance_json
+            request.session['annual_irradiance'] = annual_irradiance
+            request.session['monthly_irradiance_list'] = monthly_irradiance_list
+            # Set the flag to False, indicating that the power_calculated needs to be recalculated in the dashboard_results view
+            request.session['power_manually_calculated'] = False
+            print("\n##POST SESSION CHECK##\nThe power_manually_calculated flag set to FALSE!!!!!\n")
+            print("The power is generated in the calculate_power function") #test print
+
+            special_production = annual_irradiance * panel_area * panel_efficiency * 0.75
             total_consumption = annual_Kwh_value * 25 
             total_production = 0
             minimum_PV_panels = 1
@@ -329,14 +369,15 @@ def calculate_power(request):
             recommended_kWp = minimum_PV_panels * panel_Wp_value
             total_area = minimum_PV_panels * panel_area    
 
-            print("ANNUAL IRRADIANCE:", annual_irradiance_kWh)
-            print('Annual Consumption:', annual_Kwh_value)
-            print("Minimum Panels:", minimum_PV_panels)
-            print("Total area for roof or taratsa:", total_area)
-            print('Annual Production:', annual_production)
-            print(f"Total production after 25 years for {minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {round(panel_Wp_value*1000)}Wp is: {round(total_production)}")
-            print(f"Total consumption after 25 years: {total_consumption}")
-            print("Recommended KWp PV system: ", recommended_kWp)
+            # print("ANNUAL IRRADIANCE:", annual_irradiance)
+            # print("Monthly IRRADIANCE:", monthly_irradiance_list)
+            # print('Annual Consumption:', annual_Kwh_value)
+            # print("Minimum Panels:", minimum_PV_panels)
+            # print("Total area for roof or taratsa:", total_area)
+            # print('Annual Production:', annual_production)
+            # print(f"Total production after 25 years for {minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {round(panel_Wp_value*1000)}Wp is: {round(total_production)}")
+            # print(f"Total consumption after 25 years: {total_consumption}")
+            # print("Recommended KWp PV system: ", recommended_kWp)
 
             response_data = {
                 'special_production': round(special_production),
@@ -403,7 +444,7 @@ def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, pan
     
     return annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list
 
-# Calculate annual savings  profit Percentage, total_annual_cost, regulated_charges
+# Calculate annual savings, profit Percentage, total_annual_cost, regulated_charges
 def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced):
     annual_consumption = annual_kWh
     energy_cost = 0.19 # €/kWh today
