@@ -296,16 +296,7 @@ phase_load_selected.addEventListener("change", function(event){
   if (event.target.value === 'single_phase' || event.target.value === '3_phase'){
       disableErrorMessages();
       enableAnnualkWh();
-      annual_Kwh_input.value = " ";
-      slider.max = event.target.value === 'single_phase' ? 5 : 10.8;
-      enableSlider();
-  }else{
-      disableElements();
-  } 
-  if (event.target.value === 'single_phase' || event.target.value === '3_phase'){
-      disableErrorMessages();
-      enableAnnualkWh();
-      annual_Kwh_input.value = " ";
+      annual_Kwh_input.value = "";
       slider.max = event.target.value === 'single_phase' ? 5 : 10.8;
       enableSlider();
   }else{
@@ -708,36 +699,39 @@ discountRadio.addEventListener('change', showDiscountInputs);
 
 
 //Submit, reset, Modal events
-form_submit_button.addEventListener('click', function(){
+form_submit_button.addEventListener('click', function(event){
 
-  if (annual_Kwh_modal_input.value == ""){
+  if (annual_Kwh_input.value == ""){
     alert('Για να υποβάλετε, πρώτα πρέπει να επιλέξετε ετήσια κατανάλωση σε kWh');
+    event.preventDefault(); // Prevent the default form submission
+  } else {
+    console.log("Event listener triggered!"); // Check if the event listener is running
+    place_modal_input.value = placeSelected.value;
+    azimuth_modal_input.value = azimuthInput.value;
+    tilt_modal_input.value = tiltInput.value;
+    annual_Kwh_modal_input.value = annual_Kwh_input.value;
+
+    // Get the selected radio button's value
+    const selectedRadioButton = document.querySelector('input[name="power_option"]:checked');
+
+    if (selectedRadioButton) {
+      // Set the value of the target input field to the selected radio button's value
+      profile_modal_input.value = selectedRadioButton.value;
+    }
+
+    power_modal_input.value = slider.value;
+    battery_modal_value.value = storage_kW.value;
+    discount_percent_modal_input.value = discount_percent.value;
+    discount_percent_battery_modal_input.value = discount_percent_battery.value;
+
+    // Show the modal programmatically
+    const myModal = new bootstrap.Modal(document.getElementById('myModal'));
+    myModal.show();
+
+    console.log(place_modal_input.value);
+    console.log(azimuth_modal_input.value);
+    console.log(profile_modal_input.value);
   }
-  console.log("Event listener triggered!"); // Check if the event listener is running
-  place_modal_input.value = placeSelected.value;
-  azimuth_modal_input.value = azimuthInput.value;
-  tilt_modal_input.value = tiltInput.value;
-  annual_Kwh_modal_input.value = annual_Kwh_input.value;
-
-  // Get the selected radio button's value
-  const selectedRadioButton = document.querySelector('input[name="power_option"]:checked');
-
-  if (selectedRadioButton) {
-    // Set the value of the target input field to the selected radio button's value
-    profile_modal_input.value = selectedRadioButton.value;
-  }
-
-  power_modal_input.value = slider.value;
-
-  let panels_number_request = document.getElementById("minimumPanels"); 
-  battery_modal_value.value = storage_kW.value;
-
-  discount_percent_modal_input.value = discount_percent.value;
-  discount_percent_battery_modal_input.value = discount_percent_battery.value;
-
-  console.log(place_modal_input.value);
-  console.log(azimuth_modal_input.value);
-  console.log(profile_modal_input.value);
   
 })
 

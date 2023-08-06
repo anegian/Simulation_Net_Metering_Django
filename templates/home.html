@@ -6,6 +6,13 @@
 <title>Home</title>
 {% endblock %}
 
+{% block css %} 
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">   
+{% endblock %}
+
+{% block script %}
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+{% endblock %}
 
 {% block menu_list %}
     <li><a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home"></i> home</a></li>
