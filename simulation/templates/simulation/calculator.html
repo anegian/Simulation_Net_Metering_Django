@@ -409,6 +409,7 @@
 
                                     <input type="range" id="myRangeSlider" name="myRangeSlider" required>
                                     <p class="slider-label">Τιμή: <span id="slider-value"></span> kWp</p> 
+                                    <input type="number" id="myRangeSliderHidden" name="myRangeSliderHidden" required>
                                         
                                     <span id="error-message-panel6">Παρακαλώ πρώτα επιλέξτε ετήσια κατανάλωση kWh & kWp.</span>
                                 </div>
@@ -507,10 +508,18 @@
 
                                     <div class="hidden-storage" id="discountPercentContainer" style="display: none;" >
                                         <label for="discount_percent">Ποσοστό έκπτωσης ΦΒ Σταθμού (σε %):</label>
-                                        <input type="number" class="form-control" id="discount_percent" name="discount_percent">
+                                        <select class="form-control discount_percent_select" id="discount_percent" name="discount_percent">
+                                            <!-- Add default option -->
+                                            <option value="">Επιλέξτε ποσοστό</option>
+                                        </select>
+                                        <!-- <input type="number" class="form-control" id="discount_percent" name="discount_percent"> -->
 
                                         <label for="discount_percent_battery">Ποσοστό έκπτωσης Μπαταρίας (σε %):</label>
-                                        <input type="number" class="form-control" id="discount_percent_battery" name="discount_percent_battery">
+                                        <select class="form-control discount_percent_battery_select" id="discount_percent_battery" name="discount_percent_battery">
+                                            <!-- Add default option -->
+                                            <option value="">Επιλέξτε ποσοστό</option>
+                                        </select>
+                                        <!-- <input type="number" class="form-control" id="discount_percent_battery" name="discount_percent_battery"> -->
                                     </div>
 
                                 </div>

@@ -82,7 +82,7 @@ ul li{
     left: 0;
     width: 100%;
     height: 100%;
-    -webkit-background-size: 100% 130%;
+    /* -webkit-background-size: 100% 130%; */
     background-size: 100% 130%;
     -o-background-size: 100% 130%;
     background-size: 100% 130%;
@@ -178,7 +178,7 @@ ul li{
         background-color: #f2f2f2;
       }
       
-      #theme-slider::-webkit-slider-thumb {
+      /* #theme-slider::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
         width: 18px;
@@ -190,7 +190,7 @@ ul li{
       
       #theme-slider::-webkit-slider-thumb:hover {
         background-color: #ed4901;
-      }
+      } */
       
       #theme-slider::-moz-range-thumb {
         width: 18px;
@@ -223,11 +223,11 @@ ul li{
         border-radius: 10px;
       }
       
-      #theme-slider::-ms-fill-lower {
+      /* #theme-slider::-ms-fill-lower {
         background-color: var(--slider-color);
         height: 20px;
         border-radius: 10px;
-      }
+      } */
 
 /* ::: NAVBAR ::: */
 .second-navbar{
@@ -760,6 +760,10 @@ input[type="search"]:focus {
         width: 90%;
         color: #ed4901;
     }
+    .disabled-slider{
+        background-color: #738725;
+        color: #74b1f2;
+    }
     #slider-value{
         color: #ed4901;
         font-weight: bold;
@@ -807,13 +811,13 @@ input[type="search"]:focus {
     }
 
     #storage_kw.form-control{
-        height: 25px!important;
-        width: 100px;
+        height: 35px!important;
+        width: 170px;
         font-size: 16px;
     }
     #discount_percent.form-control, #discount_percent_battery.form-control{
-        height: 25px!important;
-        width: 100px;
+        height: 35px!important;
+        width: 170px;
         font-size: 16px;
     }
     /* ::: Django forms.py form container::: */
@@ -1354,8 +1358,8 @@ footer .admin-info {
     left: 0;
     width: 100%;
     height: 100%;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
+    /* -webkit-background-size: cover; */
+    /* -moz-background-size: cover; */
     -o-background-size: cover;
     background-size: cover;
     opacity: 0.9;

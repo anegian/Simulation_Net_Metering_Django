@@ -1,5 +1,6 @@
 // variables initialization
-let slider = document.getElementById("myRangeSlider");
+const slider = document.getElementById("myRangeSlider");
+const slider_hidden_input = document.getElementById("myRangeSliderHidden");
 const PV_kW_output = document.getElementById("slider-value");
 // const annual_Kwh_input = document.getElementById("id_select_kwh");
 let annual_Kwh_input = document.getElementById("annual_kwh");
@@ -13,7 +14,7 @@ const panelEfficiencyInput = document.getElementById('panelEfficiencyInput');
 const panelAreaInput = document.getElementById('panelAreaInput');
 const panelCostInput = document.getElementById('panelCostInput');
 const form = document.getElementById("calculatorForm");
-// const annual_Kwh_input = document.getElementById("id_select_kwh");
+
 
 const phase_load_selected = document.getElementById("id_select_phase");
 const reset_button = document.getElementById("resetBtn")
@@ -57,10 +58,17 @@ const annual_Kwh_modal_input = document.getElementById("annual_Kwh_modal_value")
 const profile_modal_input = document.getElementById("profile_modal_value");
 const power_modal_input = document.getElementById("power_modal_value");
 const panel_modal_number_input = document.getElementById("panel_modal_number");
+const battery_modal_input = document.getElementById("battery_modal_value");
 const discount_percent_modal_input = document.getElementById("discount_percent_modal_value");
 const discount_percent = document.getElementById("discount_percent");
 const discount_percent_battery_modal_input = document.getElementById("discount_percent_battery_modal_value");
 const discount_percent_battery = document.getElementById("discount_percent_battery");
+// Get references to the discount_percent and discount_percent_battery select elements
+const discountPercentSelect = document.querySelector('.discount_percent_select');
+const discountPercentBatterySelect = document.querySelector('.discount_percent_battery_select');
+let autoCalculatedPower;
+let autoCalculatedPowerNumber = 0;
+
 
 // Settings for tilt images
 const images = document.querySelectorAll('.img-tilt');
@@ -68,7 +76,6 @@ const images = document.querySelectorAll('.img-tilt');
 // Set the initial values of all elements to 0
 disableElements();
 nextButton.disabled = true;
-console.log(placeSelected.value);
 discount_percent.max = 100;
 discount_percent.min = 0;
 discount_percent_battery.max = 100;
@@ -82,24 +89,7 @@ function triggerButtonEnable() {
     console.log(nextButton.disabled);
     nextButton.classList.add('enabled-button') 
 }
-nextButton.disabled = true;
-console.log(placeSelected.value);
-// Set the readOnly property of the input elements to true
 
-// Function to simulate a change event on the input field
-function triggerButtonEnable() {
-    nextButton.disabled = false;
-    console.log("In trigger function:", placeSelected.value)
-    console.log(nextButton.disabled);
-    nextButton.classList.add('enabled-button') 
-}
-
-function triggerButtonDisable() {
-nextButton.disabled = true;
-nextButton.classList.remove ('enabled-button');
-console.log("In trigger function:", placeSelected.value);
-console.log(nextButton.disabled);
-}
 function triggerButtonDisable() {
 nextButton.disabled = true;
 nextButton.classList.remove ('enabled-button');
@@ -109,8 +99,7 @@ console.log(nextButton.disabled);
 
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
-    slider.min = 0.1;
-    slider.min = 0.1;
+    slider.min = 0.0;
     PV_kW_output.innerHTML = this.value;
     error_message3.style = 'none';
 };      
@@ -181,6 +170,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
     let currentPanelIndex = 0;
+
+    // Function to enable or disable the "Next" button based on the kWh field's value
+    function toggleNextButtonState() {
+        if (annual_Kwh_input.value.trim() === '' || annual_Kwh_input.value === 0) {
+          // If the kWh field is empty or contains only spaces, disable the "Next" button
+          nextButton.disabled = true;
+          nextButton.classList.remove('enabled-button')
+        } else {
+          // If the kWh field has a value, enable the "Next" button
+          nextButton.disabled = false;
+          nextButton.classList.add('enabled-button')
+        }
+      }
     
     function showPanel(index) {
         for (let i = 0; i < panelContainers.length; i++) {
@@ -189,6 +191,15 @@ document.addEventListener('DOMContentLoaded', function() {
           } else {
             panelContainers[i].classList.add("hidden");
           }
+        }
+
+        if (index === 3 ){
+          toggleNextButtonState();
+        }
+        if (index === 4 && autoPowerRadio.checked && autoCalculatedPower === false){
+          disableSlider();
+        }else if (autoPowerRadio.checked){
+          slider.disabled = true;
         }
     }
 
@@ -292,7 +303,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Listen for changes in the phase load input and store the selected option
 phase_load_selected.addEventListener("change", function(event){
-    
+  const phaseLoadValue = this.value; // Get the selected value
+
+  // Define the discount percent options based on the phase_load value
+  const discountPercentOptions = (phaseLoadValue === '3_phase')
+    ? ['20', '25', '60']
+    : ['30', '35', '65'];
+
+  const discountPercentBatteryOptions = (phaseLoadValue === '3_phase')
+    ? ['90', '100']
+    : ['90', '100'];
+
+  // Update the discount_percent select options
+  updateDiscountSelectOptions(discountPercentSelect, discountPercentOptions);
+  // Update the discount_percent_battery select options
+  updateDiscountSelectOptions(discountPercentBatterySelect, discountPercentBatteryOptions);
+
+  
   if (event.target.value === 'single_phase' || event.target.value === '3_phase'){
       disableErrorMessages();
       enableAnnualkWh();
@@ -305,9 +332,29 @@ phase_load_selected.addEventListener("change", function(event){
 
   check_selection_kwh_conditions();
   console.log(phase_load_selected.value);
-  check_selection_kwh_conditions();
-  console.log(phase_load_selected.value);
 });
+
+// Function to update select options dynamically
+function updateDiscountSelectOptions(selectElement, options) {
+  // Clear existing options
+  selectElement.innerHTML = '';
+
+  // Add the default option
+  const defaultOption = document.createElement('option');
+  defaultOption.value = 0;
+  defaultOption.textContent = 'Επιλέξτε ποσοστό';
+  defaultOption.selected = true; // Set the default option as selected
+  defaultOption.disabled = true; // Disable the default option
+  selectElement.appendChild(defaultOption);
+
+  // Add the new options
+  options.forEach((option) => {
+    const newOption = document.createElement('option');
+    newOption.value = option;
+    newOption.textContent = option + '%';
+    selectElement.appendChild(newOption);
+  });
+}
 
 annual_Kwh_input.addEventListener("input", function(){
     enableSlider();
@@ -323,35 +370,33 @@ annual_Kwh_input.addEventListener("input", function(){
         max_message.style.display = "none";
     }
 
-    if (annual_Kwh_input.value === '0' || annual_Kwh_input.value === "" ){
-      disableSlider();
-      triggerButtonDisable();
-  }else{
-      enableSlider();
-      triggerButtonEnable();
-  }
-});
-
-annual_Kwh_input.addEventListener("keypress", function(event){
-    if (isNaN(event.key) || event.key === " " ){
-        event.preventDefault();
+    if (annual_Kwh_input.value === 0 || annual_Kwh_input.value.trim() === ""){
+      nextButton.disabled = true;
+      nextButton.classList.remove('enabled-button')
+    }else{
+      nextButton.disabled = false;
+      nextButton.classList.add('enabled-button')
     }
 });
 
-slider.addEventListener("change", function(){
-
-    disableErrorMessages();
-    PV_kW_output.innerHTML = slider.value; 
-    storage_kW.min = slider.value;
-    storage_kW.value = slider.value;
-    disableErrorMessages();
-    PV_kW_output.innerHTML = slider.value; 
-    storage_kW.min = slider.value;
-    storage_kW.value = slider.value;
-
-    console.log(slider.value);
-
+annual_Kwh_input.addEventListener("change", function(){
+  autoCalculatedPower = false;
 });
+
+function setStorage(value) {
+  storage_kW.min = value;
+  storage_kW.value = value;
+}
+
+slider.addEventListener("change", function(){
+    disableErrorMessages();
+    PV_kW_output.innerHTML = slider.value; 
+    slider_hidden_input.value = slider.value;
+    setStorage(slider.value)
+    console.log(slider.value);
+});
+
+slider_hidden_input.addEventListener("change", setStorage(slider_hidden_input.value));
 
 storage_kW.addEventListener("change", function(){
     console.log(storage_kW.value);
@@ -416,18 +461,10 @@ function disableElements() {
     annual_Kwh_input.disabled = true;
     slider.min = 0;
     slider.value = 0;
-    annual_Kwh_input.disabled = true;
-    slider.min = 0;
-    slider.value = 0;
+    slider_hidden_input.value = 0;
     PV_kW_output.innerHTML = slider.value;
     annual_Kwh_input.value = ""
-    annual_Kwh_input.value = ""
     storage_selection.disabled = true;
-    storage_kW.disabled = true; 
-    slider.disabled = true;
-    manualPowerRadio.disabled = true;
-    autoPowerRadio.disabled = true;
-    azimuthInput.value = '0';
     storage_kW.disabled = true; 
     slider.disabled = true;
     manualPowerRadio.disabled = true;
@@ -441,31 +478,20 @@ function enableSlider() {
     PV_kW_output.innerHTML = slider.value;
     manualPowerRadio.disabled = false;
     autoPowerRadio.disabled = false;
-    manualPowerRadio.disabled = false;
-    autoPowerRadio.disabled = false;
-    console.log("Minimun PV system's kWp: ", slider.value)
+    console.log("(function enableSlider) Minimun PV system's kWp: ", slider.value)
 }
 function disableSlider(){
     slider.disabled = true;
     slider.value = 0.0;
     slider.min = 0.0;
-    if (annual_Kwh_input.value === '0') {
-        slider.value = 0.0;
-      } else {
-        console.log("Minimum PV system's kWp: ", slider.value);
-      }
-    
-    manualPowerRadio.disabled = true;
-    autoPowerRadio.disabled = true;
-    manualPowerRadio.disabled = true;
-    autoPowerRadio.disabled = true;
+    if (annual_Kwh_input.value === '0' || annual_Kwh_input.value.trim() === "" ) {
+        manualPowerRadio.disabled = true;
+        autoPowerRadio.disabled = true;
+    } 
     PV_kW_output.innerHTML = slider.value;
+    slider.classList.add("disabled-slider");
 }
 function enableAnnualkWh(){
-    annual_Kwh_input.disabled = false;
-    annual_Kwh_input.max = phase_load_selected.value === 'single_phase' ? 7000 : 15000;
-    annual_Kwh_input.step = 10;
-    annual_Kwh_input.min = 0;
     annual_Kwh_input.disabled = false;
     annual_Kwh_input.max = phase_load_selected.value === 'single_phase' ? 7000 : 15000;
     annual_Kwh_input.step = 10;
@@ -473,14 +499,12 @@ function enableAnnualkWh(){
 }
 function disableAnnualkWh() {
     annual_Kwh_input.disabled = true;
-    annual_Kwh_input.disabled = true;
 }
 function enableStorage() {
     no_storage_selection.checked = true;
     storage_selection.disabled = false;
     storage_kW.disabled = false;
     storage_kW.min = slider.value;
-    storage_kW.max = 10.8;
     storage_kW.max = 10.8;
     storage_kW.step = 0.1;
     storage_kW.value = slider.value;   
@@ -491,7 +515,6 @@ function disableStorage() {
     storage_selection.disabled = true;
     storage_kW.min = slider.value;
     storage_kW.value = 0.0;
-    storage_kW.value = slider.value;
 }
 function disableErrorMessages() {
     //district_average_irradiance.classList.remove('error');
@@ -500,7 +523,6 @@ function disableErrorMessages() {
     error_message.style.display = 'none';
     error_message2.style.display = 'none';
     error_message3.style.display = 'none';
-    max_message.style.display = 'none';
     max_message.style.display = 'none';
 }         
 function check_selection_kwh_conditions(){
@@ -563,25 +585,38 @@ const selectedValue = event.target.value;
         }
     });
 
-
-// Add event listeners to the radio buttons and the calculation button
-manualPowerRadio.addEventListener('change', toggleAutoPowerDiv);
-autoPowerRadio.addEventListener('change', toggleAutoPowerDiv);
-
-
 // Function to toggle the visibility of the div based on the selected radio button
 function toggleAutoPowerDiv() {
   if (manualPowerRadio.checked) {
     autoPowerDiv.classList.add('hidden');
     autoPowerDiv.style.display = 'none'; // Hide the div
+    enableSlider();
+    setStorage(slider.value);
   } else if (autoPowerRadio.checked) {
     autoPowerDiv.classList.remove('hidden');
     autoPowerDiv.style.display = 'block'; // Show the div
+    console.log("in toggle Auto Power: ", autoCalculatedPowerNumber);
+    console.log("Auto calculated?", autoCalculatedPower);
+    slider.disabled = true;
+    if (autoCalculatedPower === true){
+      slider.value = autoCalculatedPowerNumber;
+      slider_hidden_input.value = autoCalculatedPowerNumber;
+      PV_kW_output.innerHTML = autoCalculatedPowerNumber;
+      setStorage(slider_hidden_input.value);
+    }else{
+      disableSlider();
+      slider_hidden_input.value = 0;
+      setStorage(slider_hidden_input.value);
+    }
   }
 }
 
-function calculateAutoPower(event) {
-  event.preventDefault(); // Prevent the default form submission behavior
+// Add event listeners to the radio buttons and the calculation button
+manualPowerRadio.addEventListener('change', toggleAutoPowerDiv);
+autoPowerRadio.addEventListener('change', toggleAutoPowerDiv);
+
+function calculateAutoPower() {
+  // event.preventDefault(); // Prevent the default form submission behavior
 
   // Get the latitude, longitude, azimuth, and tilt values from the form
   const latitudeValue = latitudeInput.value;
@@ -634,9 +669,12 @@ function calculateAutoPower(event) {
       // Update the input field with the calculated power
       $('#placeProduction').val(specialProduction);
       slider.value = recommended_kWp;
+      slider_hidden_input.value = Number(recommended_kWp.toFixed(1));
       PV_kW_output.innerHTML = slider.value;
       storage_kW.min = slider.value;
       storage_kW.value = slider.value;
+      autoCalculatedPower = true;
+      autoCalculatedPowerNumber = Number(recommended_kWp.toFixed(1));
       $('#minimumPanels').val(minimum_PV_panels);
       $('#totalArea').val(totalArea);
       
@@ -697,7 +735,6 @@ function showDiscountInputs() {
 noDiscountRadio.addEventListener('change', showDiscountInputs);
 discountRadio.addEventListener('change', showDiscountInputs);
 
-
 //Submit, reset, Modal events
 form_submit_button.addEventListener('click', function(event){
 
@@ -712,17 +749,31 @@ form_submit_button.addEventListener('click', function(event){
     annual_Kwh_modal_input.value = annual_Kwh_input.value;
 
     // Get the selected radio button's value
-    const selectedRadioButton = document.querySelector('input[name="power_option"]:checked');
+    const powerRadioButton = document.querySelector('input[name="power_option"]:checked');
+    const storageRadioButton = document.querySelector('input[name="storage"][value="with_storage"]:checked');
 
-    if (selectedRadioButton) {
+
+    if (powerRadioButton) {
       // Set the value of the target input field to the selected radio button's value
-      profile_modal_input.value = selectedRadioButton.value;
+      profile_modal_input.value = powerRadioButton.value;
     }
+    slider_hidden_input.value = slider.value;
+    power_modal_input.value = slider_hidden_input.value;
 
-    power_modal_input.value = slider.value;
-    battery_modal_value.value = storage_kW.value;
-    discount_percent_modal_input.value = discount_percent.value;
-    discount_percent_battery_modal_input.value = discount_percent_battery.value;
+    if (storageRadioButton){
+      battery_modal_input.value = storage_kW.value;
+    }else{
+      battery_modal_input.value = 0;
+    }
+      
+    if (noDiscountRadio.checked){
+      discount_percent_modal_input.value = '0';
+      discount_percent_battery_modal_input.value = '0';
+    }else{
+      discount_percent_modal_input.value = discount_percent.value;
+      discount_percent_battery_modal_input.value = discount_percent_battery.value;
+    }
+    
 
     // Show the modal programmatically
     const myModal = new bootstrap.Modal(document.getElementById('myModal'));
@@ -731,6 +782,7 @@ form_submit_button.addEventListener('click', function(event){
     console.log(place_modal_input.value);
     console.log(azimuth_modal_input.value);
     console.log(profile_modal_input.value);
+    console.log(slider_hidden_input.value);
   }
   
 })
@@ -740,18 +792,6 @@ reset_button.addEventListener('click', function() {
   disableElements();
   disableErrorMessages(); 
 
-});
-
-// Add an event listener to the submit button
-submit_modal.addEventListener('click', function(event) {
-  
-  // Validate the form inputs
-  if (!validateForm()) {
-    // Submit the form programmatically
-    event.preventDefault();
-  }else{
-      form.submit();
-  }
 });
 
 // Used to validate that the calculator form has been filled by the user
@@ -774,3 +814,16 @@ function validateForm() {
   }
   return true;
 };
+
+// Add an event listener to the submit button
+submit_modal.addEventListener('click', function(event) {
+  
+  // Validate the form inputs
+  if (!validateForm()) {
+    // prevent submitting the form
+    event.preventDefault();
+  }else{
+      form.submit();
+  }
+});
+

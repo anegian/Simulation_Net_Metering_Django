@@ -263,7 +263,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 else:
                     phase_loadkVA = 15
 
-                PV_kWp = request.POST.get('myRangeSlider')
+                PV_kWp = request.POST.get('myRangeSliderHidden')
                 has_storage = request.POST.get('storage')
                 storage_kw = request.POST.get('storage_kw')
 
