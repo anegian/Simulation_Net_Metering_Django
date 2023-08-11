@@ -760,9 +760,10 @@ input[type="search"]:focus {
         width: 90%;
         color: #ed4901;
     }
-    .disabled-slider{
+    #myRangeSlider.disabled-slider:disabled, #myRangeSlider:disabled{
         background-color: #738725;
         color: #74b1f2;
+        opacity: 1;
     }
     #slider-value{
         color: #ed4901;

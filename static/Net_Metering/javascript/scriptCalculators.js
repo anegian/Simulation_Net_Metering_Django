@@ -63,7 +63,7 @@ const discount_percent_modal_input = document.getElementById("discount_percent_m
 const discount_percent = document.getElementById("discount_percent");
 const discount_percent_battery_modal_input = document.getElementById("discount_percent_battery_modal_value");
 const discount_percent_battery = document.getElementById("discount_percent_battery");
-// Get references to the discount_percent and discount_percent_battery select elements
+// Get references to the discount_percent and discount battery select elements
 const discountPercentSelect = document.querySelector('.discount_percent_select');
 const discountPercentBatterySelect = document.querySelector('.discount_percent_battery_select');
 let autoCalculatedPower;
@@ -76,11 +76,8 @@ const images = document.querySelectorAll('.img-tilt');
 // Set the initial values of all elements to 0
 disableElements();
 nextButton.disabled = true;
-discount_percent.max = 100;
-discount_percent.min = 0;
-discount_percent_battery.max = 100;
-discount_percent_battery.min = 0;
-// Set the readOnly property of the input elements to true
+
+console.log(discount_percent.value);
 
 // Function to simulate a change event on the input field
 function triggerButtonEnable() {
@@ -156,12 +153,11 @@ document.addEventListener('DOMContentLoaded', function() {
     annual_Kwh_input.value = "";
     previousButton.disabled = true;
     form_submit_button.disabled = true;
-    discount_percent.value = 0;
-    discount_percent_battery.value = 0;
     let submitBtnEnabled = false; // A flag to track the state of the submit button
 
     console.log('Next Button Disabled:', nextButton.disabled);
     console.log('Previous Button Disabled:', previousButton.disabled);
+    console.log(discount_percent.value);
     
     images.forEach(function(image) {
       const tiltValue = image.getAttribute('tilt');
@@ -314,9 +310,9 @@ phase_load_selected.addEventListener("change", function(event){
     ? ['90', '100']
     : ['90', '100'];
 
-  // Update the discount_percent select options
+  // Update the discount select options
   updateDiscountSelectOptions(discountPercentSelect, discountPercentOptions);
-  // Update the discount_percent_battery select options
+  // Update the discount battery select options
   updateDiscountSelectOptions(discountPercentBatterySelect, discountPercentBatteryOptions);
 
   
@@ -329,7 +325,7 @@ phase_load_selected.addEventListener("change", function(event){
   }else{
       disableElements();
   } 
-
+discountPercentSelect
   check_selection_kwh_conditions();
   console.log(phase_load_selected.value);
 });
@@ -470,6 +466,10 @@ function disableElements() {
     manualPowerRadio.disabled = true;
     autoPowerRadio.disabled = true;
     azimuthInput.value = '0';
+    discount_percent.max = 100;
+    discount_percent.min = 0;
+    discount_percent_battery.max = 100;
+    discount_percent_battery.min = '0';
 } 
 function enableSlider() {
     slider.disabled = false;
@@ -767,6 +767,8 @@ form_submit_button.addEventListener('click', function(event){
     }
       
     if (noDiscountRadio.checked){
+      discount_percent.value = 0;
+      discount_percent_battery.value = 0;
       discount_percent_modal_input.value = '0';
       discount_percent_battery_modal_input.value = '0';
     }else{
@@ -783,6 +785,8 @@ form_submit_button.addEventListener('click', function(event){
     console.log(azimuth_modal_input.value);
     console.log(profile_modal_input.value);
     console.log(slider_hidden_input.value);
+    console.log('discount_percent_battery value:', discount_percent_battery.value);
+    console.log('discount_percent_battery value:', discount_percent_battery_modal_input.value);
   }
   
 })
@@ -827,3 +831,10 @@ submit_modal.addEventListener('click', function(event) {
   }
 });
 
+discount_percent.addEventListener('change', function() {
+  console.log('discount_percent value:', this.value);
+});
+
+discount_percent_battery.addEventListener('change', function() {
+  console.log('discount_percent_battery value:', this.value);
+});

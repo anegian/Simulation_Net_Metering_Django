@@ -267,6 +267,18 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 has_storage = request.POST.get('storage')
                 storage_kw = request.POST.get('storage_kw')
 
+                noDiscountRadio = request.POST.get('discount')
+
+                if noDiscountRadio == 'no':
+                    # The "no" radio button is selected
+                    discount_PV = 0
+                    discount_battery = 0
+                else:
+                    # The "yes" discount radio button is selected
+                    discount_PV = request.POST.get('discount_percent')
+                    discount_battery = request.POST.get('discount_percent_battery')
+                
+
                 # print the variables to check
                 now = datetime.now()
                 print("\n ######### Start of session of USER'S form: ", now, "#########")
@@ -313,6 +325,10 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['panel_efficiency'] = panel_efficiency
             request.session['panel_cost'] = panel_cost
             request.session['panel_area'] = panel_area
+            request.session['discount_PV'] = discount_PV
+            request.session['discount_battery'] = discount_battery
+
+            print(f"DISCOUNTS posted\n PV:{discount_PV}%, Battery:{discount_battery}%")
 
             # return redirect(reverse('simulation:dashboard'))  # redirect to dashboard html
             return dashboard_results(request)
