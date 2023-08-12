@@ -776,15 +776,19 @@ form_submit_button.addEventListener('click', function(event){
       discount_percent_battery_modal_input.value = discount_percent_battery.value;
     }
     
+    if (manualPowerRadio.checked)
+      minimum_panel_container.value = 0;
 
     // Show the modal programmatically
     const myModal = new bootstrap.Modal(document.getElementById('myModal'));
     myModal.show();
 
+    // test prints
     console.log(place_modal_input.value);
     console.log(azimuth_modal_input.value);
     console.log(profile_modal_input.value);
     console.log(slider_hidden_input.value);
+    console.log(minimum_panel_container.value);
     console.log('discount_percent_battery value:', discount_percent_battery.value);
     console.log('discount_percent_battery value:', discount_percent_battery_modal_input.value);
   }
@@ -831,10 +835,11 @@ submit_modal.addEventListener('click', function(event) {
   }
 });
 
+// Test print
 discount_percent.addEventListener('change', function() {
   console.log('discount_percent value:', this.value);
 });
-
+// Test print
 discount_percent_battery.addEventListener('change', function() {
   console.log('discount_percent_battery value:', this.value);
 });
