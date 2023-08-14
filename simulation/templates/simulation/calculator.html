@@ -18,7 +18,7 @@
 <script> let geojsonPath = "{% static 'Net_Metering/json/Prefectures_boundaries.geojson' %}";</script>
 <script src="{% static 'Net_Metering/javascript/leaflet_map.js' %}" defer></script>
 <script> var calculatePowerURL = "{% url 'simulation:calculate_power' %}";</script>
-<script src="{% static 'Net_Metering/javascript/scriptCalculator.js' %}" defer></script>
+<script src="{% static 'Net_Metering/javascript/scriptCalculators.js' %}" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 {% endblock %}
 
