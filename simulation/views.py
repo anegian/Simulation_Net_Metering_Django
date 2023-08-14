@@ -485,7 +485,7 @@ def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_p
         elif userPower_profile == "high-day-evening":
             self_consumption_rate = 0.85
         elif userPower_profile == "evening-power":
-            self_consumption_rate = 0.85
+            self_consumption_rate = 0.80
         else:
             self_consumption_rate = 0.75
     else:
