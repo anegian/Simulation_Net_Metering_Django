@@ -409,7 +409,6 @@ def calculate_power(request):
     except Http404:      # not use bare except
         return Http404("404 Generic Error")
 
-
 # Calculation functions
 def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost, discount_PV, discount_battery, number_of_panels_required):
     installation_cost = 400 # average cost in €
@@ -483,11 +482,19 @@ def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_p
     if has_storage == "with_storage":
         if userPower_profile == "day-power":
             self_consumption_rate = 0.9
+        elif userPower_profile == "high-day-evening":
+            self_consumption_rate = 0.85
+        elif userPower_profile == "evening-power":
+            self_consumption_rate = 0.85
         else:
             self_consumption_rate = 0.75
     else:
         if userPower_profile == "day-power":
             self_consumption_rate = 0.7
+        elif userPower_profile == "high-day-evening":
+            self_consumption_rate = 0.65
+        elif userPower_profile == "evening-power":
+            self_consumption_rate = 0.6
         else:
             self_consumption_rate = 0.5
 
