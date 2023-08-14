@@ -33,12 +33,18 @@ class PlaceOfInstallationForm(forms.Form):
     select_district = forms.ChoiceField(choices=DISTRICT_CHOICES, label='Επιλέξτε Περιφέρεια',
                                         initial='district')
     
-
+class DisabledDefaultSelect(forms.Select):
+    def create_option(self, *args, **kwargs):
+        option = super().create_option(*args, **kwargs)
+        if option['value'] == 'phase_load':
+            option['attrs']['disabled'] = 'disabled'
+        return option
+    
 class PhaseLoad(forms.Form):
-    PHASE_LOAD = [('phase_load', 'Παροχή'), ('single_phase', 'Μονοφασική'), ('3_phase', 'Τριφασική'), ]
+    PHASE_LOAD = [('phase_load', 'Επιλέξτε Παροχή'), ('single_phase', 'Μονοφασική'), ('3_phase', 'Τριφασική'), ]
 
     
-    select_phase = forms.ChoiceField(choices=PHASE_LOAD, initial='phase_load')
+    select_phase = forms.ChoiceField(choices=PHASE_LOAD, initial='phase_load',widget=DisabledDefaultSelect)
 
 
 class RegistrationForm(UserCreationForm):
