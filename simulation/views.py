@@ -511,61 +511,26 @@ def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_p
     return average_annual_savings, profitPercent, total_annual_cost, regulated_charges
 
 def calculate_payback_period(total_investment, average_annual_savings): 
-    cycles = 0
-    total_savings = 0
-    monthly_savings = average_annual_savings / 12
+    years_to_overcome_investment = 0
+    total_savings = []
 
     # Find the point where savings exceed investment
-    while total_savings < total_investment:
-        total_savings += average_annual_savings / ( ( annual_degradation_production ) ** cycles)
-        cycles += 1
-        print(f"Total savings: {total_savings} & years needed to overcome investment:{cycles}")
-    
-    # Calculate years and months independently from that point
-    subtraction_result = total_savings - total_investment
+    while sum(total_savings) <= total_investment:
+        total_savings.append( average_annual_savings / ( ( annual_degradation_production ) ** years_to_overcome_investment) )
+        years_to_overcome_investment += 1
 
-    if subtraction_result <= monthly_savings:
-        years = cycles
-        months = 1
+    # Calculate years and months independently from that point    
+    subtraction = sum(total_savings) - total_investment
+    monthly_savings = total_savings [years_to_overcome_investment - 2] /12
+    years = years_to_overcome_investment - 1
+    months = round(12 - (subtraction/monthly_savings) )
+
+    if months == 1:
+        payback_period = f"{years} έτη & {months} μήνας"
     else:
-        years = cycles - 1
-        months = int(round(12-(subtraction_result/monthly_savings)))
+        payback_period = f"{years} έτη & {months} μήνες"
 
-    return f"{years} έτη και {months} μήνες"
-    
-
-# def calculate_annual_PV_energy_produced(PV_kWp, district_irradiance, azimuth_value, inclination_PV):
-    # Calculate the annual production of the PV system
-    # based on the system's specifications and the inclination
-    # Return the result
-
-    if azimuth_value == '90':
-        percentage_production_loss = 1.14
-    elif azimuth_value == '45':
-        percentage_production_loss = 1.04
-    elif azimuth_value == '-90':
-        percentage_production_loss = 1.13
-    elif azimuth_value == '-45':
-        percentage_production_loss = 1.03
-    else:
-        percentage_production_loss = 1 # ideal azimuth is south so no loss
-
-    if inclination_PV == '30': # ideal inclination
-        inclination_percentage = 1
-    elif inclination_PV == '45':
-        inclination_percentage = 1.018
-    elif inclination_PV == '15':
-        inclination_percentage = 1.025
-    elif inclination_PV == '0':
-        inclination_percentage = 1.12
-    else:
-        inclination_percentage = 1
-
-    production_per_KW = district_irradiance * PV_kWp 
-    total_loss_percentage = percentage_production_loss * inclination_percentage
-    annual_PV_energy_produced = production_per_KW / total_loss_percentage
-
-    return annual_PV_energy_produced, total_loss_percentage, percentage_production_loss, inclination_percentage,production_per_KW   # in kWh
+    return payback_period    
 
 def calculate_total_production_kwh(annual_PV_energy_produced):
 
