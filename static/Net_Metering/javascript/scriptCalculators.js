@@ -273,7 +273,11 @@ function toggleAutoPowerDiv() {
 }
 function calculateAutoPower() {
   // event.preventDefault(); // Prevent the default form submission behavior
-
+  
+  // Show the progress bar at the start of the request
+  $('#progressBar').css('width, '0'); //reset progress bar
+  $('#progressBar').show(); 
+  
   // Get the latitude, longitude, azimuth, and tilt values from the form
   const latitudeValue = latitudeInput.value;
   const longitudeValue = longitudeInput.value;
@@ -317,6 +321,19 @@ function calculateAutoPower() {
     headers: {
       'X-CSRFToken': csrfToken // Include the CSRF token in the request headers
     },
+    
+    xhr: function() {
+      let xhr = new window.XMLHttpRequest();
+      // Track progress events to update the progress bar
+      xhr.upload.addEventListener("progress", function(event) {
+        if (event.lengthComputable) {
+          let percentComplete = (event.loaded / event.total) * 100;
+          $('#progressBar').css('width', percentComplete + '%');
+        }
+      }, false);
+      return xhr;
+    },
+      
     success: function(response) {
       // Handle the response
       const specialProduction = response.special_production;
@@ -336,12 +353,16 @@ function calculateAutoPower() {
       $('#minimumPanels').val(minimum_PV_panels);
       $('#totalArea').val(totalArea);
 
-      enablePanelButton(nextButton);
       
+      enablePanelButton(nextButton);
+      // Hide the progress bar on success
+      $('#progressBar').hide();
 
     },
     error: function(xhr, textStatus, errorThrown) {
       console.log('Error:', errorThrown);
+      // Hide the progress bar on error
+      $('#progressBar').hide();
     }
   });
 }
