@@ -148,8 +148,8 @@
                                     </div>
 
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input option2" id="taratsa" name="installation" value="taratsa">
-                                        <label class="form-check-label" for="taratsa">Ταράτσα</label>
+                                        <input type="radio" class="form-check-input option2" id="terrace" name="installation" value="terrace">
+                                        <label class="form-check-label" for="terrace">Ταράτσα</label>
                                     </div>
                                 </div>            
 
@@ -160,7 +160,7 @@
                                         </div>
 
                                         <select  class="panel-selection-height" name="panel_params" id="panelParams"> 
-                                            <option value="0.305" data-efficiency="0.183" data-panel_area="1.67" data-panel_cost="167">Mονοκρυσταλλικό Πάνελ <strong>305Wp</strong> (Βαθμός απόδοσης : ≥18,3%)</option>
+                                            <option id="defaultPanelParams" value="0.305" data-efficiency="0.183" data-panel_area="1.67" data-panel_cost="167">Mονοκρυσταλλικό Πάνελ <strong>305Wp</strong> (Βαθμός απόδοσης : ≥18,3%)</option>
                                             <option value="0.340" data-efficiency="0.165" data-panel_area="2.06" data-panel_cost="188">Πολυκρυσταλλικό Πάνελ <strong>340Wp</strong> (Βαθμός απόδοσης : 16,5%) </option>
                                             <option value="0.370" data-efficiency="0.191" data-panel_area="1.94" data-panel_cost="199">Mονοκρυσταλλικό Πάνελ <strong>370Wp</strong> (Βαθμός απόδοσης : 19,1%) </option>
                                             <option value="0.410" data-efficiency="0.21" data-panel_area="1.95" data-panel_cost="248">Mονοκρυσταλλικό Πάνελ <strong>410Wp</strong> (Βαθμός απόδοσης : 21,0%) </option>
@@ -409,7 +409,7 @@
 
                                     <input type="range" id="myRangeSlider" name="myRangeSlider" required>
                                     <p class="slider-label">Τιμή: <span id="slider-value"></span> kWp</p> 
-                                    <input type="number" id="myRangeSliderHidden" name="myRangeSliderHidden" required>
+                                    <input type="hidden" id="myRangeSliderHidden" name="myRangeSliderHidden" required>
                                         
                                     <span id="error-message-panel6">Παρακαλώ πρώτα επιλέξτε ετήσια κατανάλωση kWh & kWp.</span>
                                 </div>
@@ -508,6 +508,27 @@
 
                                     <div class="hidden-storage" id="discountPercentContainer" style="display: none;" >
                                         <label for="discount_percent">Ποσοστό έκπτωσης ΦΒ Σταθμού (σε %):</label>
+
+                                        <button class="help-popper" type="button">
+                                            <i class="fa fa-question-circle" id="discount-info"></i>
+                                        </button>
+    
+                                            <div class="help-container">
+                                                <span class="help-text" id="discount-text">
+                                                    <strong>Προσέξτε να έχει συμπληρωθεί στο προηγούμενο βήμα, το είδος <br> παροχής και η ετήσια κατανάλωση ρεύματος!</strong><br><br>
+                                                    
+                                                    
+                                                     Μπορείτε ελεύθερα να αυξομειώσετε τη συνολική ισχύ σύμφωνα με τις εξατομικευμένες ανάγκες σας και τα επιτρεπτά όρια.<br><br>
+                                                     Επιλέγοντας "Εύρεση βέλτιστης Ισχύος", θα εμφανιστεί κουμπί υπολογισμού και πατώντας το, 
+                                                     θα συμπληρωθoύν τα kWp του Φ/Β συστήματος που απαιτούνται για να εκμηδενίσετε την ετήσια κατανάλωση σας σε βάθος 25ετίας.<br>
+                                                     <br>
+    
+                                                     <b style="color: red;">Προσοχή</b>!<br>Για Μονοφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 5 kWp.<br>
+                                                     Για Τριφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 10 kWp.
+                                                </span>
+                                                 <span class="close-help">&times;</span>
+                                            </div>
+
                                         <select class="form-control discount_percent_select" id="discount_percent" name="discount_percent">
                                             <!-- Add default option -->
                                             <option value="">Επιλέξτε ποσοστό</option>
@@ -515,6 +536,20 @@
                                         <!-- <input type="number" class="form-control" id="discount_percent" name="discount_percent"> -->
 
                                         <label for="discount_percent_battery">Ποσοστό έκπτωσης Μπαταρίας (σε %):</label>
+                                        <button class="help-popper" type="button">
+                                            <i class="fa fa-question-circle" id="discount-battery-icon"></i>
+                                        </button>
+    
+                                            <div class="help-container">
+                                                <span class="help-text" id="discount-battery-text">
+                                                    <ul><li>Ποσοστά έκπτωσης σύμφωνα με το πρόγραμμα <strong>"Φωτοβολταϊκά <br> στη Στέγη"</strong></li></ul>
+                                                    
+                                                    <img class="img-discount" src="{% static 'images/discount.png' %}" alt="No Image">
+                                                    
+                                                </span>
+                                                 <span class="close-help">&times;</span>
+                                            </div>
+
                                         <select class="form-control discount_percent_battery_select" id="discount_percent_battery" name="discount_percent_battery">
                                             <!-- Add default option -->
                                             <option value="">Επιλέξτε ποσοστό</option>
@@ -533,7 +568,7 @@
                 <div class="my-submit-form">
                     <!-- Previous and Next buttons -->
                     <div>
-                        <button type="reset" class="form-reset-button" id="resetBtn"><i class="fas fa-undo"></i> Διόρθωση</button>
+                        <button type="button" class="form-reset-button" id="resetBtn"><i class="fas fa-undo"></i> Διόρθωση</button>
                         <button type="button" id="previous-button"> &#11164; Προηγούμενο</button>
                         <button type="button" id="next-button">Επόμενο &#11166;</button>
                     </div>

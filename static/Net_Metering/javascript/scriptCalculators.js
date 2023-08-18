@@ -1,4 +1,5 @@
 // variables initialization
+const themeSlider = document.getElementById('theme-slider');
 const slider = document.getElementById("myRangeSlider");
 const slider_hidden_input = document.getElementById("myRangeSliderHidden");
 const PV_kW_output = document.getElementById("slider-value");
@@ -9,14 +10,18 @@ const placeSelected = document.getElementById('regionInput');
 const latitudeInput = document.getElementById('latitude');
 const longitudeInput = document.getElementById('longitude');
 const panelParamsSelect = document.getElementById('panelParams');
+const defaultPanelParams = document.getElementById('defaultPanelParams');
 const panelWpInput = document.getElementById('panelWpInput');
 const panelEfficiencyInput = document.getElementById('panelEfficiencyInput');
 const panelAreaInput = document.getElementById('panelAreaInput');
 const panelCostInput = document.getElementById('panelCostInput');
 const form = document.getElementById("calculatorForm");
-
+const placeInstalmentRadios  = document.getElementsByName('installation')
+let selectedPlaceInstalmentValue;
+const roofRadioButton = document.getElementById('roof');
 
 const phase_load_selected = document.getElementById("id_select_phase");
+const phaseLoadDefaultSelection = document.getElementById("phase_load");
 const reset_button = document.getElementById("resetBtn")
 const lastPanelField = document.getElementById('lastPanelField');
 const error_message = document.getElementById('error-message-panel');
@@ -37,8 +42,11 @@ const autoPowerButton = document.getElementById('calculateProductionButton');
 // Get references to the radio inputs and the azimuthInput
 const radioAzimuthInputs = document.querySelectorAll('input[name="azimuth"]');
 const azimuthInput = document.getElementById('azimuthInput');
+const azimuthDefaultRadio = document.getElementById("south");
 const radioTiltInputs = document.querySelectorAll('input[name="inclination"]');
 const tiltInput = document.getElementById('tiltInput');
+const tiltDefaultRadio = document.getElementById('inclination30');
+const profileDefaultRadio = document.getElementById('day-power');
 const special_production_output = document.getElementById('placeProduction');
 const minimum_panel_container = document.getElementById('minimumPanels');
 const total_PV_area = document.getElementById('totalArea');
@@ -47,6 +55,8 @@ const panelContainers = document.getElementsByClassName("panel-calculator");
 const previousButton = document.getElementById("previous-button");
 const nextButton = document.getElementById("next-button");
 const circleLinks = document.querySelectorAll('.circle-link');
+let currentPanelIndex = 0;
+let submitBtnEnabled;
 
 //Modal fields
 const form_submit_button = document.getElementById("submitBtn");
@@ -68,38 +78,19 @@ const discountPercentSelect = document.querySelector('.discount_percent_select')
 const discountPercentBatterySelect = document.querySelector('.discount_percent_battery_select');
 let autoCalculatedPower;
 let autoCalculatedPowerNumber = 0;
+const noDiscountRadio = document.getElementById('no-discount');
+const discountRadio = document.getElementById('discount');
 
+var loadingBar = document.getElementById('loading-bar');
+var containerWidth = loadingBar.parentElement.offsetWidth; // Get the width of the container element
+var width = 0;
+var id = null;
 
-// Settings for tilt images
-const images = document.querySelectorAll('.img-tilt');
-
-// Set the initial values of all elements to 0
-disableElements();
-nextButton.disabled = true;
-
-console.log(discount_percent.value);
-
-// Function to simulate a change event on the input field
-function triggerButtonEnable() {
-    nextButton.disabled = false;
-    console.log("In trigger function:", placeSelected.value)
-    console.log(nextButton.disabled);
-    nextButton.classList.add('enabled-button') 
-}
-
-function triggerButtonDisable() {
-nextButton.disabled = true;
-nextButton.classList.remove ('enabled-button');
-console.log("In trigger function:", placeSelected.value);
-console.log(nextButton.disabled);
-}
-
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-    slider.min = 0.0;
-    PV_kW_output.innerHTML = this.value;
-    error_message3.style = 'none';
-};      
+// Help Poppers to give details about the form fields or selected values
+const helpButtons = document.getElementsByClassName('help-popper');
+const helpTexts = document.getElementsByClassName('help-text');
+const closeIcons = document.getElementsByClassName('close-help');
+const numberOfHelpButtons = helpButtons.length;
 
 // Set default values for panel parameters
 panelWpInput.value = panelParamsSelect.options[0].value;
@@ -107,6 +98,457 @@ panelEfficiencyInput.value = panelParamsSelect.options[0].dataset.efficiency;
 panelAreaInput.value = panelParamsSelect.options[0].dataset.panel_area;
 panelCostInput.value = panelParamsSelect.options[0].dataset.panel_cost;
 
+// Settings for tilt images
+const images = document.querySelectorAll('.img-tilt');
+
+// FUNCTIONS
+function triggerButtonEnable() {
+
+  nextButton.disabled = false;
+  console.log("In trigger function:", placeSelected.value)
+  console.log(nextButton.disabled);
+  nextButton.classList.add('enabled-button') 
+}
+function triggerButtonDisable() {
+nextButton.disabled = true;
+nextButton.classList.remove ('enabled-button');
+console.log("In trigger function:", placeSelected.value);
+console.log(nextButton.disabled);
+}
+function setStorage(value) {
+  storage_kW.min = value;
+  storage_kW.value = value;
+}
+function enablePanelButton(button){
+  button.disabled = false;
+  button.classList.add('enabled-button');
+}
+function disablePanelButton(button){
+  button.disabled = true;
+  button.classList.remove('enabled-button');
+}
+function enableSlider() {
+  slider.disabled = false;
+  slider.min = 0.0;
+  slider.step = 0.1;
+  PV_kW_output.innerHTML = slider.value;
+  manualPowerRadio.disabled = false;
+  autoPowerRadio.disabled = false;
+  slider.classList.remove("disabled-slider");
+  console.log("(function enableSlider) Minimun PV system's kWp: ", slider.value)
+}
+function disableSlider(){
+  slider.disabled = true;
+  slider.value = 0.0;
+  slider.min = 0.0;
+  slider_hidden_input.value = 0;
+  if (annual_Kwh_input.value === '0' || annual_Kwh_input.value.trim() === "" ) {
+      manualPowerRadio.disabled = true;
+      autoPowerRadio.disabled = true;
+  } 
+  PV_kW_output.innerHTML = slider.value;
+  slider.classList.add("disabled-slider");
+}
+function disableElements() {
+  disableSlider();
+  placeSelected.value = "";
+  latitudeInput.value = "";
+  longitudeInput.value = "" ; 
+  disablePanelButton(nextButton);
+  disablePanelButton(previousButton);
+  disablePanelButton(form_submit_button);
+  submitBtnEnabled = false;
+  roofRadioButton.checked = true;
+  defaultPanelParams.selected  = true;
+  tiltDefaultRadio.checked = true;
+  tiltInput.value = '30'; // Set the value of tiltInput to 30
+  azimuthDefaultRadio.checked = true;
+  azimuthInput.value = 0;
+  phase_load_selected.value = "phase_load";// Set the default phase value 
+  annual_Kwh_input.disabled = true;
+  annual_Kwh_input.value = ""
+  profileDefaultRadio.checked = true;
+  storage_selection.disabled = true;
+  storage_kW.disabled = true; 
+  manualPowerRadio.disabled = true;
+  manualPowerRadio.checked = true;
+  autoPowerRadio.disabled = true;
+  autoPowerDiv.classList.add('hidden');
+  autoPowerDiv.style.display = 'none';
+  autoCalculatedPower = false;
+  special_production_output.value = "";
+  minimum_panel_container.value = "";
+  total_PV_area.value = "";
+  // Discounts 
+  discount_percent.max = 100;
+  discount_percent.min = 0;
+  discount_percent_battery.max = 100;
+  discount_percent_battery.min = '0';
+  selectedPlaceInstalmentValue = 'roof';
+  noDiscountRadio.checked = true;
+  discountPercentContainer.style.display = 'none';
+} 
+function enableAnnualkWh(){
+  annual_Kwh_input.disabled = false;
+  annual_Kwh_input.max = phase_load_selected.value === 'single_phase' ? 7000 : 15000;
+  annual_Kwh_input.step = 10;
+  annual_Kwh_input.min = 0;
+}
+function disableAnnualkWh() {
+  annual_Kwh_input.disabled = true;
+}
+function enableStorage() {
+  no_storage_selection.checked = true;
+  storage_selection.disabled = false;
+  storage_kW.disabled = false;
+  storage_kW.min = slider.value;
+  storage_kW.max = 10.8;
+  storage_kW.step = 0.1;
+  storage_kW.value = slider.value;   
+}
+function disableStorage() {
+  no_storage_selection.checked = true;
+  storage_kW.disabled = true;
+  storage_selection.disabled = true;
+  storage_kW.min = slider.value;
+  storage_kW.value = 0.0;
+}
+function disableErrorMessages() {
+  //district_average_irradiance.classList.remove('error');
+  //district_average_irradiance.classList.remove('error');
+  phase_load_selected.classList.remove('error');
+  error_message.style.display = 'none';
+  error_message2.style.display = 'none';
+  error_message3.style.display = 'none';
+  max_message.style.display = 'none';
+}         
+function check_selection_kwh_conditions(){
+  if (phase_load_selected.value !== 'phase_load' && placeSelected.value !== ""){
+      enableAnnualkWh();
+      disableErrorMessages();
+  }else{ 
+      disableAnnualkWh();
+      disableElements();
+      disableStorage();
+  }
+}
+function set_initial_properties_theme_toggler(){
+  themeSlider.value = '0';
+  document.documentElement.style.setProperty('--bg-color', '#29233b');
+  document.documentElement.style.setProperty('--text-color', '#f2f2f2');
+  document.documentElement.style.setProperty('--bg-color-panel', '#393052');
+  document.documentElement.style.setProperty('--label-color', '#bbb');
+  document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
+  document.documentElement.style.setProperty('--slider-color', '#74b1f2');
+  document.documentElement.style.setProperty('--thumb-color', '#393052');
+  document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
+  document.documentElement.style.setProperty('--bg-color-submit-button', '#738725'); 
+  document.documentElement.style.setProperty('--help-popper', 'f2f2f2');
+}
+// Function to toggle the visibility of the power calculate div
+function toggleAutoPowerDiv() {
+  if (manualPowerRadio.checked) {
+    autoPowerDiv.classList.add('hidden');
+    autoPowerDiv.style.display = 'none'; // Hide the div
+    enableSlider();
+    setStorage(slider.value);
+  } else if (autoPowerRadio.checked) {
+    autoPowerDiv.classList.remove('hidden');
+    autoPowerDiv.style.display = 'block'; // Show the div
+    console.log("in toggle Auto Power: ", autoCalculatedPowerNumber);
+    console.log("Auto calculated?", autoCalculatedPower);
+    slider.disabled = true;
+    if (autoCalculatedPower === true){
+      slider.value = autoCalculatedPowerNumber;
+      slider_hidden_input.value = autoCalculatedPowerNumber;
+      PV_kW_output.innerHTML = autoCalculatedPowerNumber;
+      setStorage(slider_hidden_input.value);
+      enablePanelButton(nextButton);
+    }else{
+      disableSlider();
+      slider_hidden_input.value = 0;
+      setStorage(slider_hidden_input.value);
+    }
+  }
+}
+function calculateAutoPower() {
+  // event.preventDefault(); // Prevent the default form submission behavior
+
+  // Get the latitude, longitude, azimuth, and tilt values from the form
+  const latitudeValue = latitudeInput.value;
+  const longitudeValue = longitudeInput.value;
+  const azimuthValue = azimuthInput.value;
+  const tiltValue = tiltInput.value;
+  const panelWpValue = panelWpInput.value
+  const panelAreaValue = panelAreaInput.value;
+  const panelEfficiencyValue = panelEfficiencyInput.value
+  const annualKWhValue = annual_Kwh_input.value
+  const placeInstalmentValue = selectedPlaceInstalmentValue
+  const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  const url = '/simulation/ajax/' ;  // Make sure this matches the URL pattern in your Django project's URLs
+
+  if (!annualKWhValue){
+    alert('Πρώτα πρέπει να επιλέξετε ετήσια κατανάλωση σε kWh στο προηγούμενο βήμα');
+  }
+    // Create the data object
+    let data = {
+        latitude: latitudeValue,
+        longitude: longitudeValue,
+        inclination: tiltValue,
+        azimuth: azimuthValue,
+        panel_area: panelAreaValue,
+        panel_efficiency: panelEfficiencyValue,
+        annual_Kwh_value: annualKWhValue,
+        panel_Wp_value: panelWpValue,
+        place_instalment_value: placeInstalmentValue,
+    };
+
+    console.log(data);
+
+  const jsonData = JSON.stringify(data);
+
+  // Make the AJAX request
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: jsonData,
+    contentType: 'application/json', // Set the request content type to JSON
+    dataType: 'json', // Expect JSON response from the server
+    headers: {
+      'X-CSRFToken': csrfToken // Include the CSRF token in the request headers
+    },
+    success: function(response) {
+      // Handle the response
+      const specialProduction = response.special_production;
+      const recommended_kWp = response.recommended_kWp;
+      const minimum_PV_panels = response.minimum_PV_panels;
+      const totalArea = response.total_area;
+      
+      // Update the input field with the calculated power
+      $('#placeProduction').val(specialProduction);
+      slider.value = recommended_kWp;
+      slider_hidden_input.value = Number(recommended_kWp.toFixed(1));
+      PV_kW_output.innerHTML = slider.value;
+      storage_kW.min = slider.value;
+      storage_kW.value = slider.value;
+      autoCalculatedPower = true;
+      autoCalculatedPowerNumber = Number(recommended_kWp.toFixed(1));
+      $('#minimumPanels').val(minimum_PV_panels);
+      $('#totalArea').val(totalArea);
+
+      enablePanelButton(nextButton);
+      
+
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      console.log('Error:', errorThrown);
+    }
+  });
+}
+function frame() {
+  if (width >= 100) {
+    clearInterval(id);
+    id = null; // Reset the interval ID
+    width = 0; // Reset the width to 0
+  } else {
+    width++;
+    var newWidth = (width / 100) * containerWidth; // Calculate the new width based on the container width
+    loadingBar.style.width = newWidth + "px"; // Set the width in pixels
+    loadingBar.innerHTML = width + "%";
+  }
+}
+function startLoading() {
+  if (id === null) { // Check if animation is not already running
+    width = 0; // Reset the width to 0
+    loadingBar.style.width = '0'; // Reset the width style to 0
+    id = setInterval(frame, 20); // Adjust the interval duration for slower animation
+  }
+}
+// Function to update select options dynamically
+function updateDiscountSelectOptions(selectElement, options) {
+  // Clear existing options
+  selectElement.innerHTML = '';
+
+  // Add the default option
+  const defaultDiscountOption = document.createElement('option');
+  defaultDiscountOption.textContent = 'Επιλέξτε ποσοστό';
+  defaultDiscountOption.selected = true; // Set the default option as selected
+  defaultDiscountOption.disabled = true; // Disable the default option
+  defaultDiscountOption.value = 0;
+  selectElement.appendChild(defaultDiscountOption);
+
+  // Add the new options
+  options.forEach((option) => {
+    const newOption = document.createElement('option');
+    newOption.value = option;
+    newOption.textContent = option + '%';
+    selectElement.appendChild(newOption);
+  });
+}
+// function to show/hide the discount inputs
+function showDiscountInputs() {
+    if (discountRadio.checked) {
+      discountPercentContainer.style.display = 'block';
+    } else {
+      discountPercentContainer.style.display = 'none';
+      discount_percent.value = 0;
+      discount_percent_battery.value = 0;
+    }
+}
+// Used to validate that the calculator form has been filled by the user
+function validateForm() {
+
+  if(phase_load_selected.value === 'phase_load' ){ //&& district_average_irradiance.value === "district"){
+      slider.classList.add('error');
+      phase_load_selected.classList.add('error');
+      error_message2.style.display = 'block';
+      // district_average_irradiance.classList.add('error'); 
+      error_message.style.display = 'block';
+      return false;
+  }else if (placeSelected.value === '' || latitudeInput.value === '' || longitudeInput.value === '') {
+      alert("Επιλέξτε μία τοποθεσία στο χάρτη");
+      return false;
+  }else if (slider.value === '0') {
+      slider.classList.add('error'); // Add the error class to the slider element
+      error_message3.style.display = 'block';
+      return false; // return false to indicate that the form was not submitted
+  }
+  return true;
+};
+
+// Function about Next, Previous buttons and how to show the panels of the form
+function toggleNextButtonState() {
+    if (annual_Kwh_input.value.trim() === '' || annual_Kwh_input.value === 0 || slider.value === '0') {
+      // If the kWh field is empty or contains only spaces, disable the "Next" button
+      disablePanelButton(nextButton);
+    } else {
+      // If the kWh field has a value, enable the "Next" button
+      enablePanelButton(nextButton);
+    }
+}
+function showPanel(index) {
+    for (let i = 0; i < panelContainers.length; i++) {
+      if (i === index) {
+        panelContainers[i].classList.remove("hidden");
+      } else {
+        panelContainers[i].classList.add("hidden");
+      }
+    }
+
+    if (index === 3 || index === 4 ){
+      toggleNextButtonState();
+    }
+    if (index === 4 && autoPowerRadio.checked && autoCalculatedPower === false){
+      disableSlider();
+    }else if (autoPowerRadio.checked){
+      slider.disabled = true;
+    }
+}
+function goToPreviousPanel() {
+  if (currentPanelIndex > 0) {
+    const previousPanelIndex = currentPanelIndex - 1; // Calculate the previous panel index
+    showPanel(previousPanelIndex);
+
+    // Update navigation active class based on panel change
+    const currentPanelLink = document.querySelector('.panel-field[href="#' + panelContainers[currentPanelIndex].getAttribute('id') + '"]');
+    if (currentPanelLink) {
+      currentPanelLink.classList.remove('active');
+    }
+
+    const previousId = panelContainers[previousPanelIndex].getAttribute('id');
+    const previousPanelLink = document.querySelector('.panel-field[href="#' + previousId + '"]');
+    // Update circle links active class based on panel change
+    circleLinks[currentPanelIndex].classList.remove('active');
+
+    console.log('Current Panel Index:', currentPanelIndex);
+    console.log('Number of Panels:', panelContainers.length);
+
+    if (previousPanelLink) {
+      previousPanelLink.classList.add('active');
+    } else {
+      console.error('Previous Panel Link not found:', previousId);
+    }
+
+    // Update currentPanelIndex only if it's not the first panel
+    currentPanelIndex = previousPanelIndex;
+
+    // Always enable the Next button when moving to the previous panel
+    enablePanelButton(nextButton);
+  }
+
+  // Check if it's the first panel and disable the Previous button
+  if (currentPanelIndex === 0) {
+    disablePanelButton(previousButton);
+
+    // Disable the form_submit_button when moving to a previous panel
+    if (submitBtnEnabled) {
+      submitBtnEnabled = false;
+      disablePanelButton(form_submit_button);
+    }
+  }
+  console.log('Next Button Disabled:', nextButton.disabled);
+  console.log('Previous Button Disabled:', previousButton.disabled);
+}
+function goToNextPanel() {
+  
+  if (currentPanelIndex < panelContainers.length - 1) {
+    currentPanelIndex++; // Update currentPanelIndex
+    showPanel(currentPanelIndex);
+
+    // Update circle links active class based on panel change
+    circleLinks[currentPanelIndex].classList.add('active');
+
+    const nextPanelId = panelContainers[currentPanelIndex].getAttribute('id');
+    const nextPanelLink = document.querySelector('.panel-field[href="#' + nextPanelId + '"]');
+    
+    console.log('Current Panel Index:', currentPanelIndex+1);
+
+    if (nextPanelLink) {
+      nextPanelLink.classList.add('active');
+    } else {
+      console.error('Next Panel Link not found:', nextPanelId);
+    }
+
+  }
+  // Check if it's the last panel and disable the Next button
+  if (currentPanelIndex === panelContainers.length - 1) {
+    disablePanelButton(nextButton);
+
+    // Enable the form_submit_button in the last panel
+    if (!submitBtnEnabled) {
+      submitBtnEnabled = true;
+      enablePanelButton(form_submit_button);
+    }
+  }
+  // Always enable the Previous button when moving to the next panel
+  enablePanelButton(previousButton);
+
+  console.log('Next Button Disabled:', nextButton.disabled);
+  console.log('Previous Button Disabled:', previousButton.disabled);
+}
+// Function to handle the reset button
+function resetForm(){
+  disableElements();
+  disableStorage();
+  // Show the first panel and scroll to it
+  currentPanelIndex = 0; // Reset to the first panel index
+  showPanel(currentPanelIndex);
+};
+
+// Set the initial values of all elements to 0
+disableElements();
+nextButton.disabled = true;
+// Settings for theme toggler
+set_initial_properties_theme_toggler();
+showPanel(currentPanelIndex);
+
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+    slider.min = 0.0;
+    PV_kW_output.innerHTML = this.value;
+    error_message3.style = 'none';
+};      
 // Parameters from panelContainers
 panelParamsSelect.addEventListener('change', function() {
     const selectedOption = panelParamsSelect.options[panelParamsSelect.selectedIndex];
@@ -122,15 +564,14 @@ panelParamsSelect.addEventListener('change', function() {
 
     console.log(panelAreaInput.value)
 });
-
 // Add event listener to each radio Azimuth input
 radioAzimuthInputs.forEach(function(input) {
   input.addEventListener('change', function() {
     // Set the value of azimuthInput to the selected radio input's value
     azimuthInput.value = this.value;
+
     });
 });
-
 // Add event listener to each radio Tilt input
 radioTiltInputs.forEach(function(inputs) {
     inputs.addEventListener('change', function(e) {
@@ -143,172 +584,60 @@ radioTiltInputs.forEach(function(inputs) {
         });
     });
 });
+placeInstalmentRadios.forEach(function(input) {
+  input.addEventListener('change', function() {
+    // Set the value of azimuthInput to the selected radio input's value
+    selectedPlaceInstalmentValue = this.value;
+
+    });
+});
+// loop through the radio buttons and add an event listener to each one
+radio_buttons.forEach(radioButton => {
+    radioButton.addEventListener('click', () => {
+    // log the value of the selected radio button
+    console.log("Selected radio field is: " + radioButton.value);
+    });
+});
 
 // Show the image corresponding to 30 degrees when the page starts or reloads
 // Go to next and previous panel calculator
 document.addEventListener('DOMContentLoaded', function() {
+    // Set the "roof" radio button as default checked
+    roofRadioButton.checked = true;
+    azimuthDefaultRadio.checked = true;
+    tiltDefaultRadio.checked = true;
     tiltInput.value = '30'; // Set the value of tiltInput to 30
+    phaseLoadDefaultSelection.value = "phase_load"; // Set the default value here
     autoPowerDiv.classList.add('hidden');
     azimuthInput.value = 0;
     annual_Kwh_input.value = "";
     previousButton.disabled = true;
     form_submit_button.disabled = true;
-    let submitBtnEnabled = false; // A flag to track the state of the submit button
+    submitBtnEnabled = false; // A flag to track the state of the submit button
 
     console.log('Next Button Disabled:', nextButton.disabled);
     console.log('Previous Button Disabled:', previousButton.disabled);
-    console.log(discount_percent.value);
     
     images.forEach(function(image) {
       const tiltValue = image.getAttribute('tilt');
       image.style.display = tiltValue === '30' ? 'block' : 'none';
     });
-    
-    
-    let currentPanelIndex = 0;
-
-    // Function to enable or disable the "Next" button based on the kWh field's value
-    function toggleNextButtonState() {
-        if (annual_Kwh_input.value.trim() === '' || annual_Kwh_input.value === 0) {
-          // If the kWh field is empty or contains only spaces, disable the "Next" button
-          nextButton.disabled = true;
-          nextButton.classList.remove('enabled-button')
-        } else {
-          // If the kWh field has a value, enable the "Next" button
-          nextButton.disabled = false;
-          nextButton.classList.add('enabled-button')
-        }
-      }
-    
-    function showPanel(index) {
-        for (let i = 0; i < panelContainers.length; i++) {
-          if (i === index) {
-            panelContainers[i].classList.remove("hidden");
-          } else {
-            panelContainers[i].classList.add("hidden");
-          }
-        }
-
-        if (index === 3 ){
-          toggleNextButtonState();
-        }
-        if (index === 4 && autoPowerRadio.checked && autoCalculatedPower === false){
-          disableSlider();
-        }else if (autoPowerRadio.checked){
-          slider.disabled = true;
-        }
-    }
-
-    function goToPreviousPanel() {
-      if (currentPanelIndex > 0) {
-        const previousPanelIndex = currentPanelIndex - 1; // Calculate the previous panel index
-        showPanel(previousPanelIndex);
-    
-        // Update navigation active class based on panel change
-        const currentPanelLink = document.querySelector('.panel-field[href="#' + panelContainers[currentPanelIndex].getAttribute('id') + '"]');
-        if (currentPanelLink) {
-          currentPanelLink.classList.remove('active');
-        }
-    
-        const previousId = panelContainers[previousPanelIndex].getAttribute('id');
-        const previousPanelLink = document.querySelector('.panel-field[href="#' + previousId + '"]');
-        // Update circle links active class based on panel change
-        circleLinks[currentPanelIndex].classList.remove('active');
-    
-        console.log('Current Panel Index:', currentPanelIndex);
-        console.log('Number of Panels:', panelContainers.length);
-    
-        if (previousPanelLink) {
-          previousPanelLink.classList.add('active');
-        } else {
-          console.error('Previous Panel Link not found:', previousId);
-        }
-    
-        // Update currentPanelIndex only if it's not the first panel
-        currentPanelIndex = previousPanelIndex;
-    
-        // Always enable the Next button when moving to the previous panel
-        nextButton.disabled = false;
-        nextButton.classList.add('enabled-button');
-      }
-    
-      // Check if it's the first panel and disable the Previous button
-      if (currentPanelIndex === 0) {
-        previousButton.disabled = true;
-        previousButton.classList.remove('enabled-button');
-
-        // Disable the form_submit_button when moving to a previous panel
-        if (submitBtnEnabled) {
-          submitBtnEnabled = false;
-          submitBtn.disabled = true;
-          form_submit_button.classList.remove('enabled-button');
-        }
-      }
-    
-      console.log('Next Button Disabled:', nextButton.disabled);
-      console.log('Previous Button Disabled:', previousButton.disabled);
-    }
-    
-    function goToNextPanel() {
-      
-      if (currentPanelIndex < panelContainers.length - 1) {
-        currentPanelIndex++; // Update currentPanelIndex
-        showPanel(currentPanelIndex);
-    
-        // Update circle links active class based on panel change
-        circleLinks[currentPanelIndex].classList.add('active');
-    
-        const nextPanelId = panelContainers[currentPanelIndex].getAttribute('id');
-        const nextPanelLink = document.querySelector('.panel-field[href="#' + nextPanelId + '"]');
-        
-        
-        console.log('Current Panel Index:', currentPanelIndex+1);
-
-        if (nextPanelLink) {
-          nextPanelLink.classList.add('active');
-        } else {
-          console.error('Next Panel Link not found:', nextPanelId);
-        }
-
-      }
-      // Check if it's the last panel and disable the Next button
-      if (currentPanelIndex === panelContainers.length - 1) {
-        nextButton.disabled = true;
-        nextButton.classList.remove('enabled-button');
-
-        // Enable the form_submit_button in the last panel
-        if (!submitBtnEnabled) {
-          submitBtnEnabled = true;
-          submitBtn.disabled = false;
-          form_submit_button.classList.add('enabled-button');
-        }
-      }
-      // Always enable the Previous button when moving to the next panel
-      previousButton.disabled = false;
-      previousButton.classList.add('enabled-button');
-
-      console.log('Next Button Disabled:', nextButton.disabled);
-      console.log('Previous Button Disabled:', previousButton.disabled);
-    }
-
-    showPanel(currentPanelIndex);
 
     previousButton.addEventListener("click", goToPreviousPanel);
     nextButton.addEventListener("click", goToNextPanel);
 });
-
 // Listen for changes in the phase load input and store the selected option
 phase_load_selected.addEventListener("change", function(event){
   const phaseLoadValue = this.value; // Get the selected value
 
   // Define the discount percent options based on the phase_load value
   const discountPercentOptions = (phaseLoadValue === '3_phase')
-    ? ['20', '25', '60']
-    : ['30', '35', '65'];
+    ? [0, 20, 25, 60]
+    : [0, 30, 35, 65];
 
   const discountPercentBatteryOptions = (phaseLoadValue === '3_phase')
-    ? ['90', '100']
-    : ['90', '100'];
+    ? [0, 90, 100]
+    : [0, 90, 100];
 
   // Update the discount select options
   updateDiscountSelectOptions(discountPercentSelect, discountPercentOptions);
@@ -329,29 +658,6 @@ discountPercentSelect
   check_selection_kwh_conditions();
   console.log(phase_load_selected.value);
 });
-
-// Function to update select options dynamically
-function updateDiscountSelectOptions(selectElement, options) {
-  // Clear existing options
-  selectElement.innerHTML = '';
-
-  // Add the default option
-  const defaultOption = document.createElement('option');
-  defaultOption.value = 0;
-  defaultOption.textContent = 'Επιλέξτε ποσοστό';
-  defaultOption.selected = true; // Set the default option as selected
-  defaultOption.disabled = true; // Disable the default option
-  selectElement.appendChild(defaultOption);
-
-  // Add the new options
-  options.forEach((option) => {
-    const newOption = document.createElement('option');
-    newOption.value = option;
-    newOption.textContent = option + '%';
-    selectElement.appendChild(newOption);
-  });
-}
-
 annual_Kwh_input.addEventListener("input", function(){
     enableSlider();
     enableStorage();
@@ -366,51 +672,32 @@ annual_Kwh_input.addEventListener("input", function(){
         max_message.style.display = "none";
     }
 
-    if (annual_Kwh_input.value === 0 || annual_Kwh_input.value.trim() === ""){
-      nextButton.disabled = true;
-      nextButton.classList.remove('enabled-button')
+    if (annual_Kwh_input.value <= 100 || annual_Kwh_input.value.trim() === ""){
+      disablePanelButton(nextButton);
     }else{
-      nextButton.disabled = false;
-      nextButton.classList.add('enabled-button')
+      enablePanelButton(nextButton);
     }
 });
-
 annual_Kwh_input.addEventListener("change", function(){
   autoCalculatedPower = false;
 });
-
-function setStorage(value) {
-  storage_kW.min = value;
-  storage_kW.value = value;
-}
-
 slider.addEventListener("change", function(){
     disableErrorMessages();
     PV_kW_output.innerHTML = slider.value; 
     slider_hidden_input.value = slider.value;
     setStorage(slider.value)
     console.log(slider.value);
+    if (PV_kW_output.innerHTML === '0'){
+      disablePanelButton(nextButton);
+    }else{
+      enablePanelButton(nextButton);
+    }
 });
-
 slider_hidden_input.addEventListener("change", setStorage(slider_hidden_input.value));
 
 storage_kW.addEventListener("change", function(){
     console.log(storage_kW.value);
 });
-
-// loop through the radio buttons and add an event listener to each one
-radio_buttons.forEach(radioButton => {
-    radioButton.addEventListener('click', () => {
-    // log the value of the selected radio button
-    console.log("Selected radio field is: " + radioButton.value);
-    });
-});
-
-// Help Poppers to give details about the form fields or selected values
-const helpButtons = document.getElementsByClassName('help-popper');
-const helpTexts = document.getElementsByClassName('help-text');
-const closeIcons = document.getElementsByClassName('close-help');
-const numberOfHelpButtons = helpButtons.length;
 
 let isOpen = new Array(numberOfHelpButtons).fill(true);
 
@@ -453,107 +740,6 @@ for (let i = 0; i < numberOfHelpButtons; i++) {
   });
 }
 
-function disableElements() {
-    annual_Kwh_input.disabled = true;
-    slider.min = 0;
-    slider.value = 0;
-    slider_hidden_input.value = 0;
-    PV_kW_output.innerHTML = slider.value;
-    annual_Kwh_input.value = ""
-    storage_selection.disabled = true;
-    storage_kW.disabled = true; 
-    slider.disabled = true;
-    manualPowerRadio.disabled = true;
-    autoPowerRadio.disabled = true;
-    azimuthInput.value = '0';
-    discount_percent.max = 100;
-    discount_percent.min = 0;
-    discount_percent_battery.max = 100;
-    discount_percent_battery.min = '0';
-} 
-function enableSlider() {
-    slider.disabled = false;
-    slider.min = 0.0;
-    slider.step = 0.1;
-    PV_kW_output.innerHTML = slider.value;
-    manualPowerRadio.disabled = false;
-    autoPowerRadio.disabled = false;
-    console.log("(function enableSlider) Minimun PV system's kWp: ", slider.value)
-}
-function disableSlider(){
-    slider.disabled = true;
-    slider.value = 0.0;
-    slider.min = 0.0;
-    if (annual_Kwh_input.value === '0' || annual_Kwh_input.value.trim() === "" ) {
-        manualPowerRadio.disabled = true;
-        autoPowerRadio.disabled = true;
-    } 
-    PV_kW_output.innerHTML = slider.value;
-    slider.classList.add("disabled-slider");
-}
-function enableAnnualkWh(){
-    annual_Kwh_input.disabled = false;
-    annual_Kwh_input.max = phase_load_selected.value === 'single_phase' ? 7000 : 15000;
-    annual_Kwh_input.step = 10;
-    annual_Kwh_input.min = 0;
-}
-function disableAnnualkWh() {
-    annual_Kwh_input.disabled = true;
-}
-function enableStorage() {
-    no_storage_selection.checked = true;
-    storage_selection.disabled = false;
-    storage_kW.disabled = false;
-    storage_kW.min = slider.value;
-    storage_kW.max = 10.8;
-    storage_kW.step = 0.1;
-    storage_kW.value = slider.value;   
-}
-function disableStorage() {
-    no_storage_selection.checked = true;
-    storage_kW.disabled = true;
-    storage_selection.disabled = true;
-    storage_kW.min = slider.value;
-    storage_kW.value = 0.0;
-}
-function disableErrorMessages() {
-    //district_average_irradiance.classList.remove('error');
-    //district_average_irradiance.classList.remove('error');
-    phase_load_selected.classList.remove('error');
-    error_message.style.display = 'none';
-    error_message2.style.display = 'none';
-    error_message3.style.display = 'none';
-    max_message.style.display = 'none';
-}         
-function check_selection_kwh_conditions(){
-    if (phase_load_selected.value !== 'phase_load' && placeSelected.value !== ""){
-        enableAnnualkWh();
-        disableErrorMessages();
-    }else{ 
-        disableAnnualkWh();
-        disableElements();
-        disableStorage();
-    }
-}
-
-// Settings for theme toggler
-const themeSlider = document.getElementById('theme-slider');
-set_initial_properties_theme_toggler();
-
-function set_initial_properties_theme_toggler(){
-    themeSlider.value = '0';
-    document.documentElement.style.setProperty('--bg-color', '#29233b');
-    document.documentElement.style.setProperty('--text-color', '#f2f2f2');
-    document.documentElement.style.setProperty('--bg-color-panel', '#393052');
-    document.documentElement.style.setProperty('--label-color', '#bbb');
-    document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
-    document.documentElement.style.setProperty('--slider-color', '#74b1f2');
-    document.documentElement.style.setProperty('--thumb-color', '#393052');
-    document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
-    document.documentElement.style.setProperty('--bg-color-submit-button', '#738725'); 
-    document.documentElement.style.setProperty('--help-popper', 'f2f2f2');
-}
-
 themeSlider.addEventListener('input', function(event) {
 const selectedValue = event.target.value;    
         
@@ -584,157 +770,13 @@ const selectedValue = event.target.value;
         document.documentElement.style.setProperty('--help-popper', 'blue');
         }
     });
-
-// Function to toggle the visibility of the div based on the selected radio button
-function toggleAutoPowerDiv() {
-  if (manualPowerRadio.checked) {
-    autoPowerDiv.classList.add('hidden');
-    autoPowerDiv.style.display = 'none'; // Hide the div
-    enableSlider();
-    setStorage(slider.value);
-  } else if (autoPowerRadio.checked) {
-    autoPowerDiv.classList.remove('hidden');
-    autoPowerDiv.style.display = 'block'; // Show the div
-    console.log("in toggle Auto Power: ", autoCalculatedPowerNumber);
-    console.log("Auto calculated?", autoCalculatedPower);
-    slider.disabled = true;
-    if (autoCalculatedPower === true){
-      slider.value = autoCalculatedPowerNumber;
-      slider_hidden_input.value = autoCalculatedPowerNumber;
-      PV_kW_output.innerHTML = autoCalculatedPowerNumber;
-      setStorage(slider_hidden_input.value);
-    }else{
-      disableSlider();
-      slider_hidden_input.value = 0;
-      setStorage(slider_hidden_input.value);
-    }
-  }
-}
-
 // Add event listeners to the radio buttons and the calculation button
 manualPowerRadio.addEventListener('change', toggleAutoPowerDiv);
 autoPowerRadio.addEventListener('change', toggleAutoPowerDiv);
-
-function calculateAutoPower() {
-  // event.preventDefault(); // Prevent the default form submission behavior
-
-  // Get the latitude, longitude, azimuth, and tilt values from the form
-  const latitudeValue = latitudeInput.value;
-  const longitudeValue = longitudeInput.value;
-  const azimuthValue = azimuthInput.value;
-  const tiltValue = tiltInput.value;
-  const panelWpValue = panelWpInput.value
-  const panelAreaValue = panelAreaInput.value;
-  const panelEfficiencyValue = panelEfficiencyInput.value
-  const annualKWhValue = annual_Kwh_input.value
-  const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-  const url = '/simulation/ajax/' ;  // Make sure this matches the URL pattern in your Django project's URLs
-
-  if (!annualKWhValue){
-    alert('Πρώτα πρέπει να επιλέξετε ετήσια κατανάλωση σε kWh στο προηγούμενο βήμα');
-  }
-    // Create the data object
-    let data = {
-        latitude: latitudeValue,
-        longitude: longitudeValue,
-        inclination: tiltValue,
-        azimuth: azimuthValue,
-        panel_area: panelAreaValue,
-        panel_efficiency: panelEfficiencyValue,
-        annual_Kwh_value: annualKWhValue,
-        panel_Wp_value: panelWpValue,
-    };
-
-    console.log(data);
-
-  const jsonData = JSON.stringify(data);
-
-  // Make the AJAX request
-  $.ajax({
-    url: url,
-    type: 'POST',
-    data: jsonData,
-    contentType: 'application/json', // Set the request content type to JSON
-    dataType: 'json', // Expect JSON response from the server
-    headers: {
-      'X-CSRFToken': csrfToken // Include the CSRF token in the request headers
-    },
-    success: function(response) {
-      // Handle the response
-      const specialProduction = response.special_production;
-      const recommended_kWp = response.recommended_kWp;
-      const minimum_PV_panels = response.minimum_PV_panels;
-      const totalArea = response.total_area;
-
-      // Update the input field with the calculated power
-      $('#placeProduction').val(specialProduction);
-      slider.value = recommended_kWp;
-      slider_hidden_input.value = Number(recommended_kWp.toFixed(1));
-      PV_kW_output.innerHTML = slider.value;
-      storage_kW.min = slider.value;
-      storage_kW.value = slider.value;
-      autoCalculatedPower = true;
-      autoCalculatedPowerNumber = Number(recommended_kWp.toFixed(1));
-      $('#minimumPanels').val(minimum_PV_panels);
-      $('#totalArea').val(totalArea);
-      
-
-    },
-    error: function(xhr, textStatus, errorThrown) {
-      console.log('Error:', errorThrown);
-    }
-  });
-}
-
-var loadingBar = document.getElementById('loading-bar');
-var containerWidth = loadingBar.parentElement.offsetWidth; // Get the width of the container element
-var width = 0;
-var id = null;
-
-function frame() {
-  if (width >= 100) {
-    clearInterval(id);
-    id = null; // Reset the interval ID
-    width = 0; // Reset the width to 0
-  } else {
-    width++;
-    var newWidth = (width / 100) * containerWidth; // Calculate the new width based on the container width
-    loadingBar.style.width = newWidth + "px"; // Set the width in pixels
-    loadingBar.innerHTML = width + "%";
-  }
-}
-
-function startLoading() {
-  if (id === null) { // Check if animation is not already running
-    width = 0; // Reset the width to 0
-    loadingBar.style.width = '0'; // Reset the width style to 0
-    id = setInterval(frame, 20); // Adjust the interval duration for slower animation
-  }
-}
-
 autoPowerButton.addEventListener('click', calculateAutoPower);
-
-const noDiscountRadio = document.getElementById('no-discount');
-const discountRadio = document.getElementById('discount');
-
-// function to show/hide the discount inputs
-function showDiscountInputs() {
-  if (noDiscountRadio.checked || discountRadio.checked) {
-    lastPanelField.value = discountRadio.checked ? 'yes' : 'no';
-    if (discountRadio.checked) {
-      discountPercentContainer.style.display = 'block';
-    } else {
-      discountPercentContainer.style.display = 'none';
-    }
-  } else {
-    lastPanelField.value = '';
-    discountPercentContainer.style.display = 'none';
-  }
-}
-
+// Discount percents
 noDiscountRadio.addEventListener('change', showDiscountInputs);
 discountRadio.addEventListener('change', showDiscountInputs);
-
 //Submit, reset, Modal events
 form_submit_button.addEventListener('click', function(event){
 
@@ -766,11 +808,11 @@ form_submit_button.addEventListener('click', function(event){
       battery_modal_input.value = 0;
     }
       
-    if (noDiscountRadio.checked){
+    if (noDiscountRadio.checked || (isNaN(discount_percent.value) && isNaN(discount_percent_battery.value))){
       discount_percent.value = 0;
       discount_percent_battery.value = 0;
-      discount_percent_modal_input.value = '0';
-      discount_percent_battery_modal_input.value = '0';
+      discount_percent_modal_input.value = 0;
+      discount_percent_battery_modal_input.value = 0;
     }else{
       discount_percent_modal_input.value = discount_percent.value;
       discount_percent_battery_modal_input.value = discount_percent_battery.value;
@@ -794,34 +836,8 @@ form_submit_button.addEventListener('click', function(event){
   }
   
 })
-
 // Reset the PV_kW_output element value to the initial value when the reset button is clicked
-reset_button.addEventListener('click', function() {
-  disableElements();
-  disableErrorMessages(); 
-
-});
-
-// Used to validate that the calculator form has been filled by the user
-function validateForm() {
-
-  if(phase_load_selected.value === 'phase_load' ){ //&& district_average_irradiance.value === "district"){
-      slider.classList.add('error');
-      phase_load_selected.classList.add('error');
-      error_message2.style.display = 'block';
-      // district_average_irradiance.classList.add('error'); 
-      error_message.style.display = 'block';
-      return false;
-  }else if (placeSelected.value === '' || latitudeInput.value === '' || longitudeInput.value === '') {
-      alert("Επιλέξτε μία τοποθεσία στο χάρτη");
-      return false;
-  }else if (slider.value === '0') {
-      slider.classList.add('error'); // Add the error class to the slider element
-      error_message3.style.display = 'block';
-      return false; // return false to indicate that the form was not submitted
-  }
-  return true;
-};
+reset_button.addEventListener('click', resetForm);
 
 // Add an event listener to the submit button
 submit_modal.addEventListener('click', function(event) {
@@ -834,7 +850,6 @@ submit_modal.addEventListener('click', function(event) {
       form.submit();
   }
 });
-
 // Test print
 discount_percent.addEventListener('change', function() {
   console.log('discount_percent value:', this.value);
