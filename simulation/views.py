@@ -79,9 +79,9 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
     # Check if the 'power_manually_calculated' flag is present in the session
     power_manually_calculated = request.session.get('power_manually_calculated', True)
     if not power_manually_calculated:
-        print("In dashboard_results function: manual flag is found FALSE")
+        print("In dashboard_results function: Auto calculation has been occured")
     else:
-        print("In dashboard_results function: manual flag is found TRUE")
+        print("In dashboard_results function: Manual power kWp set")
 
  
     if 'annual_consumption' in request.session:
@@ -270,10 +270,16 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
 
                 noDiscountRadio = request.POST.get('discount')
 
-                if noDiscountRadio == 'no':
+                if noDiscountRadio == 'no' or request.POST.get('discount_percent') is None and request.POST.get('discount_percent_battery') is None:
                     # The "no" radio button is selected
                     discount_PV = 0
                     discount_battery = 0
+                elif request.POST.get('discount_percent') is None:
+                    discount_PV = 0
+                    discount_battery = int(request.POST.get('discount_percent_battery'))
+                elif request.POST.get('discount_percent_battery') is None:
+                    discount_battery = 0 
+                    discount_PV = int(request.POST.get('discount_percent'))  
                 else:
                     # The "yes" discount radio button is selected
                     discount_PV = int(request.POST.get('discount_percent'))
@@ -361,6 +367,7 @@ def calculate_power(request):
             panel_efficiency = float(data.get('panel_efficiency'))
             annual_Kwh_value = int(data.get('annual_Kwh_value'))
             panel_Wp_value = float(data.get('panel_Wp_value'))
+            place_instalment_value = data.get('place_instalment_value')
             print("PARAMETERS FOR CALCULATING THE REQUEST:", data)
         
             # Call the get_solar_data function and retrieve the results
@@ -386,13 +393,18 @@ def calculate_power(request):
                 total_production = annual_production * 25 /1.06
                 
             recommended_kWp = minimum_PV_panels * panel_Wp_value
-            total_area = minimum_PV_panels * panel_area    
+
+            if place_instalment_value == 'roof':
+                total_area = minimum_PV_panels * panel_area    
+            else:
+                # needs more space for terrace instead of roof
+                total_area = minimum_PV_panels * panel_area  * 1.5 
 
             print("ANNUAL IRRADIANCE:", annual_irradiance)
             print("Monthly IRRADIANCE:", monthly_irradiance_list)
             print('Annual Consumption:', annual_Kwh_value)
             print("Minimum Panels:", minimum_PV_panels)
-            print("Total area for roof or taratsa:", total_area)
+            print(f"Total area for {place_instalment_value}: {total_area}" )
             print('Annual Production:', annual_production)
             print(f"Total production after 25 years for {minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {round(panel_Wp_value*1000)}Wp is: {round(total_production)}")
             print(f"Total consumption after 25 years: {total_consumption}")
@@ -409,7 +421,6 @@ def calculate_power(request):
     except Http404:      # not use bare except
         return Http404("404 Generic Error")
 
-
 # Calculation functions
 def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost, discount_PV, discount_battery, number_of_panels_required):
     installation_cost = 400 # average cost in €
@@ -417,8 +428,8 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, pane
     inverter_cost = 0
     average_battery_cost_per_kW = 850 # average in €
     # Cost of PV system is total panels * cost
-    panel_bases_cost = 90 * number_of_panels_required # bases for the panels on roof or taratsa, average cost per base
-    Pv_system_cost = round((number_of_panels_required * panel_cost) + panel_bases_cost)
+    panel_bases_cost = 90 * number_of_panels_required # bases for the panels on roof or terrace, average cost per base
+    Pv_panels_cost = round((number_of_panels_required * panel_cost) + panel_bases_cost)
     
     # for 0.1 - 5 kWp
     if phase_load == "single_phase":
@@ -440,6 +451,10 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, pane
     else:
         battery_cost = 0
 
+    # How much the PV system costs without battery
+    Pv_system_cost = Pv_panels_cost + installation_cost + inverter_cost + electric_materials
+
+    # If client/user is eligible to discounts
     if discount_PV > 0:
         print(f"Starting PV system price: {Pv_system_cost}")
         Pv_system_cost -= round(Pv_system_cost * (discount_PV / 100))
@@ -451,8 +466,8 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, pane
         print(f'Discount {discount_battery}% has been applied to PV system.')
         print(f'New battery price is {battery_cost}€.')
 
-    total_investment = Pv_system_cost + installation_cost + battery_cost + inverter_cost + electric_materials
-    print(f"*Total investment: {total_investment}\n PV panels' Cost: {Pv_system_cost},\n Battery Cost: {battery_cost},\n Inverter: {inverter_cost} and PV kWp: {PV_kWp},")
+    total_investment = Pv_panels_cost + battery_cost
+    print(f"*Total investment: {total_investment}\n PV total cost: {Pv_system_cost}\n PV panels' Cost: {Pv_panels_cost},\n Battery Cost: {battery_cost},\n Inverter: {inverter_cost} and PV kWp: {PV_kWp},")
    
     return total_investment, inverter_cost
 
@@ -483,11 +498,19 @@ def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_p
     if has_storage == "with_storage":
         if userPower_profile == "day-power":
             self_consumption_rate = 0.9
+        elif userPower_profile == "high-day-evening":
+            self_consumption_rate = 0.85
+        elif userPower_profile == "evening-power":
+            self_consumption_rate = 0.80
         else:
             self_consumption_rate = 0.75
     else:
         if userPower_profile == "day-power":
             self_consumption_rate = 0.7
+        elif userPower_profile == "high-day-evening":
+            self_consumption_rate = 0.65
+        elif userPower_profile == "evening-power":
+            self_consumption_rate = 0.6
         else:
             self_consumption_rate = 0.5
 
