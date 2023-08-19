@@ -81,10 +81,9 @@ let autoCalculatedPowerNumber = 0;
 const noDiscountRadio = document.getElementById('no-discount');
 const discountRadio = document.getElementById('discount');
 
-var loadingBar = document.getElementById('loading-bar');
-var containerWidth = loadingBar.parentElement.offsetWidth; // Get the width of the container element
-var width = 0;
-var id = null;
+let loadingBar = document.getElementById('progressBar');
+let width = 0;
+let id = null;
 
 // Help Poppers to give details about the form fields or selected values
 const helpButtons = document.getElementsByClassName('help-popper');
@@ -271,12 +270,31 @@ function toggleAutoPowerDiv() {
     }
   }
 }
+
+// function frame() {
+//   if (width >= 100) {
+//     clearInterval(id);
+//     id = null; // Reset the interval ID
+//     width = 0; // Reset the width to 0
+//   } else {
+//     width++;
+//     loadingBar.style.width = width + "%"; // Set the width as a percentage
+//     loadingBar.innerHTML = width + "%";
+//   }
+// }
+// function startLoading() {
+//   if (id === null) { // Check if animation is not already running
+//     width = 0; // Reset the width to 0
+//     loadingBar.style.width = '0'; // Reset the width style to 0
+//     id = setInterval(frame, 20); // Adjust the interval duration for slower animation
+//   }
+// }
+
 function calculateAutoPower() {
-  // event.preventDefault(); // Prevent the default form submission behavior
   
   // Show the progress bar at the start of the request
-  $('#progressBar').css('width, '0'); //reset progress bar
-  $('#progressBar').show(); 
+  $('#progressBar').css('width', '0%'); // reset progress bar
+  $('#progressBar').show();
   
   // Get the latitude, longitude, azimuth, and tilt values from the form
   const latitudeValue = latitudeInput.value;
@@ -326,10 +344,14 @@ function calculateAutoPower() {
       let xhr = new window.XMLHttpRequest();
       // Track progress events to update the progress bar
       xhr.upload.addEventListener("progress", function(event) {
-        if (event.lengthComputable) {
-          let percentComplete = (event.loaded / event.total) * 100;
-          $('#progressBar').css('width', percentComplete + '%');
-        }
+        console.log('Progress Event Fired:', event.loaded, event.total);
+
+        // Calculate the current percentage of completion
+        let currentPercentage = (event.loaded / event.total) * 100;
+        // Set the width of the progress bar based on the current percentage
+        console.log(currentPercentage);
+        $('#progressBar').css('width', currentPercentage + '%');
+        $('#progressBar').text("Loading"); // Update inner text content
       }, false);
       return xhr;
     },
@@ -353,38 +375,21 @@ function calculateAutoPower() {
       $('#minimumPanels').val(minimum_PV_panels);
       $('#totalArea').val(totalArea);
 
-      
       enablePanelButton(nextButton);
       // Hide the progress bar on success
       $('#progressBar').hide();
+     
 
     },
     error: function(xhr, textStatus, errorThrown) {
       console.log('Error:', errorThrown);
       // Hide the progress bar on error
       $('#progressBar').hide();
+      
     }
   });
 }
-function frame() {
-  if (width >= 100) {
-    clearInterval(id);
-    id = null; // Reset the interval ID
-    width = 0; // Reset the width to 0
-  } else {
-    width++;
-    var newWidth = (width / 100) * containerWidth; // Calculate the new width based on the container width
-    loadingBar.style.width = newWidth + "px"; // Set the width in pixels
-    loadingBar.innerHTML = width + "%";
-  }
-}
-function startLoading() {
-  if (id === null) { // Check if animation is not already running
-    width = 0; // Reset the width to 0
-    loadingBar.style.width = '0'; // Reset the width style to 0
-    id = setInterval(frame, 20); // Adjust the interval duration for slower animation
-  }
-}
+
 // Function to update select options dynamically
 function updateDiscountSelectOptions(selectElement, options) {
   // Clear existing options
@@ -554,6 +559,7 @@ function resetForm(){
   // Show the first panel and scroll to it
   currentPanelIndex = 0; // Reset to the first panel index
   showPanel(currentPanelIndex);
+  autoCalculatedPower = false;
 };
 
 // Set the initial values of all elements to 0
@@ -817,8 +823,13 @@ form_submit_button.addEventListener('click', function(event){
 
 
     if (powerRadioButton) {
-      // Set the value of the target input field to the selected radio button's value
-      profile_modal_input.value = powerRadioButton.value;
+      // Get the label element associated with the selected radio button
+      const labelElement = document.querySelector(`label[for="${powerRadioButton.id}"]`);
+      
+      if (labelElement) {
+        // Get the label content and set it as the value of the target input field
+        profile_modal_input.value = labelElement.textContent;
+  }
     }
     slider_hidden_input.value = slider.value;
     power_modal_input.value = slider_hidden_input.value;

@@ -77,8 +77,10 @@ def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_v
 
 def dashboard_results(request):   # simulation/templates/dashboard.html
     # Check if the 'power_manually_calculated' flag is present in the session
+    selected_power = request.POST.get('power_selected')
+
     power_manually_calculated = request.session.get('power_manually_calculated', True)
-    if not power_manually_calculated:
+    if not power_manually_calculated and selected_power == 'auto-power':
         print("In dashboard_results function: Auto calculation has been occured")
     else:
         print("In dashboard_results function: Manual power kWp set")
@@ -108,7 +110,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             discount_PV = request.session.get('discount_PV')
             discount_battery = request.session.get('discount_battery')
 
-            if not power_manually_calculated:
+            # important check if the power is auto calculated
+            if not power_manually_calculated and selected_power == 'auto-power':
                 try:
                     monthly_irradiance_json = request.session.get('monthly_irradiance_json')
                     annual_irradiance = request.session.get('annual_irradiance')
@@ -518,6 +521,7 @@ def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_p
     discount_regulated_charges = round(regulated_charges * self_consumption_rate)
 
     if annual_consumption > annual_PV_energy_produced:
+        print(f'\n^^^ annual consumption is: {annual_consumption} and annual_PV_energy_produced: {annual_PV_energy_produced}^^^\n')
         annual_kWh_difference_cost = (annual_consumption - annual_PV_energy_produced) * (energy_cost + 0.0213 + 0.00844)
         average_annual_savings = round(annual_consumption_price + discount_regulated_charges - annual_kWh_difference_cost)
         total_annual_cost = annual_consumption_price + regulated_charges + annual_kWh_difference_cost

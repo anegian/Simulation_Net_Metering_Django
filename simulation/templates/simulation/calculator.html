@@ -437,11 +437,15 @@
                                         <input type="text" id="totalArea" readonly><span class="metrics-special-calculation"> m²</span>
                                     </div>
                                     
-                                    <!-- Add the loading bar container -->
-                                    <div id="loading-bar-container">
+                                    <!-- Add the loading bar container
+                                    <div class="loading-bar-container">
                                         <div id="loading-bar">0%</div>
+                                        
+                                    </div> -->
+                                    <br>
+                                    <div class="loading-bar-container">
                                         <!-- Add the progress bar to test it -->
-                                        <div id="progressBar" style="width: 0%;">0%</div>
+                                        <div id="progressBar"></div>
                                     </div>
                                 </div>
                                 
@@ -517,11 +521,12 @@
     
                                             <div class="help-container">
                                                 <span class="help-text" id="discount-text">
-                                                    <ul><li>Ποσοστά έκπτωσης σύμφωνα με το πρόγραμμα <strong>"Φωτοβολταϊκά <br> στη Στέγη"</strong>, φαίνονται <br>
-                                                     στην παρακάτω φωτογραφία. <strong>Για να είναι κάποιος δικαιούχος επιδότησης, πρέπει απαρέγκλιτα <br> 
-                                                     να προσθέσει στο ΦΒ του σύστημα μπαταρία</strong>. Βέβαια ξεχωριστά του προγράμματος, μπορεί ο εκάστοτε <br>
-                                                     χρήστης της εφαρμογής να επιλέξει ποσοστό έκπτωσης μόνο για το κόστος του ΦΒ συστήματος, εφόσον έχει <br> 
-                                                     προεγκαταστημένο σύστημα και επθυμεί μία οικονομική μελέτη, για αύξηση ισχύος συστήματος kWp.</li></ul>
+                                                    <ul>
+                                                        <li>Ποσοστά έκπτωσης σύμφωνα με το πρόγραμμα <strong>"Φωτοβολταϊκά <br> στη Στέγη"</strong>, φαίνονται
+                                                        στην παρακάτω φωτογραφία. <strong>Για να είναι κάποιος δικαιούχος επιδότησης, πρέπει απαρέγκλιτα
+                                                        να προσθέσει στο ΦΒ του σύστημα, μπαταρία</strong>.
+                                                        </li>
+                                                    </ul>
                                                     
                                                     <img class="img-discount" src="{% static 'images/discount.png' %}" alt="No Image">
                                                     
@@ -542,12 +547,19 @@
     
                                             <div class="help-container">
                                                 <span class="help-text" id="discount-battery-text">
-                                                    <ul><li>Σύμφωνα με το πρόγραμμα <strong>"Φωτοβολταϊκά στη Στέγη"</strong> για να είναι κάποιος δικαιούχος επιδότησης, πρέπει απαρέγκλιτα <br> 
-                                                     να προσθέσει στο ΦΒ σύστημα μπαταρία. Αναφορικά με τα ποσοστά έκπτωσης για προσθήκης μπαταρίας στο σύστημα, όσοι ανήκουν στις κατηγορίες Α και Β <br>
-                                                     δικαιούνται 100% έκπτωση, ενώ σε όσους ανήκουν στην κατηγορία Γ, το ποσοστό ανέρχεται στο 90% του κόστους.</li></ul>
-                                                    
+                                                    <ul>
+                                                        <li>Σύμφωνα με το πρόγραμμα <strong>"Φωτοβολταϊκά στη Στέγη"</strong> τα <br> 
+                                                            ποσοστά έκπτωσης για συσσωρευτές, έχουν ως εξής:
+                                                        </li>
+                                                            <ol>
+                                                                <li><strong>100%</strong> έκπτωση, για όσους ανήκουν στις <strong>κατηγορίες Α και Β</strong></li>
+                                                                <li><strong>90%</strong> έκπτωση, για όσους ανήκουν στην <strong>κατηγορία Γ</strong> </li> 
+                                                            </ol> 
+                                                    </ul>  
                                                 </span>
-                                                 <span class="close-help">&times;</span>
+                                                <span 
+                                                    class="close-help">&times;
+                                                </span>
                                             </div>
 
                                         <select class="form-control discount_percent_battery_select" id="discount_percent_battery" name="discount_percent_battery">
@@ -605,8 +617,8 @@
                                         <label for="discount_percent_battery_modal_value">Ποσοστό έκπτωσης Μπαταρίας (σε %):</label>
                                         <input type="number" class="form-control" id="discount_percent_battery_modal_value" readonly>
                                         <br>
-                                        Εάν συμφωνείτε πατήστε <strong>"Υποβολή"</strong>. Σε διαφορετική περίπτωση επιστρέψτε <br>
-                                        για να αλλάξετε κάποια από τις επιλογές σας.
+                                        Εάν συμφωνείτε πατήστε <strong>"Υποβολή"</strong>. Σε διαφορετική περίπτωση επιστρέψτε,
+                                        ώστε να αλλάξετε κάποια από τις επιλογές σας.
                                     </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Επιστροφή</button>
