@@ -28,12 +28,16 @@ const error_message = document.getElementById('error-message-panel');
 const error_message2 = document.getElementById('error-message-panel5');
 const error_message3 = document.getElementById('error-message-panel6');
 const max_message = document.getElementById("max-message")
+
+// Get the selected radio button's value
+const powerRadioButton = document.querySelector('input[name="power_option"]:checked');
 const storage_selection = document.getElementById("with_storage");
 const storage_kW = document.getElementById("storage_kw");
+const noDiscountRadio = document.getElementById('no-discount');
+const discountRadio = document.getElementById('discount');
 const no_storage_selection = document.getElementById("without_storage");
 // select all radio buttons with the class "form-check-input"
 const radio_buttons = document.querySelectorAll('.form-check-input');
-
 const manualPowerRadio = document.getElementById('manual_power');
 const autoPowerRadio = document.getElementById('auto_power');
 const autoPowerDiv = document.getElementById('autoPower-button-input');
@@ -73,13 +77,13 @@ const discount_percent_modal_input = document.getElementById("discount_percent_m
 const discount_percent = document.getElementById("discount_percent");
 const discount_percent_battery_modal_input = document.getElementById("discount_percent_battery_modal_value");
 const discount_percent_battery = document.getElementById("discount_percent_battery");
+// Show the modal programmatically
+const myModal = new bootstrap.Modal(document.getElementById('myModal'));
 // Get references to the discount_percent and discount battery select elements
 const discountPercentSelect = document.querySelector('.discount_percent_select');
 const discountPercentBatterySelect = document.querySelector('.discount_percent_battery_select');
 let autoCalculatedPower;
 let autoCalculatedPowerNumber = 0;
-const noDiscountRadio = document.getElementById('no-discount');
-const discountRadio = document.getElementById('discount');
 
 let loadingBar = document.getElementById('progressBar');
 let width = 0;
@@ -681,7 +685,7 @@ phase_load_selected.addEventListener("change", function(event){
   }else{
       disableElements();
   } 
-discountPercentSelect
+
   check_selection_kwh_conditions();
   console.log(phase_load_selected.value);
 });
@@ -701,6 +705,8 @@ annual_Kwh_input.addEventListener("input", function(){
 
     if (annual_Kwh_input.value <= 100 || annual_Kwh_input.value.trim() === ""){
       disablePanelButton(nextButton);
+      disablePanelButton(form_submit_button);
+      submitBtnEnabled = false;
     }else{
       enablePanelButton(nextButton);
     }
@@ -804,57 +810,53 @@ autoPowerButton.addEventListener('click', calculateAutoPower);
 // Discount percents
 noDiscountRadio.addEventListener('change', showDiscountInputs);
 discountRadio.addEventListener('change', showDiscountInputs);
+
+// Reset the PV_kW_output element value to the initial value when the reset button is clicked
+reset_button.addEventListener('click', resetForm);
+
 //Submit, reset, Modal events
 form_submit_button.addEventListener('click', function(event){
 
-  if (annual_Kwh_input.value == ""){
-    alert('Για να υποβάλετε, πρώτα πρέπει να επιλέξετε ετήσια κατανάλωση σε kWh');
-    event.preventDefault(); // Prevent the default form submission
+  if (powerRadioButton) {
+    // Get the label element associated with the selected radio button
+    const labelElement = document.querySelector(`label[for="${powerRadioButton.id}"]`);
+    
+    if (labelElement) {
+      // Get the label content and set it as the value of the target input field
+      profile_modal_input.value = labelElement.textContent;
+    }
+  }
+
+  slider_hidden_input.value = slider.value;
+  power_modal_input.value = slider_hidden_input.value;
+
+  if (storage_selection.checked){
+    battery_modal_input.value = storage_kW.value;
+  }else{
+    battery_modal_input.value = 0;
+  }
+      
+  if (noDiscountRadio.checked || (isNaN(discount_percent.value) && isNaN(discount_percent_battery.value))){
+    discount_percent.value = 0;
+    discount_percent_battery.value = 0;
+    discount_percent_modal_input.value = 0;
+    discount_percent_battery_modal_input.value = 0;
+  }else{
+    discount_percent_modal_input.value = discount_percent.value;
+    discount_percent_battery_modal_input.value = discount_percent_battery.value;
+  }
+    
+  if (manualPowerRadio.checked){
+    minimum_panel_container.value = 0;
+  }
+
+  if ( discountRadio.checked && discount_percent_battery.value > 0 && no_storage_selection.checked ){
+    alert('Έχετε επιλέξει ποσοστό έκπτωσης μπαταρίας, χωρίς να επιλέξετε προσθήκη συσσωρευτών!');
   } else {
-    console.log("Event listener triggered!"); // Check if the event listener is running
     place_modal_input.value = placeSelected.value;
     azimuth_modal_input.value = azimuthInput.value;
     tilt_modal_input.value = tiltInput.value;
-    annual_Kwh_modal_input.value = annual_Kwh_input.value;
-
-    // Get the selected radio button's value
-    const powerRadioButton = document.querySelector('input[name="power_option"]:checked');
-    const storageRadioButton = document.querySelector('input[name="storage"][value="with_storage"]:checked');
-
-
-    if (powerRadioButton) {
-      // Get the label element associated with the selected radio button
-      const labelElement = document.querySelector(`label[for="${powerRadioButton.id}"]`);
-      
-      if (labelElement) {
-        // Get the label content and set it as the value of the target input field
-        profile_modal_input.value = labelElement.textContent;
-  }
-    }
-    slider_hidden_input.value = slider.value;
-    power_modal_input.value = slider_hidden_input.value;
-
-    if (storageRadioButton){
-      battery_modal_input.value = storage_kW.value;
-    }else{
-      battery_modal_input.value = 0;
-    }
-      
-    if (noDiscountRadio.checked || (isNaN(discount_percent.value) && isNaN(discount_percent_battery.value))){
-      discount_percent.value = 0;
-      discount_percent_battery.value = 0;
-      discount_percent_modal_input.value = 0;
-      discount_percent_battery_modal_input.value = 0;
-    }else{
-      discount_percent_modal_input.value = discount_percent.value;
-      discount_percent_battery_modal_input.value = discount_percent_battery.value;
-    }
-    
-    if (manualPowerRadio.checked)
-      minimum_panel_container.value = 0;
-
-    // Show the modal programmatically
-    const myModal = new bootstrap.Modal(document.getElementById('myModal'));
+    annual_Kwh_modal_input.value = annual_Kwh_input.value;  
     myModal.show();
 
     // test prints
@@ -867,9 +869,7 @@ form_submit_button.addEventListener('click', function(event){
     console.log('discount_percent_battery value:', discount_percent_battery_modal_input.value);
   }
   
-})
-// Reset the PV_kW_output element value to the initial value when the reset button is clicked
-reset_button.addEventListener('click', resetForm);
+});
 
 // Add an event listener to the submit button
 submit_modal.addEventListener('click', function(event) {
@@ -882,6 +882,7 @@ submit_modal.addEventListener('click', function(event) {
       form.submit();
   }
 });
+
 // Test print
 discount_percent.addEventListener('change', function() {
   console.log('discount_percent value:', this.value);
