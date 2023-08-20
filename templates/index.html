@@ -37,22 +37,20 @@
 </head>
 
 <body class="{% block body_class %}{% endblock %} ">
-        <header class="main-header">         
-            <div class="header-container-left">
-                <a href="{% url 'home' %}"><img class="sm-image" src="{% static 'images/panel.png'%}" alt="photo not found"></a>
-                <p class="logo"><a href="{% url 'home' %}">
-                  Simulation - <b style="color: #ed4901;">N</b>et Metering</a></p>
-            </div>
-            <div class="header-container-right">
-                {% block color_theme %}
-                  
-                  {% endblock %}
-                <p class="signup"><a href="{% url 'simulation:signup' %}" title="Νέα Εγγραφή"><i class="fas fa-user"></i></a></p>
-                <p class="login"><a title="Σύνδεση" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in"></i></a></p>                             
-            </div>
-        </header>
 
         <nav class="second-navbar">
+
+            <div class="second-navbar-right-container">
+
+                <header class="main-header">         
+                    <div class="header-container-left">
+                        <a href="{% url 'home' %}"><img class="sm-image" src="{% static 'images/panel.png'%}" alt="photo not found"></a>
+                        <p class="logo"><a href="{% url 'home' %}">
+                          Simulation - <b style="color: #ed4901;">N</b>et Metering</a></p>
+                    </div>
+                </header>
+            </div >
+
             <div class="second-navbar-left-container" id="second-navbar-left-container">
                 <input type="checkbox" id="check-navbar">
                 <label  for="check-navbar" id="menu-nav-button" class="demo-class"><i class="fas fa-bars"></i></label>
@@ -66,22 +64,16 @@
                     <li><a href="{% url 'simulation:about' %}"><i class="fas fa-info-circle"></i> about</a></li>
                     {% endblock %}
                 </ul>         
+                   <div class="header-container-right">
+                        {% block color_theme %}
                         
+                        {% endblock %}
+                        
+                    </div>     
             </div>
 
-            <div class="second-navbar-right-container">
-                    <div class="search-box-container">
-                        <input type="checkbox" id="small-show-search-checkbox">
-                        <label  for="small-show-search-checkbox" id="small-screen-button" class="small-screen-show-search-button">
-                            <i class="fas fa-search"></i></label>
-
-                            <form action="{% url 'simulation:calculator' %}" class="search-box" id="search-box">
-                                    <input type="search" id="large-screen-search-button" placeholder="  Search here.." data-search>
-                                    <label for="large-screen-search-button"></label>
-                                    <button class="large-screen-search-button" type="submit"><i class="fas fa-search"></i></button>
-                            </form>
-                    </div>
-            </div >
+            
+            
         </nav>
         
         <div id="main-index-content-for-all">

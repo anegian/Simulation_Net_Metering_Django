@@ -13,6 +13,6 @@ urlpatterns = [
     path('dashboard/', views.dashboard_results, name='dashboard'),
     path('regulations/', views.regulations, name='regulations'),
     path('about/', views.about, name='about'), 
-    path('signup/', views.signup, name='signup'),
+    # path('signup/', views.signup, name='signup'),
 
 ]

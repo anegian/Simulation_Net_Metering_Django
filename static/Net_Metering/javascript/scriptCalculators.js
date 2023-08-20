@@ -242,7 +242,7 @@ function set_initial_properties_theme_toggler(){
   document.documentElement.style.setProperty('--bg-color-panel', '#393052');
   document.documentElement.style.setProperty('--label-color', '#bbb');
   document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
-  document.documentElement.style.setProperty('--slider-color', '#74b1f2');
+  document.documentElement.style.setProperty('--slider-color', '#f2f2f2');
   document.documentElement.style.setProperty('--thumb-color', '#393052');
   document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
   document.documentElement.style.setProperty('--bg-color-submit-button', '#738725'); 
@@ -773,16 +773,16 @@ for (let i = 0; i < numberOfHelpButtons; i++) {
   });
 }
 
-themeSlider.addEventListener('input', function(event) {
-const selectedValue = event.target.value;    
-        
+themeSlider.addEventListener('input', function(event) {   
+  const selectedValue = event.target.value;  
+
         if (selectedValue === '0') {
         document.documentElement.style.setProperty('--bg-color', '#29233b');
         document.documentElement.style.setProperty('--text-color', '#f2f2f2');
         document.documentElement.style.setProperty('--bg-color-panel', '#393052');
         document.documentElement.style.setProperty('--label-color', '#bbb');
         document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
-        document.documentElement.style.setProperty('--slider-color', '#74b1f2');
+        document.documentElement.style.setProperty('--slider-color', '#f2f2f2');
         document.documentElement.style.setProperty('--slider-value-kW-color', '#f2f2f2');
         document.documentElement.style.setProperty('--bg-color-calculator-page', '#29233b');
         document.documentElement.style.setProperty('--thumb-color', '#393052');
@@ -795,7 +795,7 @@ const selectedValue = event.target.value;
         document.documentElement.style.setProperty('--text-color-panel', '#c6ccd2'); 
         document.documentElement.style.setProperty('--label-color', '#334d68'); 
         document.documentElement.style.setProperty('--title-panel-color', '#538bc7');
-        document.documentElement.style.setProperty('--slider-color', '#393052');
+        document.documentElement.style.setProperty('--slider-color', '#f2f2f2');
         document.documentElement.style.setProperty('--slider-value-kW-color', '#334d68');
         document.documentElement.style.setProperty('--bg-color-calculator-page', '#f2f2f2');
         document.documentElement.style.setProperty('--thumb-color', '#74b1f2');

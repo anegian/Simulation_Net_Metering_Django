@@ -646,38 +646,38 @@ def calculate_equivalent_trees_planted(annual_PV_energy_produced):
    
    return annual_PV_energy_produced * percentage_trees_per_kWh 
 
-def signup(request):
-    try:
-        result = 'simulation/signup.html'
-        return render(request, result)
-    except Http404:      # not use bare except
-        return Http404("404 Generic Error")
+# def signup(request):
+#     try:
+#         result = 'simulation/signup.html'
+#         return render(request, result)
+#     except Http404:      # not use bare except
+#         return Http404("404 Generic Error")
     
-def signupJsonResponse(request):
-    if request.method == 'POST':
-        # Get form data from request.POST
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        repeat_password = request.POST.get('repeat_password')
+# def signupJsonResponse(request):
+#     if request.method == 'POST':
+#         # Get form data from request.POST
+#         name = request.POST.get('name')
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
+#         repeat_password = request.POST.get('repeat_password')
 
-        # Check if passwords match
-        if password != repeat_password:
-            return JsonResponse({'success': False, 'error': 'Passwords do not match'})
+#         # Check if passwords match
+#         if password != repeat_password:
+#             return JsonResponse({'success': False, 'error': 'Passwords do not match'})
 
-        # Check if user with same email already exists
-        if MyUser.objects.filter(email=email).exists():
-            return JsonResponse({'success': False, 'error': 'User with this email already exists'})
+#         # Check if user with same email already exists
+#         if MyUser.objects.filter(email=email).exists():
+#             return JsonResponse({'success': False, 'error': 'User with this email already exists'})
 
-        # Create user account
-        user = MyUser.objects.create_user(username=email, email=email, password=password)
-        user.first_name = name
-        user.save()
+#         # Create user account
+#         user = MyUser.objects.create_user(username=email, email=email, password=password)
+#         user.first_name = name
+#         user.save()
 
-        # Return success response
-        return JsonResponse({'success': True})
-    else:
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
+#         # Return success response
+#         return JsonResponse({'success': True})
+#     else:
+#         return JsonResponse({'success': False, 'error': 'Invalid request method'})
     
 # simulation/templates/regulations.html
 def regulations(request):     
