@@ -42,28 +42,4 @@ sideNavbarButton.addEventListener('click', function(event) {
             menuNavbar.style.left = initialPositionMenu.left;
 
         }
-
 });
-
-// search button activity when zoomed in
-// const searchButton = document.getElementById('small-screen-button');
-// const originalSearchButton = searchButton.innerHTML;
-// let searchButtonIsOriginal = true;
-
-// searchButton.addEventListener('click', function(event) {
-//     if (searchButtonIsOriginal) {
-//         searchButton.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i>';
-//         searchButtonIsOriginal = false;
-//     } else {
-//         searchButton.innerHTML = originalSearchButton;
-//         searchButtonIsOriginal = true;
-//     }
-// });
-
-// const searchInput = document.querySelector("[data-search]")
-  
-// searchInput.addEventListener("input", event => {
-//     const value = event.target.value
-//     console.log(value)
-// });
-
