@@ -361,7 +361,6 @@ input[type="search"]:focus {
         /* display: flex;
         flex-direction: column; */
         line-height: 2;
-        color: #393052;
         text-align: justify;
     }
     .img-div-home{
@@ -453,25 +452,30 @@ input[type="search"]:focus {
 
  .section-before-calculator {
     height: auto; /* Allow the section to adjust its height based on content */
-    width: 1050px;
+    background-color: #f2f2f2;
+    width: 100%;
     margin: 0 auto;
-    background: #393052;
+    display: flex;
+    flex-direction: row; /* Start in a line */
+    align-items: center;
+    justify-content: center;
 }
 
 .section-middle-position {
+    width: 1050px;
     display: flex;
     flex-direction: row; /* Start in a line */
     align-items: center;
     justify-content: center;
     flex-wrap: wrap; /* Wrap to a column when needed */
-    background: #f2f2f2;
+    background-color: #f2f2f2;
     padding: 10px 0 10px 0;
 }
 
 .table-title {
     height: 100%;
     flex: 0.5; /* Equal width for both elements when in a line */
-    max-width: 400px;
+    max-width: 300px;
     border-right: solid 1px;
     border-right-color: #393052;
     padding-right: 10px;
@@ -588,7 +592,7 @@ input[type="search"]:focus {
         color: #000022;
     }
     .panel-selection-height{
-        height: 30px!important;
+        height: 25px!important;
         color: #000022;
     }
     .img-div-calculator{
@@ -618,7 +622,6 @@ input[type="search"]:focus {
     }
     .spacer-in-calculator-panel{
         height: 10px;
-
     }
     .calculator-fieldset{
         position: relative;
@@ -651,31 +654,10 @@ input[type="search"]:focus {
     #panel-tilt{
         flex: 1;
     }
+    #compass-photo{
+        width: 240px;
+    }   
 
-    /* Add a media query to adjust the layout for smaller screens */
-    @media (max-width: 768px) {
-        .panel-calculator {
-            flex: 1 1 100%;
-            /* Stack the panels one below the other for smaller screens */
-        }
-
-        .navigation-panel li{
-            margin-top: 5px;
-        } 
-        .panel-field {
-            margin-top: 0;
-        }
-        .navigation-panel li a, .navigation-panel li span{
-            font-size: 10px;
-        } 
-        .circle-link {
-            display: inline-block;
-            height: 14px;
-            width: 14px;
-            margin: 0 auto;
-            text-align: center;
-        }
-    }
     .calculator-fieldset .panel-calculator, .panel-calculator-map-auto{
         width: 780px;
         height: 480px;
@@ -738,7 +720,7 @@ input[type="search"]:focus {
     #id_select_district{
         height: 25px;
     }
-    #id_select_phase{
+    #id_select_phase{.spacer-label
         height: 25px;
     }
     #id_select_kwh{
@@ -994,7 +976,7 @@ input[type="search"]:focus {
     }
       /* Positioning the radio buttons */
     #east, #east-label { transform: translate(265px, -195px);transform-origin: 0 0; }
-    #southEast, #southEast-label { transform: translate(230px, -85px); transform-origin: 0 0;}
+    #southEast, #southEast-label { transform: translate(228px, -90px); transform-origin: 0 0;}
     #south, #south-label { transform: translate(132px, -20px);transform-origin: 0 0; }
     #southWest, #southWest-label { transform: translate(30px, -45px);transform-origin: 0 0; }
     #west, #west-label { transform: translate(0px, -105px); transform-origin: 0 0;}
@@ -1073,13 +1055,14 @@ input[type="search"]:focus {
                     display: flex;
                     justify-content: center;
                   }
-                .section-before-calculator{
+                /* .section-before-calculator{
                     width: 600px;
-                }
+                } */
                 .section-middle-position {
                     -webkit-flex-direction: column;
                     flex-direction: column;
                     height: 110%;
+                    width: 600px;
                 }
                 .table-title{
                     -webkit-flex: 0.5;
@@ -1180,8 +1163,130 @@ input[type="search"]:focus {
                     height: 70vh!important; /* Set a minimum height for the elements inside */
                     width: 90%!important;
                 } 
+                .calculator-fieldset .panel-calculator{
+                    width: 480px;
+                    height: 380px;
+                }
+                .panel-calculator-map-auto{
+                    width: 480px;
+                    height: 280px;
+                }
+                .calculator-fieldset .panel-calculator .number{
+                    font-size: 20px;
+                }
+                h4{
+                    font-size: 12px;
+                }
+                .spacer-label{
+                    font-size: 12px;
+                }
+                .coords-inline{
+                    font-size: 12px;
+                }
+                #map{
+                    height: 55%;
+                    width: 95%;
+                }
+                /* .section-before-calculator{
+                    width: 400px;
+                    font-size: 10px;
+                } */
+                .section-middle-position{
+                    width: 400px;
+                    font-size: 10px;
+                }
+                #previous-button, #next-button, #resetBtn, #submitBtn, #next-button.enabled-button, #previous-button.enabled-button, #submitBtn.enabled-button {
+                    font-size: 8px;
+                    width: 80px;
+                    height: 20px;
+                    margin: 10px 5px 5px 10px;
+                }
+                .spacer-in-calculator-panel{
+                    height: 0;
+                }
+                .option-selector-margin, .form-check{
+                    font-size: 8px;
+                } 
+                .panels_parameters{
+                    font-size: 10px;
+                }
+                #annual_kwh{
+                    height: 5px;
+                }
+                #compass-photo{
+                    width: 140px;
+                }
+                  /* Positioning the radio buttons */
+                #east, #east-label { transform: translate(165px, -162px);transform-origin: 0 0; }
+                #southEast, #southEast-label { transform: translate(145px, -85px); transform-origin: 0 0;}
+                #south, #south-label { transform: translate(82px, -30px);transform-origin: 0 0; }
+                #southWest, #southWest-label { transform: translate(20px, -35px);transform-origin: 0 0; }
+                #west, #west-label { transform: translate(0%, -58px); transform-origin: 0 0;}
+
+                .img-tilt{
+                    width: 200px;
+                    height: 120px;
+                }
+                .navigation-panel li a, .navigation-panel li span{
+                    font-size: 7px;
+                } 
+                .panel-selection-height{
+                    height: 16px!important;
+                    font-size: 6px;
+                }
+                .panels_parametersm, .metrics-special-calculation{
+                    height: 16px!important;
+                    font-size: 6px;
+                }
+                #panelCostInput, #panelAreaInput{
+                    width: 30px;
+                }
+                .spacer-label{
+                    font-size: 10px;
+                }
+                .panel-field, #latitude, #longitude{
+                    font-size: 8px;
+                    width: 50px;
+                }
+                .coords-map-longitude label, .coords-map-latitude label{
+                    font-size: 8px;
+                }
+                #regionInput{
+                    width: 80px;
+                }
+                
             }
 
+             /* Add a media query to adjust the layout for smaller screens */
+    @media (max-width: 768px) {
+        .calculator-fieldset.panel-calculator, .panel-calculator-map-auto{
+            width: 280px;
+            height: 280px;
+        }
+
+        .navigation-panel li{
+            margin-top: 5px;
+        } 
+        .panel-field {
+            margin-top: 0;
+        }
+        .navigation-panel li a, .navigation-panel li span{
+            font-size: 10px;
+        } 
+        .circle-link {
+            display: inline-block;
+            height: 14px;
+            width: 14px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        #previous-button, #next-button, #resetBtn, #submitBtn, #next-button.enabled-button, #previous-button.enabled-button, #submitBtn.enabled-button {
+            font-size: 8px;
+            width: 80px;
+            height: 20px;
+            margin: 10px 5px 5px 10px;
+        }
+    }
 
             /* ::: EXTRA ZOOM IN ::: */
             @media (max-width: 420px) {
@@ -1221,6 +1326,57 @@ input[type="search"]:focus {
                 .go-back-button-dash-empty{
                     margin: 60px 0 60px 0;
                   }
+                  .calculator-fieldset.panel-calculator, .panel-calculator-map-auto{
+                    width: 280px;
+                    height: 180px;
+                }
+                /* .section-before-calculator{
+                    width: 200px;
+                    font-size: 8px;
+                } */
+                .section-middle-position{
+                    width: 200px;
+                    font-size: 8px;
+                }
+                .coords-inline{
+                    font-size: 8px;
+                }
+                .navigation-panel{
+                    font-size: 6px;
+                }
+                .navigation-panel li a, .navigation-panel li span{
+                    font-size: 6px;
+                } 
+                #previous-button, #next-button, #resetBtn, #submitBtn, #next-button.enabled-button, #previous-button.enabled-button, #submitBtn.enabled-button {
+                    font-size: 4px;
+                    width: 50px;
+                    height: 14px;
+                    margin: 10px 5px 5px 10px;
+                }
+                .panel-calculator-map-auto{
+                    width: 200px;
+                    height: 140px;
+                }      
+                .calculator-fieldset.panel-calculator{
+                    height: 300px;
+                } 
+                #compass-photo{
+                    width: 80px;
+                }     
+                  /* Positioning the radio buttons */
+                #east, #east-label { transform: translate(105px, -132px);transform-origin: 0 0; }
+                #southEast, #southEast-label { transform: translate(90px, -75px); transform-origin: 0 0;}
+                #south, #south-label { transform: translate(52px, -30px);transform-origin: 0 0; }
+                #southWest, #southWest-label { transform: translate(10px, -25px);transform-origin: 0 0; }
+                #west, #west-label { transform: translate(0px, -30px); transform-origin: 0 0;}
+
+                .img-tilt{
+                    width: 100px;
+                    height: 80px;
+                }
+                .option-selector-margin, .form-check{
+                    font-size: 8px;
+                } 
             }
 
 
@@ -1255,7 +1411,46 @@ input[type="search"]:focus {
                     .main-page-content {
                         height: 500vh;
                     }
-                                        
+                    .calculator-fieldset.panel-calculator, .panel-calculator-map-auto{
+                        width: 280px;
+                        height: 180px;
+                    }
+                    #previous-button, #next-button, #resetBtn, #submitBtn, #next-button.enabled-button, #previous-button.enabled-button, #submitBtn.enabled-button {
+                        font-size: 4px;
+                        width: 50px;
+                        height: 14px;
+                        margin: 10px 5px 5px 10px;
+                    }
+                    .navigation-panel{
+                        font-size: 5px;
+                    }
+                    .navigation-panel li a, .navigation-panel li span{
+                        font-size: 5px;
+                    }   
+                    .panel-calculator-map-auto{
+                        width: 200px;
+                        height: 140px;
+                    }      
+                    .calculator-fieldset .panel-calculator{
+                        height: 300px;
+                    }    
+                    .coords-inline{
+                        font-size: 8px;
+                    } 
+                    #compass-photo{
+                        width: 80px;
+                    }     
+                      /* Positioning the radio buttons */
+                    #east, #east-label { transform: translate(105px, -132px);transform-origin: 0 0; }
+                    #southEast, #southEast-label { transform: translate(90px, -75px); transform-origin: 0 0;}
+                    #south, #south-label { transform: translate(52px, -30px);transform-origin: 0 0; }
+                    #southWest, #southWest-label { transform: translate(10px, -25px);transform-origin: 0 0; }
+                    #west, #west-label { transform: translate(0px, -30px); transform-origin: 0 0;}
+
+                    .img-tilt{
+                        width: 100px;
+                        height: 80px;
+                    }  
                 }
 
 
