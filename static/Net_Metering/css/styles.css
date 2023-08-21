@@ -188,7 +188,7 @@ ul li{
         border-radius: 100%;
         border: solid 1px;
         border-color: #f2f2f2;
-        cursor: pointer;
+        cursor: grab;
         margin-top: 1px;
       }
       
@@ -202,7 +202,7 @@ ul li{
         background-color: var(--thumb-color);
         border-radius: 100%;
         border-color: #f2f2f2;
-        cursor: pointer;
+        cursor: grab;
       }
       
       #theme-slider::-moz-range-thumb:hover {
@@ -826,6 +826,7 @@ input[type="search"]:focus {
         height: 6px;
         border: none;
         border-radius: 3px; /* Add some rounded corners for styling */
+        cursor: pointer;
     }
     #myRangeSlider::-moz-range-progress {
         background-color: #738725;
@@ -842,13 +843,12 @@ input[type="search"]:focus {
         border-color: #f2f2f2;    
     }
     #myRangeSlider::-moz-range-thumb:hover{
-        color: #ed4901;
+        background-color: #ed4901;
+        cursor: grab;
     }
-    /* #myRangeSlider::-webkit-slider-runnable-track {
-        background-color: #738725;
-        height: 6px;
-        border-radius: 3px;
-    }*/
+    #myRangeSlider::-webkit-slider-runnable-track {
+        cursor: pointer;
+    }
     #myRangeSlider::-webkit-slider-thumb {
         -webkit-appearance: none;
         width: 18px;
@@ -857,12 +857,12 @@ input[type="search"]:focus {
         border-radius: 50%;
         border: solid 1px;
         border-color: #f2f2f2;
-        cursor: pointer;
+        cursor: grab;
         padding-bottom: 5px;
     }
-    
     #myRangeSlider::-webkit-slider-thumb:hover {
-        color: #ed4901;
+        -webkit-appearance: none;
+        background-color: #ed4901;
     }
     
     #myRangeSlider.disabled-slider:disabled, #myRangeSlider:disabled{
