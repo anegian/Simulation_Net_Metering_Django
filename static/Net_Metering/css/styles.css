@@ -1,0 +1,1699 @@
+/* ::: General Page Settings ::: */
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+ul li{
+    margin-bottom: 10px;
+}
+.article-small-titles{
+    color: #393052;
+    font-size: 20px;
+}
+.article-big-titles{
+    color: #e34c0cbf;
+    font-size: 25px;
+    margin-top: 10px;
+    font-style: italic;
+    line-height: 1.5;
+}
+.article-first-title{
+    color: #393052;
+    font-size: 25px;
+    margin-top: 10px;
+    font-style: italic;
+    line-height: 1.5;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+.hidden{
+    display: none;
+}
+.disabled-button {
+    background-color: lightgray;
+    color: gray;
+    pointer-events: none; /* Disable pointer events to prevent hover effect */
+}
+
+.disable-pointer-events {
+    pointer-events: none;
+}
+.disable-pointer-events .close-icon {
+    pointer-events: auto;
+}
+
+.blurred {
+    background-color: hsla(0, 0%, 0%, 0.5); /* Set the background color to semi-transparent black */
+    filter: brightness(10%); /* Adjust the brightness of the background to 50% */
+  }
+
+.error {
+    border: 2px solid hsla(0, 100%, 50%, 0.5);
+}
+
+#error-message-panel, #error-message-panel5, #error-message-panel6, #max-message{
+    display: none;
+    font-weight: bold;
+    color: hsla(0, 100%, 50%, 0.5);
+}
+
+
+/* ::: Home Page Main image background: url('../../images/solar-cell.jpg');::: */
+.home-body::before{
+    background: url('../../images/home.jpg');
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* -webkit-background-size: 100% 130%; */
+    background-size: 100% 130%;
+    -o-background-size: 100% 130%;
+    background-size: 100% 130%;
+    /* opacity: 0.7;filter: brightness(80%) contrast(100%); */
+    z-index: -1;
+    
+}
+.link-mid-position-home{
+    width: 50px;
+    height: 30px;
+    color: #f2f2f2;
+    display: inline;
+}
+.carousel-inner {
+    border: 2px solid #59419b;
+    border-radius: 2px;
+    padding: 10px;
+    margin: 0 auto;
+  }
+
+
+    /* ::: HEADINGS ::: */
+    h2{
+        font-size: 24px;
+        font-weight: bold;
+        color: #f2f2f2;
+    }
+
+    h3{
+        font-size: 16px;
+        font-weight: bold;
+        color: #538bc7;
+    }
+    h4{
+        font-weight: bold;
+        font-size: 16px;
+        color: var(--title-panel-color);
+    }
+
+    /* ::: MAIN HEADER ::: */
+    .main-header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #393052;
+        height: 40px;
+        width: 100%;
+    }
+    .header-container-left{
+        height: inherit;
+        display: inherit;
+        align-items: center;
+        justify-content: center;
+
+    }
+    .header-container-right{
+        height: inherit;
+        display: inherit;
+        align-items: center;
+        justify-content: center;
+        margin-left: 10px;
+    }
+    .sm-image{
+        width: 30px;
+        cursor: pointer;
+    }
+    .login i, .signup i, .logo a{
+        margin: 20px 0 0 10px;
+        text-decoration: none;
+        color: #f2f2f2;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+
+    }
+    .logo{
+        margin-top: 15px;
+    }
+    /* .login i:hover, .signup i:hover{
+        color: #ed4901;
+    } */
+    .theme-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .theme-toggle label {
+     margin-left: 10px;
+    }
+    #theme-slider {
+        -webkit-appearance: none;
+        width: 40px;  
+        color: #74b1f2;
+        background-color: #393052;
+      }
+      
+      #theme-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        background-color: var(--thumb-color);
+        border-radius: 100%;
+        border: solid 1px;
+        border-color: #f2f2f2;
+        cursor: grab;
+        margin-top: 1px;
+      }
+      
+      #theme-slider::-webkit-slider-thumb:hover {
+        background-color: #ed4901;
+      }
+      
+      #theme-slider::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background-color: var(--thumb-color);
+        border-radius: 100%;
+        border-color: #f2f2f2;
+        cursor: grab;
+      }
+      
+      #theme-slider::-moz-range-thumb:hover {
+        background-color: #ed4901;
+      }
+      
+      #theme-slider::-moz-range-progress {
+        background-color: var(--slider-color);
+        height: 19px;
+        border-radius: 20px;
+      }
+      
+      #theme-slider::-webkit-slider-runnable-track {
+        background-color: var(--slider-color);
+        height: 18px;
+        border-radius: 20px;
+      }
+      
+      #theme-slider::-moz-range-track {
+        background-color: var(--slider-color);
+        height: 19px;
+        border-radius: 20px;
+      }
+      
+      #theme-slider::-ms-fill-lower {
+        background-color: var(--slider-color);
+        height: 19px;
+        border-radius: 20px;
+      }
+
+/* ::: NAVBAR ::: */
+.second-navbar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #393052;
+    height: 40px;
+    width: 100%;
+}
+.second-navbar-left-container{
+    height: inherit;
+    display: flex;
+    align-items: center;
+    margin-left: 120px;
+}
+.second-navbar-left-container .nav-list{
+    height: inherit;
+    display: flex;
+    justify-content: space-evenly;
+    align-items:center;
+    padding-top: 28px;
+    margin-right: 20px;
+}
+.second-navbar-right-container{
+    height: inherit;
+    display: inherit;
+    align-items: center;
+    margin-left: 10px;
+}
+.nav-list li, .nav-list a{
+    padding: 0 15px 0 0;
+    list-style: none;
+    text-decoration: none;
+    color: #f2f2f2;
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.nav-list a:hover{
+    color: #ed4901;
+    letter-spacing: 1px;
+}
+.nav-link.active{
+    color: #ed4901;
+}
+
+/* ::: SEARCH BOX POSITION ::: */
+
+/* .search-box-container{
+    padding-right: 5px;
+    display: flex;
+    align-items: center;
+}
+.search-box{
+    display: flex;
+    color: #f2f2f2;
+    border: 1px solid currentColor;
+    border-radius: 5px;
+    height: 40px;
+
+}
+input[type="search"] {
+  background: transparent;
+  margin: 0;
+  padding: 7px 8px;
+  font-size: 14px;
+  color: inherit;
+  border: 1px solid transparent;
+  border-radius: inherit;
+}
+input[type="search"]::placeholder {
+  color: #bbb;
+}
+.large-screen-search-button {
+    width: 40px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    background: transparent;
+    color: #f2f2f2;
+    cursor: pointer;
+    opacity: 0.7;
+}
+button[type="submit"]:hover {
+  opacity: 0.8;
+}
+input[type="search"]:focus {
+  border-color: #ed4901;
+  outline: none;
+} */
+
+/* ::: END SEARCH BOX POSITION ::: */
+
+
+    /* ::: MAIN PAGE CONTENT GENERAL SETTINGS :::*/
+        
+    .main-index-content-for-all{    /* ::: parent element of MAIN PAGE CONTENT :::*/
+        display: flex;
+        background-color: #f2f2f2;
+    }
+    .main-page-content{
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        flex: 1;
+    }
+    .main-page-section{
+        display: flex;
+        flex-direction: column;
+        overflow-y: hidden;
+        align-items: center;
+    }
+    .main-page-article{
+        background: transparent;
+        display: flex;
+        flex-direction: column;
+        color: #000022;
+        font-size: 14px;
+        justify-content: center;
+        width: 60%;
+    }
+    .article-body{
+        background-color: transparent;
+        font-weight: 500;
+        /* display: flex;
+        flex-direction: column; */
+        line-height: 2;
+        text-align: justify;
+    }
+    .img-div-home{
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .img-div-dash-empty{
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .img-equipment{
+        width: 600px;
+        height: 400px;
+        border-radius: 10px;
+    }
+    
+    .img-info{
+        width: 600px;
+        height: 300px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+    .img-dash-nodata{
+        width: 300px;
+        height: 300px;
+    }
+    
+    .calculator-page-content{
+        background-color: var(--bg-color-calculator-page);
+        min-height: 100vh;
+    }
+    .dashboard-page-content{
+        background-color: #29233b;
+        min-height: 100vh;
+    }
+    .dashboard-empty-page-content{
+        background-color: #29233b;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+    
+
+
+
+                /* ::: CHECKBUTTON & Search Box ::: */
+
+
+                #menu-nav-button{
+                    margin-top: 2px;
+                    font-size: 20px;
+                    color: #f2f2f2;
+                    cursor: pointer;
+                    display: none;
+                }
+                #check-navbar{
+                    display: none;
+                }
+                #menu-nav-button:hover{
+                    color: #ed4901;
+                }
+                /* Position and settings of search box button */
+                /* .small-screen-show-search-button {
+                    font-size: 19px;
+                    color: #f2f2f2;
+                    cursor: pointer;
+                    display: none;
+                }
+                .small-screen-show-search-button:hover {
+                    color: #ed4901;
+                }
+                /* Hide search-bar show-button */
+                /* #small-show-search-checkbox{
+                    display: none;
+                } */
+
+
+
+
+
+        /* ::: MAIN CONTENT OF CALCULATOR PAGE ::: */
+
+ /* ::: SECTION BEFORE CALCULATOR FORM::: */
+
+ .section-before-calculator {
+    height: auto; /* Allow the section to adjust its height based on content */
+    background-color: #f2f2f2;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row; /* Start in a line */
+    align-items: center;
+    justify-content: center;
+}
+
+.section-middle-position {
+    width: 1050px;
+    display: flex;
+    flex-direction: row; /* Start in a line */
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap; /* Wrap to a column when needed */
+    background-color: #f2f2f2;
+    padding: 10px 0 10px 0;
+}
+
+.table-title {
+    height: 100%;
+    flex: 0.5; /* Equal width for both elements when in a line */
+    max-width: 300px;
+    border-right: solid 1px;
+    border-right-color: #393052;
+    padding-right: 10px;
+    text-align: center;
+}
+
+.table-title td i {
+    font-size: 36px;
+    color: #2c3e50;
+    padding-left: 5px;
+}
+
+.calc-title {
+    flex: 1; /* Equal width for both elements when in a line */
+    max-width: 400px;
+    padding-right: 5px;
+    text-align: center;
+    padding-top: 5px;
+}
+
+.calculator-article {
+    flex: 2; /* Expand when wrapping to column */
+    width: 100%; /* Take full width when wrapping */
+    max-width: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.padding-article {
+    font-size: 12px;
+    text-align: justify;
+    padding: 0 8px 0 8px;
+}
+.spacer{
+    min-height: 100px;
+}
+
+
+/* ::: CALCULATOR FORM Panels ::: */
+
+    .navigation-panel{
+        height: inherit;
+        justify-content: center;
+        align-items: center;
+        padding-top: 3px;
+    }
+    #navigation-ul{
+        margin: 0;
+        padding: 0;
+        height: inherit;
+        display: inline-flex;
+        text-align: center;
+        list-style: none;
+        text-decoration: none;
+    }
+    .navigation-panel li{
+        margin: 0;
+        padding: 0;
+        height: inherit;
+        margin-top: 5px;
+    }
+    .navigation-panel li a{
+        padding: 0 10px 0 0;
+        list-style: none;
+        text-decoration: none;
+        color: #f2f2f2;
+        font-size: 12px;
+    }
+    .panel-field.active {
+        color: #738725!important;
+        font-weight: bold;
+    }
+    .circle-link {
+        background: #f2f2f2;
+        border-radius: 50%;
+        color: #738725;
+        display: inline-block;
+        height: 20px;
+        font-weight: bold;
+        font-size: 1.2em;
+        width: 20px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .circle-link.active{
+        background: #738725;
+        color: #f2f2f2;
+        font-weight: bold;
+    }
+    .panel-field::after {
+        content: "\21E8"; /* Unicode arrow symbol */
+        margin-left: 5px; /* Adjust spacing */
+      }
+    .panel-field {
+        cursor:default;
+    }
+    #theme-slider{
+        cursor: pointer;
+    }
+      
+    #map{
+        margin-left: 13px;
+        height: 68%;
+        width: 96%;
+        border-radius: 10px;
+    }
+    .coords-inline{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        color: #000022;
+    }
+    .panel-selection-height{
+        height: 25px!important;
+        color: #000022;
+    }
+
+    .img-div-calculator{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .img-info-panel-icon{
+        width: 100px;
+        height: 100px;
+    }
+    .img-tilt{
+        width: 300px;
+        height: 200px;
+    }
+    .img-discount{
+        width: 420px;
+        height: 240px;
+        transform: translate(30px, 0);
+    }
+    .spacer-in-main-content{
+        height: 40px;
+        background-color: #393052;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .spacer-in-calculator-panel{
+        height: 10px;
+    }
+    .calculator-fieldset{
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .panel-calculator.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+    #panel3{
+       flex-direction: row;
+       justify-content: center;
+    }
+    #panel-azimuth-tilt{
+        display: flex;
+    }
+    #panel-azimuth{
+        flex: 1;
+    }
+    #panel-tilt{
+        flex: 1;
+    }
+    #compass-photo{
+        width: 200px;
+    }   
+
+    .calculator-fieldset .panel-calculator{
+        width: 780px;
+        height: 460px;
+        margin: 10px 10px;
+        border-color: #221e2e;
+        border-radius: 5px;
+        background-color: var(--bg-color-panel);
+        font-size: 14px;
+        color: var(--text-color-panel);
+        box-shadow: 0 0 10px rgba(103, 103, 159, 0.5);
+    }
+    .calculator-fieldset .panel-calculator .number{
+        margin: 0 10px 0 10px;
+        font-size: 40px;
+        color: #ed4901;
+    }
+    .calculator-fieldset label{
+        color: var(--label-color);
+
+    }
+    .title-panel{
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        justify-content: start;
+    }
+    .option-selector-margin {
+       margin: 10px 0 10px 45px;
+    }
+   
+    /* Set the position of the label to absolute, and move it to the right by 5 pixels */
+    #option-selector-margin-label, #regionInput {
+        color: #000022;
+    }
+    #latitude, #longitude{
+        width: 75px;
+    }
+    .coords-map-longitude label, .coords-map-latitude label{
+        margin-left: 3px;
+    }
+    .option-selector-margin-select-phase{
+        color: #000022;
+    }
+    .panels_parameters{
+        width: 150px;
+        display: flex;
+        flex-direction: column;
+        margin: 20px 0 0 100px;
+    }
+    #azimuthInput, #tiltInput{
+        width: 50px;
+        transform: translate(0px, -45px);
+        color: #000022;
+    }
+    .azimuth_label{
+        transform: translate(0px, -45px);
+        color: #000022;
+    }
+    
+    #id_select_district{
+        height: 25px;
+    }
+    #id_select_phase{
+        height: 25px;
+    }
+    #id_select_kwh{
+        height: 25px;
+        margin-top: 5px;
+    }
+    .option-selector-margin .form-check{
+        font-size: 14px;
+    }
+    .spacer-label{
+        font-size: 16px;
+        text-decoration: underline;
+    }
+    /* Calculator Form help question mark poppers */
+    .help-popper, #phase-load-button, #phase-load-info {
+        background: none;
+        border: none;
+        padding: 0;
+        color: #f2f2f2;
+        color: var(--help-popper);
+        opacity: 0.8;
+        cursor: pointer;
+    }
+    #phase-load-button{
+        color: #f2f2f2;
+    }
+    .help-popper:focus {
+        outline: none;
+    }
+    .help-popper:hover{
+        color: goldenrod;
+        opacity: 0.7;
+    }
+    .close-help {
+        display: none;
+    }
+    .movePosition {
+        position: absolute;
+        z-index: 2;
+       
+    }
+    .help-container {
+        position: relative;
+      }
+    .help-text{
+        position: absolute;
+        color: #000022;
+        display: none;
+        outline: #000022;
+        background-color: goldenrod;
+        border: 1px solid grey;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        width: 500px;
+        height: auto;
+    }
+    .close-help {
+        position: absolute;
+        text-align: center;
+        width: 40px;
+        height: 40px;
+        left: 460px;
+        font-size: 30px;
+        color: rgba(44,62,80, 0.8);
+        cursor: pointer;
+        z-index: 2;
+    }
+    .close-help:hover {
+        background-color: rgba(44,62,80, 0.8);
+        color: #f2f2f2;
+    }
+    #myRangeSlider{
+        background-color: var(--slider-value-kW-color);
+        width: 90%;
+        height: 6px;
+        opacity: 1;
+        border-radius: 3px; /* Add some rounded corners for styling */
+    }
+    /* Gecko (Firefox) */
+    #myRangeSlider::-moz-range-track {
+        width: 90%;
+        height: 6px;
+        border: none;
+        border-radius: 3px; /* Add some rounded corners for styling */
+        cursor: pointer;
+    }
+    #myRangeSlider::-moz-range-progress {
+        background-color: #738725;
+        border: none;
+        height: 6px;
+      }
+
+    #myRangeSlider::-moz-range-thumb {
+        height: 16px;
+        width: 16px;
+        background: lightslategray;
+        border: solid 1px;
+        border-radius: 50%; /* Add some rounded corners for styling */
+        border-color: #f2f2f2;    
+    }
+    #myRangeSlider::-moz-range-thumb:hover{
+        background-color: #ed4901;
+        cursor: grab;
+    }
+    #myRangeSlider::-webkit-slider-runnable-track {
+        cursor: pointer;
+    }
+    #myRangeSlider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        background-color: lightslategray;
+        border-radius: 50%;
+        border: solid 1px;
+        border-color: #f2f2f2;
+        cursor: grab;
+        padding-bottom: 5px;
+    }
+    #myRangeSlider::-webkit-slider-thumb:hover {
+        -webkit-appearance: none;
+        background-color: #ed4901;
+    }
+    
+    .disabled-slider, #myRangeSlider:disabled{
+        background-color: grey;
+        height: 6px;
+        border-radius: 3px;
+        border: none;
+        opacity: 1;
+        cursor: none;
+    }
+    #slider-value{
+        color: #ed4901;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .button-auto-div{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .slider-label{
+        margin-top: 10px;
+        color: var(--slider-value-kW-color);
+        font-weight: bold;
+        font-size: 15px;
+    }
+    .slider-select-manual-auto{
+        display: inline-flex;
+        width: 90%;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .autoPower-button{
+        width: 280px;
+        height: 60px;
+        background-color: var(--bg-color-submit-button);
+        border-color: #553f33;
+        border-radius: 5px;
+        border-width: 0.01px;
+        color: #f2f2f2;
+        font-weight: bold;
+        font-size: 16px;
+        margin: 10px 15px 10px 15px;
+        box-shadow: 0 0 10px rgba(103, 103, 159, 0.5);
+    }
+    #placeProduction{
+        margin-left: 17px;
+    }
+    .hidden-storage {
+        display: none;
+    }
+
+    #with_storage:checked~.hidden-storage {
+        display: block;
+    }
+
+    #storage_kw.form-control{
+        height: 35px!important;
+        width: 170px;
+        font-size: 16px;
+    }
+    #discount_percent.form-control, #discount_percent_battery.form-control{
+        height: 35px!important;
+        width: 170px;
+        font-size: 16px;
+    }
+    /* ::: Django forms.py form container::: */
+    .name-form-container{
+        display: flex;
+        justify-content: center;
+    }
+    .my-submit-form{
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+     /* ::: SUBMIT BUTTON ::: */
+
+    #submitBtn.enabled-button, #previous-button.enabled-button, #next-button.enabled-button{
+        width: 150px;
+        height: 50px;
+        background-color: var(--bg-color-submit-button);
+        border-color: #553f33;
+        border-radius: 5px;
+        border-width: 0.01px;
+        color: #f2f2f2;
+        font-weight: bold;
+        font-size: 16px;
+        margin: 5px 15px 5px 15px;
+        box-shadow: 0 0 10px rgba(103, 103, 159, 0.5);
+        opacity: 0.8;
+    }
+    #myModalLabel{
+        color: #000022!important;
+    }
+    #myModal{
+        font-size: 12px;
+        background-image: url('../../images/purple2.jpg');
+        background-size: cover;
+        color: #000022;
+    }
+    #myModal label{
+        font-size: 12px;
+        font-weight: bold;
+    }
+    input.form-control{
+        font-size: 11px;
+        font-weight: bold;
+    }
+    #resetBtn{
+        width: 140px;
+        height: 50px;
+        background-color:rgba(255, 0, 0, 0.448);
+        opacity: 0.8;
+        border-color: #553f33;
+        border-radius: 5px;
+        border-width: 0.01px;
+        color: #f2f2f2;
+        font-weight: bold;
+        font-size: 16px;
+        margin: 5px 15px 5px 15px;
+        box-shadow: 0 0 10px rgba(103, 103, 159, 0.5);
+    }
+    #resetBtn:hover, .form-submit-button:hover, #previous-button.enabled-button:hover, #next-button.enabled-button:hover{
+        opacity: 1;
+    }
+    #next-button, #previous-button, #submitBtn{
+        background-color: #2c3e50;
+        width: 150px;
+        height: 50px;
+        border-color: #553f33;
+        border-radius: 5px;
+        border-width: 0.01px;
+        color: #f2f2f2;
+        font-weight: bold;
+        font-size: 16px;
+        margin: 5px 15px 5px 15px;
+        box-shadow: 0 0 10px rgba(103, 103, 159, 0.5);
+    }
+      /* Positioning the radio buttons */
+    #east, #east-label { transform: translate(225px, -190px);transform-origin: 0 0; }
+    #southEast, #southEast-label { transform: translate(195px, -90px); transform-origin: 0 0;}
+    #south, #south-label { transform: translate(110px, -25px);transform-origin: 0 0; }
+    #southWest, #southWest-label { transform: translate(25px, -45px);transform-origin: 0 0; }
+    #west, #west-label { transform: translate(0px, -88px); transform-origin: 0 0;}
+    #compass-photo { transform: translate(20px, 20px); transform-origin: 0 0;}
+
+    .calculator-container{
+        display: flex;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .column-calculator-page{
+        width: 25%;
+    }
+    #placeProduction, #minimumPanels, #totalArea{
+        color: #000022;
+        width: 50px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    #panelAreaInput, #panelCostInput{
+        color: #000022;
+        width: 100px;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+    .metrics-special-calculation{
+        font-size: 12px;
+    }
+    #loading-bar-container {
+    width: 90%;
+    height: 6px;
+
+    }
+    
+    #progressBar {
+    height: 6px;
+    width: 0;
+    background-color: #738725;
+    transition: width 0.3s ease-in-out;
+    text-align: center;
+    line-height: 30px;
+    color: #f2f2f2;
+    }
+    
+
+ /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
+
+ /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
+            @media (max-width: 1040px) {
+                .full-container{
+                    width: 100%;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }  
+                .panels-container{
+                    height: 80vh!important; /* Set a minimum height for the elements inside */
+                    min-width: 80%!important;
+                }
+                .panels-container canvas{
+                    height: 70vh!important; /* Set a minimum height for the elements inside */
+                    width: 80%!important;
+                }
+                #myChart3{
+                    height: 40vh!important; /* Set a minimum height for the elements inside */
+                    width: 70%!important;
+                }
+                .right-upper{
+
+                    width: 770px;
+                    display: flex;
+                    justify-content: center;
+                  }
+                /* .section-before-calculator{
+                    width: 600px;
+                } */
+                .section-middle-position {
+                    -webkit-flex-direction: column;
+                    flex-direction: column;
+                    height: 110%;
+                    width: 600px;
+                }
+                .table-title{
+                    -webkit-flex: 0.5;
+                    -ms-flex:0.5;
+                    flex: 0.5;
+                    border-right: none;
+                    margin-top: 5px;
+                }
+                .calc-title {
+                    padding-left: 5px;
+                }
+                .padding-article{
+                    padding-bottom: 10px;
+                }
+                 /* Check-button transformed in bars when small (600px) and
+                    in times icon (x) when checkbutton is checked */
+                #menu-nav-button{
+                    padding-left: 10px;
+                    display: block;
+                }
+            
+
+
+                /* ::: MENU NAVBAR HIDDEN::: */
+                /* settings & position of menu container left off the page */
+
+
+                /* settings & position of menu container left off the page */
+                #nav-list{
+                    position: absolute;
+                    display: flex;
+                    flex-direction: column;
+                    top: 40px!important;
+                    left: -240%;
+                    min-height: 100vh;
+                    width: 240px;
+                    transition: all .5s ease-out;
+                    /* :: The higher z-index is over other elements:: */
+                    z-index: 1;
+                    background-color: rgba(44,62,80, 0.8);
+
+                }
+                /* show menu container vertical */
+                #nav-list li{
+                    display: block;
+                }
+                /* settings for anchor references in menu */
+                #nav-list li a{
+                    color: #f2f2f2;
+                    font-size: 14px;
+                    text-transform: uppercase;
+                 }
+                /*  color in active anchor reference */
+                #nav-list a:hover, #nav-list li a.active{
+                    background: none;
+                    color: #ed4901;
+                }
+                /* menu container in right position when check-button checked */
+                #check-navbar:checked ~ #nav-list{
+                    left: 0;
+                    transition: all .5s ease-in;
+                }
+
+                .second-navbar-left-container .nav-list li{
+                    /* padding-bottom: 50px; */
+                    cursor: pointer;
+                }
+                .second-navbar-left-container{
+                    margin-left: 0px;
+                }
+                
+                /* ::: SEARCH BOX ::: */
+                /* .search-box {
+                    position: absolute;
+                    right: 10%;
+                    display: none;
+                } */
+
+                
+
+                /* position of search box bar in menu navbar */
+                /* .small-screen-show-search-button {
+                    padding-right: 10px;
+                    display: block;
+                }
+
+                #small-show-search-checkbox:checked ~ .search-box{
+                    display: block;
+
+                } */
+
+            } /* End media  */
+
+
+
+            @media (max-width: 836px) {
+                #myChart3{
+                    height: 70vh!important; /* Set a minimum height for the elements inside */
+                    width: 90%!important;
+                } 
+                .calculator-fieldset .panel-calculator{
+                    width: 480px;
+                    height: 400px;
+                }
+                .calculator-fieldset .panel-calculator .number{
+                    font-size: 20px;
+                }
+                h4{
+                    font-size: 12px;
+                }
+                .spacer-label{
+                    font-size: 12px;
+                }
+                .coords-inline{
+                    font-size: 12px;
+                }
+                #map{
+                    height: 75%;
+                    width: 95%;
+                }
+                /* .section-before-calculator{
+                    width: 400px;
+                    font-size: 10px;
+                } */
+                .section-middle-position{
+                    width: 400px;
+                    font-size: 10px;
+                }
+                #previous-button, #next-button, #resetBtn, #submitBtn, #next-button.enabled-button, #previous-button.enabled-button, #submitBtn.enabled-button {
+                    font-size: 8px;
+                    width: 80px;
+                    height: 20px;
+                    margin: 10px 5px 5px 10px;
+                }
+                .spacer-in-calculator-panel{
+                    height: 0;
+                }
+                .option-selector-margin, .form-check{
+                    font-size: 8px;
+                } 
+                .panels_parameters{
+                    font-size: 10px;
+                }
+                #annual_kwh{
+                    height: 5px;
+                    width: 100px;
+                }
+                #compass-photo{
+                    width: 140px;
+                }
+                  /* Positioning the radio buttons */
+                #east, #east-label { transform: translate(165px, -162px);transform-origin: 0 0; }
+                #southEast, #southEast-label { transform: translate(145px, -85px); transform-origin: 0 0;}
+                #south, #south-label { transform: translate(82px, -30px);transform-origin: 0 0; }
+                #southWest, #southWest-label { transform: translate(20px, -35px);transform-origin: 0 0; }
+                #west, #west-label { transform: translate(0%, -58px); transform-origin: 0 0;}
+
+                .img-tilt{
+                    width: 200px;
+                    height: 120px;
+                }
+                .navigation-panel li a, .navigation-panel li span{
+                    font-size: 8px;
+                } 
+                .panel-selection-height{
+                    height: 16px!important;
+                    font-size: 6px;
+                }
+                .panels_parametersm, .metrics-special-calculation{
+                    height: 16px!important;
+                    font-size: 6px;
+                }
+                #panelCostInput, #panelAreaInput{
+                    width: 30px;
+                }
+                .spacer-label{
+                    font-size: 10px;
+                }
+                .panel-field, #latitude, #longitude{
+                    font-size: 8px;
+                    width: 50px;
+                }
+                .coords-map-longitude label, .coords-map-latitude label{
+                    font-size: 8px;
+                }
+                #regionInput{
+                    width: 80px;
+                }
+                
+            }
+
+             /* Add a media query to adjust the layout for smaller screens */
+    @media (max-width: 768px) {
+        .navigation-panel li{
+            margin-top: 5px;
+        } 
+        .panel-field {
+            margin-top: 0;
+        }
+        .navigation-panel li a, .navigation-panel li span{
+            font-size: 6px;
+        } 
+        .circle-link {
+            display: inline-block;
+            height: 14px;
+            width: 14px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        #previous-button, #next-button, #resetBtn, #submitBtn, #next-button.enabled-button, #previous-button.enabled-button, #submitBtn.enabled-button {
+            font-size: 8px;
+            width: 80px;
+            height: 20px;
+            margin: 10px 5px 5px 10px;
+        }
+    }
+
+            /* ::: EXTRA ZOOM IN ::: */
+            @media (max-width: 420px) {
+                .titles-panel{
+                    font-size: 11px!important;
+                }  
+                .panels-container{
+                    height: 80vh!important; /* Set a minimum height for the elements inside */
+                    min-width: 80%!important;
+                }
+                .panels-container canvas{
+                    height: 40vh!important; /* Set a minimum height for the elements inside */
+                    width: 90%!important;
+                }
+                #myChart3{
+                    height: 70vh!important; /* Set a minimum height for the elements inside */
+                    width: 100%!important;
+                } 
+                .lord-icon-small{
+                    width: 80px!important;
+                    height:80px!important;
+                }
+                .login a, .signup a, .logo a {
+                    font-size: 15px;
+                }
+                .sm-image {
+                    width: 20px;
+                }
+                #nav-list {
+                    min-height: 100vh;
+                }
+                .main-page-content {
+                    height: 300vh;
+                }
+                .go-back-button-dash-empty{
+                    margin: 60px 0 60px 0;
+                }
+
+                .section-middle-position{
+                    width: 200px;
+                    font-size: 8px;
+                }
+                .coords-inline{
+                    font-size: 8px;
+                }
+                .navigation-panel{
+                    font-size: 4px;
+                }
+                .navigation-panel li a, .navigation-panel li span{
+                    font-size: 4px;
+                } 
+                #previous-button, #next-button, #resetBtn, #submitBtn, #next-button.enabled-button, #previous-button.enabled-button, #submitBtn.enabled-button {
+                    font-size: 4px;
+                    width: 50px;
+                    height: 14px;
+                    margin: 10px 5px 5px 10px;
+                }     
+                #compass-photo{
+                    width: 80px;
+                }     
+                  /* Positioning the radio buttons */
+                #east, #east-label { transform: translate(105px, -132px);transform-origin: 0 0; }
+                #southEast, #southEast-label { transform: translate(90px, -75px); transform-origin: 0 0;}
+                #south, #south-label { transform: translate(52px, -30px);transform-origin: 0 0; }
+                #southWest, #southWest-label { transform: translate(10px, -25px);transform-origin: 0 0; }
+                #west, #west-label { transform: translate(0px, -30px); transform-origin: 0 0;}
+
+                .img-tilt{
+                    width: 100px;
+                    height: 80px;
+                }
+                .option-selector-margin, .form-check{
+                    font-size: 8px;
+                } 
+            }
+
+
+                /* ::: EXTRA ZOOM IN ::: */
+                @media (max-width: 330px) {
+                    .panels-container{
+                        height: 80vh!important; /* Set a minimum height for the elements inside */
+                        min-width: 80%!important;
+                    }
+                    .panels-container canvas{
+                        height: 40vh!important; /* Set a minimum height for the elements inside */
+                        width: 90%!important;
+                      }
+                      
+                    .login a, .signup a {
+                        padding: 0;
+                        color: #2c3e50;
+                        font-size: 15px;
+                    }
+                    .logo a{
+                        display: none;
+                    }
+
+                    .sm-image {
+                        width: 20px;
+                    }
+
+                    #nav-list {
+                        height: 400px;
+                    }
+
+                    .main-page-content {
+                        height: 500vh;
+                    }
+                    #previous-button, #next-button, #resetBtn, #submitBtn, #next-button.enabled-button, #previous-button.enabled-button, #submitBtn.enabled-button {
+                        font-size: 4px;
+                        width: 50px;
+                        height: 14px;
+                        margin: 10px 5px 5px 10px;
+                    }
+                    .navigation-panel{
+                        font-size: 3px;
+                    }
+                    .navigation-panel li a, .navigation-panel li span{
+                        font-size: 3px;
+                    }     
+                    .coords-inline{
+                        font-size: 8px;
+                    } 
+                    #compass-photo{
+                        width: 80px;
+                    }     
+                      /* Positioning the radio buttons */
+                    #east, #east-label { transform: translate(105px, -132px);transform-origin: 0 0; }
+                    #southEast, #southEast-label { transform: translate(90px, -75px); transform-origin: 0 0;}
+                    #south, #south-label { transform: translate(52px, -30px);transform-origin: 0 0; }
+                    #southWest, #southWest-label { transform: translate(10px, -25px);transform-origin: 0 0; }
+                    #west, #west-label { transform: translate(0px, -30px); transform-origin: 0 0;}
+
+                    .img-tilt{
+                        width: 100px;
+                        height: 80px;
+                    }  
+                }
+
+
+/* ::: FOOTER ::: */
+.footer {
+    margin-top: auto;
+    bottom: 0;
+    width: 100%;
+    background-color: #393052;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.other-links i:hover {
+    color: #ed4901;
+    transform: scale3d(1.5, 1.5, 1.5);
+}
+
+.other-links {
+    display: inherit;
+    align-items: center;
+    justify-content: center;
+}
+
+.other-links a {
+    text-decoration: none;
+    color: cornflowerblue;
+    font-size: 15px;
+    margin: 10px 10px 0 10px;
+}
+
+footer .admin-info {
+    min-height: 60px;
+    display: inherit;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #f2f2f2;
+    font-size: 8px;
+    text-align: center;
+}
+
+
+/* ::: DASHBOARD CHARTS SECTION ::: */
+.full-container{
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #29233b;
+  }        
+  .left-container{
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+  .left-upper{
+    display: flex;
+    justify-content: space-evenly;  
+  }
+  .left-middle{
+    display: flex;
+    justify-content: center;
+  }
+  .left-below{
+    display: flex;
+    justify-content: space-evenly;  
+  }
+  .panels-container{
+    min-height: 60vh;
+    margin: 10px 0 10px 0;
+    width: 95%;
+    background-color: #393052;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: #221e2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .panels-container canvas{
+    height: 50vh!important; /* Set a minimum height for the elements inside */
+    width: 95%!important;
+}
+#myChart3{
+    height: 48vh!important; /* Set a minimum height for the elements inside */
+    width: 95%!important;
+}
+  .container-icons{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: #393052;
+    width: 30%;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: #221e2e;
+  }
+  .container-icons-bottom{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: #393052;
+    width: 30%;
+    height: 240px;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: #221e2e;
+  }
+
+  .right-container{
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;  
+  }
+  .right-upper{
+    display: flex;
+    justify-content: center;
+  }
+  .right-below{
+    display: flex;
+    justify-content: center;
+  }
+
+  .titles-panel{
+    margin-top: 10px;
+    color: #ed4901;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .info-title, .go-back-button i{
+    color: #f2f2f2;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .go-back-button-dash-empty{
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #29233b;
+  }
+
+  #change-data-button{
+    height: 40px;
+    width: 260px;
+    background-color: #393052;
+  }
+  #change-data-button, #change-data-button a{
+    text-decoration: none;
+    color: #f2f2f2;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  #change-data-button:hover, #change-data-button a:hover, .go-back-button-div i:hover{
+    color: #ed4901;
+  }
+  .dashboard-empty-info{
+    height: 20%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 500;
+    font-size: 18px;
+    background-color: #393052;
+    color: #f2f2f2;
+    width: 70%;
+    font-style: italic;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #29233b;
+    line-height: 1.5;
+    margin-bottom: 40px;
+  }
+  .fa-exclamation-circle, .fa-copyright{
+    color: #ed4901;
+  }
+
+  .full-container-empty{
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+  }
+
+    /* ::: SIGNUP PAGE SECTION ::: */
+  .vh-100{
+    background-color: #29233b!important;
+  }
+  .card, .text-black{
+    background-color: #393052!important;
+  }
+  .card-body, .p-md-5, .form-label{
+    display: flex;
+    color: #f2f2f2!important;
+  }
+  #signup-main-content{
+    min-height: 100vh;
+  }
+
+
+  /* ::: ABOUT PAGE SECTION ::: */
+  .info-body::before{
+    background-image: url('../../images/lamp2.jpg');
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* -webkit-background-size: cover; */
+    /* -moz-background-size: cover; */
+    -o-background-size: cover;
+    background-size: cover;
+    opacity: 0.9;
+    z-index: -1;
+    filter: brightness(90%) contrast(110%);
+  }
+
+  .container-info{
+    min-height: 100vh;
+  }
+  .about-text{
+    color: #f2f2f2;
+    font-size: 14px;
+    font-weight: 600;
+    width: 50%;
+    text-align: justify;
+  }
+  .about-title{
+    color: #ed4901;
+    font-size: 24px;
+    font-weight: 600;
+    width: 60%;
+    text-align: justify;
+    margin: 40px 0 20px 0;
+    font-style: italic;
+  }
+  .italics{
+    font-style: italic;
+    text-decoration: underline;
+  }
+  .spacer-text{
+    margin-right: 5px;
+  }
+  .little-spacer{
+    margin: 10px 0;
+  }
+  .little-spacer a{
+    text-decoration: none;
+  }
+  .little-spacer-dash{
+    display: flex;
+    background-color: #29233b;
+    height: 80px;
+    justify-content: center;
+  }
+  .link-mid-position a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+  }
+
+
+

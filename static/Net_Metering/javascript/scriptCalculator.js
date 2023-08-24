@@ -3,7 +3,7 @@ const themeSlider = document.getElementById('theme-slider');
 const slider = document.getElementById("myRangeSlider");
 const slider_hidden_input = document.getElementById("myRangeSliderHidden");
 const PV_kW_output = document.getElementById("slider-value");
-// const annual_Kwh_input = document.getElementById("id_select_kwh");
+// annual Kwh
 let annual_Kwh_input = document.getElementById("annual_kwh");
 // Get panel parameters
 const placeSelected = document.getElementById('regionInput');
@@ -19,7 +19,6 @@ const form = document.getElementById("calculatorForm");
 const placeInstalmentRadios  = document.getElementsByName('installation')
 let selectedPlaceInstalmentValue;
 const roofRadioButton = document.getElementById('roof');
-
 const phase_load_selected = document.getElementById("id_select_phase");
 const phaseLoadDefaultSelection = document.getElementById("phase_load");
 const reset_button = document.getElementById("resetBtn")
@@ -28,7 +27,6 @@ const error_message = document.getElementById('error-message-panel');
 const error_message2 = document.getElementById('error-message-panel5');
 const error_message3 = document.getElementById('error-message-panel6');
 const max_message = document.getElementById("max-message")
-
 // Get the selected radio button's value
 const powerRadioButton = document.querySelector('input[name="power_option"]:checked');
 const storage_selection = document.getElementById("with_storage");
@@ -42,7 +40,6 @@ const manualPowerRadio = document.getElementById('manual_power');
 const autoPowerRadio = document.getElementById('auto_power');
 const autoPowerDiv = document.getElementById('autoPower-button-input');
 const autoPowerButton = document.getElementById('calculateProductionButton');
-
 // Get references to the radio inputs and the azimuthInput
 const radioAzimuthInputs = document.querySelectorAll('input[name="azimuth"]');
 const azimuthInput = document.getElementById('azimuthInput');
@@ -54,13 +51,13 @@ const profileDefaultRadio = document.getElementById('day-power');
 const special_production_output = document.getElementById('placeProduction');
 const minimum_panel_container = document.getElementById('minimumPanels');
 const total_PV_area = document.getElementById('totalArea');
-
 const panelContainers = document.getElementsByClassName("panel-calculator");
 const previousButton = document.getElementById("previous-button");
 const nextButton = document.getElementById("next-button");
 const circleLinks = document.querySelectorAll('.circle-link');
 let currentPanelIndex = 0;
 let submitBtnEnabled;
+let loadingBar = document.getElementById('progressBar');
 
 //Modal fields
 const form_submit_button = document.getElementById("submitBtn");
@@ -84,10 +81,6 @@ const discountPercentSelect = document.querySelector('.discount_percent_select')
 const discountPercentBatterySelect = document.querySelector('.discount_percent_battery_select');
 let autoCalculatedPower;
 let autoCalculatedPowerNumber = 0;
-
-let loadingBar = document.getElementById('progressBar');
-let width = 0;
-let id = null;
 
 // Help Poppers to give details about the form fields or selected values
 const helpButtons = document.getElementsByClassName('help-popper');
@@ -217,8 +210,6 @@ function disableStorage() {
   storage_kW.value = 0.0;
 }
 function disableErrorMessages() {
-  //district_average_irradiance.classList.remove('error');
-  //district_average_irradiance.classList.remove('error');
   phase_load_selected.classList.remove('error');
   error_message.style.display = 'none';
   error_message2.style.display = 'none';
@@ -275,26 +266,6 @@ function toggleAutoPowerDiv() {
     }
   }
 }
-
-// function frame() {
-//   if (width >= 100) {
-//     clearInterval(id);
-//     id = null; // Reset the interval ID
-//     width = 0; // Reset the width to 0
-//   } else {
-//     width++;
-//     loadingBar.style.width = width + "%"; // Set the width as a percentage
-//     loadingBar.innerHTML = width + "%";
-//   }
-// }
-// function startLoading() {
-//   if (id === null) { // Check if animation is not already running
-//     width = 0; // Reset the width to 0
-//     loadingBar.style.width = '0'; // Reset the width style to 0
-//     id = setInterval(frame, 20); // Adjust the interval duration for slower animation
-//   }
-// }
-
 function calculateAutoPower() {
   
   // Show the progress bar at the start of the request
@@ -394,7 +365,6 @@ function calculateAutoPower() {
     }
   });
 }
-
 // Function to update select options dynamically
 function updateDiscountSelectOptions(selectElement, options) {
   // Clear existing options
@@ -446,7 +416,6 @@ function validateForm() {
   }
   return true;
 };
-
 // Function about Next, Previous buttons and how to show the panels of the form
 function toggleNextButtonState() {
     if (annual_Kwh_input.value.trim() === '' || annual_Kwh_input.value === 0 || slider.value === '0') {
@@ -573,7 +542,6 @@ nextButton.disabled = true;
 // Settings for theme toggler
 set_initial_properties_theme_toggler();
 showPanel(currentPanelIndex);
-
 
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
@@ -882,13 +850,4 @@ submit_modal.addEventListener('click', function(event) {
   }else{
       form.submit();
   }
-});
-
-// Test print
-discount_percent.addEventListener('change', function() {
-  console.log('discount_percent value:', this.value);
-});
-// Test print
-discount_percent_battery.addEventListener('change', function() {
-  console.log('discount_percent_battery value:', this.value);
 });
