@@ -7,8 +7,6 @@
 {% endblock %}
 
 {% block css %} 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 {% endblock %}
 
@@ -18,7 +16,7 @@
 <script> let geojsonPath = "{% static 'Net_Metering/json/Prefectures_boundaries.geojson' %}";</script>
 <script src="{% static 'Net_Metering/javascript/leaflet_map.js' %}" defer></script>
 <script> var calculatePowerURL = "{% url 'simulation:calculate_power' %}";</script>
-<script src="{% static 'Net_Metering/javascript/scriptCalculators.js' %}" defer></script>
+<script src="{% static 'Net_Metering/javascript/scriptCalculator.js' %}" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 {% endblock %}
 
@@ -38,30 +36,31 @@
 
 {% block content %}
 
+<section class="section-before-calculator">
+    <div class="section-middle-position">
+        <table class="table-title">
+                <tr class="row-in-table-title">
+                    <td class="icon-calculator">
+                    <i class=" fa fa-calculator" aria-hidden="true"  ></i>
+                    </td>
+                    <th class="calc-title">
+                        <h3>Υπολογιστής Απόδοσης</h3>
+                    </th>
+                </tr>
+        </table>    
+
+        <article class="calculator-article">
+            <div class="padding-article">
+                Ο υπολογιστής απόδοσης οικιακού φωτοβολταϊκού συστήματος αυτοπαραγωγής με ενεργειακό συμψηφισμό
+                (Net Metering), θα σας βοηθήσει να υπολογίσετε την απαραίτητη Ισχύ Φ/Β συστήματος, τον εκτιμώμενο 
+                χρόνο απόσβεσης και χρηματο-οικονομικούς δείκτες της επένδυσής σας, βάσει επιλογών εγκατάστασης 
+                και καταναλωτικού σας προφίλ.
+            </div>
+        </article>
+    </div>
+</section>
+
     <div class="calculator-page-content">
-
-        <section class="section-before-calculator">
-            <table class="table-title">
-                    <tr class="row-in-table-title">
-                        <td class="icon-calculator">
-                           <i class=" fa fa-calculator" aria-hidden="true"  ></i>
-                        </td>
-                        <th class="calc-title">
-                            <h3>Υπολογιστής Απόδοσης</h3>
-                        </th>
-                    </tr>
-            </table>
-
-            <article class="calculator-article">
-                <div class="padding-article">
-                    Ο υπολογιστής απόδοσης οικιακού φωτοβολταϊκού συστήματος αυτοπαραγωγής με ενεργειακό συμψηφισμό
-                    (Net Metering), θα σας βοηθήσει να υπολογίσετε την απαραίτητη Ισχύ Φ/Β συστήματος, τον εκτιμώμενο 
-                    χρόνο απόσβεσης και χρηματο-οικονομικούς δείκτες της επένδυσής σας, βάσει επιλογών εγκατάστασης 
-                    και καταναλωτικού σας προφίλ.
-                </div>
-            </article>
-
-        </section>
 
         <div class="spacer-in-main-content">
             <!-- <h2>Συμπληρώστε τα πεδία</h2> -->
@@ -196,7 +195,7 @@
                                     <p> <label for="azimuthInput" class="spacer-label">Επιλέξτε προσανατολισμό Φ/Β πάνελ: </label></p> 
                 
                                     <div>
-                                        <img id="compass-photo" src="{% static 'images/compass4.png'%}" alt="photo not found" style="width: 240px;">
+                                        <img id="compass-photo" src="{% static 'images/compass4.png'%}" alt="photo not found">
                                     </div>
 
                                     <div class="form-check">
@@ -308,7 +307,8 @@
                                 </div>
 
                                 <div>
-                                    <input class="panel-selection-height" type="number" name="annual_consumption" id="annual_kwh" title="Παρακαλούμε, συμπληρώστε εκτιμώμενη ετήσια κατανάλωση σε kW" >
+                                    <input class="panel-selection-height" type="number" name="annual_consumption" id="annual_kwh" 
+                                        title="Παρακαλούμε, συμπληρώστε εκτιμώμενη ετήσια κατανάλωση σε kW" >
                                     <span>kWh</span>
                                         <button class="help-popper" type="button">
                                           <i class="fa fa-question-circle" aria-hidden="true" id="annual-consumption-info"></i>
@@ -417,7 +417,7 @@
                                 <div id="autoPower-button-input" class="">
                                     <div class="button-auto-div">
                                         <input type="hidden" name="buttonClicked" value="true">
-                                        <button class="autoPower-button" type="button" id="calculateProductionButton" onclick="startLoading()">
+                                        <button class="autoPower-button" type="button" id="calculateProductionButton">
                                             Υπολογισμός Απαιτούμενης Ισχύος
                                         </button>
                                     </div>
@@ -437,14 +437,8 @@
                                         <input type="text" id="totalArea" readonly><span class="metrics-special-calculation"> m²</span>
                                     </div>
                                     
-                                    <!-- Add the loading bar container
-                                    <div class="loading-bar-container">
-                                        <div id="loading-bar">0%</div>
-                                        
-                                    </div> -->
-                                    <br>
-                                    <div class="loading-bar-container">
-                                        <!-- Add the progress bar to test it -->
+                                    <!-- Add the loading bar container -->
+                                    <div id="loading-bar-container">
                                         <div id="progressBar"></div>
                                     </div>
                                 </div>
@@ -516,20 +510,21 @@
                                         <label for="discount_percent">Ποσοστό έκπτωσης ΦΒ Σταθμού (σε %):</label>
 
                                         <button class="help-popper" type="button">
-                                            <i class="fa fa-question-circle" id="discount-icon"></i>
+                                            <i class="fa fa-question-circle" id="discount-info"></i>
                                         </button>
     
                                             <div class="help-container">
                                                 <span class="help-text" id="discount-text">
-                                                    <ul>
-                                                        <li>Ποσοστά έκπτωσης σύμφωνα με το πρόγραμμα <strong>"Φωτοβολταϊκά <br> στη Στέγη"</strong>, φαίνονται
-                                                        στην παρακάτω φωτογραφία. <strong>Για να είναι κάποιος δικαιούχος επιδότησης, πρέπει απαρέγκλιτα
-                                                        να προσθέσει στο ΦΒ του σύστημα, μπαταρία</strong>.
-                                                        </li>
-                                                    </ul>
+                                                    <strong>Προσέξτε να έχει συμπληρωθεί στο προηγούμενο βήμα, το είδος <br> παροχής και η ετήσια κατανάλωση ρεύματος!</strong><br><br>
                                                     
-                                                    <img class="img-discount" src="{% static 'images/discount.png' %}" alt="No Image">
                                                     
+                                                     Μπορείτε ελεύθερα να αυξομειώσετε τη συνολική ισχύ σύμφωνα με τις εξατομικευμένες ανάγκες σας και τα επιτρεπτά όρια.<br><br>
+                                                     Επιλέγοντας "Εύρεση βέλτιστης Ισχύος", θα εμφανιστεί κουμπί υπολογισμού και πατώντας το, 
+                                                     θα συμπληρωθoύν τα kWp του Φ/Β συστήματος που απαιτούνται για να εκμηδενίσετε την ετήσια κατανάλωση σας σε βάθος 25ετίας.<br>
+                                                     <br>
+    
+                                                     <b style="color: red;">Προσοχή</b>!<br>Για Μονοφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 5 kWp.<br>
+                                                     Για Τριφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 10 kWp.
                                                 </span>
                                                  <span class="close-help">&times;</span>
                                             </div>
@@ -547,19 +542,12 @@
     
                                             <div class="help-container">
                                                 <span class="help-text" id="discount-battery-text">
-                                                    <ul>
-                                                        <li>Σύμφωνα με το πρόγραμμα <strong>"Φωτοβολταϊκά στη Στέγη"</strong> τα <br> 
-                                                            ποσοστά έκπτωσης για συσσωρευτές, έχουν ως εξής:
-                                                        </li>
-                                                            <ol>
-                                                                <li><strong>100%</strong> έκπτωση, για όσους ανήκουν στις <strong>κατηγορίες Α και Β</strong></li>
-                                                                <li><strong>90%</strong> έκπτωση, για όσους ανήκουν στην <strong>κατηγορία Γ</strong> </li> 
-                                                            </ol> 
-                                                    </ul>  
+                                                    <ul><li>Ποσοστά έκπτωσης σύμφωνα με το πρόγραμμα <strong>"Φωτοβολταϊκά <br> στη Στέγη"</strong></li></ul>
+                                                    
+                                                    <img class="img-discount" src="{% static 'images/discount.png' %}" alt="No Image">
+                                                    
                                                 </span>
-                                                <span 
-                                                    class="close-help">&times;
-                                                </span>
+                                                 <span class="close-help">&times;</span>
                                             </div>
 
                                         <select class="form-control discount_percent_battery_select" id="discount_percent_battery" name="discount_percent_battery">
@@ -617,8 +605,7 @@
                                         <label for="discount_percent_battery_modal_value">Ποσοστό έκπτωσης Μπαταρίας (σε %):</label>
                                         <input type="number" class="form-control" id="discount_percent_battery_modal_value" readonly>
                                         <br>
-                                        Εάν συμφωνείτε πατήστε <strong>"Υποβολή"</strong>. Σε διαφορετική περίπτωση επιστρέψτε,
-                                        ώστε να αλλάξετε κάποια από τις επιλογές σας.
+                                        Εάν συμφωνείτε πατήστε <strong>"Υποβολή"</strong>. Διαφορετικά επιστρέψτε και πραγματοποιήστε τις αλλαγές που επιθυμείτε.
                                     </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Επιστροφή</button>
