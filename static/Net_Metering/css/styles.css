@@ -174,7 +174,6 @@ ul li{
      margin-left: 10px;
     }
     #theme-slider {
-        -webkit-appearance: none;
         width: 40px;  
         color: #74b1f2;
         background-color: #393052;
@@ -849,7 +848,6 @@ input[type="search"]:focus {
         border-radius: 3px;
         border: none;
         opacity: 1;
-        cursor: none;
     }
     #slider-value{
         color: #ed4901;
@@ -1286,9 +1284,21 @@ input[type="search"]:focus {
             height: 20px;
             margin: 10px 5px 5px 10px;
         }
-    }
 
-            /* ::: EXTRA ZOOM IN ::: */
+    }
+        /* ::: EXTRA ZOOM IN  (> 300%)::: */
+        @media (max-width: 540px) {
+            .calculator-fieldset .panel-calculator{
+                width: 425px;
+                height: 320px;
+            }
+            #map{
+                height: 68%;
+                width: 92%;
+            }
+        }   
+
+            /* ::: EXTRA ZOOM IN  (> 360%)::: */
             @media (max-width: 420px) {
                 .titles-panel{
                     font-size: 11px!important;
@@ -1361,10 +1371,18 @@ input[type="search"]:focus {
                 .option-selector-margin, .form-check{
                     font-size: 8px;
                 } 
+                .calculator-fieldset .panel-calculator{
+                    width: 330px;
+                    height: 280px;
+                }
+                #map{
+                    height: 65%;
+                    width: 92%;
+                }
             }
 
 
-                /* ::: EXTRA ZOOM IN ::: */
+                /* ::: EXTRA ZOOM IN  (> 460%)::: */
                 @media (max-width: 330px) {
                     .panels-container{
                         height: 80vh!important; /* Set a minimum height for the elements inside */
@@ -1423,7 +1441,16 @@ input[type="search"]:focus {
                     .img-tilt{
                         width: 100px;
                         height: 80px;
-                    }  
+                    } 
+                     .calculator-fieldset .panel-calculator{
+                        width: 300px;
+                        height: 280px;
+                    }
+                    #map{
+                        height: 55%;
+                        width: 92%;
+                    }
+
                 }
 
 
