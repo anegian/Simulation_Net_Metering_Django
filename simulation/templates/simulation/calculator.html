@@ -95,13 +95,22 @@
                             </div>
                             
                                 <div class="option-selector-margin">
-                                    <input class="panel-selection-height" type="hidden" name="select_district" id="select_district" >
                                     
-                                    <p><label for="regionInput" class="spacer-label">Επιλέξτε Τοποθεσία Εγκατάστασης Φ/Β Συστήματος στο Χάρτη:</label></p>
-                                    <!-- <p class="spacer-label">{{ form_district.select_district.label_tag }}</p> -->
-                                    <p  title="Παρακαλούμε, επιλέξτε ένα σημείο εντός των γεωγραφικών συνόρων. Ο Νομός και οι συντεταγμένες
-                                    θα εμφανιστούν στα αντίστοιχα πεδία" id="option-selector-margin-label">{{ form_district.select_district }}</p>
-                                    <input class="panel-selection-height" type="hidden" name="select_district" id="select_district" >
+                                    <p id="region-title" title="Παρακαλούμε, επιλέξτε ένα σημείο εντός των γεωγραφικών συνόρων της Ελλάδας. Ο Νομός και οι συντεταγμένες θα εμφανιστούν στα αντίστοιχα πεδία">
+                                        <label for="regionInput" class="spacer-label">Επιλέξτε Τοποθεσία Εγκατάστασης Φ/Β Συστήματος στο Χάρτη:</label>
+
+                                        <button class="help-popper" type="button" title="">
+                                            <i class="fa fa-question-circle" id="place-info"></i>
+                                        </button>
+    
+                                            <div class="help-container" title="">
+                                                <span class="help-text" id="place-text">
+                                                    &#8226; Επιτρέπετε να επιλέξετε στίγμα, μόνο εντός των γεωγραφικών συνόρων <br>της Ελλάδας. Οτιδήποτε, εκτός των οριοθετημένων περιοχών με μπλε χρώμα γραμμής,
+                                                     θεωρείται <strong>μη αποδεκτή τιμή</strong>.<br>
+                                                </span>    
+                                                <span class="close-help">&times;</span>
+                                            </div>
+                                    </p>
                                     
                                     <div class='coords-inline'>
 
@@ -136,7 +145,20 @@
 
                                 <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε εάν η εγκατάσταση θα βρίσκεται σε στέγη ή ταράτσα.">
 
-                                    <p><label for="roof" class="spacer-label">Επιλέξτε θέση Εγκατάστασης στην οικία σας: </label></p>
+                                    <p>
+                                        <label for="roof" class="spacer-label">Επιλέξτε θέση Εγκατάστασης στην οικία σας: </label>
+                                        <button class="help-popper" type="button" title="">
+                                            <i class="fa fa-question-circle" id="installation-info"></i>
+                                        </button>
+    
+                                            <div class="help-container" title="">
+                                                <span class="help-text" id="installation-text">
+                                                    &#8226; Η εγκατάσταση σε <strong>ταράτσα</strong> απαιτεί περισσότερο χώρο σε τ.μ. Αυτό οφείλεται στην ύπαρξη συνήθως καποιου δώματος 
+                                                    ή άλλων μέσων που προκαλούν σκιάσεις, όπως κεραίες και ηλιακοί θερμοσίφωνες.
+                                                </span>    
+                                                <span class="close-help">&times;</span>
+                                            </div>
+                                    </p>
 
                                     <div class="spacer-in-calculator-panel">
                                     </div>
@@ -152,8 +174,23 @@
                                     </div>
                                 </div>            
 
-                                    <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε είδος Φ/Β πάνελ">
-                                        <p><label for="panel_wp" class="spacer-label">Επιλέξτε είδος Φ/Β πάνελ:</label></p>
+                                    <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε είδος Φ/Β πάνελ και παραμέτρους.">
+                                        <p>
+                                            <label for="panel_wp" class="spacer-label">Επιλέξτε είδος Φ/Β πάνελ:</label>
+
+                                            <button class="help-popper" type="button" title="">
+                                                <i class="fa fa-question-circle" id="panels-info"></i>
+                                            </button>
+        
+                                                <div class="help-container" title="">
+                                                    <span class="help-text" id="panels-text">
+                                                        &#8226; Μπορείτε να επιλέξετε ένα εκ των 5 ηλιακών πάνελ, από την παρακάτω <br>λίστα.
+                                                        Η επιλογή σας θα βοηθήσει στον υπολογισμό του αριθμού των ελάχιστα απαιτούμενων ηλιακών πάνελ,
+                                                        άρα και της <strong>συνολικής επένδυσης</strong>.
+                                                    </span>    
+                                                    <span class="close-help">&times;</span>
+                                                </div>
+                                        </p>
 
                                         <div class="spacer-in-calculator-panel">
                                         </div>
@@ -192,7 +229,21 @@
                             </div>
                             <div id="panel-azimuth-tilt">
                                 <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κατεύθυνση του PV συστήματος" id="panel-azimuth">
-                                    <p> <label for="azimuthInput" class="spacer-label">Επιλέξτε προσανατολισμό Φ/Β πάνελ: </label></p> 
+                                    <p> 
+                                        <label for="azimuthInput" class="spacer-label">Επιλέξτε προσανατολισμό Φ/Β πάνελ: </label>
+                                        <button class="help-popper" type="button" title="">
+                                            <i class="fa fa-question-circle" id="azimuth-info"></i>
+                                        </button>
+    
+                                            <div class="help-container" title="">
+                                                <span class="help-text" id="azimuth-text">
+                                                    &#8226; Για τη γεωγραφική περιοχή της Ελλάδος, το βέλτιστο αζιμούθιο (προσανατολισμός) Φ/Β συστήματος, είναι 
+                                                    ο <strong>Νότος</strong> (προεπιλογή), στον οποίο δίνεται η τιμή "0". Όσο περισσότερο προσανατολίζεται το σύστημα <br>
+                                                    σας προς το Νότο, τόσο υψηλότερη η απόδοση του.   
+                                                </span>    
+                                                <span class="close-help">&times;</span>
+                                            </div>
+                                    </p> 
                 
                                     <div>
                                         <img id="compass-photo" src="{% static 'images/compass4.png'%}" alt="photo not found">
@@ -233,7 +284,21 @@
                                 
 
                                 <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κλίση του συστήματος PV" id="panel-tilt">
-                                    <p> <label for="tiltInput" class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</label></p>
+                                    <p> 
+                                        <label for="tiltInput" class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</label>
+                                        <button class="help-popper" type="button" title="">
+                                            <i class="fa fa-question-circle" id="tilt-info"></i>
+                                        </button>
+    
+                                            <div class="help-container" title="">
+                                                <span class="help-text" id="tilt-text">
+                                                    &#8226; Για τη γεωγραφική περιοχή της Ελλάδος, η βέλτιστη γωνία κλίσης Φ/Β συστήματος, είναι 
+                                                    οι <strong>30 μοίρες</strong> (προεπιλογή). Όσο περισσότερο προσεγγίζει τη γωνία αυτή το σύστημα σας, 
+                                                    τόσο υψηλότερη η απόδοση του.
+                                                </span>    
+                                                <span class="close-help">&times;</span>
+                                            </div>
+                                    </p>
 
                                         <div class="spacer-in-calculator-panel">
                                         </div>
@@ -285,7 +350,9 @@
 
                             <div class="option-selector-margin" >
 
-                                <p> <label for="phase_load" class="spacer-label">Επιλέξτε Παροχή και KWh:</label> </p>
+                                <p title="Επιλέξτε πρώτα το είδος της παροχής, για να σας επιτραπεί η συμπλήρωση ετήσιας κατανάλωσης!">
+                                    <label for="phase_load" class="spacer-label">Επιλέξτε Παροχή και KWh:</label>
+                                 </p>
 
                                 <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος">
                                     <input class="panel-selection-height" type="hidden" name="phase_load" id="phase_load"  required>
@@ -330,7 +397,7 @@
                         
                             </div>
 
-                            <div class="option-selector-margin" title="Πότε εντοπίζετε τις μεγαλύτερες ανάγκες σας για οικιακό ρεύμα;">
+                            <div class="option-selector-margin" title="Σημειώστε το ωράριο, στο οποίο εντοπίζετε τις μεγαλύτερες ανάγκες σε οικιακό ρεύμα.">
                                 <p><label for="power_option" class="spacer-label">Επιλέξτε προφίλ μεγαλύτερης κατανάλωσης ρεύματος:</label></p>
 
                                     <div class="spacer-in-calculator-panel">
@@ -377,16 +444,19 @@
 
                                         <div class="help-container">
                                             <span class="help-text" id="power-text">
-                                                <strong>Προσέξτε να έχει συμπληρωθεί στο προηγούμενο βήμα, το είδος <br> παροχής και η ετήσια κατανάλωση ρεύματος!</strong><br><br>
+                                                 <strong>Χειροκίνητη Επιλογή</strong><br>
                                                 
                                                 
-                                                 Μπορείτε ελεύθερα να αυξομειώσετε τη συνολική ισχύ σύμφωνα με τις εξατομικευμένες ανάγκες σας και τα επιτρεπτά όρια.<br><br>
-                                                 Επιλέγοντας "Εύρεση βέλτιστης Ισχύος", θα εμφανιστεί κουμπί υπολογισμού και πατώντας το, 
-                                                 θα συμπληρωθoύν τα kWp του Φ/Β συστήματος που απαιτούνται για να εκμηδενίσετε την ετήσια κατανάλωση σας σε βάθος 25ετίας.<br>
+                                                 &ensp;Μπορείτε ελεύθερα να αυξομειώσετε τη συνολική ισχύ, σύμφωνα με τις εξατομικευμένες ανάγκες σας και τα επιτρεπτά όρια.<br><br>
+
+                                                 <strong>Εύρεση βέλτιστης Ισχύος</strong><br>
+                                                 
+                                                 &ensp;Πατώντας εδώ, θα εμφανιστεί κουμπί υπολογισμού και πατώντας το,  
+                                                 θα υπολογιστούν αυτόματα τα kWp του Φ/Β συστήματος, τα οποία απαιτούνται για εκμηδένιση της ετήσιας κατανάλωσής σας.<br>
                                                  <br>
 
                                                  <b style="color: red;">Προσοχή</b>!<br>Για Μονοφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 5 kWp.<br>
-                                                 Για Τριφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 10 kWp.
+                                                 Για Τριφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 10.8 kWp.
                                             </span>
                                              <span class="close-help">&times;</span>
                                         </div></p>
@@ -395,12 +465,12 @@
                                         </div>
                                         <div class="slider-select-manual-auto" id="slider_selection_type">
                                             <div class="form-check" >
-                                                <input type="radio" class="form-check-input" id="manual_power" name="power_selected" checked>
+                                                <input type="radio" class="form-check-input" id="manual_power" name="power_kWp_method" value="manual-power" checked>
                                                 <label class="form-check-label" for="manual_power">Χειροκίνητη επιλογή</label>
                                             </div>
             
                                             <div class="form-check">
-                                                <input type="radio" class="form-check-input option2" id="auto_power" name="power_selected">
+                                                <input type="radio" class="form-check-input option2" id="auto_power" name="power_kWp_method" value="auto-power">
                                                 <label class="form-check-label" for="auto_power">Εύρεση βέλτιστης Ισχύος </label>
                                             </div>
 

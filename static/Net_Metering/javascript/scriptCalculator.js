@@ -418,14 +418,22 @@ function validateForm() {
 };
 // Function about Next, Previous buttons and how to show the panels of the form
 function toggleNextButtonState() {
-    if (annual_Kwh_input.value.trim() === '' || annual_Kwh_input.value === 0 || slider.value === '0') {
+    if ( annual_Kwh_input.value.trim() === '' || annual_Kwh_input.value === 0 && slider.value === '0')  {
       // If the kWh field is empty or contains only spaces, disable the "Next" button
       disablePanelButton(nextButton);
-    } else {
+      disablePanelButton(form_submit_button);
+      console.log("NOW WE ARE IN PANEL no", currentPanelIndex, "--- 1st if");
+    }else if ( currentPanelIndex === 4 && slider.value === '0'){
+      console.log("NOW WE ARE IN PANEL no", currentPanelIndex, "--- 2nd if");
+      disablePanelButton(nextButton);
+      disablePanelButton(form_submit_button);
+    } else{
       // If the kWh field has a value, enable the "Next" button
       enablePanelButton(nextButton);
+      console.log("NOW WE ARE IN PANEL no", currentPanelIndex, "--- else");
     }
 }
+
 function showPanel(index) {
     for (let i = 0; i < panelContainers.length; i++) {
       if (i === index) {
@@ -433,17 +441,19 @@ function showPanel(index) {
       } else {
         panelContainers[i].classList.add("hidden");
       }
-    }
 
-    if (index === 3 || index === 4 ){
-      toggleNextButtonState();
-    }
-    if (index === 4 && autoPowerRadio.checked && autoCalculatedPower === false){
-      disableSlider();
-    }else if (autoPowerRadio.checked){
-      slider.disabled = true;
-    }
+      // panel array has zero indexing (panel 4 -> index 3)
+      if (index === 3 || index === 4 ){
+        toggleNextButtonState();
+      }
+      if (index === 4 && autoPowerRadio.checked && autoCalculatedPower === false){
+        disableSlider();
+      }else if (autoPowerRadio.checked){
+        slider.disabled = true;
+      }
+  }   
 }
+
 function goToPreviousPanel() {
   if (currentPanelIndex > 0) {
     const previousPanelIndex = currentPanelIndex - 1; // Calculate the previous panel index
@@ -479,15 +489,17 @@ function goToPreviousPanel() {
   // Check if it's the first panel and disable the Previous button
   if (currentPanelIndex === 0) {
     disablePanelButton(previousButton);
-
-    // Disable the form_submit_button when moving to a previous panel
-    if (submitBtnEnabled) {
-      submitBtnEnabled = false;
-      disablePanelButton(form_submit_button);
-    }
   }
+
+  // Disable the form_submit_button when moving to a previous panel
+  if (submitBtnEnabled) {
+    submitBtnEnabled = false;
+    disablePanelButton(form_submit_button);
+  }
+
   console.log('Next Button Disabled:', nextButton.disabled);
   console.log('Previous Button Disabled:', previousButton.disabled);
+
 }
 function goToNextPanel() {
   
@@ -501,7 +513,7 @@ function goToNextPanel() {
     const nextPanelId = panelContainers[currentPanelIndex].getAttribute('id');
     const nextPanelLink = document.querySelector('.panel-field[href="#' + nextPanelId + '"]');
     
-    console.log('Current Panel Index:', currentPanelIndex+1);
+    console.log('Current Panel Index:', currentPanelIndex + 1);
 
     if (nextPanelLink) {
       nextPanelLink.classList.add('active');
@@ -675,7 +687,6 @@ annual_Kwh_input.addEventListener("input", function(){
     if (annual_Kwh_input.value <= 100 || annual_Kwh_input.value.trim() === ""){
       disablePanelButton(nextButton);
       disablePanelButton(form_submit_button);
-      submitBtnEnabled = false;
     }else{
       enablePanelButton(nextButton);
     }
@@ -691,6 +702,8 @@ slider.addEventListener("change", function(){
     console.log(slider.value);
     if (PV_kW_output.innerHTML === '0'){
       disablePanelButton(nextButton);
+      disablePanelButton(form_submit_button);
+      submitBtnEnabled = false;
     }else{
       enablePanelButton(nextButton);
     }

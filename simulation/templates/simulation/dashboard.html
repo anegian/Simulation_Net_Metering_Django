@@ -46,7 +46,9 @@
                     trigger="hover"
                     style="width:120px;height:120px">
                 </lord-icon>
-                <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">Σύνολο: {{total_investment|default:'0' }} €</p>    
+                <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">
+                   Σύνολο: {{total_investment|default:'0' }} € <br>({{number_of_panels_required|default:'0'}} πάνελ και {{total_panel_area|default:'0'}}m²)
+                </p>    
               </div>
 
               <div class="container-icons">
@@ -84,7 +86,7 @@
             <div class="left-below">
           
               <div class="container-icons-bottom">
-                <div class="titles-panel">Μειωμένη Εκπομπή CO2</div>
+                <div class="titles-panel">Μειωμένες Εκπομπές Αερίου CO2</div>
                 <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
                   <lord-icon
                       src="https://cdn.lordicon.com/npfyliwp.json"
