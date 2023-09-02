@@ -76,15 +76,6 @@ def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_v
     return monthly_irradiance_json, annual_irradiance, monthly_irradiance_list
 
 def dashboard_results(request):   # simulation/templates/dashboard.html
-    # Check if the 'power_manually_calculated' flag is present in the session, else PV_kWp was automatically calculated
-    selected_power = request.POST.get('power_selected')
-    power_manually_calculated = request.session.get('power_manually_calculated', True)
-
-    if not power_manually_calculated and selected_power == 'auto-power':
-        print("In dashboard_results function: Auto calculation has been occured")
-    else:
-        print("In dashboard_results function: Manual power kWp set")
-
     # Retrieving Data from Session
     if 'annual_consumption' and 'PV_kWp' in request.session:
         latitude_coords = float(request.session.get('latitude_coords'))
@@ -100,6 +91,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         panel_efficiency = float(request.session.get('panel_efficiency'))
         panel_cost = int(request.session.get('panel_cost'))
         panel_area = float(request.session.get('panel_area'))
+        power_kWp_method = request.session.get('power_kWp_method')
+        print(f"@@@@@@@   power_kWp_method  @@@@@@@@: {power_kWp_method}")
         PV_kWp = float(request.session.get('PV_kWp'))
         has_storage = request.session.get('has_storage')
         storage_kw = float(request.session.get('storage_kw'))
@@ -107,7 +100,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         discount_battery = request.session.get('discount_battery')
 
         # important check if the power is auto calculated
-        if not power_manually_calculated and selected_power == 'auto-power':
+        if power_kWp_method == 'auto-power':
             try:
                 monthly_irradiance_json = request.session.get('monthly_irradiance_json')
                 annual_irradiance = request.session.get('annual_irradiance')
@@ -117,16 +110,13 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
                 print("\nThe PV power was auto generated with ajax request!!!!!!\n")
                 print(f"annual_irradiance: {annual_irradiance} and panels needed:{number_of_panels_required}")
                 print("****************")
-                # If the power kWp was given as ajax response, set the flag and the local variable to TRUE for the next session (default manual)
-                power_manually_calculated = True
-                request.session['power_manually_calculated'] = True
 
             except KeyError as e:
                     return HttpResponse(f"Error while retrieving session data: {str(e)}")
             except ValueError as e:
                 return HttpResponse(f"Error while converting data: {str(e)}")
         else:  
-            # PV kWp was manually given -> get data from PVGIS    
+            # PV kWp was manually given -> get data from PVGIS  
             monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
             number_of_panels_required = round((PV_kWp / panel_wp)* annual_degradation_production)
             print("****************")
@@ -257,6 +247,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 else:
                     phase_loadkVA = 15
 
+                power_kWp_method = request.POST.get('power_kWp_method')
                 PV_kWp = request.POST.get('myRangeSliderHidden')
                 has_storage = request.POST.get('storage')
                 storage_kw = request.POST.get('storage_kw')
@@ -326,6 +317,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['minimumPanels'] = number_of_panels_required
             request.session['discount_PV'] = discount_PV
             request.session['discount_battery'] = discount_battery
+            request.session['power_kWp_method'] = power_kWp_method
 
             print(f"DISCOUNTS in session\n PV:{discount_PV}%, Battery:{discount_battery}%")
 
@@ -345,7 +337,7 @@ def calculate_power(request):
 
     try:
         if request.method == 'POST':
-                        # Retrieve values from the JSON data
+            # Retrieve values from the JSON data
             data = json.loads(request.body)
         
             # Extract the values from the data object
@@ -363,14 +355,12 @@ def calculate_power(request):
             # Call the get_solar_data function and retrieve the results
             monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value)
 
-            # Store the monthly_irradiance_list in the session and set a flag to true
+            # Store the monthly_irradiance_list in the session
             request.session['monthly_irradiance_json'] = monthly_irradiance_json
             request.session['annual_irradiance'] = annual_irradiance
             request.session['monthly_irradiance_list'] = monthly_irradiance_list
-            # Set the flag to False, indicating that the power_calculated needs to be recalculated in the dashboard_results view
-            request.session['power_manually_calculated'] = False
-            print("\n##POST SESSION CHECK##\nThe power_manually_calculated flag set to FALSE!!!!!\n")
-            print("The power is generated in the calculate_power function") #test print
+
+            print("\n!! The power is generated in the calculate_power function !!") #test print
 
             special_production = annual_irradiance * panel_area * panel_efficiency * 0.75
             total_consumption = annual_Kwh_value * 25 
