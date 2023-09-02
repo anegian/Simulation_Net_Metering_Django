@@ -759,7 +759,10 @@ input[type="search"]:focus {
     }
     .help-container {
         position: relative;
+        /* #map has z-index 400, zoom in-out has z-index 1000 */
+        z-index: 1001; 
       }
+
     .help-text{
         position: absolute;
         color: #000022;

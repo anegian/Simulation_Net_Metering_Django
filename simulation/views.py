@@ -76,93 +76,86 @@ def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_v
     return monthly_irradiance_json, annual_irradiance, monthly_irradiance_list
 
 def dashboard_results(request):   # simulation/templates/dashboard.html
-    # Check if the 'power_manually_calculated' flag is present in the session
+    # Check if the 'power_manually_calculated' flag is present in the session, else PV_kWp was automatically calculated
     selected_power = request.POST.get('power_selected')
-
     power_manually_calculated = request.session.get('power_manually_calculated', True)
+
     if not power_manually_calculated and selected_power == 'auto-power':
         print("In dashboard_results function: Auto calculation has been occured")
     else:
         print("In dashboard_results function: Manual power kWp set")
 
- 
-    if 'annual_consumption' in request.session:
-        try:
-            # district_irradiance = int(request.session.get('district_irradiance'))
-            # district_value = request.session.get('district_value')
-            latitude_coords = float(request.session.get('latitude_coords'))
-            longitude_coords = float(request.session.get('longitude_coords'))
-            place_of_installment = request.session.get('place_of_installment')
-            inclination_PV = request.session.get('inclination_PV')
-            azimuth_value = request.session.get('azimuth_value')
-            userPower_profile = request.session.get('userPower_profile')
-            phase_load = request.session.get('phase_load')
-            phase_loadkVA = int(request.session.get('phase_loadkVA'))
-            annual_consumption = int(request.session.get('annual_consumption'))
-            panel_wp = float(request.session.get('panel_wp'))
-            panel_efficiency = float(request.session.get('panel_efficiency'))
-            panel_cost = int(request.session.get('panel_cost'))
-            panel_area = float(request.session.get('panel_area'))
-           
-            PV_kWp = float(request.session.get('PV_kWp'))
-            has_storage = request.session.get('has_storage')
-            storage_kw = float(request.session.get('storage_kw'))
-            discount_PV = request.session.get('discount_PV')
-            discount_battery = request.session.get('discount_battery')
+    # Retrieving Data from Session
+    if 'annual_consumption' and 'PV_kWp' in request.session:
+        latitude_coords = float(request.session.get('latitude_coords'))
+        longitude_coords = float(request.session.get('longitude_coords'))
+        place_of_installment = request.session.get('place_of_installment')
+        inclination_PV = request.session.get('inclination_PV')
+        azimuth_value = request.session.get('azimuth_value')
+        userPower_profile = request.session.get('userPower_profile')
+        phase_load = request.session.get('phase_load')
+        phase_loadkVA = int(request.session.get('phase_loadkVA'))
+        annual_consumption = int(request.session.get('annual_consumption'))
+        panel_wp = float(request.session.get('panel_wp'))
+        panel_efficiency = float(request.session.get('panel_efficiency'))
+        panel_cost = int(request.session.get('panel_cost'))
+        panel_area = float(request.session.get('panel_area'))
+        PV_kWp = float(request.session.get('PV_kWp'))
+        has_storage = request.session.get('has_storage')
+        storage_kw = float(request.session.get('storage_kw'))
+        discount_PV = request.session.get('discount_PV')
+        discount_battery = request.session.get('discount_battery')
 
-            # important check if the power is auto calculated
-            if not power_manually_calculated and selected_power == 'auto-power':
-                try:
-                    monthly_irradiance_json = request.session.get('monthly_irradiance_json')
-                    annual_irradiance = request.session.get('annual_irradiance')
-                    monthly_irradiance_list = request.session.get('monthly_irradiance_list')
-                    number_of_panels_required = request.session.get('minimumPanels')
-                    print("****************")
-                    print("\nThe PV power was auto generated with ajax request!!!!!!\n")
-                    print(f"annual_irradiance: {annual_irradiance} and panels needed:{number_of_panels_required}")
-                    print("****************")
-                    # If the power kWp was given as ajax response, set the flag and the local variable to TRUE for the next session (default manual)
-                    power_manually_calculated = True
-                    request.session['power_manually_calculated'] = True
-
-                except KeyError as e:
-                     return HttpResponse(f"Error while retrieving session data: {str(e)}")
-                except ValueError as e:
-                    return HttpResponse(f"Error while converting data: {str(e)}")
-            else:        
-                monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
-                number_of_panels_required = round((PV_kWp / panel_wp)* annual_degradation_production)
+        # important check if the power is auto calculated
+        if not power_manually_calculated and selected_power == 'auto-power':
+            try:
+                monthly_irradiance_json = request.session.get('monthly_irradiance_json')
+                annual_irradiance = request.session.get('annual_irradiance')
+                monthly_irradiance_list = request.session.get('monthly_irradiance_list')
+                number_of_panels_required = request.session.get('minimumPanels')
                 print("****************")
-                print("\nThe PV power was manually given!!!!!!\n")
-                print(f"annual_irradiance: {annual_irradiance} and number of panels calculated after submit: {number_of_panels_required}")
+                print("\nThe PV power was auto generated with ajax request!!!!!!\n")
+                print(f"annual_irradiance: {annual_irradiance} and panels needed:{number_of_panels_required}")
                 print("****************")
+                # If the power kWp was given as ajax response, set the flag and the local variable to TRUE for the next session (default manual)
+                power_manually_calculated = True
+                request.session['power_manually_calculated'] = True
 
-            total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost, discount_PV, discount_battery, number_of_panels_required)
-            annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required)
+            except KeyError as e:
+                    return HttpResponse(f"Error while retrieving session data: {str(e)}")
+            except ValueError as e:
+                return HttpResponse(f"Error while converting data: {str(e)}")
+        else:  
+            # PV kWp was manually given -> get data from PVGIS    
+            monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
+            number_of_panels_required = round((PV_kWp / panel_wp)* annual_degradation_production)
+            print("****************")
+            print("\nThe PV power was manually given!!!!!!\n")
+            print(f"annual_irradiance: {annual_irradiance} and number of panels calculated after submit: {number_of_panels_required}")
+            print("****************")
 
-            average_annual_savings, profitPercent, total_annual_cost, regulated_charges = calculate_annual_savings(annual_consumption, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced)
-            
-            total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
-            total_savings_array_json = json.dumps(total_savings_array)
-            total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced)
-            total_production_kwh_array_json = json.dumps(total_production_kwh_array)
-            # month_production_array = calculate_month_production(annual_PV_energy_produced)
-            
-            payback_period = calculate_payback_period(total_investment, average_annual_savings) #in months
+        # Calculate the rest variables
+        total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost, discount_PV, discount_battery, number_of_panels_required)
+        annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required)
+        average_annual_savings, profitPercent, total_annual_cost, regulated_charges = calculate_annual_savings(annual_consumption, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced)
+        total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
+        total_savings_array_json = json.dumps(total_savings_array)
+        total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced)
+        total_production_kwh_array_json = json.dumps(total_production_kwh_array)
+        payback_period = calculate_payback_period(total_investment, average_annual_savings) #in months
 
-            net_present_value = calculate_npv(total_investment, total_savings)
-            maintenance_cost = calculate_maintenance_cost(total_investment, inverter_cost)
-            lcoe = calculate_lcoe(total_investment, maintenance_cost , total_production_kwh)
-            roi, annualized_roi = calculate_roi(net_present_value, total_investment, total_savings)
-            irr = calculate_irr(total_investment, total_savings_array)
-            average_CO2 = round(calculate_CO2_emissions_reduced(annual_PV_energy_produced))
-            trees_planted = round(calculate_equivalent_trees_planted(annual_PV_energy_produced))
+        net_present_value = calculate_npv(total_investment, total_savings)
+        maintenance_cost = calculate_maintenance_cost(total_investment, inverter_cost)
+        lcoe = calculate_lcoe(total_investment, maintenance_cost , total_production_kwh)
+        roi, annualized_roi = calculate_roi(net_present_value, total_investment, total_savings)
+        irr = calculate_irr(total_investment, total_savings_array)
+        average_CO2 = round(calculate_CO2_emissions_reduced(annual_PV_energy_produced))
+        trees_planted = round(calculate_equivalent_trees_planted(annual_PV_energy_produced))
+        total_panel_area = round(number_of_panels_required * panel_area, 1)
 
-            # dictionary with rendered variables
-            context = {
-             # form values
-            # 'district_irradiance': district_irradiance,
-            # 'district_value': district_value,
+        # dictionary with rendered variables
+        context = {
+            # form values
             'latitude_coords': latitude_coords,
             'longitude_coords': longitude_coords,
             'place_of_installment': place_of_installment,
@@ -182,8 +175,10 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'discount_PV': discount_PV,
             'discount_battery': discount_battery,
 
-             # calculated values
+            # calculated values
             'total_investment': total_investment,
+            'number_of_panels_required': number_of_panels_required,
+            'total_panel_area': total_panel_area,
             'payback_period': payback_period,
             'average_annual_savings': average_annual_savings,
             'profitPercent': profitPercent,
@@ -196,14 +191,13 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'total_production_kwh': total_production_kwh, 
             'total_production_kwh_array': total_production_kwh_array,
             'total_production_kwh_array_json': total_production_kwh_array_json,
-            # 'month_production_array': month_production_array,
             'monthly_panel_energy_produced_list': monthly_panel_energy_produced_list,
             'monthly_irradiance_json': monthly_irradiance_json,
             'annual_irradiance': annual_irradiance,
             'annual_PV_energy_produced': annual_PV_energy_produced,
             'monthly_panel_energy_produced_json': monthly_panel_energy_produced_json,
 
-             # economic models values
+            # economic models values
             'net_present_value': net_present_value,
             'lcoe': lcoe,
             'roi': roi,
@@ -211,8 +205,9 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'irr': irr,
             'average_CO2': average_CO2,
             'trees_planted': trees_planted,
-            }
+        }
 
+        try:
             result = 'simulation/dashboard.html'
 
             print('Total Investment:', total_investment,"euro", 'Average annual Savings: ', average_annual_savings, '& Περίοδος Απόσβεσης:', payback_period) 
@@ -239,7 +234,6 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
     if request.method == 'POST':
         print(request.POST)
         # changes the name of variable to calculator_form because form was fault --> shadow name 'form' out of scope
-        # form_district = PlaceOfInstallationForm(request.POST)
         form_phase_load = PhaseLoad(request.POST)
 
         if form_phase_load.is_valid(): # form_district.is_valid() and
@@ -247,8 +241,6 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 # initialization of variables
                 latitude_coords = request.POST.get('latitude')
                 longitude_coords = request.POST.get('longitude')
-                # district_irradiance = request.POST.get('select_district')
-                # district_value = dict(PlaceOfInstallationForm.DISTRICT_CHOICES).get(district_irradiance)
                 place_of_installment = request.POST.get('installation')
                 azimuth_value = request.POST.get('azimuth')
                 inclination_PV = request.POST.get('inclination')
@@ -258,7 +250,6 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 panel_efficiency = request.POST.get('panel_efficiency')
                 panel_area = request.POST.get('panel_area')
                 panel_cost = request.POST.get('panel_cost')
-
                 phase_load = request.POST.get('select_phase')
 
                 if phase_load == "single_phase":
@@ -270,7 +261,6 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 has_storage = request.POST.get('storage')
                 storage_kw = request.POST.get('storage_kw')
                 number_of_panels_required = int(request.POST.get('minimumPanels'))
-
                 noDiscountRadio = request.POST.get('discount')
 
                 if noDiscountRadio == 'no' or request.POST.get('discount_percent') is None and request.POST.get('discount_percent_battery') is None:
@@ -288,7 +278,6 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                     discount_PV = int(request.POST.get('discount_percent'))
                     discount_battery = int(request.POST.get('discount_percent_battery'))
                 
-
                 # print the variables to check
                 now = datetime.now()
                 print("\n ######### Start of session of USER'S form: ", now, "#########")
@@ -308,8 +297,6 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print(f"Did User select Battery storage: {has_storage}")
                 print(f"Number of panels in session: {number_of_panels_required}")
                 
-                
-
                 if has_storage == 'with_storage':
                     print(f"Battery kWh value: {storage_kw}")
                 else:
@@ -319,7 +306,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 # Handle the case where an invalid key is provided
                 return HttpResponse('Invalid request parameters')
 
-            # request.session['district_irradiance'] = district_irradiance
+            # Storing Data in Session
             request.session['latitude_coords'] = latitude_coords
             request.session['longitude_coords'] = longitude_coords
             request.session['place_of_installment'] = place_of_installment
@@ -646,40 +633,6 @@ def calculate_equivalent_trees_planted(annual_PV_energy_produced):
    
    return annual_PV_energy_produced * percentage_trees_per_kWh 
 
-# def signup(request):
-#     try:
-#         result = 'simulation/signup.html'
-#         return render(request, result)
-#     except Http404:      # not use bare except
-#         return Http404("404 Generic Error")
-    
-# def signupJsonResponse(request):
-#     if request.method == 'POST':
-#         # Get form data from request.POST
-#         name = request.POST.get('name')
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         repeat_password = request.POST.get('repeat_password')
-
-#         # Check if passwords match
-#         if password != repeat_password:
-#             return JsonResponse({'success': False, 'error': 'Passwords do not match'})
-
-#         # Check if user with same email already exists
-#         if MyUser.objects.filter(email=email).exists():
-#             return JsonResponse({'success': False, 'error': 'User with this email already exists'})
-
-#         # Create user account
-#         user = MyUser.objects.create_user(username=email, email=email, password=password)
-#         user.first_name = name
-#         user.save()
-
-#         # Return success response
-#         return JsonResponse({'success': True})
-#     else:
-#         return JsonResponse({'success': False, 'error': 'Invalid request method'})
-    
-# simulation/templates/regulations.html
 def regulations(request):     
     try:
         result = 'simulation/regulations.html'
@@ -694,21 +647,3 @@ def about(request):
         return render(request, result)
     except Http404:      # not use bare except
         return Http404("404 Generic Error")
-
-# FUNCTION FOR THE CALCULATOR FORM SUBMIT
-def user_form(request):
-
-    if request.method == 'POST':
-        form = CustomerForm(request.POST)
-        if form.is_valid():
-            # process the form data
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            # perform any necessary actions with the form data
-            return HttpResponse('Form submitted successfully')
-        else:
-            # handle form errors
-            return HttpResponse('There was an error in the form')
-    else:
-        form = CustomerForm()
-        return render(request, 'simulation/calculator.html', {'form': form})
