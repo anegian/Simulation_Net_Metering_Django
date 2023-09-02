@@ -92,7 +92,6 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         panel_cost = int(request.session.get('panel_cost'))
         panel_area = float(request.session.get('panel_area'))
         power_kWp_method = request.session.get('power_kWp_method')
-        print(f"@@@@@@@   power_kWp_method  @@@@@@@@: {power_kWp_method}")
         PV_kWp = float(request.session.get('PV_kWp'))
         has_storage = request.session.get('has_storage')
         storage_kw = float(request.session.get('storage_kw'))
