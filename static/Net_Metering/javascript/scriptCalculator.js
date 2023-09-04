@@ -164,6 +164,7 @@ function resetAutoPowerDiv(){
   special_production_output.value = "";
   minimum_panel_container.value = "";
   total_PV_area.value = "";
+  $('#completionMessage').hide();
   console.log("Reset Power Div: yes", "Auto power value is now: ", autoCalculatedPowerNumber);
 }
 // Disable and reset every element
@@ -871,7 +872,7 @@ reset_button.addEventListener('click', resetForm);
 //Submit, reset, Modal events
 form_submit_button.addEventListener('click', function(event){
   const powerRadioButton = document.querySelector('input[name="power_option"]:checked');
-  
+
   if (powerRadioButton) {
     // Get the label element associated with the selected radio button
     const labelElement = document.querySelector(`label[for="${powerRadioButton.id}"]`);
