@@ -423,7 +423,7 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, pane
     elif phase_load == "3_phase":
         if has_storage == "with_storage":
             inverter_cost = (PV_kWp * 250 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter for battery support
-            battery_cost = storage_kw * average_battery_cost_per_kW
+            battery_cost = round(storage_kw * average_battery_cost_per_kW)
         else:
             inverter_cost = ( PV_kWp * 150 )+ ( (10 - PV_kWp) * 100 ) # simple 3-phase PV inverter
             battery_cost = 0
@@ -442,10 +442,10 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, pane
     if discount_battery > 0:
         print(f"Starting battery system price: {battery_cost}")
         battery_cost -= round(battery_cost * (discount_battery / 100))
-        print(f'Discount {discount_battery}% has been applied to PV system.')
+        print(f'Discount {discount_battery}% has been applied to battery.')
         print(f'New battery price is {battery_cost}€.')
 
-    total_investment = Pv_panels_cost + battery_cost
+    total_investment = round(Pv_system_cost + battery_cost)
     print(f"*Total investment: {total_investment}\n PV total cost: {Pv_system_cost}\n PV panels' Cost: {Pv_panels_cost},\n Battery Cost: {battery_cost},\n Inverter: {inverter_cost} and PV kWp: {PV_kWp},")
    
     return total_investment, inverter_cost
