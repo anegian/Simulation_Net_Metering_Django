@@ -79,6 +79,25 @@ new Chart("myChart2", {
         fontColor: "#f2f2f2"
       }
     },
+    plugins: [],
+    animation: {
+      onComplete: function () {
+        const chart = this.chart;
+        const ctx = chart.ctx;
+        const xAxis = chart.scales["x-axis-0"];
+        const yAxis = chart.scales["y-axis-0"];
+        const xValue = xAxis.getPixelForValue(paybackYear);
+  
+        ctx.save();
+        ctx.strokeStyle = "red"; // Customize line color
+        ctx.lineWidth = 2; // Customize line width
+        ctx.beginPath();
+        ctx.moveTo(xValue, yAxis.top);
+        ctx.lineTo(xValue, yAxis.bottom);
+        ctx.stroke();
+        ctx.restore();
+      },
+    },
   }
 });
 

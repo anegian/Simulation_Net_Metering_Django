@@ -314,7 +314,6 @@ function handleCalculateButtonClick() {
 function calculateAutoPower() {
   // Record the start time
   const startTime = new Date().getTime();
-  const estimatedDuration = 5000; // 5 seconds
   
   // Show the progress bar at the start of the request
   $('#progressBar').css('width', '0%'); // reset progress bar
@@ -738,18 +737,20 @@ phase_load_selected.addEventListener("change", function(event){
 annual_Kwh_input.addEventListener("input", function(){
     enableSlider();
     enableStorage();
-    let enteredValue = parseInt (annual_Kwh_input.value)
+    let enteredValue = annual_Kwh_input.value;
+    let sanitizedValue = enteredValue.replace(/[^0-9]/g, '');
+    annual_Kwh_input.value = sanitizedValue;
     const maxValue = parseInt (annual_Kwh_input.max)
     
-    if (enteredValue > maxValue) {
-        enteredValue = maxValue;
-        annual_Kwh_input.value = enteredValue;
+    if (parseInt(sanitizedValue) > maxValue) {
+        sanitizedValue = maxValue;
+        annual_Kwh_input.value = sanitizedValue;
         max_message.style.display = "block";
     } else {
         max_message.style.display = "none";
     }
 
-    if (annual_Kwh_input.value <= 100 || annual_Kwh_input.value.trim() === ""){
+    if (parseInt(sanitizedValue) <= 999 || sanitizedValue === "" ){
       disablePanelButton(nextButton);
       disablePanelButton(form_submit_button);
     }else{
@@ -762,6 +763,16 @@ annual_Kwh_input.addEventListener("change", function(){
     resetAutoPowerDiv();
     hideAutoPowerDiv();
     manualPowerRadio.checked = true;
+  }
+});
+
+// Add an event listener to the "Next" button
+nextButton.addEventListener('click', function() {
+  if (phase_load_selected.value != 'phase_load' && isNaN(annual_Kwh_input.value) && nextButton.disabled) {
+      annual_Kwh_input.classList.add('highlight-input');
+  } else {
+      // Input is valid, remove the CSS class
+      annual_Kwh_input.classList.remove('highlight-input');
   }
 });
 
@@ -851,8 +862,8 @@ themeSlider.addEventListener('input', function(event) {
         document.documentElement.style.setProperty('--slider-color', '#f2f2f2');
         document.documentElement.style.setProperty('--slider-value-kW-color', 'lightgrey');
         document.documentElement.style.setProperty('--bg-color-calculator-page', '#f2f2f2');
-        document.documentElement.style.setProperty('--thumb-color', '#74b1f2');
-        document.documentElement.style.setProperty('--bg-color-submit-button', '#74b1f2');
+        document.documentElement.style.setProperty('--thumb-color', '#738725');
+        document.documentElement.style.setProperty('--bg-color-submit-button', '#738725');
         document.documentElement.style.setProperty('--help-popper', 'blue');
         }
     });

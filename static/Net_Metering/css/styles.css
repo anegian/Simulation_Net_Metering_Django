@@ -397,7 +397,7 @@ input[type="search"]:focus {
     }
     .dashboard-page-content{
         background-color: #29233b;
-        min-height: 100vh;
+        min-height: 130vh;
     }
     .dashboard-empty-page-content{
         background-color: #29233b;
@@ -613,6 +613,11 @@ input[type="search"]:focus {
         height: 240px;
         transform: translate(30px, 0);
     }
+    .img-house{
+        width: 260px;
+        height: 200px;
+        transform: translate(0, 5px);
+    }
     .spacer-in-main-content{
         height: 40px;
         background-color: #393052;
@@ -652,6 +657,22 @@ input[type="search"]:focus {
     #compass-photo{
         width: 200px;
     }   
+
+    /* Change the border color for all radio buttons with class "form-check-input" */
+    .form-check-input {
+        border: 2px solid grey; /* Change "red" to the desired border color */
+        outline-color: #ccff00;
+    }
+
+    /* If you want to change the border color when the radio button is checked */
+    .form-check-input:checked {
+        border: 2px solid #738725; /* Change "green" to the desired border color */
+        background-color: #738725;
+        outline-color: #ccff00;
+    }
+    .highlight-input {
+        border: 1px solid red; /* Apply a red border to highlight the input */
+    }
 
     .calculator-fieldset .panel-calculator{
         width: 780px;
@@ -985,7 +1006,7 @@ input[type="search"]:focus {
     #resetBtn{
         width: 140px;
         height: 50px;
-        background-color:rgba(255, 0, 0, 0.448);
+        background-color:rgb(58, 58, 149);
         opacity: 0.8;
         border-color: #553f33;
         border-radius: 5px;
@@ -1090,7 +1111,7 @@ input[type="search"]:focus {
                 }
                 #myChart3{
                     height: 40vh!important; /* Set a minimum height for the elements inside */
-                    width: 70%!important;
+                    width: 60%!important;
                 }
                 .right-upper{
 
@@ -1204,7 +1225,7 @@ input[type="search"]:focus {
             @media (max-width: 836px) {
                 #myChart3{
                     height: 70vh!important; /* Set a minimum height for the elements inside */
-                    width: 90%!important;
+                    width: 60%!important;
                 } 
                 .calculator-fieldset .panel-calculator{
                     width: 480px;
@@ -1353,7 +1374,7 @@ input[type="search"]:focus {
                 }
                 #myChart3{
                     height: 70vh!important; /* Set a minimum height for the elements inside */
-                    width: 100%!important;
+                    width: 60%!important;
                 } 
                 .lord-icon-small{
                     width: 80px!important;
@@ -1418,6 +1439,10 @@ input[type="search"]:focus {
                 #map{
                     height: 65%;
                     width: 92%;
+                }
+                .dashboard-page-content{
+
+                    min-height: 150vh;
                 }
             }
 
@@ -1489,6 +1514,9 @@ input[type="search"]:focus {
                     #map{
                         height: 55%;
                         width: 92%;
+                    }
+                    .dashboard-page-content{
+                        min-height: 160vh;
                     }
 
                 }
@@ -1576,8 +1604,8 @@ footer .admin-info {
     width: 95%!important;
 }
 #myChart3{
-    height: 48vh!important; /* Set a minimum height for the elements inside */
-    width: 95%!important;
+    height: 40vh!important; /* Set a minimum height for the elements inside */
+    width: 90%!important;
 }
   .container-icons{
     margin-top: 10px;
@@ -1588,6 +1616,7 @@ footer .admin-info {
     border-style: solid;
     border-width: 1.5px;
     border-color: #221e2e;
+    min-height: 30vh;
   }
   .container-icons-bottom{
     margin-top: 10px;
@@ -1595,7 +1624,7 @@ footer .admin-info {
     text-align: center;
     background-color: #393052;
     width: 30%;
-    height: 240px;
+    min-height: 48vh;
     border-style: solid;
     border-width: 1.5px;
     border-color: #221e2e;
@@ -1604,16 +1633,37 @@ footer .admin-info {
   .right-container{
     flex-basis: 50%;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;  
+    flex-direction: column; 
   }
   .right-upper{
     display: flex;
-    justify-content: center;
+    justify-content: center; 
+  }
+  #top-right-panel{
+    min-height: 30vh;
+    margin: 10px 0 10px 0;
+    width: 95%;
+    background-color: #393052;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: #221e2e;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
   }
   .right-below{
     display: flex;
     justify-content: center;
+  }
+  .right-middle{
+    display: flex;
+    justify-content: center;
+  }
+  #first-panel{
+    height: 50px;
+  }
+  #third-panel{
+    min-height: 50vh;
   }
 
   .titles-panel{
