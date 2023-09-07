@@ -82,7 +82,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         longitude_coords = float(request.session.get('longitude_coords'))
         place_of_installment = request.session.get('place_of_installment')
         inclination_PV = request.session.get('inclination_PV')
-        azimuth_value = float(request.session.get('azimuth_value'))
+        azimuth_value = request.session.get('azimuth_value')
         userPower_profile = request.session.get('userPower_profile')
         phase_load = request.session.get('phase_load')
         phase_loadkVA = int(request.session.get('phase_loadkVA'))
