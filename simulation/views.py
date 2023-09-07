@@ -9,6 +9,7 @@ import numpy_financial as npf
 import numpy as np
 from datetime import datetime
 import pvlib.iotools
+import pvlib
 from django.conf import settings
 from django.contrib.sessions.models import Session
 
@@ -37,7 +38,7 @@ VARIABLE_MAP = {
 # function using PVGIS API to get the solar data
 def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value):
 
-    print(latitude_value,longitude_value)
+    print(latitude_value,longitude_value, inclination_value, "Azimuth: ", azimuth_value)
 
     poa_data_2020, meta, input = pvlib.iotools.get_pvgis_hourly(latitude=latitude_value, longitude=longitude_value, 
                     start=2020, end=2020, raddatabase= 'PVGIS-SARAH2', components=True, 
@@ -81,8 +82,9 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         latitude_coords = float(request.session.get('latitude_coords'))
         longitude_coords = float(request.session.get('longitude_coords'))
         place_of_installment = request.session.get('place_of_installment')
-        inclination_PV = request.session.get('inclination_PV')
-        azimuth_value = float(request.session.get('azimuth_value'))
+        inclination_PV = float(request.session.get('inclination_PV'))
+        # azimuth type is already float
+        azimuth_value = request.session.get('azimuth_value')
         userPower_profile = request.session.get('userPower_profile')
         phase_load = request.session.get('phase_load')
         phase_loadkVA = int(request.session.get('phase_loadkVA'))
@@ -231,7 +233,9 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 latitude_coords = request.POST.get('latitude')
                 longitude_coords = request.POST.get('longitude')
                 place_of_installment = request.POST.get('installation')
-                azimuth_value = request.POST.get('azimuth')
+                # from now on pvlib has an 180 offset for azimuth aspect
+                azimuth_value = float(request.POST.get('azimuth'))
+                azimuth_value += 180
                 inclination_PV = request.POST.get('inclination')
                 userPower_profile = request.POST.get('power_option')
                 annual_consumption = request.POST.get('annual_consumption')
@@ -300,7 +304,8 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['latitude_coords'] = latitude_coords
             request.session['longitude_coords'] = longitude_coords
             request.session['place_of_installment'] = place_of_installment
-            request.session['inclination_PV'] = inclination_PV
+            request.session['inclination_PV'] = inclination_PV 
+            # adding the pvlib azimuth offset
             request.session['azimuth_value'] = azimuth_value
             request.session['userPower_profile'] = userPower_profile
             request.session['annual_consumption'] = annual_consumption
@@ -343,7 +348,9 @@ def calculate_power(request):
             latitude_value = float(data.get('latitude'))
             longitude_value = float(data.get('longitude'))
             inclination_value = float(data.get('inclination'))
+            # from now on pvlib has an 180 offset for azimuth aspect
             azimuth_value = float(data.get('azimuth'))
+            azimuth_value += 180
             panel_area = float(data.get('panel_area'))
             panel_efficiency = float(data.get('panel_efficiency'))
             annual_Kwh_value = int(data.get('annual_Kwh_value'))
