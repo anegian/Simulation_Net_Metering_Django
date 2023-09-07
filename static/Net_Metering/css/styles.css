@@ -397,7 +397,7 @@ input[type="search"]:focus {
     }
     .dashboard-page-content{
         background-color: #29233b;
-        min-height: 100vh;
+        min-height: 130vh;
     }
     .dashboard-empty-page-content{
         background-color: #29233b;
@@ -613,6 +613,11 @@ input[type="search"]:focus {
         height: 240px;
         transform: translate(30px, 0);
     }
+    .img-house{
+        width: 260px;
+        height: 200px;
+        transform: translate(0, 5px);
+    }
     .spacer-in-main-content{
         height: 40px;
         background-color: #393052;
@@ -652,6 +657,22 @@ input[type="search"]:focus {
     #compass-photo{
         width: 200px;
     }   
+
+    /* Change the border color for all radio buttons with class "form-check-input" */
+    .form-check-input {
+        border: 2px solid grey; /* Change "red" to the desired border color */
+        outline-color: #ccff00;
+    }
+
+    /* If you want to change the border color when the radio button is checked */
+    .form-check-input:checked {
+        border: 2px solid #738725; /* Change "green" to the desired border color */
+        background-color: #738725;
+        outline-color: #ccff00;
+    }
+    .highlight-input {
+        border: 1px solid red; /* Apply a red border to highlight the input */
+    }
 
     .calculator-fieldset .panel-calculator{
         width: 780px;
@@ -703,9 +724,10 @@ input[type="search"]:focus {
         margin: 20px 0 0 100px;
     }
     #azimuthInput, #tiltInput{
-        width: 50px;
+        width: 40px;
         transform: translate(0px, -45px);
         color: #000022;
+        text-align: center;
     }
     .azimuth_label{
         transform: translate(0px, -45px);
@@ -886,6 +908,21 @@ input[type="search"]:focus {
         font-size: 16px;
         margin: 10px 15px 10px 15px;
         box-shadow: 0 0 10px rgba(103, 103, 159, 0.5);
+        transform: translateX(-30px);
+    }
+    /* animation for progress bar */
+    @keyframes fill-progress-bar {
+        0% {
+          width: 0;
+        }
+        100% {
+          width: 100%;
+        }
+    }
+    #completionMessage {
+        font-size: 14px; /* Adjust the font size to your preference */
+        color: green; /* Change the text color */
+        margin-top: 5px; /* Add some spacing from the progress bar */
     }
     #placeProduction{
         margin-left: 17px;
@@ -949,14 +986,27 @@ input[type="search"]:focus {
         font-size: 12px;
         font-weight: bold;
     }
-    input.form-control{
-        font-size: 11px;
-        font-weight: bold;
+    #myModalLabel {
+        color: #841884!important;
+    }
+    .modal-body p{
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+    #myModal .form-control{
+        font-size: 12px;
+    }
+    #azimuth_modal_value{
+        letter-spacing: 1px;
+    }
+    #submit_modal{
+        background-color: #2a109d;
+        opacity: 0.8;
     }
     #resetBtn{
         width: 140px;
         height: 50px;
-        background-color:rgba(255, 0, 0, 0.448);
+        background-color:rgb(58, 58, 149);
         opacity: 0.8;
         border-color: #553f33;
         border-radius: 5px;
@@ -967,7 +1017,12 @@ input[type="search"]:focus {
         margin: 5px 15px 5px 15px;
         box-shadow: 0 0 10px rgba(103, 103, 159, 0.5);
     }
-    #resetBtn:hover, .form-submit-button:hover, #previous-button.enabled-button:hover, #next-button.enabled-button:hover{
+    #resetBtn:hover, 
+    .form-submit-button:hover, 
+    #previous-button.enabled-button:hover, 
+    #next-button.enabled-button:hover, 
+    #submitBtn.enabled-button:hover,
+    #submit_modal:hover{
         opacity: 1;
     }
     #next-button, #previous-button, #submitBtn{
@@ -1056,7 +1111,7 @@ input[type="search"]:focus {
                 }
                 #myChart3{
                     height: 40vh!important; /* Set a minimum height for the elements inside */
-                    width: 70%!important;
+                    width: 60%!important;
                 }
                 .right-upper{
 
@@ -1170,7 +1225,7 @@ input[type="search"]:focus {
             @media (max-width: 836px) {
                 #myChart3{
                     height: 70vh!important; /* Set a minimum height for the elements inside */
-                    width: 90%!important;
+                    width: 60%!important;
                 } 
                 .calculator-fieldset .panel-calculator{
                     width: 480px;
@@ -1192,15 +1247,17 @@ input[type="search"]:focus {
                     height: 75%;
                     width: 95%;
                 }
-                /* .section-before-calculator{
-                    width: 400px;
-                    font-size: 10px;
-                } */
                 .section-middle-position{
                     width: 400px;
                     font-size: 10px;
                 }
-                #previous-button, #next-button, #resetBtn, #submitBtn, #next-button.enabled-button, #previous-button.enabled-button, #submitBtn.enabled-button {
+                #previous-button, 
+                #next-button, 
+                #resetBtn, 
+                #submitBtn, 
+                #next-button.enabled-button,
+                #previous-button.enabled-button, 
+                #submitBtn.enabled-button {
                     font-size: 8px;
                     width: 80px;
                     height: 20px;
@@ -1218,6 +1275,7 @@ input[type="search"]:focus {
                 #annual_kwh{
                     height: 5px;
                     width: 100px;
+                    font-weight: bold;
                 }
                 #compass-photo{
                     width: 140px;
@@ -1237,8 +1295,8 @@ input[type="search"]:focus {
                     font-size: 8px;
                 } 
                 .panel-selection-height{
-                    height: 16px!important;
-                    font-size: 6px;
+                    height: 18px!important;
+                    font-size: 8px;
                 }
                 .panels_parametersm, .metrics-special-calculation{
                     height: 16px!important;
@@ -1293,7 +1351,7 @@ input[type="search"]:focus {
         @media (max-width: 540px) {
             .calculator-fieldset .panel-calculator{
                 width: 425px;
-                height: 320px;
+                height: 360px;
             }
             #map{
                 height: 68%;
@@ -1316,7 +1374,7 @@ input[type="search"]:focus {
                 }
                 #myChart3{
                     height: 70vh!important; /* Set a minimum height for the elements inside */
-                    width: 100%!important;
+                    width: 60%!important;
                 } 
                 .lord-icon-small{
                     width: 80px!important;
@@ -1376,11 +1434,20 @@ input[type="search"]:focus {
                 } 
                 .calculator-fieldset .panel-calculator{
                     width: 330px;
-                    height: 280px;
+                    height: 360px;
+                }
+                .autoPower-button{
+                    width: 160px;
+                    height: 40px;
+                    font-size: 10px;
                 }
                 #map{
                     height: 65%;
                     width: 92%;
+                }
+                .dashboard-page-content{
+
+                    min-height: 150vh;
                 }
             }
 
@@ -1447,11 +1514,14 @@ input[type="search"]:focus {
                     } 
                      .calculator-fieldset .panel-calculator{
                         width: 300px;
-                        height: 280px;
+                        height: 380px;
                     }
                     #map{
                         height: 55%;
                         width: 92%;
+                    }
+                    .dashboard-page-content{
+                        min-height: 160vh;
                     }
 
                 }
@@ -1539,8 +1609,8 @@ footer .admin-info {
     width: 95%!important;
 }
 #myChart3{
-    height: 48vh!important; /* Set a minimum height for the elements inside */
-    width: 95%!important;
+    height: 40vh!important; /* Set a minimum height for the elements inside */
+    width: 90%!important;
 }
   .container-icons{
     margin-top: 10px;
@@ -1551,6 +1621,7 @@ footer .admin-info {
     border-style: solid;
     border-width: 1.5px;
     border-color: #221e2e;
+    min-height: 30vh;
   }
   .container-icons-bottom{
     margin-top: 10px;
@@ -1558,25 +1629,48 @@ footer .admin-info {
     text-align: center;
     background-color: #393052;
     width: 30%;
-    height: 240px;
+    min-height: 50vh;
     border-style: solid;
     border-width: 1.5px;
     border-color: #221e2e;
+    justify-content: center;
+    align-items: center;
   }
 
   .right-container{
     flex-basis: 50%;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;  
+    flex-direction: column; 
   }
   .right-upper{
     display: flex;
-    justify-content: center;
+    justify-content: center; 
+  }
+  #top-right-panel{
+    min-height: 30vh;
+    margin: 10px 0 10px 0;
+    width: 95%;
+    background-color: #393052;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: #221e2e;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
   }
   .right-below{
     display: flex;
     justify-content: center;
+  }
+  .right-middle{
+    display: flex;
+    justify-content: center;
+  }
+  #first-panel{
+    height: 50px;
+  }
+  #third-panel{
+    min-height: 50vh;
   }
 
   .titles-panel{

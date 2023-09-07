@@ -1,5 +1,25 @@
 // Map
+var southWest = L.latLng(30, 15); // Southwestern corner (between Africa and top Balkans)
+var northEast = L.latLng(45, 32); // Northeastern corner (between Italy, and Turkey)
+var bounds = L.latLngBounds(southWest, northEast); // Create a LatLngBounds object
+
 let map = L.map('map').setView([37.983917, 23.72936], 7);
+
+// Set the maximum bounds for the map after initialization
+map.setMaxBounds(bounds);
+
+// When the map moves to the end of the bounds(SW or NE), returns to the center coords
+map.on('moveend', function () {
+    var center = map.getCenter();
+  
+    // Check if the map's center longitude has wrapped around
+    if (center.lng < -180 || center.lng > 180) {
+      // Re-add your layer or perform any other actions you need
+      // Example: map.addLayer(yourLayer);
+      console.log('Map has wrapped around');
+    }
+});
+
 let latitude = document.getElementById('latitude')
 let longitude = document.getElementById('longitude')
 // Get the region input element
