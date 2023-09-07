@@ -1295,8 +1295,8 @@ input[type="search"]:focus {
                     font-size: 8px;
                 } 
                 .panel-selection-height{
-                    height: 16px!important;
-                    font-size: 6px;
+                    height: 18px!important;
+                    font-size: 8px;
                 }
                 .panels_parametersm, .metrics-special-calculation{
                     height: 16px!important;
@@ -1351,7 +1351,7 @@ input[type="search"]:focus {
         @media (max-width: 540px) {
             .calculator-fieldset .panel-calculator{
                 width: 425px;
-                height: 320px;
+                height: 360px;
             }
             #map{
                 height: 68%;
@@ -1434,7 +1434,12 @@ input[type="search"]:focus {
                 } 
                 .calculator-fieldset .panel-calculator{
                     width: 330px;
-                    height: 280px;
+                    height: 360px;
+                }
+                .autoPower-button{
+                    width: 160px;
+                    height: 40px;
+                    font-size: 10px;
                 }
                 #map{
                     height: 65%;
@@ -1509,7 +1514,7 @@ input[type="search"]:focus {
                     } 
                      .calculator-fieldset .panel-calculator{
                         width: 300px;
-                        height: 280px;
+                        height: 380px;
                     }
                     #map{
                         height: 55%;
