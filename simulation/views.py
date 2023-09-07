@@ -13,6 +13,7 @@ import pvlib
 from django.conf import settings
 from django.contrib.sessions.models import Session
 
+
 # Create your views here
 # App level
 
