@@ -1624,10 +1624,12 @@ footer .admin-info {
     text-align: center;
     background-color: #393052;
     width: 30%;
-    min-height: 48vh;
+    min-height: 50vh;
     border-style: solid;
     border-width: 1.5px;
     border-color: #221e2e;
+    justify-content: center;
+    align-items: center;
   }
 
   .right-container{
