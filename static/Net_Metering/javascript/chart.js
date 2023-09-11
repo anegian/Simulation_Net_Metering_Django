@@ -42,7 +42,7 @@ new Chart("myChart1", {
 
 
 // DASHBOARD CHART 2
-const pv_lifetime = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
+const pv_lifetime = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
 
 new Chart("myChart2", {
   type: "line",
@@ -89,12 +89,23 @@ new Chart("myChart2", {
         const xValue = xAxis.getPixelForValue(paybackYear);
   
         ctx.save();
-        ctx.strokeStyle = "red"; // Customize line color
+        ctx.strokeStyle = "#e34c0cbf"; // Customize line color
         ctx.lineWidth = 2; // Customize line width
         ctx.beginPath();
         ctx.moveTo(xValue, yAxis.top);
         ctx.lineTo(xValue, yAxis.bottom);
         ctx.stroke();
+
+        // Draw a label next to the line
+        ctx.fillStyle = "#f2f2f2"; // Customize label color
+        ctx.font = "12px Arial"; // Customize label font
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        const label = "Έτος Απόσβεσης"; // Your label text
+        const labelX = xValue + 10; // Adjust the X position of the label
+        const labelY = (yAxis.top + yAxis.bottom) / 2 + 10; // Center the label vertically and move it down by 10 pixels
+        ctx.fillText(label, labelX, labelY);
+
         ctx.restore();
       },
     },

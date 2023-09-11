@@ -136,7 +136,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         total_savings_array_json = json.dumps(total_savings_array)
         total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced)
         total_production_kwh_array_json = json.dumps(total_production_kwh_array)
-        payback_period = calculate_payback_period(total_investment, average_annual_savings) #in months
+        payback_period, payback_year_float = calculate_payback_period(total_investment, average_annual_savings) #in months
 
         net_present_value = calculate_npv(total_investment, total_savings)
         maintenance_cost = calculate_maintenance_cost(total_investment, inverter_cost)
@@ -174,6 +174,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'number_of_panels_required': number_of_panels_required,
             'total_panel_area': total_panel_area,
             'payback_period': payback_period,
+            'payback_year_float': payback_year_float,
             'average_annual_savings': average_annual_savings,
             'profitPercent': profitPercent,
             'total_annual_cost': total_annual_cost,
@@ -204,7 +205,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         try:
             result = 'simulation/dashboard.html'
 
-            print('Total Investment:', total_investment,"euro", 'Average annual Savings: ', average_annual_savings, '& Περίοδος Απόσβεσης:', payback_period) 
+            print('Total Investment:', total_investment,"euro", 'Average annual Savings: ', average_annual_savings, '& Περίοδος Απόσβεσης:', payback_period, "Έτη:", payback_year_float) 
             print(f'Total savings for 25 years: {total_savings}, NPV is: {total_savings} - {total_investment} = {net_present_value}')
             print("Ετήσιο κόστος ρεύματος, μαζί με ρυθμιζόμενες χρεώσεις, χωρίς δημοτικούς φόρους: ", total_annual_cost, "& Ετήσιο Όφελος: ", average_annual_savings)
             print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges)
@@ -538,7 +539,6 @@ def calculate_payback_period(total_investment, average_annual_savings):
     years_to_overcome_investment = 0
     total_savings = []
     starting_invest = total_investment
-    amount_left = starting_invest
 
     # Find the point where savings exceed investment
     while sum(total_savings) <= total_investment:
@@ -554,12 +554,14 @@ def calculate_payback_period(total_investment, average_annual_savings):
     years = years_to_overcome_investment - 1
     months = round(12 - (subtraction/monthly_savings) )
 
+    payback_year_float  = years + (months / 10)
+
     if months == 1:
         payback_period = f"{years} έτη & {months} μήνας"
     else:
         payback_period = f"{years} έτη & {months} μήνες"
 
-    return payback_period    
+    return payback_period, payback_year_float    
 
 def calculate_total_production_kwh(annual_PV_energy_produced):
 
@@ -579,11 +581,10 @@ def calculate_total_savings(average_annual_savings):
     # Calculate the total profit over 25 years
     # based on the annual production
     # Return the result
-    total_savings_array = []
+    total_savings_array = [0, average_annual_savings]
     total_savings = average_annual_savings
-    total_savings_array.append(total_savings)
     
-    for i in range(1, 25):
+    for i in range(1, 26):
         total_savings += round(average_annual_savings / ( ( annual_degradation_production ) ** i))
         total_savings_array.append(total_savings)
 

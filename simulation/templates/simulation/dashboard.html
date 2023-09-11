@@ -11,7 +11,7 @@
          let totalProductionArray = JSON.parse( '{{ total_production_kwh_array_json|safe }}' );
          let monthIrradianceArray = JSON.parse( '{{ monthly_irradiance_json|safe }}' );
          let monthlyPanelEnergy= JSON.parse('{{monthly_panel_energy_produced_json|safe }}' );
-         let paybackYear = '{{ payback_period }}';
+         let paybackYear = '{{ payback_year_float }}';
          let roi = '{{ roi }}';
          let annual_roi = '{{ annualized_roi }}';
          let lcoe = '{{ lcoe }}';
