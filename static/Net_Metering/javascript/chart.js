@@ -103,7 +103,7 @@ new Chart("myChart2", {
 
 
 // DASHBOARD CHART 3
-var zValues = ["Return on Investment %", "Net P.V. (€)", "Levelized Cost Electricity (€)", "Internal Rate %", "Annualized R.O.I. %"];
+var zValues = ["Απόδοση Επένδυσης(ROI) %", "Καθαρό Κέρδος (NPV) (€)", " Σταθμισμένο Κόστος Ενέργειας(LCOE)€", "Εσωτερικός βαθμός απόδοση (IRR) %", "Ετήσια Απόδοση Επένδυσης (aROI) %"];
 var rValues = [roi, npv, lcoe, irr, annual_roi];
 var barColors = [
   "#5BBAD2",

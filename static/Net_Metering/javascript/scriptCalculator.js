@@ -2,6 +2,8 @@
 const themeSlider = document.getElementById('theme-slider');
 const slider = document.getElementById("myRangeSlider");
 const slider_hidden_input = document.getElementById("myRangeSliderHidden");
+const slider_shadings = document.getElementById("shadings-slider");
+const slider_shadings_hidden_input = document.getElementById("shadingsliderHidden");
 const PV_kW_output = document.getElementById("slider-value");
 // annual Kwh
 let annual_Kwh_input = document.getElementById("annual_kwh");
@@ -17,6 +19,7 @@ const panelAreaInput = document.getElementById('panelAreaInput');
 const panelCostInput = document.getElementById('panelCostInput');
 const form = document.getElementById("calculatorForm");
 const placeInstalmentRadios  = document.getElementsByName('installation')
+const customParams = document.getElementById('customParameters');
 let selectedPlaceInstalmentValue;
 const roofRadioButton = document.getElementById('roof');
 const phase_load_selected = document.getElementById("id_select_phase");
@@ -177,6 +180,7 @@ function disableElements() {
   disablePanelButton(form_submit_button);
   submitBtnEnabled = false;
   roofRadioButton.checked = true;
+  slider_shadings.value = 1;
   defaultPanelParams.selected  = true;
   tiltDefaultRadio.checked = true;
   tiltInput.value = '30'; // Set the value of tiltInput to 30
@@ -202,6 +206,7 @@ function disableElements() {
   selectedPlaceInstalmentValue = 'roof';
   noDiscountRadio.checked = true;
   discountPercentContainer.style.display = 'none';
+  customParams.checked = false;
 } 
 function enableAnnualkWh(){
   annual_Kwh_input.disabled = false;
@@ -320,15 +325,19 @@ function calculateAutoPower() {
   $('#progressBar').show();
   
   // Get the latitude, longitude, azimuth, and tilt values from the form
-  const latitudeValue = latitudeInput.value;
-  const longitudeValue = longitudeInput.value;
-  const azimuthValue = azimuthInput.value;
-  const tiltValue = tiltInput.value;
-  const panelWpValue = panelWpInput.value
-  const panelAreaValue = panelAreaInput.value;
-  const panelEfficiencyValue = panelEfficiencyInput.value
-  const annualKWhValue = annual_Kwh_input.value
-  const placeInstalmentValue = selectedPlaceInstalmentValue
+  const latitudeValue = parseFloat(latitudeInput.value);
+  const longitudeValue = parseFloat(longitudeInput.value);
+  const azimuthValue = parseFloat(azimuthInput.value);
+  const tiltValue = parseFloat(tiltInput.value);
+  let panelKWpValue = parseFloat(panelWpInput.value);
+  // from Wp to kWp
+  panelKWpValue /= 1000; 
+  const panelAreaValue = parseFloat(panelAreaInput.value);
+  let panelEfficiencyValue = parseFloat(panelEfficiencyInput.value);
+  //  from xx % to 0,xx %
+  panelEfficiencyValue /= 100;
+  const annualKWhValue = parseInt(annual_Kwh_input.value);
+  const placeInstalmentValue = selectedPlaceInstalmentValue;
   const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
   const url = '/simulation/ajax/' ;  // Make sure this matches the URL pattern in your Django project's URLs
 
@@ -344,7 +353,7 @@ function calculateAutoPower() {
         panel_area: panelAreaValue,
         panel_efficiency: panelEfficiencyValue,
         annual_Kwh_value: annualKWhValue,
-        panel_Wp_value: panelWpValue,
+        panel_Wp_value: panelKWpValue,
         place_instalment_value: placeInstalmentValue,
     };
 
@@ -392,10 +401,10 @@ function calculateAutoPower() {
       
       if ( recommended_kWp > Number(slider.max) ){
         console.log("@@@ The energy consumption exceeds solar production @@@")
-        console.log("--- panel Wp: ", panelWpValue, "---")
+        console.log("--- panel kWp: ", panelKWpValue, "---")
         recommended_kWp = Number(slider.max);
         // panel Wp was set as decimal, so we have to multiply with 100
-        minimum_PV_panels = (recommended_kWp * panelWpValue * 10 ).toFixed(0) ; 
+        minimum_PV_panels = (recommended_kWp * panelKWpValue * 10 ).toFixed(0) ; 
         totalArea = (minimum_PV_panels * panelAreaValue).toFixed(1);
       }
 
@@ -609,6 +618,83 @@ function resetForm(){
   showPanel(currentPanelIndex);
   autoCalculatedPower = false;
 };
+function setPanelParameters(){
+  const selectedOption = panelParamsSelect.options[panelParamsSelect.selectedIndex];
+  const wp = selectedOption.value;
+  const efficiency = selectedOption.dataset.efficiency;
+  const panel_area = selectedOption.dataset.panel_area;
+  const panel_cost = selectedOption.dataset.panel_cost;
+  
+  panelWpInput.value = wp;
+  panelEfficiencyInput.value = efficiency;
+  panelAreaInput.value = panel_area;
+  panelCostInput.value = panel_cost;
+};
+function clearPanelParameters(){
+  panelWpInput.value = "";
+  panelEfficiencyInput.value = "";
+  panelAreaInput.value = "";
+  panelCostInput.value = "";
+};
+
+function validatePanelWp(){
+  // Validation Rules
+  const panelWpEntered = panelWpInput.value;
+  let sanitizedWpValue = panelWpEntered.replace(/[^0-9]/g, '');
+  // Check value Entered & Limit the value to at most 500Wp
+  if (sanitizedWpValue > 500) {
+    sanitizedWpValue = 500;
+  }
+  // after check set the value of the input
+  panelWpInput.value = sanitizedWpValue; 
+};
+
+function validatePanelEfficiency(){
+  const enteredEfficiencyValue = panelEfficiencyInput.value;
+
+  $('#panelEfficiencyInput').mask('00.0', {
+    reverse: true,
+    translation: {
+      '0': { pattern: /[0-9]/ }, // Allow 0-9 in the tens place
+    },
+  }); 
+
+  if (isNaN(enteredEfficiencyValue) || enteredEfficiencyValue < 0.0) {
+    // Invalid input, set to a default value
+    $(this).val('0.0');
+  } else if (enteredEfficiencyValue > 30.0) {
+      // Input value exceeds maximum, set to the maximum value
+      $(this).val('30.0');
+  }
+};
+
+function validatePanelArea(){
+  const enteredAreaValue = panelAreaInput.value;
+
+  $('#panelAreaInput').mask('0.00', {
+    reverse: true,
+    translation: {
+      '0': { pattern: /[0-9]/ }, // Allow 0-9 in the tens place
+    },
+  }); 
+
+  if (isNaN(enteredAreaValue) || enteredAreaValue < 0.00) {
+    // Invalid input, set to a default value
+    $(this).val('0.00');
+  }
+};
+
+function validatePanelCost(){
+  // Validation Rules
+  const panelCostEntered = panelCostInput.value;
+  let sanitizedCostValue = panelCostEntered.replace(/[^0-9]/g, '');
+  // Check value Entered & Limit the value to at most 500Wp
+  if (sanitizedCostValue > 500) {
+    sanitizedCostValue = 500;
+  }
+  // after check set the value of the input
+  panelCostInput.value = sanitizedCostValue; 
+};
 
 // Set the initial values of all elements to 0
 disableElements();
@@ -626,19 +712,65 @@ slider.oninput = function() {
 };      
 // Parameters from panelContainers
 panelParamsSelect.addEventListener('change', function() {
-    const selectedOption = panelParamsSelect.options[panelParamsSelect.selectedIndex];
-    const wp = selectedOption.value;
-    const efficiency = selectedOption.dataset.efficiency;
-    const panel_area = selectedOption.dataset.panel_area;
-    const panel_cost = selectedOption.dataset.panel_cost;
-  
-    panelWpInput.value = wp;
-    panelEfficiencyInput.value = efficiency;
-    panelAreaInput.value = panel_area;
-    panelCostInput.value = panel_cost;
+  setPanelParameters();
+  customParams.checked = false;
 
-    console.log(panelAreaInput.value)
+  // Toggle the 'highlight' class based on the checkbox state
+  $('.panels_parameters input[type="number"], .panels_parameters input[type="text"]').removeClass('highlight-input');
+  $('.panels_parameters input[type="number"], .panels_parameters input[type="text"]').removeClass('highlight-filled');
+  console.log(panelAreaInput.value)
 });
+
+customParams.addEventListener('click', function(){
+  if (customParams.checked) {
+    clearPanelParameters();
+    // Remove the "readonly" attribute from the input fields
+    panelWpInput.removeAttribute('readonly');
+    panelEfficiencyInput.removeAttribute('readonly');
+    panelAreaInput.removeAttribute('readonly');
+    panelCostInput.removeAttribute('readonly');
+  } else {
+      setPanelParameters();   
+      // If the checkbox is unchecked, add the "readonly" attribute back to the input fields
+      panelWpInput.setAttribute('readonly', 'readonly');
+      panelEfficiencyInput.setAttribute('readonly', 'readonly');
+      panelAreaInput.setAttribute('readonly', 'readonly');
+      panelCostInput.setAttribute('readonly', 'readonly');
+  }
+});
+
+$(document).ready(function () {
+  $('#customParameters').click(function () {
+    const isChecked = this.checked;
+    const inputs = $('.panels_parameters input[type="number"], .panels_parameters input[type="text"]');
+        
+    // Toggle the 'highlight' class based on the checkbox state
+    inputs.toggleClass('highlight-input', isChecked);
+
+    if (!isChecked) {
+        inputs.removeClass('highlight-filled');
+    }
+  });
+    
+});
+
+  // Add input event listeners to remove the border when the field is filled
+  $('.panels_parameters input[type="number"], .panels_parameters input[type="text"]').on('input', function () {
+    if ($(this).val().trim() !== '') {
+      $(this).removeClass('highlight-input');
+      $(this).addClass('highlight-filled');
+    }else{
+      $(this).addClass('highlight-input');
+      $(this).removeClass('highlight-filled'); // Remove 'highlight-filled' class when it's empty
+    }
+  });
+
+// Add input event listeners to trigger the validation function
+panelWpInput.addEventListener('input', validatePanelWp);
+panelEfficiencyInput.addEventListener('input', validatePanelEfficiency);
+panelAreaInput.addEventListener('input', validatePanelArea);
+panelCostInput.addEventListener('input', validatePanelCost);
+
 // Add event listener to each radio Azimuth input
 radioAzimuthInputs.forEach(function(input) {
   input.addEventListener('change', function() {
@@ -647,6 +779,7 @@ radioAzimuthInputs.forEach(function(input) {
 
     });
 });
+
 // Add event listener to each radio Tilt input
 radioTiltInputs.forEach(function(inputs) {
     inputs.addEventListener('change', function(e) {
@@ -896,6 +1029,7 @@ form_submit_button.addEventListener('click', function(event){
 
   slider_hidden_input.value = slider.value;
   power_modal_input.value = slider_hidden_input.value;
+  slider_shadings_hidden_input.value = slider_shadings.value;
 
   if (storage_selection.checked){
     battery_modal_input.value = storage_kW.value;
@@ -931,6 +1065,7 @@ form_submit_button.addEventListener('click', function(event){
     console.log(azimuth_modal_input.value);
     console.log(profile_modal_input.value);
     console.log(slider_hidden_input.value);
+    console.log(slider_shadings_hidden_input.value);
     console.log(minimum_panel_container.value);
     console.log('discount_percent_battery value:', discount_percent_battery.value);
     console.log('discount_percent_battery value:', discount_percent_battery_modal_input.value);
