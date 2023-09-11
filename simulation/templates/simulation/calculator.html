@@ -13,6 +13,7 @@
 {% block script %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script> let geojsonPath = "{% static 'Net_Metering/json/Prefectures_boundaries.geojson' %}";</script>
 <script src="{% static 'Net_Metering/javascript/leaflet_map.js' %}" defer></script>
 <script> var calculatePowerURL = "{% url 'simulation:calculate_power' %}";</script>
@@ -154,29 +155,51 @@
                                             <div class="help-container" title="">
                                                 <span class="help-text" id="installation-text">
                                                     &#8226; Η εγκατάσταση σε <strong>ταράτσα</strong> απαιτεί περισσότερο χώρο σε τ.μ. Αυτό οφείλεται στην ύπαρξη συνήθως καποιου δώματος 
-                                                    ή άλλων μέσων που προκαλούν σκιάσεις, όπως κεραίες και ηλιακοί θερμοσίφωνες.
+                                                    ή άλλων μέσων που προκαλούν σκιάσεις, όπως κεραίες και ηλιακοί θερμοσίφωνες.<br><br>
+
+                                                    &#8226; Εφόσον γνωρίζετε, επιλέξτε κατά προσέγγιση το ποσοστό σκιάσεων. <strong>Οι σκιάσεις έχουν σημαντική βαρύτητα στην παραγωγή ηλεκτρικής ενέργειας ενός ΦΒ συστήματος</strong>.
+                                                    Όταν εντοπίζονται περισσότερες σκιάσεις, επηρεάζεται ανάλογα και η περίοδος απόσβεσης, με αυξητική τάση. Η προεπιλογή είναι στο χαμηλό ποσοστό, το οποίο είναι το βέλτιστο.
                                                 </span>    
                                                 <span class="close-help">&times;</span>
                                             </div>
                                     </p>
+                                    <div id="installation-shadings">
+                                        <div>
+                                             <div class="spacer-in-calculator-panel">
+                                            </div>
 
-                                    <div class="spacer-in-calculator-panel">
+                                            <div class="form-check" >
+                                                <input type="radio" class="form-check-input" id="roof" name="installation" value="roof" checked>
+                                                <label class="form-check-label" for="roof">Στέγη</label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input type="radio" class="form-check-input option2" id="terrace" name="installation" value="terrace">
+                                                <label class="form-check-label" for="terrace">Ταράτσα</label>
+                                            </div>
+                                        </div>
+                                       
+
+                                        <div class="shadings-input">
+                                            <label for="shadings-slider" title="Προαιρετικά, εάν εντοπίσατε σκιάσεις στο χώρο εγκατάστασης, επιλέξτε ανάλογα το ποσοστό">Ποσοστό Σκιάσεων: </label>
+                                            <div class="shadings-container">
+                                                <input type="range" id="shadings-slider" name="shadings-slider" min="1" max="3" step="1">
+                                                <div class="slider-labels">
+                                                    <span class="slider-label" id="slider-shadings-low">Χαμηλό</span>
+                                                    <span class="slider-label" id="slider-shadings-medium">Μέτριο</span>
+                                                    <span class="slider-label" id="slider-shadings-high">Υψηλό</span>
+                                                    <input type="hidden" id="shadingsliderHidden" name="shadingsliderHidden" required>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div class="form-check" >
-                                        <input type="radio" class="form-check-input" id="roof" name="installation" value="roof" checked>
-                                        <label class="form-check-label" for="roof">Στέγη</label>
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input type="radio" class="form-check-input option2" id="terrace" name="installation" value="terrace">
-                                        <label class="form-check-label" for="terrace">Ταράτσα</label>
-                                    </div>
+                                    
                                 </div>            
 
                                     <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε είδος Φ/Β πάνελ και παραμέτρους.">
                                         <p>
-                                            <label for="panel_wp" class="spacer-label">Επιλέξτε είδος Φ/Β πάνελ:</label>
+                                            <label for="panelParams" class="spacer-label">Επιλέξτε είδος Φ/Β πάνελ:</label>
 
                                             <button class="help-popper" type="button" title="">
                                                 <i class="fa fa-question-circle" id="panels-info"></i>
@@ -184,9 +207,11 @@
         
                                                 <div class="help-container" title="">
                                                     <span class="help-text" id="panels-text">
-                                                        &#8226; Μπορείτε να επιλέξετε ένα εκ των 5 ηλιακών πάνελ, από την παρακάτω <br>λίστα.
-                                                        Η επιλογή σας θα βοηθήσει στον υπολογισμό του αριθμού των ελάχιστα απαιτούμενων ηλιακών πάνελ,
-                                                        άρα και της <strong>συνολικής επένδυσης</strong>.
+                                                        &#8226; Μπορείτε να επιλέξετε ένα εκ των 5 τύπων ηλιακών πάνελ, από την παρακάτω λίστα. Η επιλογή σας θα βοηθήσει στον υπολογισμό 
+                                                        του αριθμού των <strong>ελάχιστα απαιτούμενων ηλιακών πάνελ</strong>, για εκμηδένιση ετήσιας κατανάλωσης, όπως και της <strong>συνολικής σας επένδυσης</strong>.
+                                                         Με επιλογή από τη λίστα, συμπληρώνονται αυτόματα τα παρακάτω πεδία παραμέτρων.<br><br>
+                                                          
+                                                        &#8226; Μπορείτε να συμπληρώσετε χειροκίνητα τα πεδία παραμέτρων, επιλέγοντας <strong>Προσαρμοσμένες Παράμετροι</strong>
                                                     </span>    
                                                     <span class="close-help">&times;</span>
                                                 </div>
@@ -196,24 +221,37 @@
                                         </div>
 
                                         <select  class="panel-selection-height" name="panel_params" id="panelParams"> 
-                                            <option id="defaultPanelParams" value="0.305" data-efficiency="0.183" data-panel_area="1.67" data-panel_cost="167">Mονοκρυσταλλικό Πάνελ <strong>305Wp</strong> (Βαθμός απόδοσης : ≥18,3%)</option>
-                                            <option value="0.340" data-efficiency="0.165" data-panel_area="2.06" data-panel_cost="188">Πολυκρυσταλλικό Πάνελ <strong>340Wp</strong> (Βαθμός απόδοσης : 16,5%) </option>
-                                            <option value="0.370" data-efficiency="0.191" data-panel_area="1.94" data-panel_cost="199">Mονοκρυσταλλικό Πάνελ <strong>370Wp</strong> (Βαθμός απόδοσης : 19,1%) </option>
-                                            <option value="0.410" data-efficiency="0.21" data-panel_area="1.95" data-panel_cost="248">Mονοκρυσταλλικό Πάνελ <strong>410Wp</strong> (Βαθμός απόδοσης : 21,0%) </option>
-                                            <option value="0.450" data-efficiency="0.199" data-panel_area="2.2" data-panel_cost="272">Mονοκρυσταλλικό Πάνελ <strong>450Wp</strong> (Βαθμός απόδοσης : 19,9%) </option>
+                                            <option id="defaultPanelParams" value="305" data-efficiency="18.3" data-panel_area="1.67" data-panel_cost="167">Mονοκρυσταλλικό Πάνελ <strong>305Wp</strong> (Βαθμός απόδοσης : ≥18,3%)</option>
+                                            <option value="340" data-efficiency="16.5" data-panel_area="2.06" data-panel_cost="188">Πολυκρυσταλλικό Πάνελ <strong>340Wp</strong> (Βαθμός απόδοσης : 16,5%) </option>
+                                            <option value="370" data-efficiency="19.1" data-panel_area="1.94" data-panel_cost="199">Mονοκρυσταλλικό Πάνελ <strong>370Wp</strong> (Βαθμός απόδοσης : 19,1%) </option>
+                                            <option value="410" data-efficiency="21" data-panel_area="1.95" data-panel_cost="248">Mονοκρυσταλλικό Πάνελ <strong>410Wp</strong> (Βαθμός απόδοσης : 21,0%) </option>
+                                            <option value="450" data-efficiency="19.9" data-panel_area="2.2" data-panel_cost="272">Mονοκρυσταλλικό Πάνελ <strong>450Wp</strong> (Βαθμός απόδοσης : 19,9%) </option>
                                         </select>
+                                        <div class="custom_parameters">
+                                            <label for="customParameters" title="Πατήστε εδώ για να συμπληρώσετε διαφορετικές τιμές παραμέτρων">Προσαρμοσμένες Παράμετροι:  </label>
+                                            <div class="checkbox-container">
+                                                <input type="checkbox" id="customParameters" value="yes">
+                                            </div>
+                                        </div>
                                         
                                     </div>
                                     <div class="panels_parameters">
+                                        
                                         <div>
-                                            <input type="hidden" name="panel_wp" id="panelWpInput">
-                                            <input type="hidden" name="panel_efficiency" id="panelEfficiencyInput">
-                                            <label for="panel_wp">Eμβαδόν Πάνελ: </label>
-                                            <input type="text" name="panel_area" id="panelAreaInput" readonly><span class="metrics-special-calculation"> m²</span>
+                                            <label for="panelWpInput">Ισχύς Πάνελ: </label>
+                                            <input type="number" name="panel_kWp" id="panelWpInput" readonly><span class="metrics-special-calculation"> kWp</span>
+
+                                            <label for="panelEfficiencyInput">Απόδοση Πάνελ: </label>
+                                            <input type="text" name="panel_efficiency" id="panelEfficiencyInput" readonly><span class="metrics-special-calculation"> %</span>
+
                                         </div>
                                         <div>
-                                            <label for="panel_wp">Κόστος Πάνελ: </label>
-                                            <input type="text" name="panel_cost" id="panelCostInput" readonly><span class="metrics-special-calculation"> € </span>
+                                            <label for="panelAreaInput">Eμβαδόν Πάνελ: </label>
+                                            <input type="text" name="panel_area" id="panelAreaInput" readonly><span class="metrics-special-calculation"> m²</span>
+
+                                            <label for="panelCostInput">Κόστος Πάνελ: </label>
+                                            <input type="number" name="panel_cost" id="panelCostInput" readonly><span class="metrics-special-calculation"> € </span>
+
                                         </div>
                                     </div>
                              
@@ -250,28 +288,29 @@
                                     </div>
 
                                     <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="north" name="azimuth" value="180">
+                                        <label class="form-check-label" id="north-label" for="north"></label>
+
+                                        <input type="radio" class="form-check-input" id="northWest" name="azimuth" value="135">
+                                        <label class="form-check-label" id="northWest-label" for="northWest"></label>
+
                                         <input type="radio" class="form-check-input" id="west" name="azimuth" value="90">
                                         <label class="form-check-label" id="west-label" for="west"></label>
-                                    </div>
 
-                                    <div class="form-check">
                                         <input type="radio" class="form-check-input" id="southWest" name="azimuth" value="45">
                                         <label class="form-check-label" id="southWest-label" for="southWest"></label>
-                                    </div>
 
-                                    <div class="form-check south">
                                         <input type="radio" class="form-check-input" id="south" name="azimuth" value="0" checked>
                                         <label class="form-check-label" id="south-label" for="south"></label>
-                                    </div>
 
-                                    <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="southEast" name="azimuth" value="-45">
-                                    <label class="form-check-label" id="southEast-label" for="southEast"></label>
-                                    </div>
-                                    
-                                    <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="east" name="azimuth" value="-90">
-                                    <label class="form-check-label" id="east-label" for="east"></label>
+                                        <input type="radio" class="form-check-input" id="southEast" name="azimuth" value="-45">
+                                        <label class="form-check-label" id="southEast-label" for="southEast"></label>
+
+                                        <input type="radio" class="form-check-input" id="east" name="azimuth" value="-90">
+                                        <label class="form-check-label" id="east-label" for="east"></label>
+
+                                        <input type="radio" class="form-check-input" id="northEast" name="azimuth" value="-135">
+                                        <label class="form-check-label" id="northEast-label" for="northEast"></label>
                                     </div>
 
                                     <div>
@@ -285,7 +324,7 @@
 
                                 <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κλίση του συστήματος PV" id="panel-tilt">
                                     <p> 
-                                        <label for="tiltInput" class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</label>
+                                        <label for="inclination0" class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</label>
                                         <button class="help-popper" type="button" title="">
                                             <i class="fa fa-question-circle" id="tilt-info"></i>
                                         </button>
@@ -350,11 +389,12 @@
 
                             <div class="option-selector-margin" >
 
-                                <p title="Επιλέξτε πρώτα το είδος της παροχής, για να σας επιτραπεί η συμπλήρωση ετήσιας κατανάλωσης!">
-                                    <label for="phase_load" class="spacer-label">Επιλέξτε Παροχή και KWh:</label>
-                                 </p>
+                                <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος" >
 
-                                <div class="option-selector-margin-select-phase" title="Παρακαλούμε, επιλέξτε Παροχή ρεύματος">
+                                    <p title="Επιλέξτε πρώτα το είδος της παροχής, για να σας επιτραπεί η συμπλήρωση ετήσιας κατανάλωσης!" id="spacer-label-phase-load">
+                                        Επιλέξτε Παροχή και KWh:                                     
+                                     </p>
+
                                     <input class="panel-selection-height" type="hidden" name="phase_load" id="phase_load"  required>
 
                                         {{ form_phase_load.select_phase }}
@@ -398,7 +438,7 @@
                             </div>
 
                             <div class="option-selector-margin" title="Σημειώστε το ωράριο, στο οποίο εντοπίζετε τις μεγαλύτερες ανάγκες σε οικιακό ρεύμα.">
-                                <p><label for="power_option" class="spacer-label">Επιλέξτε προφίλ μεγαλύτερης κατανάλωσης ρεύματος:</label></p>
+                                <p><label for="day-power" class="spacer-label">Επιλέξτε προφίλ μεγαλύτερης κατανάλωσης ρεύματος:</label></p>
 
                                     <div class="spacer-in-calculator-panel">
                                     </div>
@@ -478,7 +518,7 @@
                                                                              
 
                                     <input type="range" id="myRangeSlider" name="myRangeSlider" required>
-                                    <p class="slider-label">Τιμή: <span id="slider-value"></span> kWp</p> 
+                                    <p class="slider-power-label">Τιμή: <span id="slider-value"></span> kWp</p> 
                                     <input type="hidden" id="myRangeSliderHidden" name="myRangeSliderHidden" required>
                                         
                                     <span id="error-message-panel6">Παρακαλώ πρώτα επιλέξτε ετήσια κατανάλωση kWh & kWp.</span>
@@ -494,7 +534,7 @@
                                    
                                     
                                     <div>
-                                        <label for="placeProduction">Ειδική Παραγωγή:</label>
+                                        <label for="placeProduction">Ειδική Παραγωγή Πάνελ:</label>
                                         <input type="text" id="placeProduction" readonly><span class="metrics-special-calculation"> kWh/panel</span>
 
                                     </div>
@@ -528,7 +568,7 @@
                             </div>
 
                             <div class="option-selector-margin" title="Παρακαλούμε, πρώτα συμπληρώστε τα πεδία Κατανάλωση και Ισχύς και στη συνέχεια επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
-                                <p><label for="storage" class="spacer-label">Επιθυμείτε προσθήκη συσσωρευτή:</label></p>
+                                <p><label for="without_storage" class="spacer-label">Επιθυμείτε προσθήκη συσσωρευτή:</label></p>
                                     
                                 <div class="spacer-in-calculator-panel">  
                                 </div>

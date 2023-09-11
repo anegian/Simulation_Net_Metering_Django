@@ -231,6 +231,40 @@ ul li{
         height: 19px;
         border-radius: 20px;
       }
+            /* Style the shadings slider track to move to the right */
+            .shadings-container {
+               margin-right: 200px;
+               width: 300px;
+            }
+
+            #shadings-slider {
+                width: 100%;
+            }
+            /* Style the slider labels */
+            .slider-labels {
+                display: flex;
+                justify-content: space-between;
+                margin-top: -5px;
+            }
+            
+            #slider-shadings-low{
+                transform:translate(-30px, 0);
+                font-size: 10px;
+                font-weight: normal;
+            }
+            #slider-shadings-medium{
+                font-size: 10px;
+                font-weight: normal;
+            }
+            #slider-shadings-high{  
+                transform: translate(30px, 0);
+                font-size: 10px;
+                font-weight: normal;
+            }
+            .slider-label {
+                flex: 1;
+                text-align: center;
+            }
 
 /* ::: NAVBAR ::: */
 .second-navbar{
@@ -426,22 +460,6 @@ input[type="search"]:focus {
                 #menu-nav-button:hover{
                     color: #ed4901;
                 }
-                /* Position and settings of search box button */
-                /* .small-screen-show-search-button {
-                    font-size: 19px;
-                    color: #f2f2f2;
-                    cursor: pointer;
-                    display: none;
-                }
-                .small-screen-show-search-button:hover {
-                    color: #ed4901;
-                }
-                /* Hide search-bar show-button */
-                /* #small-show-search-checkbox{
-                    display: none;
-                } */
-
-
 
 
 
@@ -594,6 +612,11 @@ input[type="search"]:focus {
         height: 25px!important;
         color: #000022;
     }
+    .custom_parameters {
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+    }
 
     .img-div-calculator{
         display: flex;
@@ -662,6 +685,7 @@ input[type="search"]:focus {
     .form-check-input {
         border: 2px solid grey; /* Change "red" to the desired border color */
         outline-color: #ccff00;
+        margin: none;
     }
 
     /* If you want to change the border color when the radio button is checked */
@@ -671,7 +695,15 @@ input[type="search"]:focus {
         outline-color: #ccff00;
     }
     .highlight-input {
-        border: 1px solid red; /* Apply a red border to highlight the input */
+        border: 2px solid red; /* Apply a red border to highlight the input */
+        height: 24px;
+    }
+    .highlight-filled{
+        border: 2px solid #738725; /* Apply a red border to highlight the input */
+        height: 24px;
+    }
+    #customParameters:hover{
+        cursor: pointer;
     }
 
     .calculator-fieldset .panel-calculator{
@@ -690,9 +722,12 @@ input[type="search"]:focus {
         font-size: 40px;
         color: #ed4901;
     }
-    .calculator-fieldset label{
+    .calculator-fieldset label,
+    #spacer-label-phase-load,
+    .spacer-label{
         color: var(--label-color);
-
+        font-size: 16px;
+        text-decoration: underline;
     }
     .title-panel{
         display: flex;
@@ -702,6 +737,11 @@ input[type="search"]:focus {
     }
     .option-selector-margin {
        margin: 10px 0 10px 45px;
+    }
+    #installation-shadings{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
    
     /* Set the position of the label to absolute, and move it to the right by 5 pixels */
@@ -718,19 +758,20 @@ input[type="search"]:focus {
         color: #000022;
     }
     .panels_parameters{
-        width: 150px;
+        width: 250px;
         display: flex;
-        flex-direction: column;
-        margin: 20px 0 0 100px;
+        flex-direction: row;
+        margin: 20px 0 0 60px;
+        justify-content: space-between;
     }
     #azimuthInput, #tiltInput{
         width: 40px;
-        transform: translate(0px, -45px);
+        transform: translate(0px, 45px);
         color: #000022;
         text-align: center;
     }
     .azimuth_label{
-        transform: translate(0px, -45px);
+        transform: translate(0px, 45px);
         color: #000022;
     }
     
@@ -747,10 +788,6 @@ input[type="search"]:focus {
     .option-selector-margin .form-check{
         font-size: 14px;
     }
-    .spacer-label{
-        font-size: 16px;
-        text-decoration: underline;
-    }
     /* Calculator Form help question mark poppers */
     .help-popper, #phase-load-button, #phase-load-info {
         background: none;
@@ -762,7 +799,12 @@ input[type="search"]:focus {
         cursor: pointer;
     }
     #phase-load-button{
+        opacity: 1;
         color: #f2f2f2;
+    }
+    #phase-load-button:hover{
+        color: goldenrod;
+        opacity: 0.7;
     }
     .help-popper:focus {
         outline: none;
@@ -884,7 +926,7 @@ input[type="search"]:focus {
         justify-content: center;
         align-items: center;
     }
-    .slider-label{
+    .slider-power-label{
         margin-top: 10px;
         color: var(--slider-value-kW-color);
         font-weight: bold;
@@ -924,9 +966,9 @@ input[type="search"]:focus {
         color: green; /* Change the text color */
         margin-top: 5px; /* Add some spacing from the progress bar */
     }
-    #placeProduction{
-        margin-left: 17px;
-    }
+    /* #placeProduction{
+        margin-left: 7px;
+    } */
     .hidden-storage {
         display: none;
     }
@@ -1039,11 +1081,15 @@ input[type="search"]:focus {
         box-shadow: 0 0 10px rgba(103, 103, 159, 0.5);
     }
       /* Positioning the radio buttons */
-    #east, #east-label { transform: translate(225px, -190px);transform-origin: 0 0; }
-    #southEast, #southEast-label { transform: translate(195px, -90px); transform-origin: 0 0;}
-    #south, #south-label { transform: translate(110px, -25px);transform-origin: 0 0; }
-    #southWest, #southWest-label { transform: translate(25px, -45px);transform-origin: 0 0; }
-    #west, #west-label { transform: translate(0px, -88px); transform-origin: 0 0;}
+    
+    #east, #east-label { transform: translate(225px, -90px);transform-origin: 0 0; }
+    #southEast, #southEast-label { transform: translate(195px, -18px); transform-origin: 0 0;}
+    #south, #south-label { transform: translate(112px, 20px);transform-origin: 0 0; }
+    #southWest, #southWest-label { transform: translate(25px, -20px);transform-origin: 0 0; }
+    #west, #west-label { transform: translate(0px, -90px); transform-origin: 0 0;}
+    #northEast, #northEast-label { transform: translate(200px, -160px);transform-origin: 0 0; }
+    #northWest, #northWest-label { transform: translate(30px, -160px); transform-origin: 0 0;}
+    #north, #north-label { transform: translate(113px, -200px); transform-origin: 0 0;}
     #compass-photo { transform: translate(20px, 20px); transform-origin: 0 0;}
 
     .calculator-container{
@@ -1063,9 +1109,13 @@ input[type="search"]:focus {
         font-weight: bold;
         margin-bottom: 15px;
     }
-    #panelAreaInput, #panelCostInput{
+    /* Panel Parameters field's size */
+    #panelAreaInput, 
+    #panelCostInput, 
+    #panelWpInput, 
+    #panelEfficiencyInput{
         color: #000022;
-        width: 100px;
+        width: 80px;
         margin-bottom: 15px;
         font-weight: bold;
     }
@@ -1197,27 +1247,6 @@ input[type="search"]:focus {
                 .second-navbar-left-container{
                     margin-left: 0px;
                 }
-                
-                /* ::: SEARCH BOX ::: */
-                /* .search-box {
-                    position: absolute;
-                    right: 10%;
-                    display: none;
-                } */
-
-                
-
-                /* position of search box bar in menu navbar */
-                /* .small-screen-show-search-button {
-                    padding-right: 10px;
-                    display: block;
-                }
-
-                #small-show-search-checkbox:checked ~ .search-box{
-                    display: block;
-
-                } */
-
             } /* End media  */
 
 
@@ -1237,6 +1266,8 @@ input[type="search"]:focus {
                 h4{
                     font-size: 12px;
                 }
+                .calculator-fieldset label,
+                #spacer-label-phase-load,
                 .spacer-label{
                     font-size: 12px;
                 }
@@ -1302,9 +1333,14 @@ input[type="search"]:focus {
                     height: 16px!important;
                     font-size: 6px;
                 }
-                #panelCostInput, #panelAreaInput{
-                    width: 30px;
+                #panelCostInput, 
+                #panelAreaInput,
+                #panelWpInput, 
+                #panelEfficiencyInput{
+                    width: 40px;
                 }
+                .calculator-fieldset label,
+                #spacer-label-phase-load,
                 .spacer-label{
                     font-size: 10px;
                 }

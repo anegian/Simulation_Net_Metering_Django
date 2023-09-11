@@ -84,14 +84,16 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         longitude_coords = float(request.session.get('longitude_coords'))
         place_of_installment = request.session.get('place_of_installment')
         inclination_PV = float(request.session.get('inclination_PV'))
+        shadings_slider_value = int(request.session.get('shadings_slider_value'))
         # azimuth type is already float
         azimuth_value = request.session.get('azimuth_value')
         userPower_profile = request.session.get('userPower_profile')
         phase_load = request.session.get('phase_load')
         phase_loadkVA = int(request.session.get('phase_loadkVA'))
         annual_consumption = int(request.session.get('annual_consumption'))
-        panel_wp = float(request.session.get('panel_wp'))
-        panel_efficiency = float(request.session.get('panel_efficiency'))
+        # panel_kWp & panel_efficiency are already float
+        panel_kWp = request.session.get('panel_kWp')
+        panel_efficiency = request.session.get('panel_efficiency')
         panel_cost = int(request.session.get('panel_cost'))
         panel_area = float(request.session.get('panel_area'))
         power_kWp_method = request.session.get('power_kWp_method')
@@ -120,15 +122,15 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         else:  
             # PV kWp was manually given -> get data from PVGIS  
             monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
-            number_of_panels_required = round((PV_kWp / panel_wp)* annual_degradation_production)
+            number_of_panels_required = round((PV_kWp / panel_kWp)* annual_degradation_production)
             print("****************")
             print("\nThe PV power was manually given!!!!!!\n")
             print(f"annual_irradiance: {annual_irradiance} and number of panels calculated after submit: {number_of_panels_required}")
             print("****************")
 
         # Calculate the rest variables
-        total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost, discount_PV, discount_battery, number_of_panels_required)
-        annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required)
+        total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required)
+        annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value)
         average_annual_savings, profitPercent, total_annual_cost, regulated_charges = calculate_annual_savings(annual_consumption, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced)
         total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
         total_savings_array_json = json.dumps(total_savings_array)
@@ -151,7 +153,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'latitude_coords': latitude_coords,
             'longitude_coords': longitude_coords,
             'place_of_installment': place_of_installment,
-            'panel_wp': panel_wp,
+            'panel_kWp': panel_kWp,
             'panel_efficiency': panel_efficiency,
             'panel_area': panel_area,
             'panel_cost': panel_cost,
@@ -234,14 +236,19 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 latitude_coords = request.POST.get('latitude')
                 longitude_coords = request.POST.get('longitude')
                 place_of_installment = request.POST.get('installation')
+                shadings_slider_value = request.POST.get('shadings-slider')
                 # from now on pvlib has an 180 offset for azimuth aspect
                 azimuth_value = float(request.POST.get('azimuth'))
                 azimuth_value += 180
                 inclination_PV = request.POST.get('inclination')
                 userPower_profile = request.POST.get('power_option')
                 annual_consumption = request.POST.get('annual_consumption')
-                panel_wp = request.POST.get('panel_wp') 
-                panel_efficiency = request.POST.get('panel_efficiency')
+                panel_kWp = float(request.POST.get('panel_kWp')) 
+                # from Wp to kWp
+                panel_kWp /= 1000 
+                panel_efficiency = float(request.POST.get('panel_efficiency'))
+                # from xx % to 0,xx %
+                panel_efficiency /= 100
                 panel_area = request.POST.get('panel_area')
                 panel_cost = request.POST.get('panel_cost')
                 phase_load = request.POST.get('select_phase')
@@ -280,7 +287,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 # print(f"District value: {district_value}")
                 print(f"Latitude: {latitude_coords}")
                 print(f"Longitude: {longitude_coords}")
-                print(f"Panel parameters are: {panel_wp}Wp, {panel_area}m², {panel_efficiency}(%) & {panel_cost}€") 
+                print(f"Panel parameters are: {panel_kWp}Wp, {panel_area}m², {panel_efficiency}(%) & {panel_cost}€") 
                 print(f"The selected phase load is: {phase_load}")
                 print(f"Agreed kVA is: {phase_loadkVA}")
                 print(f"Annual kWh consumed is: {annual_consumption}")
@@ -305,6 +312,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['latitude_coords'] = latitude_coords
             request.session['longitude_coords'] = longitude_coords
             request.session['place_of_installment'] = place_of_installment
+            request.session['shadings_slider_value'] = shadings_slider_value
             request.session['inclination_PV'] = inclination_PV 
             # adding the pvlib azimuth offset
             request.session['azimuth_value'] = azimuth_value
@@ -315,7 +323,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['storage_kw'] = storage_kw
             request.session['phase_loadkVA'] = phase_loadkVA
             request.session['phase_load'] = phase_load
-            request.session['panel_wp'] = panel_wp
+            request.session['panel_kWp'] = panel_kWp
             request.session['panel_efficiency'] = panel_efficiency
             request.session['panel_cost'] = panel_cost
             request.session['panel_area'] = panel_area
@@ -346,16 +354,16 @@ def calculate_power(request):
             data = json.loads(request.body)
         
             # Extract the values from the data object
-            latitude_value = float(data.get('latitude'))
-            longitude_value = float(data.get('longitude'))
-            inclination_value = float(data.get('inclination'))
+            latitude_value = data.get('latitude')
+            longitude_value = data.get('longitude')
+            inclination_value = data.get('inclination')
             # from now on pvlib has an 180 offset for azimuth aspect
-            azimuth_value = float(data.get('azimuth'))
+            azimuth_value = data.get('azimuth')
             azimuth_value += 180
-            panel_area = float(data.get('panel_area'))
-            panel_efficiency = float(data.get('panel_efficiency'))
-            annual_Kwh_value = int(data.get('annual_Kwh_value'))
-            panel_Wp_value = float(data.get('panel_Wp_value'))
+            panel_area = data.get('panel_area')
+            panel_efficiency = data.get('panel_efficiency')
+            annual_Kwh_value = data.get('annual_Kwh_value')
+            panel_Wp_value = data.get('panel_Wp_value')
             place_instalment_value = data.get('place_instalment_value')
             print("PARAMETERS FOR CALCULATING THE REQUEST:", data)
         
@@ -409,7 +417,7 @@ def calculate_power(request):
         return Http404("404 Generic Error")
 
 # Calculation functions
-def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost, discount_PV, discount_battery, number_of_panels_required):
+def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required):
     installation_cost = 400 # average cost in €
     electric_materials = 100 # average cost in €
     inverter_cost = 0
@@ -458,13 +466,20 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, pane
    
     return total_investment, inverter_cost
 
-def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required):
-    performance_ratio = 0.75  # υπολογίζει κατά προσέγγιση απώλειες σε αστάθμητους παράγοντες, σκιάσεις, σκόνη, σύννεφα κτλ
+def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value):
+    if shadings_slider_value == 2:
+        shadings_percentage = 0.85
+    elif shadings_slider_value == 3:
+        shadings_percentage = 0.6
+    else:
+        shadings_percentage = 1
+
+    performance_ratio = 0.8  # υπολογίζει κατά προσέγγιση απώλειες σε αστάθμητους παράγοντες, σκόνη, σύννεφα κτλ
     monthly_panel_energy_produced_list = []
-    annual_PV_energy_produced = round((panel_area * panel_efficiency * performance_ratio * annual_irradiance) * number_of_panels_required)
+    annual_PV_energy_produced = round((panel_area * panel_efficiency * performance_ratio * annual_irradiance) * number_of_panels_required * shadings_percentage)
 
     for irradiance_month in monthly_irradiance_list:
-        monthly_energy_produced = round(irradiance_month * panel_area * panel_efficiency * 0.75)
+        monthly_energy_produced = round(irradiance_month * panel_area * panel_efficiency * performance_ratio * shadings_percentage)
         monthly_panel_energy_produced_list.append(monthly_energy_produced)
 
     monthly_panel_energy_produced_json = json.dumps(monthly_panel_energy_produced_list)
@@ -505,11 +520,9 @@ def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_p
     discount_regulated_charges = round(regulated_charges * self_consumption_rate)
 
     if annual_consumption > annual_PV_energy_produced:
-        print(f'\n^^^ annual consumption is: {annual_consumption} and annual_PV_energy_produced: {annual_PV_energy_produced}^^^\n')
         annual_kWh_difference_cost = (annual_consumption - annual_PV_energy_produced) * (energy_cost + 0.0213 + 0.00844)
         average_annual_savings = round(annual_consumption_price + discount_regulated_charges - annual_kWh_difference_cost)
         total_annual_cost = annual_consumption_price + regulated_charges + annual_kWh_difference_cost
-        print('\n^^^ User must pick a larger pv system in kWp, in order to reduce annual electricity costs!!! ^^^\n')
     else:
         annual_kWh_difference_cost = (annual_PV_energy_produced - annual_consumption) * (0.0213 * 0.00844)
         difference_savings = (annual_PV_energy_produced - annual_consumption) * energy_cost
@@ -524,11 +537,16 @@ def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_p
 def calculate_payback_period(total_investment, average_annual_savings): 
     years_to_overcome_investment = 0
     total_savings = []
+    starting_invest = total_investment
+    amount_left = starting_invest
 
     # Find the point where savings exceed investment
     while sum(total_savings) <= total_investment:
         total_savings.append( average_annual_savings / ( ( annual_degradation_production ) ** years_to_overcome_investment) )
         years_to_overcome_investment += 1
+        starting_invest -= float(total_savings[-1])
+        print(f" ^^^ investment left: {starting_invest} €")
+        print(f"Years: {years_to_overcome_investment}")
 
     # Calculate years and months independently from that point    
     subtraction = sum(total_savings) - total_investment
@@ -562,9 +580,10 @@ def calculate_total_savings(average_annual_savings):
     # based on the annual production
     # Return the result
     total_savings_array = []
-    total_savings = 0
+    total_savings = average_annual_savings
+    total_savings_array.append(total_savings)
     
-    for i in range(1, 26):
+    for i in range(1, 25):
         total_savings += round(average_annual_savings / ( ( annual_degradation_production ) ** i))
         total_savings_array.append(total_savings)
 
