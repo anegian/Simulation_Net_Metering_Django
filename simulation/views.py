@@ -417,7 +417,7 @@ def calculate_power(request):
         return Http404("404 Generic Error")
 
 # Calculation functions
-def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_wp, panel_cost, discount_PV, discount_battery, number_of_panels_required):
+def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required):
     installation_cost = 500 # average cost in €
     electric_materials = 100 # average cost in €
     inverter_cost = 0
