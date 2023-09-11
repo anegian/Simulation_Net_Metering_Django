@@ -578,8 +578,8 @@ def calculate_total_production_kwh(annual_PV_energy_produced):
 
 def calculate_total_savings(average_annual_savings):
     # Calculate the total profit over 25 years
-    # based on the annual production
-    # Return the result
+    # based on the annual savings
+    # 1st year the total savings is the average_annual_savings
     total_savings_array = [0, average_annual_savings]
     total_savings = average_annual_savings
     
