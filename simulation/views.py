@@ -564,10 +564,9 @@ def calculate_payback_period(total_investment, average_annual_savings):
     return payback_period, payback_year_float    
 
 def calculate_total_production_kwh(annual_PV_energy_produced):
-
-    total_production_kwh = 0
-    total_production_kwh_array =[]
-
+    # 1st year the total production is the annual_PV_energy_produced
+    total_production_kwh = annual_PV_energy_produced
+    total_production_kwh_array =[0, annual_PV_energy_produced]
 
     for i in range(1, 26):
         total_production_kwh += round(annual_PV_energy_produced / ( (annual_degradation_production) ** i))
@@ -584,7 +583,7 @@ def calculate_total_savings(average_annual_savings):
     total_savings_array = [0, average_annual_savings]
     total_savings = average_annual_savings
     
-    for i in range(1, 26):
+    for i in range(1, 25):
         total_savings += round(average_annual_savings / ( ( annual_degradation_production ) ** i))
         total_savings_array.append(total_savings)
 
