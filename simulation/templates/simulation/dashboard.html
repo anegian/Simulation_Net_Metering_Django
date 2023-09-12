@@ -137,11 +137,15 @@
                 <div >
                   <span class="titles-panel">Φ/Β Σύστημα</span><br>
 
-                  <span class="info-title">Σύνολο: {{number_of_panels_required|default:'0'}} Φ/Β πάνελ</span> <br>
-                  <span class="info-title">Εμβαδόν: {{total_panel_area|default:'0'}} m²</span>
+                  <span class="info-title">&#8226; Σύνολο: {{number_of_panels_required|default:'0'}} Φ/Β πάνελ</span> <br>
+                  <span class="info-title">&#8226; Εμβαδόν: {{total_panel_area|default:'0'}} m²</span> <br>
+                  <span class="info-title">&#8226; {{azimuth_text}}</span> <br>
+                  <span class="info-title">&#8226; Κλίση: {{inclination_PV}} &deg;</span>
 
                   {% if total_savings_potential > 0 %}
                     <p class="info-title" id="potential-savings" ><span style="color: #738725;">Περιθώριο κέρδους:</span> <br>✔ έως επιπλέον {{total_savings_potential|default:'0'}} €/έτος </p>
+                  {% else %}
+                    <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ σύστημα για <br>κάλυψη ετήσιας κατανάλωσης</span></p>
                   {% endif %}
                 </div>
 

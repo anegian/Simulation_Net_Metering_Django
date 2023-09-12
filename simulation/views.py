@@ -146,6 +146,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         average_CO2 = round(calculate_CO2_emissions_reduced(annual_PV_energy_produced))
         trees_planted = round(calculate_equivalent_trees_planted(annual_PV_energy_produced))
         total_panel_area = round(number_of_panels_required * panel_area, 1)
+        azimuth_text = transform_azimuth_text(azimuth_value)
 
         # dictionary with rendered variables
         context = {
@@ -158,7 +159,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'panel_area': panel_area,
             'panel_cost': panel_cost,
             'azimuth_value': azimuth_value,
-            'inclination_PV': inclination_PV,
+            'inclination_PV': int(inclination_PV),
+            'azimuth_text': azimuth_text,
             'userPower_profile': userPower_profile,
             'phase_load': phase_load,
             'phase_loadkVA': phase_loadkVA,
@@ -595,7 +597,27 @@ def calculate_total_savings(average_annual_savings):
         total_savings_array.append(total_savings)
 
     return total_savings, total_savings_array
-   
+
+def transform_azimuth_text(azimuth_value):
+    if azimuth_value == 0:
+        azimuth_text = "Νότιος Προσανατολισμός"
+    elif azimuth_value == 45:
+        azimuth_text = "Ν.Δ Προσανατολισμός"
+    elif azimuth_value == 90:
+        azimuth_text = "Δυτικός Προσανατολισμός"
+    elif azimuth_value == 135:
+        azimuth_text = "Νότιος Προσανατολισμός"
+    elif azimuth_value == 180:
+        azimuth_text = "Βόρειος Προσανατολισμός"
+    elif azimuth_value == -135:
+        azimuth_text = "Β.Α Προσανατολισμός"
+    elif azimuth_value == -90:
+        azimuth_text = "Ανατολικός Προσανατολισμός"
+    elif azimuth_value == -45:
+        azimuth_text = "Ν.Α Προσανατολισμός"
+
+    return azimuth_text
+
 def calculate_maintenance_cost(total_investment, inverter_cost):
     cost_rate = (1.5 / 100) * 25 # 1.5% της συνολικής επένδυσης ανά έτος
 
