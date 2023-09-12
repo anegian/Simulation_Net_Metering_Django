@@ -256,6 +256,7 @@ function set_initial_properties_theme_toggler(){
   document.documentElement.style.setProperty('--text-color', '#f2f2f2');
   document.documentElement.style.setProperty('--bg-color-panel', '#393052');
   document.documentElement.style.setProperty('--label-color', '#bbb');
+  document.documentElement.style.setProperty('--form-label-color', '#f2f2f2');
   document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
   document.documentElement.style.setProperty('--slider-color', '#f2f2f2');
   document.documentElement.style.setProperty('--slider-value-kW-color', '#f2f2f2');
@@ -978,6 +979,7 @@ themeSlider.addEventListener('input', function(event) {
         document.documentElement.style.setProperty('--text-color', '#f2f2f2');
         document.documentElement.style.setProperty('--bg-color-panel', '#393052');
         document.documentElement.style.setProperty('--label-color', '#bbb');
+        document.documentElement.style.setProperty('--form-label-color', '#f2f2f2');
         document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
         document.documentElement.style.setProperty('--slider-color', '#f2f2f2');
         document.documentElement.style.setProperty('--slider-value-kW-color', '#f2f2f2');
@@ -991,6 +993,7 @@ themeSlider.addEventListener('input', function(event) {
         document.documentElement.style.setProperty('--bg-color-panel', '#f2f2f2');
         document.documentElement.style.setProperty('--text-color-panel', '#c6ccd2'); 
         document.documentElement.style.setProperty('--label-color', '#334d68'); 
+        document.documentElement.style.setProperty('--form-label-color', '#333');
         document.documentElement.style.setProperty('--title-panel-color', '#538bc7');
         document.documentElement.style.setProperty('--slider-color', '#f2f2f2');
         document.documentElement.style.setProperty('--slider-value-kW-color', 'lightgrey');

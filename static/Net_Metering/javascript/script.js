@@ -43,3 +43,19 @@ sideNavbarButton.addEventListener('click', function(event) {
 
         }
 });
+
+// Get the elements by their IDs
+const profitText = document.getElementById('profitText');
+const profitPercentValue = document.getElementById('profitPercentValue');
+const tickOrDash = document.getElementById('tickOrDash');
+
+// Set the value of profitPercent and text color
+profitPercentValue.textContent = profitPercent + '%';
+
+if (profitPercent === 100) {
+  profitText.style.color = '#738725';
+  tickOrDash.textContent = '✔'; // Green tick
+} else {
+  profitText.style.color = 'lightgrey';
+  tickOrDash.textContent = '-'; // Grey dash
+}
