@@ -554,7 +554,7 @@ def calculate_payback_period(total_investment, average_annual_savings):
     years = years_to_overcome_investment - 1
     months = round(12 - (subtraction/monthly_savings) )
 
-    payback_year_float  = years + (months / 10)
+    payback_year_float  = years + (months / 12)
 
     if months == 1:
         payback_period = f"{years} έτη & {months} μήνας"
