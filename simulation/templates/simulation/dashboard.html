@@ -12,6 +12,7 @@
          let monthIrradianceArray = JSON.parse( '{{ monthly_irradiance_json|safe }}' );
          let monthlyPanelEnergy= JSON.parse('{{monthly_panel_energy_produced_json|safe }}' );
          let paybackYear = '{{ payback_year_float }}';
+         let profitPercent = '{{ profitPercent }}';
          let roi = '{{ roi }}';
          let annual_roi = '{{ annualized_roi }}';
          let lcoe = '{{ lcoe }}';
@@ -71,14 +72,19 @@
                       trigger="hover"
                       style="width:110px;height:120px">
                   </lord-icon>
-                <p class="info-title" id="profit" >{{average_annual_savings|default:'0'}} €/έτος   ({{profitPercent|default:'0'}}%)</p>
+                <p class="info-title" id="profit" >{{average_annual_savings|default:'0'}} €/έτος   </p>
+                {% if profitPercent == 100 %}
+                 <p class="green-text">Κάλυψη Ετήσιου Κόστους: <br> ({{ profitPercent|default:'0' }}%) ✔</p>
+                {% else %}
+                  <p class="grey-text">Κάλυψη Ετήσιου Κόστους: <br> ({{ profitPercent|default:'0' }}%) --</p>
+                {% endif %}
               </div>
           
             </div>
           
             <div class="left-middle">
             
-                 <div class="panels-container" id="second-panel" title="profit">
+                 <div class="panels-container" id="second-panel" title="Συνολική Παραγωγή & Κέρδος">
                      <canvas class="panels-element-size" id="myChart2" ></canvas>
                  </div>
             
@@ -128,10 +134,19 @@
             <div class="right-upper">
 
               <div id="top-right-panel">
-                <div >
-                  <div class="titles-panel">Φ/Β Σύστημα</div><br>
-                  <span class="info-title">Σύνολο: {{number_of_panels_required|default:'0'}} Φ/Β πάνελ</span> <br>
-                  <span class="info-title">Εμβαδόν: {{total_panel_area|default:'0'}} m²</span>
+                <div title="Στοιχεία ΦΒ Συστήματος">
+                  <span class="titles-panel">Φ/Β Σύστημα</span><br>
+
+                  <span class="info-title">&#8226; Σύνολο: {{number_of_panels_required|default:'0'}} Φ/Β πάνελ</span> <br>
+                  <span class="info-title">&#8226; Εμβαδόν: {{total_panel_area|default:'0'}} m²</span> <br>
+                  <span class="info-title">&#8226; {{azimuth_text}}</span> <br>
+                  <span class="info-title">&#8226; Κλίση: {{inclination_PV}} &deg;</span>
+
+                  {% if total_savings_potential > 0 %}
+                    <p class="info-title" id="potential-savings" ><span style="color: #738725;">Περιθώριο κέρδους:</span> <br>✔ έως επιπλέον {{total_savings_potential|default:'0'}} €/έτος </p>
+                  {% else %}
+                    <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ σύστημα για <br>κάλυψη ετήσιας κατανάλωσης</span></p>
+                  {% endif %}
                 </div>
 
                 <img class="img-house" src="{% static 'images/roof.png' %}" alt="No Image"> 
@@ -140,7 +155,7 @@
             </div>
 
             <div class="right-middle">
-                <div class="panels-container" id="second-panel" title="production">
+                <div class="panels-container" id="second-panel" title="Μηνιαία ηλιακή ακτινοβολία & Μηνιαία Παραγωγή">
                   <canvas class="panels-element-size" id="myChart1" ></canvas>
               
                 </div>
@@ -148,7 +163,7 @@
 
             <div class="right-below">
 
-              <div class="panels-container" id="third-panel">
+              <div class="panels-container" id="third-panel" title="Οικονομικοί Δείκτες">
                   <canvas class="panels-element-size" id="myChart3"></canvas>
               </div>
         </div> 

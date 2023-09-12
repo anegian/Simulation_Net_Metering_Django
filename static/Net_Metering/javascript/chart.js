@@ -7,13 +7,13 @@ new Chart("myChart1", {
   data: {
     labels: monthValues,
     datasets: [ { 
-      label: "Μηνιαία Ηλιακή Ακτινοβολία kWh/m² (2020)",
+      label: "Μηνιαία Ηλιακή Ακτινοβολία (kWh/m²) (2020)",
       data: monthIrradianceArray,
       backgroundColor: "#ed4901",
       borderColor: "rgba(91, 186, 210,0.3)",
       fill: false
     }, { 
-      label: "Μηνιαία Παραγωγή kWh / ΦΒ πάνελ",
+      label: "Μηνιαία Παραγωγή (kWh/ΦΒ πάνελ)",
       data: monthlyPanelEnergy,
       backgroundColor: "#A457F2",
       borderColor: "rgba(186, 204, 209,0.4)",
