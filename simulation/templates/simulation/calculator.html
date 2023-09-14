@@ -100,11 +100,11 @@
                                     <p id="region-title" title="Παρακαλούμε, επιλέξτε ένα σημείο εντός των γεωγραφικών συνόρων της Ελλάδας. Ο Νομός και οι συντεταγμένες θα εμφανιστούν στα αντίστοιχα πεδία">
                                         <label for="regionInput" class="spacer-label">Επιλέξτε Τοποθεσία Εγκατάστασης Φ/Β Συστήματος στο Χάρτη:</label>
 
-                                        <button class="help-popper" type="button" title="">
+                                        <button class="help-popper" type="button" title="help-button">
                                             <i class="fa fa-question-circle" id="place-info"></i>
                                         </button>
     
-                                            <div class="help-container" title="">
+                                            <div class="help-container">
                                                 <span class="help-text" id="place-text">
                                                     &#8226; Επιτρέπετε να επιλέξετε στίγμα, μόνο εντός των γεωγραφικών συνόρων <br>της Ελλάδας. Οτιδήποτε, εκτός των οριοθετημένων περιοχών με γραμμή μπλε χρώματος,
                                                      θεωρείται <strong>μη αποδεκτή τιμή</strong>.<br>
@@ -148,11 +148,11 @@
 
                                     <p>
                                         <label for="roof" class="spacer-label">Επιλέξτε θέση Εγκατάστασης στην οικία σας: </label>
-                                        <button class="help-popper" type="button" title="">
+                                        <button class="help-popper" type="button" title="help-button">
                                             <i class="fa fa-question-circle" id="installation-info"></i>
                                         </button>
     
-                                            <div class="help-container" title="">
+                                            <div class="help-container">
                                                 <span class="help-text" id="installation-text">
                                                     &#8226; Η εγκατάσταση σε <strong>ταράτσα</strong> απαιτεί περισσότερο χώρο σε τ.μ. Αυτό οφείλεται στην ύπαρξη συνήθως καποιου δώματος 
                                                     ή άλλων μέσων που προκαλούν σκιάσεις, όπως κεραίες και ηλιακοί θερμοσίφωνες.<br><br>
@@ -181,14 +181,13 @@
                                        
 
                                         <div class="shadings-input">
-                                            <label class="form-check-label" for="shadings-slider" title="Προαιρετικά, εάν εντοπίσατε σκιάσεις στο χώρο εγκατάστασης, επιλέξτε ανάλογα το ποσοστό">Ποσοστό Σκιάσεων: </label>
+                                            <label class="form-check-label" for="shadings_slider" title="Προαιρετικά, εάν εντοπίσατε σκιάσεις στο χώρο εγκατάστασης, επιλέξτε ανάλογα το ποσοστό">Ποσοστό Σκιάσεων: </label>
                                             <div class="shadings-container">
-                                                <input type="range" id="shadings-slider" name="shadings-slider" min="1" max="3" step="1">
+                                                <input type="range" id="shadings_slider" name="shadings_slider" min="1" max="3" step="1" value="1" required>
                                                 <div class="slider-labels">
-                                                    <span class="slider-label" id="slider-shadings-low">Χαμηλό</span>
+                                                    <span class="slider-label" id="slider-shadings-low" >Χαμηλό</span>
                                                     <span class="slider-label" id="slider-shadings-medium">Μέτριο</span>
                                                     <span class="slider-label" id="slider-shadings-high">Υψηλό</span>
-                                                    <input type="hidden" id="shadingsliderHidden" name="shadingsliderHidden" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -201,11 +200,11 @@
                                         <p>
                                             <label for="panelParams" class="spacer-label">Επιλέξτε είδος Φ/Β πάνελ:</label>
 
-                                            <button class="help-popper" type="button" title="">
+                                            <button class="help-popper" type="button" title="help-button">
                                                 <i class="fa fa-question-circle" id="panels-info"></i>
                                             </button>
         
-                                                <div class="help-container" title="">
+                                                <div class="help-container">
                                                     <span class="help-text" id="panels-text">
                                                         &#8226; Μπορείτε να επιλέξετε ένα εκ των 5 τύπων ηλιακών πάνελ, από την παρακάτω λίστα. Η επιλογή σας θα βοηθήσει στον υπολογισμό 
                                                         του αριθμού των <strong>ελάχιστα απαιτούμενων ηλιακών πάνελ</strong>, για εκμηδένιση ετήσιας κατανάλωσης, όπως και της <strong>συνολικής σας επένδυσης</strong>.
@@ -241,7 +240,7 @@
                                             <label class="form-check-label" for="panelWpInput">Ισχύς Πάνελ: </label>
                                             <input type="number" name="panel_kWp" id="panelWpInput" readonly><span class="metrics-special-calculation"> kWp</span>
 
-                                            <label class="form-check-label" or="panelEfficiencyInput">Απόδοση Πάνελ: </label>
+                                            <label class="form-check-label" for="panelEfficiencyInput">Απόδοση Πάνελ: </label>
                                             <input type="text" name="panel_efficiency" id="panelEfficiencyInput" readonly><span class="metrics-special-calculation"> %</span>
 
                                         </div>
@@ -269,11 +268,11 @@
                                 <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κατεύθυνση του PV συστήματος" id="panel-azimuth">
                                     <p> 
                                         <label for="azimuthInput" class="spacer-label">Επιλέξτε προσανατολισμό Φ/Β πάνελ: </label>
-                                        <button class="help-popper" type="button" title="">
+                                        <button class="help-popper" type="button" title="help-button">
                                             <i class="fa fa-question-circle" id="azimuth-info"></i>
                                         </button>
     
-                                            <div class="help-container" title="">
+                                            <div class="help-container">
                                                 <span class="help-text" id="azimuth-text">
                                                     &#8226; Για τη γεωγραφική περιοχή της Ελλάδος, το βέλτιστο αζιμούθιο (προσανατολισμός) Φ/Β συστήματος, είναι 
                                                     ο <strong>Νότος</strong> (προεπιλογή), στον οποίο δίνεται η τιμή "0". Όσο περισσότερο προσανατολίζεται το σύστημα <br>
@@ -314,9 +313,8 @@
                                     </div>
 
                                     <div>
-                                    <label class="azimuth_label" for="azimuthInput" class="azimuth_label">Αζιμούθιο σε &deg; :  </label>
-                                    <input class="panel-field" type="text" id="azimuthInput" readonly>
-                                    <label for="azimuthInput" class="azimuth_label">   </label>
+                                    <label class="azimuth_label" for="azimuthInput" class="azimuth_label" title="Το πεδίο συπληρώνεται αυτόματα">Αζιμούθιο σε &deg; :  </label>
+                                    <input class="panel-field azimuth" type="text" id="azimuthInput" readonly>
                                 </div>
                                 
                                 </div>
@@ -325,11 +323,11 @@
                                 <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κλίση του συστήματος PV" id="panel-tilt">
                                     <p> 
                                         <label for="inclination0" class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</label>
-                                        <button class="help-popper" type="button" title="">
+                                        <button class="help-popper" type="button" title="help-button">
                                             <i class="fa fa-question-circle" id="tilt-info"></i>
                                         </button>
     
-                                            <div class="help-container" title="">
+                                            <div class="help-container">
                                                 <span class="help-text" id="tilt-text">
                                                     &#8226; Για τη γεωγραφική περιοχή της Ελλάδος, η βέλτιστη γωνία κλίσης Φ/Β συστήματος, είναι 
                                                     οι <strong>30 μοίρες</strong> (προεπιλογή). Όσο περισσότερο προσεγγίζει τη γωνία αυτή το σύστημα σας, 
@@ -395,11 +393,11 @@
                                         Επιλέξτε Παροχή και KWh:                                     
                                      </p>
 
-                                    <input class="panel-selection-height" type="hidden" name="phase_load" id="phase_load"  required>
+                                    <input class="panel-selection-height" type="hidden" name="phase_load" id="phase_load" title="Form from forms.py, to select phase load" required>
 
                                         {{ form_phase_load.select_phase }}
         
-                                    <button class="help-popper" type="button" id="phase-load-button">
+                                    <button class="help-popper" type="button" id="phase-load-button" title="help-button">
                                         <i class="fa fa-question-circle" aria-hidden="true" id="phase-load-info"></i>
                                     </button>
                                     
@@ -415,9 +413,9 @@
 
                                 <div>
                                     <input class="panel-selection-height" type="number" name="annual_consumption" id="annual_kwh" 
-                                        title="Παρακαλούμε, συμπληρώστε εκτιμώμενη ετήσια κατανάλωση σε kW" >
+                                        title="Παρακαλώ, συμπληρώστε εκτιμώμενη ετήσια κατανάλωση σε kW" >
                                     <span>kWh</span>
-                                        <button class="help-popper" type="button">
+                                        <button class="help-popper" type="button" title="help-button">
                                           <i class="fa fa-question-circle" aria-hidden="true" id="annual-consumption-info"></i>
                                         </button>
                                     
@@ -464,6 +462,37 @@
                                 </div> 
 
                             </div>
+
+                            <div class="option-selector-margin" title="Συμπληρώστε την τιμή €/kWh του παρόχου σας.">
+                                <div> <span class="spacer-label">Επιλέξτε τιμή προμήθειας Ηλεκτρικής Ενέργειας:</span>
+                                       
+                                                <button class="help-popper" type="button" title="help-button">
+                                                <i class="fa fa-question-circle" aria-hidden="true" id="price-kwh-info"></i>
+                                                </button>
+                                            
+                                                <div class="help-container">
+                                                    <span class="help-text price" id="annual-consumption-text">
+                                                        &#8594; Η προεπιλεγμένη τιμή προμήθειας για τη ΔΕΗ το μήνα Σεπτέμβριο, ανέρχεται στα <strong>155 €/MWh</strong> <br>
+                                                        (ή 0,155 €/kWh), για τις πρώτες 500kWh. Αν θέλετε να βρείτε την τιμή προμήθειας του δικού σας παρόχου, 
+                                                        συμβουλευτείτε το λογαριασμό ρεύματος.<br><br>
+
+                                                        &#8594; Μπορείτε να επιλέξετε τιμή αρεσκείας, αλλάζοντας τα 3 δεκαδικά ψηφία. Το ανώτερο όριο είναι 999.<br><br>
+                                                        
+                                                        &#8594; Eπιπλέον, για να εντοπίσετε τις μηνιαίες τιμές προμήθειας για όλους τους παρόχους, μπορείτε να επισκεφτείτε τη σελίδα της <strong>Ρυθμιστικής Αρχής Ενέργειας</strong> (ΡΑΕ) πατώντας στο link:
+                                                        <a href="https://www.rae.gr/katanalotes/times-kai-xreoseis/" title="ΡΑΕ">Ρυθμιστική Αρχή Ενέργειας</a>
+                                                    </span>
+                                                    <span class="close-help price">&times;</span>
+                                                </div>
+                                      
+                                    </div>
+
+                                    <p class="spacer-in-calculator-panel"></p>
+                                
+                                    <label for="price_kwh">Τιμή: </label>
+                                    <span>0. <input type="number" id="price_kwh" name="price_kwh" min="1" max="300" step="1" required></span>
+                                    <span> €/kWh</span>
+                                    
+                            </div>
                         </div>
 
                         <!-- PANEL 5 -->
@@ -478,7 +507,7 @@
                                 <div class="slide-container" title="Παρακαλώ, επιλέξτε επιθυμητή ισχύς φωτοβολταϊκού σε kWp">
                                     <p><label for="myRangeSlider" class="spacer-label">Επιλέξτε επιθυμητή Ισχύ: </label>
 
-                                    <button class="help-popper" type="button">
+                                    <button class="help-popper" type="button" title="help-button">
                                         <i class="fa fa-question-circle" id="power-info"></i>
                                     </button>
 
@@ -585,11 +614,11 @@
                                     <div class="hidden-storage">
                                         <label for="storage_kw">Iσχύς μπαταρίας (σε kWh):</label>
 
-                                        <button class="help-popper" type="button" title="">
+                                        <button class="help-popper" type="button" title="help-button">
                                             <i class="fa fa-question-circle" id="battery-info"></i>
                                         </button>
 
-                                            <div class="help-container" title="">
+                                            <div class="help-container">
                                                 <span class="help-text" id="storage-text">
                                                     &#8226; Η <strong>ελάχιστη</strong> τιμή kWh για τον συσσωρευτή είναι ίση με τα kVA της<br> Ισχύος Φ/Β!<br>
                                                     &#8226; Η <strong>μέγιστη</strong> δυνατή τιμή, είναι 10 kWh<br>
@@ -620,7 +649,7 @@
                                     <div class="hidden-storage" id="discountPercentContainer" style="display: none;" >
                                         <label for="discount_percent">Ποσοστό έκπτωσης ΦΒ Σταθμού (σε %):</label>
 
-                                        <button class="help-popper" type="button">
+                                        <button class="help-popper" type="button" title="help-button">
                                             <i class="fa fa-question-circle" id="discount-info"></i>
                                         </button>
     
@@ -647,7 +676,7 @@
                                         <!-- <input type="number" class="form-control" id="discount_percent" name="discount_percent"> -->
 
                                         <label for="discount_percent_battery">Ποσοστό έκπτωσης Μπαταρίας (σε %):</label>
-                                        <button class="help-popper" type="button">
+                                        <button class="help-popper" type="button" title="help-button">
                                             <i class="fa fa-question-circle" id="discount-battery-icon"></i>
                                         </button>
     

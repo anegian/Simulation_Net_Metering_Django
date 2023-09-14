@@ -21,6 +21,7 @@
  </script>
  <script src="{% static 'Net_Metering/javascript/chart.js' %}" defer></script>
  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" ></script>
+ <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
 {% endblock %}
 
 {% block menu_list %}
@@ -37,137 +38,140 @@
 
       <section class="full-container">
     
-        <div class="left-container">
+        <div class="zoom-center">
+          <div class="left-container">
 
-            <div class="left-upper">
+              <div class="left-upper">
 
-              <div class="container-icons">
-                <div class="titles-panel">Επένδυση</div>
-                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-                <lord-icon class="lord-icon-small" src="https://cdn.lordicon.com/ftjtyaku.json"
-                    trigger="hover"
-                    style="width:120px;height:120px">
-                </lord-icon>
-                <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">
-                   Σύνολο: {{total_investment|default:'0' }} €
-                </p>    
-              </div>
-
-              <div class="container-icons">
-                <div class="titles-panel">Απόσβεση</div>
-                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-                  <lord-icon
-                      src="https://cdn.lordicon.com/uutnmngi.json"
-                      trigger="hover"
-                      style="width:100px;height:120px">
-                  </lord-icon>
-                <p class="info-title"  id="paybackPeriod" data-value="{{ payback_period|default:'0' }}" >{{payback_period|default:'0 έτη'}}</p>
-              </div>
-
-              <div class="container-icons">
-                <div class="titles-panel">Όφελος</div>
-                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-                  <lord-icon
-                      src="https://cdn.lordicon.com/isdxbcqi.json"
-                      trigger="hover"
-                      style="width:110px;height:120px">
-                  </lord-icon>
-                <p class="info-title" id="profit" >{{average_annual_savings|default:'0'}} €/έτος   </p>
-                {% if profitPercent == 100 %}
-                 <p class="green-text">Κάλυψη Ετήσιου Κόστους: <br> ({{ profitPercent|default:'0' }}%) ✔</p>
-                {% else %}
-                  <p class="grey-text">Κάλυψη Ετήσιου Κόστους: <br> ({{ profitPercent|default:'0' }}%) --</p>
-                {% endif %}
-              </div>
-          
-            </div>
-          
-            <div class="left-middle">
-            
-                 <div class="panels-container" id="second-panel" title="Συνολική Παραγωγή & Κέρδος">
-                     <canvas class="panels-element-size" id="myChart2" ></canvas>
-                 </div>
-            
-             </div>
-          
-            <div class="left-below">
-          
-              <div class="container-icons-bottom">
-                <div class="titles-panel">Μειωμένες Εκπομπές Αερίου CO2</div>
-                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-                  <lord-icon
-                      src="https://cdn.lordicon.com/npfyliwp.json"
-                      trigger="hover"
-                      style="width:120px;height:120px">
-                  </lord-icon>
-                <p class="info-title" id="CO2" data-value="{{ average_CO2|default:'0' }}">{{average_CO2|default:'0' }}kg CO2 eq/kWh </p>
-              </div>
-              
-              <div class="container-icons-bottom">
-                <div class="titles-panel">Ισοδύναμα Φυτεμένα Δέντρα</div>
-                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-                  <lord-icon
-                      src="https://cdn.lordicon.com/azbllxpx.json"
-                      trigger="hover"
-                      style="width:120px;height:120px">
-                  </lord-icon>
-                 <p class="info-title" id="trees" data-value="{{ trees_planted|default:'0' }}">{{trees_planted|default:'0' }} νέα δέντρα </p>
-              </div>
-              
-              <div class="container-icons-bottom">
-                <div class="titles-panel">Μικρότερο Ενεργειακό Αποτύπωμα</div>
-                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-                  <lord-icon
-                      src="https://cdn.lordicon.com/efdhjqgx.json"
-                      trigger="hover"
-                      style="width:100px;height:120px">
-                  </lord-icon>
-                <p class="info-title" id="other_energy" data-value="{{ annual_consumption|default:'0' }}">{{annual_consumption|default:'0' }}kWh/έτος</p>
-              </div>
-          
-            </div>
-
-        </div>
-        
-        <div class="right-container">
-          
-            <div class="right-upper">
-
-              <div id="top-right-panel">
-                <div title="Στοιχεία ΦΒ Συστήματος">
-                  <span class="titles-panel">Φ/Β Σύστημα</span><br>
-
-                  <span class="info-title">&#8226; Σύνολο: {{number_of_panels_required|default:'0'}} Φ/Β πάνελ</span> <br>
-                  <span class="info-title">&#8226; Εμβαδόν: {{total_panel_area|default:'0'}} m²</span> <br>
-                  <span class="info-title">&#8226; {{azimuth_text}}</span> <br>
-                  <span class="info-title">&#8226; Κλίση: {{inclination_PV}} &deg;</span>
-
-                  {% if total_savings_potential > 0 %}
-                    <p class="info-title" id="potential-savings" ><span style="color: #738725;">Περιθώριο κέρδους:</span> <br>✔ έως επιπλέον {{total_savings_potential|default:'0'}} €/έτος </p>
-                  {% else %}
-                    <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ σύστημα για <br>κάλυψη ετήσιας κατανάλωσης</span></p>
-                  {% endif %}
+                <div class="container-icons">
+                    <div class="titles-panel">Επένδυση</div>
+                    <lord-icon class="lord-icon-small" src="https://cdn.lordicon.com/ftjtyaku.json"
+                        trigger="hover"
+                        style="width:120px;height:120px">
+                    </lord-icon>
+                    <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">
+                      Σύνολο: {{total_investment|default:'0' }} €
+                    </p>    
                 </div>
 
-                <img class="img-house" src="{% static 'images/roof.png' %}" alt="No Image"> 
+                <div class="container-icons">
+                  <div class="titles-panel">Απόσβεση</div>
+                    <lord-icon class="lord-icon-small" 
+                        src="https://cdn.lordicon.com/uutnmngi.json"
+                        trigger="hover"
+                        style="width:100px;height:120px">
+                    </lord-icon>
+                  <p class="info-title"  id="paybackPeriod" data-value="{{ payback_period|default:'0' }}" >{{payback_period|default:'0 έτη'}}</p>
+                </div>
+
+                <div class="container-icons">
+                  <div class="titles-panel">Όφελος</div>
+                    <lord-icon class="lord-icon-small" 
+                        src="https://cdn.lordicon.com/isdxbcqi.json"
+                        trigger="hover"
+                        style="width:110px;height:120px">
+                    </lord-icon>
+                    <p class="info-title" id="profit">{{average_annual_savings|default:'0'}} €/έτος</p>
+                      {% if profitPercent == 100 %}
+                        <p class="green-text">Κάλυψη Ετήσιου Κόστους: <br> ({{ profitPercent|default:'0' }}%) ✔</p>
+                      {% else %}
+                        <p class="grey-text">Κάλυψη Ετήσιου Κόστους: <br> ({{ profitPercent|default:'0' }}%) --</p>
+                      {% endif %}
+                </div>
+
+              </div>
+            
+              <div class="left-middle">
+              
+                <div class="panels-container" id="second-panel-left" title="Συνολική Παραγωγή & Κέρδος">
+                    <canvas class="panels-element-size" id="myChart2" ></canvas>
+                </div>
+              
+              </div>
+            
+              <div class="left-below">
+            
+                <div class="container-icons-bottom">
+                  <div class="titles-panel">Μειωμένες Εκπομπές Αερίου CO2</div>
+                    <lord-icon class="lord-icon-small" 
+                        src="https://cdn.lordicon.com/npfyliwp.json"
+                        trigger="hover"
+                        style="width:120px;height:120px">
+                    </lord-icon>
+                  <p class="info-title" id="CO2" data-value="{{ average_CO2|default:'0' }}">{{average_CO2|default:'0' }}kg CO2 eq/kWh </p>
+                </div>
+                
+                <div class="container-icons-bottom">
+                  <div class="titles-panel">Ισοδύναμα Φυτεμένα Δέντρα</div>
+                    <lord-icon class="lord-icon-small" 
+                        src="https://cdn.lordicon.com/azbllxpx.json"
+                        trigger="hover"
+                        style="width:120px;height:120px">
+                    </lord-icon>
+                  <p class="info-title" id="trees" data-value="{{ trees_planted|default:'0' }}">{{trees_planted|default:'0' }} νέα δέντρα </p>
+                </div>
+                
+                <div class="container-icons-bottom">
+                  <div class="titles-panel">Μικρότερο Ενεργειακό Αποτύπωμα</div>
+                    <lord-icon class="lord-icon-small" 
+                        src="https://cdn.lordicon.com/efdhjqgx.json"
+                        trigger="hover"
+                        style="width:100px;height:120px">
+                    </lord-icon>
+                  <p class="info-title" id="other_energy" data-value="{{ annual_consumption|default:'0' }}">{{annual_consumption|default:'0' }}kWh/έτος</p>
+                </div>
+
               </div>
 
-            </div>
+          </div>
+          
+          <div class="right-container">
+            
+              <div class="right-upper">
 
-            <div class="right-middle">
+                <div class="top-right-panel-container">
+
+                  <div id="top-right-panel">
+
+                    <span class="titles-panel">
+                      Φωτοβολταϊκό Σύστημα
+                    </span> <br>
+
+                    <div id="pv-info">
+
+                      <div title="Στοιχεία ΦΒ Συστήματος" id="pv-info-list">
+                        <span class="info-title">&#8226; Σύνολο: {{number_of_panels_required|default:'0'}} Φ/Β πάνελ</span> <br>
+                        <span class="info-title">&#8226; Εμβαδόν: {{total_panel_area|default:'0'}} m²</span> <br>
+                        <span class="info-title">&#8226; {{azimuth_text}}</span> <br>
+                        <span class="info-title">&#8226; Κλίση: {{inclination_PV}} &deg;</span>
+
+                          {% if total_savings_potential > 0 %}
+                            <p class="info-title" id="potential-savings" ><span style="color: #738725;">Περιθώριο κέρδους:<br>✔</span> έως επιπλέον {{total_savings_potential|default:'0'}} €/έτος </p>
+                          {% else %}
+                            <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης</span></p>
+                          {% endif %}
+                      </div>
+
+                      <img class="img-house" src="{% static 'images/roof.png' %}" alt="No Image"> 
+                    </div>
+                      
+                  </div>
+                </div> 
+              </div>
+
+              <div class="right-middle">
                 <div class="panels-container" id="second-panel" title="Μηνιαία ηλιακή ακτινοβολία & Μηνιαία Παραγωγή">
                   <canvas class="panels-element-size" id="myChart1" ></canvas>
-              
                 </div>
-            </div>
-
-            <div class="right-below">
-
-              <div class="panels-container" id="third-panel" title="Οικονομικοί Δείκτες">
-                  <canvas class="panels-element-size" id="myChart3"></canvas>
               </div>
-        </div> 
-        
+
+              <div class="right-below">
+
+                <div class="panels-container" id="third-panel" title="Οικονομικοί Δείκτες">
+                  <canvas class="panels-element-size" id="myChart3"></canvas>
+                </div>
+          </div> 
+        </div>
       </section>
       <div class="little-spacer-dash">
           <div class='go-back-button-dash-empty'>
@@ -175,7 +179,7 @@
               <button id="change-data-button">
                <i class="fas fa-calculator"></i>
                Νέος Υπολογισμός</button>
-           </a>
+            </a>
           </div>
       </div>
     </div>

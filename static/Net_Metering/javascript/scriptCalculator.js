@@ -2,8 +2,8 @@
 const themeSlider = document.getElementById('theme-slider');
 const slider = document.getElementById("myRangeSlider");
 const slider_hidden_input = document.getElementById("myRangeSliderHidden");
-const slider_shadings = document.getElementById("shadings-slider");
-const slider_shadings_hidden_input = document.getElementById("shadingsliderHidden");
+const shadingSlider = document.getElementById("shadings_slider");
+let shadingSliderValue = shadingSlider.value;
 const PV_kW_output = document.getElementById("slider-value");
 // annual Kwh
 let annual_Kwh_input = document.getElementById("annual_kwh");
@@ -24,7 +24,8 @@ let selectedPlaceInstalmentValue;
 const roofRadioButton = document.getElementById('roof');
 const phase_load_selected = document.getElementById("id_select_phase");
 const phaseLoadDefaultSelection = document.getElementById("phase_load");
-const reset_button = document.getElementById("resetBtn")
+let priceKwhInput = document.getElementById('price_kwh');
+const reset_button = document.getElementById("resetBtn");
 const lastPanelField = document.getElementById('lastPanelField');
 const error_message = document.getElementById('error-message-panel');
 const error_message2 = document.getElementById('error-message-panel5');
@@ -180,13 +181,15 @@ function disableElements() {
   disablePanelButton(form_submit_button);
   submitBtnEnabled = false;
   roofRadioButton.checked = true;
-  slider_shadings.value = 1;
+  shadingSliderValue = "1";
   defaultPanelParams.selected  = true;
   tiltDefaultRadio.checked = true;
   tiltInput.value = '30'; // Set the value of tiltInput to 30
   azimuthDefaultRadio.checked = true;
   azimuthInput.value = 0;
   phase_load_selected.value = "phase_load";// Set the default phase value 
+  priceKwhInput.max = 999;
+  priceKwhInput.value = 155;
   annual_Kwh_input.disabled = true;
   annual_Kwh_input.value = ""
   profileDefaultRadio.checked = true;
@@ -299,6 +302,7 @@ function handleCalculateButtonClick() {
   if (isAutoCalculatingPower) {
     // Calculation is already in progress, do nothing or show a message
     console.log("Calculation is already in progress");
+    console.log('shadingSliderValue');
     return;
   }else{
     // Set the flag to indicate that the calculation is in progress
@@ -331,6 +335,7 @@ function calculateAutoPower() {
   const azimuthValue = parseFloat(azimuthInput.value);
   const tiltValue = parseFloat(tiltInput.value);
   let panelKWpValue = parseFloat(panelWpInput.value);
+  let shadingInputValue = parseInt(shadingSliderValue)
   // from Wp to kWp
   panelKWpValue /= 1000; 
   const panelAreaValue = parseFloat(panelAreaInput.value);
@@ -356,6 +361,7 @@ function calculateAutoPower() {
         annual_Kwh_value: annualKWhValue,
         panel_Wp_value: panelKWpValue,
         place_instalment_value: placeInstalmentValue,
+        shading_value: shadingInputValue,
     };
 
     console.log(data);
@@ -813,6 +819,7 @@ radio_buttons.forEach(radioButton => {
 document.addEventListener('DOMContentLoaded', function() {
     // Set the "roof" radio button as default checked
     roofRadioButton.checked = true;
+    shadingSliderValue = "1";
     azimuthDefaultRadio.checked = true;
     tiltDefaultRadio.checked = true;
     tiltInput.value = '30'; // Set the value of tiltInput to 30
@@ -926,6 +933,9 @@ slider.addEventListener("change", function(){
 });
 slider_hidden_input.addEventListener("change", setStorage(slider_hidden_input.value));
 
+shadingSlider.addEventListener('change', function(){
+  shadingSliderValue = shadingSlider.value;
+});
 storage_kW.addEventListener("change", function(){
     console.log(storage_kW.value);
 });
@@ -1016,6 +1026,15 @@ discountRadio.addEventListener('change', showDiscountInputs);
 // Reset the PV_kW_output element value to the initial value when the reset button is clicked
 reset_button.addEventListener('click', resetForm);
 
+priceKwhInput.addEventListener('input', function(){
+    if (priceKwhInput.value > 999){
+    priceKwhInput.value = 999;
+  }
+
+  
+  priceKwhInput.value = this.value;
+});
+
 //Submit, reset, Modal events
 form_submit_button.addEventListener('click', function(event){
   const powerRadioButton = document.querySelector('input[name="power_option"]:checked');
@@ -1032,7 +1051,6 @@ form_submit_button.addEventListener('click', function(event){
 
   slider_hidden_input.value = slider.value;
   power_modal_input.value = slider_hidden_input.value;
-  slider_shadings_hidden_input.value = slider_shadings.value;
 
   if (storage_selection.checked){
     battery_modal_input.value = storage_kW.value;
@@ -1068,7 +1086,6 @@ form_submit_button.addEventListener('click', function(event){
     console.log(azimuth_modal_input.value);
     console.log(profile_modal_input.value);
     console.log(slider_hidden_input.value);
-    console.log(slider_shadings_hidden_input.value);
     console.log(minimum_panel_container.value);
     console.log('discount_percent_battery value:', discount_percent_battery.value);
     console.log('discount_percent_battery value:', discount_percent_battery_modal_input.value);

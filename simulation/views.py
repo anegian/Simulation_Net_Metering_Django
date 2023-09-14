@@ -90,6 +90,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         userPower_profile = request.session.get('userPower_profile')
         phase_load = request.session.get('phase_load')
         phase_loadkVA = int(request.session.get('phase_loadkVA'))
+        price_kwh = float(request.session.get('price_kwh'))
         annual_consumption = int(request.session.get('annual_consumption'))
         # panel_kWp & panel_efficiency are already float
         panel_kWp = request.session.get('panel_kWp')
@@ -131,7 +132,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         # Calculate the rest variables
         total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required)
         annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value)
-        average_annual_savings, profitPercent, total_annual_cost, regulated_charges, total_savings_potential = calculate_annual_savings(annual_consumption, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced)
+        average_annual_savings, profitPercent, total_annual_cost, regulated_charges, total_savings_potential = calculate_annual_savings(annual_consumption, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced, price_kwh)
         total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
         total_savings_array_json = json.dumps(total_savings_array)
         total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced)
@@ -240,12 +241,19 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 latitude_coords = request.POST.get('latitude')
                 longitude_coords = request.POST.get('longitude')
                 place_of_installment = request.POST.get('installation')
-                shadings_slider_value = request.POST.get('shadings-slider')
+                shadings_slider_value = request.POST.get('shadings_slider')
                 # from now on pvlib has an 180 offset for azimuth aspect
                 azimuth_value = float(request.POST.get('azimuth'))
                 azimuth_value += 180
                 inclination_PV = request.POST.get('inclination')
                 userPower_profile = request.POST.get('power_option')
+                price_kwh = int(request.POST.get('price_kwh'))
+                # to become decimal
+                if price_kwh >= 100:
+                    price_kwh /= 1000
+                else:
+                    price_kwh /= 100
+
                 annual_consumption = request.POST.get('annual_consumption')
                 panel_kWp = float(request.POST.get('panel_kWp')) 
                 # from Wp to kWp
@@ -302,6 +310,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print(f"kWp of PV value: {PV_kWp}")
                 print(f"Did User select Battery storage: {has_storage}")
                 print(f"Number of panels in session: {number_of_panels_required}")
+                print(f"Τιμή κιλοβατώρας: {price_kwh}")
                 
                 if has_storage == 'with_storage':
                     print(f"Battery kWh value: {storage_kw}")
@@ -327,6 +336,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['storage_kw'] = storage_kw
             request.session['phase_loadkVA'] = phase_loadkVA
             request.session['phase_load'] = phase_load
+            request.session['price_kwh'] = price_kwh
             request.session['panel_kWp'] = panel_kWp
             request.session['panel_efficiency'] = panel_efficiency
             request.session['panel_cost'] = panel_cost
@@ -369,7 +379,9 @@ def calculate_power(request):
             annual_Kwh_value = data.get('annual_Kwh_value')
             panel_Wp_value = data.get('panel_Wp_value')
             place_instalment_value = data.get('place_instalment_value')
+            shading_value = data.get('shading_value')
             print("PARAMETERS FOR CALCULATING THE REQUEST:", data)
+            print(f"Σκίαση επίπεδο: {shading_value}, Τύπος δεδομένου: {type(shading_value)}")
         
             # Call the get_solar_data function and retrieve the results
             monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value)
@@ -384,13 +396,16 @@ def calculate_power(request):
             special_production = annual_irradiance * panel_area * panel_efficiency * 0.75
             total_consumption = annual_Kwh_value * 25 
             total_production = 0
-            minimum_PV_panels = 1
+            current_PV_panels = 1
 
             while total_production < total_consumption:
-                minimum_PV_panels += 1
-                annual_production = minimum_PV_panels * special_production
+                current_PV_panels += 1
+                annual_production = current_PV_panels * special_production
                 total_production = annual_production * 25 /1.06
                 
+            # calculate first the impact of shading to get the minimum solar panels needed
+            shadings_percentage = calculate_shade_percentage(shading_value)
+            minimum_PV_panels = round(current_PV_panels / shadings_percentage)
             recommended_kWp = minimum_PV_panels * panel_Wp_value
 
             if place_instalment_value == 'roof':
@@ -470,14 +485,19 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, pane
    
     return total_investment, inverter_cost
 
-def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value):
-    if shadings_slider_value == 2:
-        shadings_percentage = 0.85
-    elif shadings_slider_value == 3:
-        shadings_percentage = 0.6
-    else:
-        shadings_percentage = 1
+def calculate_shade_percentage(shadings_slider_value):
+        # solar production reduction percentage due to shadings
+        if shadings_slider_value == 2:
+            shadings_percentage = 0.85 
+        elif shadings_slider_value == 3:
+            shadings_percentage = 0.6
+        else:
+            shadings_percentage = 1
+        
+        return shadings_percentage
 
+def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value):
+    shadings_percentage = calculate_shade_percentage(shadings_slider_value)
     performance_ratio = 0.8  # υπολογίζει κατά προσέγγιση απώλειες σε αστάθμητους παράγοντες, σκόνη, σύννεφα κτλ
     monthly_panel_energy_produced_list = []
     annual_PV_energy_produced = round((panel_area * panel_efficiency * performance_ratio * annual_irradiance) * number_of_panels_required * shadings_percentage)
@@ -491,9 +511,8 @@ def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, pan
     return annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list
 
 # Calculate annual savings, profit Percentage, total_annual_cost, regulated_charges
-def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced):
+def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced, energy_cost):
     annual_consumption = annual_kWh
-    energy_cost = 0.16 # €/kWh today
     annual_consumption_price = annual_consumption * energy_cost
     # Ρυθμιζόμενες Χρεώσεις
     regulated_charges = round((phase_loadkVA * 0.52) + (annual_consumption * 0.0213) + (phase_loadkVA * 1) + (annual_consumption * 0.00844) + (annual_consumption*0.017) + (annual_consumption*energy_cost*0.06))

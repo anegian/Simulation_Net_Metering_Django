@@ -234,11 +234,11 @@ ul li{
             /* Style the shadings slider track to move to the right */
             .shadings-container {
                margin-right: 200px;
-               width: 300px;
+               width: 250px!important;
             }
 
-            #shadings-slider {
-                width: 100%;
+            #shadings_slider {
+                width: 95%;
             }
             /* Style the slider labels */
             .slider-labels {
@@ -391,9 +391,6 @@ ul li{
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-    }
-    #potential-savings{
-        margin-top: 10px;
     }
     .green-text {
         color: #738725;
@@ -566,6 +563,10 @@ ul li{
     .panel-field {
         cursor:default;
     }
+    #azimuthInput.panel-field.azimuth{
+        background-color: lightslategrey;
+        border: lightslategray;
+    }
     #theme-slider{
         cursor: pointer;
     }
@@ -613,7 +614,7 @@ ul li{
     .img-house{
         width: 260px;
         height: 200px;
-        transform: translate(0, 5px);
+        transform: translate(10px, -5px);
     }
     .spacer-in-main-content{
         height: 40px;
@@ -753,7 +754,7 @@ ul li{
     }
     .azimuth_label{
         transform: translate(0px, 45px);
-        color: var(--form-label-color);
+        color: lightslategray;
     }
     #id_select_district{
         height: 25px;
@@ -768,6 +769,13 @@ ul li{
     .option-selector-margin .form-check{
         font-size: 14px;
     }
+    #price_kwh{
+        width: 50px;
+        border-width: 2px;
+        border: solid #738725;
+        text-align: center;
+        font-weight: 600;
+        }
     /* Calculator Form help question mark poppers */
     .help-popper, #phase-load-button, #phase-load-info {
         background: none;
@@ -822,6 +830,9 @@ ul li{
         width: 500px;
         height: auto;
     }
+    .help-text.price{
+        width: 660px;
+    }
     .close-help {
         position: absolute;
         text-align: center;
@@ -832,6 +843,11 @@ ul li{
         color: rgba(44,62,80, 0.8);
         cursor: pointer;
         z-index: 2;
+    }
+    .close-help.price{
+        left: 620px;
+        position: absolute;
+        text-align: center;
     }
     .close-help:hover {
         background-color: rgba(44,62,80, 0.8);
@@ -941,6 +957,7 @@ ul li{
           width: 100%;
         }
     }
+
     #completionMessage {
         font-size: 14px; /* Adjust the font size to your preference */
         color: green; /* Change the text color */
@@ -1122,6 +1139,50 @@ ul li{
  /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
 
  /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
+            /* ZOOM IN  (> 110%) */
+            @media (max-width: 1397px) {
+                .green-text,
+                .grey-text,
+                span.info-title,
+                #potential-savings{
+                    font-size: 12px;
+                  }
+                .img-house{
+                    width: 200px;
+                    height: 160px;
+                }
+            }
+            /* ZOOM IN  (> 120%) */
+            @media (max-width: 1300px) {
+
+                .lord-icon-small{
+                    width: 80px!important;
+                    height:80px!important;
+                }
+            }
+
+            /* ZOOM IN  (> 125%) */
+            @media (max-width: 1270px) {
+                .green-text,
+                .grey-text,
+                span.info-title{
+                    font-size: 10px;
+                }
+                #potential-savings{
+                    font-size: 10px;
+                    transform: translate(0, 50px);
+                }
+                span.titles-panel,
+                div.titles-panel{
+                    font-size: 14px;
+                }
+                .img-house{
+                   width: 180px;
+                   height: 140px;
+                }
+            }
+ 
+            /* ZOOM IN  (> 150%) */
             @media (max-width: 1040px) {
                 .full-container{
                     width: 100%;
@@ -1139,12 +1200,15 @@ ul li{
                     height: 70vh!important; /* Set a minimum height for the elements inside */
                     width: 80%!important;
                 }
-                #myChart3{
-                    height: 40vh!important; /* Set a minimum height for the elements inside */
-                    width: 60%!important;
-                }
                 .right-upper{
                     width: 770px;
+                    display: flex;
+                    justify-content: center;
+                  }
+                  .left-upper,
+                  .left-middle,
+                  .left-below{
+                    width: 658px;
                     display: flex;
                     justify-content: center;
                   }
@@ -1176,8 +1240,23 @@ ul li{
                     padding-left: 10px;
                     display: block;
                 }
-            
-
+                div.top-right-panel-container,
+                #second-panel,
+                #third-panel{
+                    width: 81%;
+                    height: 50vh!important; /* Set a minimum height for the elements inside */
+                }
+                div.top-right-panel-container{
+                    height: 200px;
+                }
+                #second-panel-left{
+                    height: 50vh!important;
+                }
+                button#change-data-button{
+                    font-size: 12px;
+                    width: 160px;
+                }
+           
 
                 /* ::: MENU NAVBAR HIDDEN::: */
                 /* settings & position of menu container left off the page */
@@ -1226,8 +1305,18 @@ ul li{
                 .second-navbar-left-container{
                     margin-left: 0px;
                 }
+                .img-house{
+                    width: 200px;
+                    height: 140px;
+                }
             } /* End media  */
 
+
+            @media (max-width: 940px) {
+                div.top-right-panel-container{
+                    min-height: 60vh;
+                }
+            }
 
 
             @media (max-width: 836px) {
@@ -1295,7 +1384,10 @@ ul li{
                 #south, #south-label { transform: translate(82px, -30px);transform-origin: 0 0; }
                 #southWest, #southWest-label { transform: translate(20px, -35px);transform-origin: 0 0; }
                 #west, #west-label { transform: translate(0%, -58px); transform-origin: 0 0;}
-
+                #northEast, #northEast-label { transform: translate(200px, -160px);transform-origin: 0 0; }
+                #northWest, #northWest-label { transform: translate(30px, -160px); transform-origin: 0 0;}
+                #north, #north-label { transform: translate(113px, -200px); transform-origin: 0 0;}
+                
                 .img-tilt{
                     width: 200px;
                     height: 120px;
@@ -1331,10 +1423,36 @@ ul li{
                 #regionInput{
                     width: 80px;
                 }
+                div.top-right-panel-container{
+                    min-height: 60vh;
+                }
+                .help-text{
+                    font-size: 10px;
+                    width: 300px;
+                    height: auto;
+                }
+                .help-text.price{
+                    font-size: 10px;
+                    width: 340px;
+                    height: auto;
+                }
+                .close-help {
+                    width: 30px;
+                    height: 30px;
+                    left: 270px;
+                    position: absolute;
+                    text-align: center;
+                }
+                .close-help.price{
+                    left: 310px;
+                    position: absolute;
+                    text-align: center;
+                }
                 
             }
 
-             /* Add a media query to adjust the layout for smaller screens */
+    /* Add a media query to adjust the layout for smaller screens */
+    /* ::: EXTRA ZOOM IN  (> 200%)::: */
     @media (max-width: 768px) {
         .navigation-panel li{
             margin-top: 5px;
@@ -1358,7 +1476,48 @@ ul li{
             height: 20px;
             margin: 10px 5px 5px 10px;
         }
-
+        div.top-right-panel-container{
+            min-height: 70vh;
+        }
+        .right-upper{
+            width: 670px;
+            display: flex;
+            justify-content: center;
+          }
+          .left-upper,
+          .left-middle,
+          .left-below{
+            width: 558px;
+            display: flex;
+            justify-content: center;
+          }
+        /* Positioning the radio buttons */
+        #east, #east-label { transform: translate(164px, -60px);transform-origin: 0 0; }
+        #southEast, #southEast-label { transform: translate(140px, -5px); transform-origin: 0 0;}
+        #south, #south-label { transform: translate(82px, 20px);transform-origin: 0 0; }
+        #southWest, #southWest-label { transform: translate(20px, -5px);transform-origin: 0 0; }
+        #west, #west-label { transform: translate(1px, -58px); transform-origin: 0 0;}
+        #northEast, #northEast-label { transform: translate(143px, -113px);transform-origin: 0 0; }
+        #northWest, #northWest-label { transform: translate(30px, -120px); transform-origin: 0 0;}
+        #north, #north-label { transform: translate(83px, -140px); transform-origin: 0 0;}
+    }
+    /* ::: EXTRA ZOOM IN  (> 250%)::: */
+    @media (max-width: 640px) {
+        div.top-right-panel-container{
+            min-height: 80vh;
+        }
+        .right-upper{
+            width: 470px;
+            display: flex;
+            justify-content: center;
+          }
+          .left-upper,
+          .left-middle,
+          .left-below{
+            width: 358px;
+            display: flex;
+            justify-content: center;
+          }
     }
         /* ::: EXTRA ZOOM IN  (> 300%)::: */
         @media (max-width: 540px) {
@@ -1370,7 +1529,22 @@ ul li{
                 height: 68%;
                 width: 92%;
             }
-        }   
+            div.top-right-panel-container{
+                min-height: 100vh;
+            }
+            .right-upper{
+                width: 370px;
+                display: flex;
+                justify-content: center;
+              }
+              .left-upper,
+              .left-middle,
+              .left-below{
+                width: 258px;
+                display: flex;
+                justify-content: center;
+              }
+        }
 
             /* ::: EXTRA ZOOM IN  (> 360%)::: */
             @media (max-width: 420px) {
@@ -1461,6 +1635,29 @@ ul li{
                 .dashboard-page-content{
 
                     min-height: 150vh;
+                }
+                div.top-right-panel-container{
+                    min-height: 120vh;
+                }
+                .help-text{
+                    font-size: 8px;
+                    width: 200px;
+                    height: auto;
+                }
+                .help-text.price{
+                    font-size: 8px;
+                    width: 240px;
+                    height: auto;
+                }
+                .close-help {
+                    width: 20px;
+                    height: 20px;
+                    left: 180px;
+                    position: absolute;
+                    text-align: center;
+                }
+                .close-help.price{
+                    left: 220px;
                 }
             }
 
@@ -1584,10 +1781,19 @@ footer .admin-info {
 /* ::: DASHBOARD CHARTS SECTION ::: */
 .full-container{
     min-height: 100vh;
-    display: flex;
-    flex-wrap: wrap;
+    width: 100%;
+    margin: 0 auto;;
     background-color: #29233b;
-  }        
+  } 
+   /* This div to center the panels as a column in zoom levels  */
+  .zoom-center{
+    margin: 0 auto;; /* Center horizontally as well */
+    display: flex;
+    flex-wrap: wrap; 
+    width: 100%;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+  }
   .left-container{
     flex-basis: 50%;
     display: flex;
@@ -1617,6 +1823,18 @@ footer .admin-info {
     justify-content: center;
     align-items: center;
   }
+  .top-right-panel-container{
+    min-height: 40vh;
+    margin: 10px 0 10px 0;
+    width: 95%;
+    background-color: #393052;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: #221e2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .panels-container canvas{
     height: 50vh!important; /* Set a minimum height for the elements inside */
     width: 95%!important;
@@ -1634,7 +1852,7 @@ footer .admin-info {
     border-style: solid;
     border-width: 1.5px;
     border-color: #221e2e;
-    min-height: 30vh;
+    min-height: 40vh;
   }
   .container-icons-bottom{
     margin-top: 10px;
@@ -1660,16 +1878,21 @@ footer .admin-info {
     justify-content: center; 
   }
   #top-right-panel{
-    min-height: 30vh;
-    margin: 10px 0 10px 0;
-    width: 95%;
-    background-color: #393052;
-    border-style: solid;
-    border-width: 1.5px;
-    border-color: #221e2e;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    align-self: flex-start;
+  }
+  #pv-info{
+    margin: 0 10px 0 10px;
     display: flex;
     justify-content: space-evenly;
-    align-items: center;
+  }
+  #pv-info-list{
+    margin-right: 8px;
+  }
+  #potential-savings{
+    transform: translateY(30px);
   }
   .right-below{
     display: flex;
@@ -1687,9 +1910,9 @@ footer .admin-info {
   }
 
   .titles-panel{
-    margin-top: 10px;
+    margin: 10px 0 5px 0;
     color: #ed4901;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
   }
   .info-title, .go-back-button i{
@@ -1749,7 +1972,6 @@ footer .admin-info {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-
   }
 
     /* ::: SIGNUP PAGE SECTION ::: */
