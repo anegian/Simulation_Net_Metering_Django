@@ -547,19 +547,14 @@ def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_p
         average_annual_savings = round(annual_consumption_price + discount_regulated_charges - annual_kWh_difference_cost)
         total_annual_cost = annual_consumption_price + discount_regulated_charges + annual_kWh_difference_cost
         total_savings_potential = 0
-    elif annual_PV_energy_produced > annual_consumption:
+    else:
         total_annual_cost = annual_consumption_price + discount_regulated_charges
         average_annual_savings = round(annual_consumption_price + discount_regulated_charges)
         annual_kWh_difference_cost = (annual_PV_energy_produced - annual_consumption) * (0.0213 * 0.00844)
         difference_savings = (annual_PV_energy_produced - annual_consumption) * energy_cost
         total_savings_potential = annual_kWh_difference_cost + difference_savings
-    else:
-        total_annual_cost = annual_consumption_price + discount_regulated_charges
-        average_annual_savings = round(annual_consumption_price + discount_regulated_charges)
-        total_savings_potential = 0
-        
-
-    profitPercent =  round(average_annual_savings / total_annual_cost * 100, 1)
+    
+    profitPercent =  min(round(average_annual_savings / total_annual_cost * 100, 1)100) 
 
     return average_annual_savings, profitPercent, total_annual_cost, discount_regulated_charges, total_savings_potential
 
