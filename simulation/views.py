@@ -130,9 +130,13 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print("****************")
 
         # Calculate the rest variables
+        self_consumption_rate = calculate_self_consumption_rate(has_storage, userPower_profile)
         total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required)
         annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value)
-        average_annual_savings, profitPercent, total_annual_cost, regulated_charges, total_savings_potential = calculate_annual_savings(annual_consumption, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced, price_kwh)
+        consumption_total_charges = calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost)
+        self_consumed_energy = calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_rate)
+        total_avoided_charges = calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges)
+        average_annual_savings, profitPercent, total_annual_cost, total_savings_potential = calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, consumption_total_charges, total_avoided_charges, regulated_charges_for_grid_energy, phase_loadkVA, energy_cost)
         total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
         total_savings_array_json = json.dumps(total_savings_array)
         total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced)
@@ -181,7 +185,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'average_annual_savings': average_annual_savings,
             'profitPercent': profitPercent,
             'total_annual_cost': total_annual_cost,
-            'regulated_charges': regulated_charges,
+            'consumption_total_charges': consumption_total_charges,
+            'total_avoided_charges': total_avoided_charges,
             'total_savings_potential': round(total_savings_potential),
             'has_storage': has_storage,
             'total_savings': total_savings,
@@ -212,7 +217,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print('Total Investment:', total_investment,"euro", 'Average annual Savings: ', average_annual_savings, '& Περίοδος Απόσβεσης:', payback_period, "Έτη:", payback_year_float) 
             print(f'Total savings for 25 years: {total_savings}, NPV is: {total_savings} - {total_investment} = {net_present_value}')
             print("Ετήσιο κόστος ρεύματος, μαζί με ρυθμιζόμενες χρεώσεις, χωρίς δημοτικούς φόρους: ", total_annual_cost, "& Ετήσιο Όφελος: ", average_annual_savings)
-            print("Ρυθμιζόμενες χρεώσεις: ", regulated_charges, "Πιθανό επιπλέον όφελος", total_savings_potential)
+            print("Ολικές χρεώσεις για ετήσια κατανάλωση: ", consumption_total_charges, "Πιθανό επιπλέον όφελος", total_savings_potential)
             print(f"Annual Irradiance: {annual_irradiance}, Μέση Ετήσια Παραγωγή:: {annual_PV_energy_produced}")
             print(f"Each Panel monthly produced energy{monthly_panel_energy_produced_list}")
             print(f"Discount passed in dashboard: {discount_PV}% & {discount_battery}%.")
@@ -486,15 +491,15 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, pane
     return total_investment, inverter_cost
 
 def calculate_shade_percentage(shadings_slider_value):
-        # solar production reduction percentage due to shadings
-        if shadings_slider_value == 2:
-            shadings_percentage = 0.85 
-        elif shadings_slider_value == 3:
-            shadings_percentage = 0.6
-        else:
-            shadings_percentage = 1
-        
-        return shadings_percentage
+    # solar production reduction percentage due to shadings
+    if shadings_slider_value == 2:
+        shadings_percentage = 0.85 
+    elif shadings_slider_value == 3:
+        shadings_percentage = 0.6
+    else:
+        shadings_percentage = 1
+    
+    return shadings_percentage
 
 def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value):
     shadings_percentage = calculate_shade_percentage(shadings_slider_value)
@@ -510,15 +515,39 @@ def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, pan
     
     return annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list
 
-# Calculate annual savings, profit Percentage, total_annual_cost, regulated_charges
-def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_profile, annual_PV_energy_produced, energy_cost):
-    annual_consumption = annual_kWh
-    annual_consumption_price = annual_consumption * energy_cost
-    # Ρυθμιζόμενες Χρεώσεις
-    regulated_charges = round((phase_loadkVA * 0.52) + (annual_consumption * 0.0213) + (phase_loadkVA * 1) + (annual_consumption * 0.00844) + (annual_consumption*0.017) + (annual_consumption*energy_cost*0.06))
-    # Συνολική Χρέωση καταναλισκόμενου ρεύματος χωρίς net metering
-    total_annual_cost = annual_consumption_price + regulated_charges
+def calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost):
+    # πάγιο(0.52 €/kVA), ΔΙΑΝΟΜΗ 0,0213 €/kWh, ΜΕΤΑΦΟΡΑ 0.00844€/kWh, ΕΤΜΕΑΡ 0,017€/kWh, ΦΠΑ 6% * kWh * τιμή kWh, Συνολικό κόστος κατανάλωσης
+    return round((phase_loadkVA * 0.52) + (annual_consumption * 0.0213) + (phase_loadkVA * 1) + (annual_consumption * 0.00844) + (annual_consumption*0.017) + (annual_consumption*energy_cost*0.06) + ( annual_consumption*energy_cost))
 
+def calculate_regulated_charges(difference_consumption):
+
+     return round( (annual_consumption * 0.0213) + (annual_consumption * 0.00844) )
+
+def calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_rate):
+
+    return annual_PV_energy_produced * self_consumption_rate
+    
+def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges):
+    
+    # Calculate solar energy regulated cost sent back and forth to the grid 
+    if self_consumed_energy >= annual_consumption: 
+        grid_energy = annual_PV_energy_produced - self_consumed_energy
+        regulated_charges_for_grid_energy = calculate_regulated_charges(grid_energy)
+        total_avoided_charges = consumption_total_charges
+    elif annual_consumption > self_consumed_energy and annual_consumption < annual_PV_energy_produced :
+        grid_energy = annual_consumption - self_consumed_energy
+        regulated_charges_for_grid_energy = calculate_regulated_charges(grid_energy)
+        total_avoided_charges = consumption_total_charges - regulated_charges_for_grid_energy 
+    else: # annual_consumption > self_consumed_energy and annual_consumption >= annual_PV_energy_produced
+        additional_kWh_from_grid = (annual_consumption - annual_PV_energy_produced)
+        additional_kWh_total_charges = calculate_consumption_total_charges(additional_kWh_from_grid, phase_loadkVA, energy_cost)
+        grid_energy = annual_PV_energy_produced - self_consumed_energy
+        regulated_charges_for_grid_energy = calculate_regulated_charges(grid_energy)
+        total_avoided_charges = consumption_total_charges - additional_kWh_total_charges - regulated_charges_for_grid_energy
+    
+    return total_avoided_charges, regulated_charges_for_grid_energy
+
+def calculate_self_consumption_rate(has_storage, userPower_profile):
     # cases with battery storage and use profile to calculate self-consumption rate
     if has_storage == "with_storage":
         if userPower_profile == "day-power":
@@ -538,25 +567,23 @@ def calculate_annual_savings(annual_kWh, phase_loadkVA, has_storage, userPower_p
             self_consumption_rate = 0.6
         else:
             self_consumption_rate = 0.5
-
-    # Μειωμένο Ποσό Ρυθμιζόμενων Χρεώσεων
-    discount_regulated_charges = round(regulated_charges * self_consumption_rate)
-
-    if annual_consumption > annual_PV_energy_produced:
-        annual_kWh_difference_cost = (annual_consumption - annual_PV_energy_produced) * (energy_cost + 0.0213 + 0.00844)
-        average_annual_savings = round(annual_consumption_price + discount_regulated_charges - annual_kWh_difference_cost)
-        total_annual_cost = annual_consumption_price + discount_regulated_charges + annual_kWh_difference_cost
-        total_savings_potential = 0
-    else:
-        total_annual_cost = annual_consumption_price + discount_regulated_charges
-        average_annual_savings = round(annual_consumption_price + discount_regulated_charges)
-        annual_kWh_difference_cost = (annual_PV_energy_produced - annual_consumption) * (0.0213 * 0.00844)
-        difference_savings = (annual_PV_energy_produced - annual_consumption) * energy_cost
-        total_savings_potential = annual_kWh_difference_cost + difference_savings
+            
+    return self_consumption_rate
     
-    profitPercent =  min(round(average_annual_savings / total_annual_cost * 100, 1)100) 
+# Calculate annual savings, profit Percentage, total_annual_cost
+def calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, consumption_total_charges, total_avoided_charges, regulated_charges_for_grid_energy, phase_loadkVA, energy_cost):
+    
+    if  annual_PV_energy_produced > annual_consumption:
+        difference_consumed = annual_PV_energy_produced - annual_consumption
+        average_annual_savings = round(total_avoided_charges)
+        total_savings_potential = calculate_consumption_total_charges(difference_consumed) - regulated_charges_for_grid_energy
+    else:
+        average_annual_savings = round(total_avoided_charges)
+        total_savings_potential = 0
+       
+    profitPercent =  min(round(average_annual_savings / total_avoided_charges * 100, 1)100) 
 
-    return average_annual_savings, profitPercent, total_annual_cost, discount_regulated_charges, total_savings_potential
+    return average_annual_savings, profitPercent, total_savings_potential
 
 def calculate_payback_period(total_investment, average_annual_savings): 
     years_to_overcome_investment = 0
