@@ -147,8 +147,10 @@
 
                           {% if total_savings_potential > 0 %}
                             <p class="info-title" id="potential-savings" ><span style="color: #738725;">Περιθώριο κέρδους:<br>✔</span> έως επιπλέον {{total_savings_potential|default:'0'}} €/έτος </p>
-                          {% else %}
+                          {% elif total_savings_potential < 0 and profitPercent < 100 %}
                             <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης</span></p>
+                          {% else %}   
+                             <p class="info-title" id="potential-savings" ><span style="color: lightslategrey;">Περιθώριο κέρδους:<br></span> Δεν υπάρχει διαθέσιμο περιθώριο κέρδους</p>      
                           {% endif %}
                       </div>
 
