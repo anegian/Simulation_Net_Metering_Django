@@ -103,6 +103,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         storage_kw = float(request.session.get('storage_kw'))
         discount_PV = request.session.get('discount_PV')
         discount_battery = request.session.get('discount_battery')
+        shadings_percentage = calculate_shade_percentage(shadings_slider_value)
 
         # important check if the power is auto calculated
         if power_kWp_method == 'auto-power':
@@ -112,6 +113,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
                 monthly_irradiance_list = request.session.get('monthly_irradiance_list')
                 number_of_panels_required = request.session.get('minimumPanels')
                 annual_PV_energy_produced = request.session.get('annual_production')
+                print ("Annual PV energy produced calculated with request", annual_PV_energy_produced)
                 print("****************")
                 print("\nThe PV power was auto generated with ajax request!!!!!!\n")
                 print(f"annual_irradiance: {annual_irradiance} and panels needed:{number_of_panels_required}")
@@ -125,14 +127,14 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             # PV kWp was manually given -> get data from PVGIS  
             monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
             number_of_panels_required = round((PV_kWp / panel_kWp)* annual_degradation_production)
-            annual_PV_energy_produced, _, _ = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value)
+            annual_PV_energy_produced, _, _ = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_percentage)
+            print ("annual_PV_energy_produced calculated after submit", annual_PV_energy_produced)
             print("****************")
             print("\nThe PV power was manually given!!!!!!\n")
             print(f"annual_irradiance: {annual_irradiance} and number of panels calculated after submit: {number_of_panels_required}")
             print("****************")
 
         # Calculate the rest variables
-        shadings_percentage = calculate_shade_percentage(shadings_slider_value)
         self_consumption_rate = calculate_self_consumption_rate(has_storage, userPower_profile)
         total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required)
         consumption_total_charges = calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost)
@@ -402,7 +404,7 @@ def calculate_power(request):
 
             print("\n!! The power is generated in the calculate_power function !!") #test print
 
-            special_production = annual_irradiance * panel_area * panel_efficiency * 0.8
+            special_production = annual_irradiance * panel_area * panel_efficiency * 0.75
             total_consumption = annual_Kwh_value * 25 
             total_production = 0
             minimum_PV_panels = 0
@@ -519,12 +521,13 @@ def calculate_shade_percentage(shadings_slider_value):
     return shadings_percentage
 
 def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_percentage):
-    special_production = annual_irradiance * panel_area * panel_efficiency * 0.8
+    special_production = annual_irradiance * panel_area * panel_efficiency * 0.75
     monthly_panel_energy_produced_list = []
     annual_PV_energy_produced = round( special_production * number_of_panels_required * shadings_percentage)
+    print(f"88888888 In calculate PV energy: annual_PV_energy_produced: {annual_PV_energy_produced},special_production:{special_production}, number_of_panels_required: {number_of_panels_required}, shadings_percentage {shadings_percentage}")
 
     for irradiance_month in monthly_irradiance_list:
-        monthly_energy_produced = round(irradiance_month * panel_area * panel_efficiency * 0.8 * shadings_percentage)
+        monthly_energy_produced = round(irradiance_month * panel_area * panel_efficiency * 0.75 * shadings_percentage)
         monthly_panel_energy_produced_list.append(monthly_energy_produced)
 
     monthly_panel_energy_produced_json = json.dumps(monthly_panel_energy_produced_list)
@@ -601,6 +604,19 @@ def calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self
 
     return average_annual_savings, profitPercent, total_savings_potential
 
+def calculate_total_savings(average_annual_savings):
+    # Calculate the total profit over 25 years
+    # based on the annual savings
+    # 1st year the total savings is the average_annual_savings
+    total_savings_array = [0, average_annual_savings]
+    total_savings = average_annual_savings
+    
+    for i in range(1, 25):
+        total_savings += round(average_annual_savings / ( ( annual_degradation_production ) ** i))
+        total_savings_array.append(total_savings)
+
+    return total_savings, total_savings_array
+
 def calculate_payback_period(total_investment, average_annual_savings): 
     years_to_overcome_investment = 0
     total_savings = []
@@ -611,8 +627,6 @@ def calculate_payback_period(total_investment, average_annual_savings):
         total_savings.append( average_annual_savings / ( ( annual_degradation_production ) ** years_to_overcome_investment) )
         years_to_overcome_investment += 1
         starting_invest -= float(total_savings[-1])
-        print(f" ^^^ investment left: {starting_invest} €")
-        print(f"Years: {years_to_overcome_investment}")
 
     # Calculate years and months independently from that point    
     subtraction = sum(total_savings) - total_investment
@@ -633,27 +647,15 @@ def calculate_total_production_kwh(annual_PV_energy_produced, shadings_percentag
     # 1st year the total production is the annual_PV_energy_produced
     total_production_kwh = annual_PV_energy_produced
     total_production_kwh_array =[0, annual_PV_energy_produced]
+    print(f"3333333333 in calculate_total_production_kwh, annual_PV_energy_produced {annual_PV_energy_produced} 333333")
 
     for i in range(1, 25):
-        total_production_kwh += annual_PV_energy_produced / ( (annual_degradation_production) ** i) * shadings_percentage
+        total_production_kwh += annual_PV_energy_produced / ( annual_degradation_production ** i) * shadings_percentage
         total_production_kwh_array.append(round(total_production_kwh))
 
     print("Total kWh production after 25 years: ", total_production_kwh)
 
     return total_production_kwh_array, total_production_kwh
-
-def calculate_total_savings(average_annual_savings):
-    # Calculate the total profit over 25 years
-    # based on the annual savings
-    # 1st year the total savings is the average_annual_savings
-    total_savings_array = [0, average_annual_savings]
-    total_savings = average_annual_savings
-    
-    for i in range(1, 25):
-        total_savings += round(average_annual_savings / ( ( annual_degradation_production ) ** i))
-        total_savings_array.append(total_savings)
-
-    return total_savings, total_savings_array
 
 def transform_azimuth_text(azimuth_value):
     if azimuth_value == 180:
