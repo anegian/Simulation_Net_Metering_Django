@@ -398,7 +398,7 @@ def calculate_power(request):
 
             print("\n!! The power is generated in the calculate_power function !!") #test print
 
-            special_production = annual_irradiance * panel_area * panel_efficiency * 0.75
+            special_production = annual_irradiance * panel_area * panel_efficiency * 0.8
             total_consumption = annual_Kwh_value * 25 
             total_production = 0
             current_PV_panels = 1
@@ -410,11 +410,11 @@ def calculate_power(request):
                 
             # calculate first the impact of shading to get the minimum solar panels needed
             shadings_percentage = calculate_shade_percentage(shading_value)
-            minimum_PV_panels = round(current_PV_panels / shadings_percentage)
+            minimum_PV_panels = current_PV_panels / shadings_percentage
             recommended_kWp = minimum_PV_panels * panel_Wp_value
 
             if annual_Kwh_value > annual_production: 
-                annual_production = minimum_PV_panels * special_production
+                annual_production = round(minimum_PV_panels * special_production)
 
             if place_instalment_value == 'roof':
                 total_area = minimum_PV_panels * panel_area    
