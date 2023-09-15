@@ -413,6 +413,9 @@ def calculate_power(request):
             minimum_PV_panels = round(current_PV_panels / shadings_percentage)
             recommended_kWp = minimum_PV_panels * panel_Wp_value
 
+            if annual_Kwh_value > annual_production: 
+                annual_production = minimum_PV_panels * special_production
+
             if place_instalment_value == 'roof':
                 total_area = minimum_PV_panels * panel_area    
             else:
