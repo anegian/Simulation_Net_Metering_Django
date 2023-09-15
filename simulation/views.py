@@ -16,8 +16,8 @@ from django.contrib.sessions.models import Session
 
 # Create your views here
 # App level
-
-annual_degradation_production = 1 + 0.06
+# annual degardation aprox. 0.5%. After 25 years degradation almost 10%
+annual_degradation_production = 1 + 0.005
 
 # Dictionary mapping PVGIS names to pvlib names
 VARIABLE_MAP = {
@@ -132,16 +132,17 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print("****************")
 
         # Calculate the rest variables
+        shadings_percentage = calculate_shade_percentage(shadings_slider_value)
         self_consumption_rate = calculate_self_consumption_rate(has_storage, userPower_profile)
         total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required)
         consumption_total_charges = calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost)
         self_consumed_energy = calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_rate)
-        _, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value)
+        _, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_percentage)
         total_avoided_charges, regulated_charges_for_grid_energy = calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges)
         average_annual_savings, profitPercent, total_savings_potential = calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, consumption_total_charges, total_avoided_charges, regulated_charges_for_grid_energy, phase_loadkVA, energy_cost)
         total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
         total_savings_array_json = json.dumps(total_savings_array)
-        total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced)
+        total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced, shadings_percentage)
         total_production_kwh_array_json = json.dumps(total_production_kwh_array)
         payback_period, payback_year_float = calculate_payback_period(total_investment, average_annual_savings) #in months
 
@@ -367,6 +368,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
 
 # Ajax Request Calculation    url = simulation/ajax/
 def calculate_power(request):
+    cumulative_degradation = 1.125
 
     try:
         if request.method == 'POST':
@@ -408,20 +410,20 @@ def calculate_power(request):
             while total_production < total_consumption:
                 minimum_PV_panels += 1
                 annual_production = minimum_PV_panels * special_production
-                total_production = annual_production * 25 / annual_degradation_production
+                total_production = annual_production * 25 / cumulative_degradation
                 print("total_production: ",total_production, "annual_production:", annual_production)
             
             if shadings_percentage < 1:
                 # Μείωση Παραγωγής  *  0.85
                 annual_reduced_production = annual_production * shadings_percentage
-                total_reduced_production = annual_reduced_production * 25 / annual_degradation_production
+                total_reduced_production = annual_reduced_production * 25 / cumulative_degradation
                 # Διαφορά μειωμένης παραγωγής από αρχική
                 production_required = annual_production - annual_reduced_production 
                 minimum_PV_panels += round((production_required / shadings_percentage) / special_production)
                 
                 annual_required_production = round(minimum_PV_panels * special_production)
                 annual_production = annual_required_production
-                total_new_production = round((annual_required_production * 25 / annual_degradation_production) * shadings_percentage)
+                total_new_production = round((annual_required_production * 25 / cumulative_degradation) * shadings_percentage)
                 print("If minimum_PV_panels", minimum_PV_panels, "1st total_production", total_reduced_production, "annual_reduced_production:",annual_reduced_production, "total_new_production:",total_new_production, "annual_required_production", annual_required_production)
 
             request.session['annual_production'] = annual_production
@@ -516,8 +518,7 @@ def calculate_shade_percentage(shadings_slider_value):
     
     return shadings_percentage
 
-def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value):
-    shadings_percentage = calculate_shade_percentage(shadings_slider_value)
+def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_percentage):
     special_production = annual_irradiance * panel_area * panel_efficiency * 0.8
     monthly_panel_energy_produced_list = []
     annual_PV_energy_produced = round( special_production * number_of_panels_required * shadings_percentage)
@@ -628,14 +629,14 @@ def calculate_payback_period(total_investment, average_annual_savings):
 
     return payback_period, payback_year_float    
 
-def calculate_total_production_kwh(annual_PV_energy_produced):
+def calculate_total_production_kwh(annual_PV_energy_produced, shadings_percentage):
     # 1st year the total production is the annual_PV_energy_produced
     total_production_kwh = annual_PV_energy_produced
     total_production_kwh_array =[0, annual_PV_energy_produced]
 
-    for i in range(1, 26):
-        total_production_kwh += round(annual_PV_energy_produced / ( (annual_degradation_production) ** i))
-        total_production_kwh_array.append(total_production_kwh)
+    for i in range(1, 25):
+        total_production_kwh += annual_PV_energy_produced / ( (annual_degradation_production) ** i) * shadings_percentage
+        total_production_kwh_array.append(round(total_production_kwh))
 
     print("Total kWh production after 25 years: ", total_production_kwh)
 
