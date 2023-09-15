@@ -111,6 +111,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
                 annual_irradiance = request.session.get('annual_irradiance')
                 monthly_irradiance_list = request.session.get('monthly_irradiance_list')
                 number_of_panels_required = request.session.get('minimumPanels')
+                annual_PV_energy_produced = request.session.get('annual_production')
                 print("****************")
                 print("\nThe PV power was auto generated with ajax request!!!!!!\n")
                 print(f"annual_irradiance: {annual_irradiance} and panels needed:{number_of_panels_required}")
@@ -124,6 +125,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             # PV kWp was manually given -> get data from PVGIS  
             monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
             number_of_panels_required = round((PV_kWp / panel_kWp)* annual_degradation_production)
+            annual_PV_energy_produced, _, _ = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value)
             print("****************")
             print("\nThe PV power was manually given!!!!!!\n")
             print(f"annual_irradiance: {annual_irradiance} and number of panels calculated after submit: {number_of_panels_required}")
@@ -132,10 +134,9 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         # Calculate the rest variables
         self_consumption_rate = calculate_self_consumption_rate(has_storage, userPower_profile)
         total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required)
-        annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value)
         consumption_total_charges = calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost)
         self_consumed_energy = calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_rate)
-
+        _, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value)
         total_avoided_charges, regulated_charges_for_grid_energy = calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges)
         average_annual_savings, profitPercent, total_savings_potential = calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, consumption_total_charges, total_avoided_charges, regulated_charges_for_grid_energy, phase_loadkVA, energy_cost)
         total_savings, total_savings_array = calculate_total_savings(average_annual_savings)
@@ -152,7 +153,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         average_CO2 = round(calculate_CO2_emissions_reduced(annual_PV_energy_produced))
         trees_planted = round(calculate_equivalent_trees_planted(annual_PV_energy_produced))
         total_panel_area = round(number_of_panels_required * panel_area, 1)
-        azimuth_text = transform_azimuth_text(azimuth_value)
+        azimuth_text = transform_azimuth_text(int(azimuth_value))
 
         # dictionary with rendered variables
         context = {
@@ -419,8 +420,11 @@ def calculate_power(request):
                 minimum_PV_panels += round((production_required / shadings_percentage) / special_production)
                 
                 annual_required_production = round(minimum_PV_panels * special_production)
+                annual_production = annual_required_production
                 total_new_production = round((annual_required_production * 25 / annual_degradation_production) * shadings_percentage)
                 print("If minimum_PV_panels", minimum_PV_panels, "1st total_production", total_reduced_production, "annual_reduced_production:",annual_reduced_production, "total_new_production:",total_new_production, "annual_required_production", annual_required_production)
+
+            request.session['annual_production'] = annual_production
 
             recommended_kWp = minimum_PV_panels * panel_Wp_value
 
@@ -514,12 +518,12 @@ def calculate_shade_percentage(shadings_slider_value):
 
 def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_slider_value):
     shadings_percentage = calculate_shade_percentage(shadings_slider_value)
-    performance_ratio = 0.8  # υπολογίζει κατά προσέγγιση απώλειες σε αστάθμητους παράγοντες, σκόνη, σύννεφα κτλ
+    special_production = annual_irradiance * panel_area * panel_efficiency * 0.8
     monthly_panel_energy_produced_list = []
-    annual_PV_energy_produced = round((panel_area * panel_efficiency * performance_ratio * annual_irradiance) * number_of_panels_required * shadings_percentage)
+    annual_PV_energy_produced = round( special_production * number_of_panels_required * shadings_percentage)
 
     for irradiance_month in monthly_irradiance_list:
-        monthly_energy_produced = round(irradiance_month * panel_area * panel_efficiency * performance_ratio * shadings_percentage)
+        monthly_energy_produced = round(irradiance_month * panel_area * panel_efficiency * 0.8 * shadings_percentage)
         monthly_panel_energy_produced_list.append(monthly_energy_produced)
 
     monthly_panel_energy_produced_json = json.dumps(monthly_panel_energy_produced_list)
@@ -651,21 +655,21 @@ def calculate_total_savings(average_annual_savings):
     return total_savings, total_savings_array
 
 def transform_azimuth_text(azimuth_value):
-    if azimuth_value == 0:
+    if azimuth_value == 180:
         azimuth_text = "Νότιος Προσανατολισμός"
-    elif azimuth_value == 45:
+    elif azimuth_value == 225:
         azimuth_text = "Ν.Δ Προσανατολισμός"
-    elif azimuth_value == 90:
+    elif azimuth_value == 270:
         azimuth_text = "Δυτικός Προσανατολισμός"
-    elif azimuth_value == 135:
-        azimuth_text = "Νότιος Προσανατολισμός"
-    elif azimuth_value == 180:
+    elif azimuth_value == 315:
+        azimuth_text = "Β.Δ Προσανατολισμός"
+    elif azimuth_value == 360:
         azimuth_text = "Βόρειος Προσανατολισμός"
-    elif azimuth_value == -135:
+    elif azimuth_value == 45:
         azimuth_text = "Β.Α Προσανατολισμός"
-    elif azimuth_value == -90:
+    elif azimuth_value == 90:
         azimuth_text = "Ανατολικός Προσανατολισμός"
-    elif azimuth_value == -45:
+    elif azimuth_value == 135:
         azimuth_text = "Ν.Α Προσανατολισμός"
 
     return azimuth_text
