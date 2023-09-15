@@ -16,7 +16,7 @@ from django.contrib.sessions.models import Session
 
 # Create your views here
 # App level
-# annual degardation aprox. 0.5%. After 25 years degradation almost 10%
+# annual degardation aprox. 0.5%. After 25 years degradation almost 12.5%
 annual_degradation_production = 1 + 0.005
 
 # Dictionary mapping PVGIS names to pvlib names
@@ -591,16 +591,23 @@ def calculate_self_consumption_rate(has_storage, userPower_profile):
     
 # Calculate annual savings, profit Percentage, total_savings_potential
 def calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, consumption_total_charges, total_avoided_charges, regulated_charges_for_grid_energy, phase_loadkVA, energy_cost):
+    print("TEST in calculate_annual_savings\n")
+    print(annual_consumption, annual_PV_energy_produced, self_consumed_energy, consumption_total_charges, total_avoided_charges, regulated_charges_for_grid_energy, phase_loadkVA, energy_cost)
+    print("TEST in calculate_annual_savings\n")
+
     
-    if  annual_PV_energy_produced > annual_consumption:
+    if  annual_PV_energy_produced > annual_consumption and self_consumed_energy > annual_consumption:
         difference_consumed = annual_PV_energy_produced - annual_consumption
         average_annual_savings = round(total_avoided_charges)
         total_savings_potential = calculate_consumption_total_charges(difference_consumed, phase_loadkVA, energy_cost) - regulated_charges_for_grid_energy
+    elif annual_PV_energy_produced > annual_consumption and self_consumed_energy <= annual_consumption:
+        average_annual_savings = round(total_avoided_charges)
+        total_savings_potential = 1
     else:
         average_annual_savings = round(total_avoided_charges)
         total_savings_potential = 0
        
-    profitPercent =  min(round(average_annual_savings / total_avoided_charges * 100, 1),100) 
+    profitPercent =  min(round(average_annual_savings / consumption_total_charges * 100, 1),100) 
 
     return average_annual_savings, profitPercent, total_savings_potential
 
@@ -634,10 +641,11 @@ def calculate_payback_period(total_investment, average_annual_savings):
     years = years_to_overcome_investment - 1
     months = round(12 - (subtraction/monthly_savings) )
 
-    payback_year_float  = years + (months / 12)
+    payback_year_float  = years + (months / 13)
 
     if months == 1:
         payback_period = f"{years} έτη & {months} μήνας"
+
     else:
         payback_period = f"{years} έτη & {months} μήνες"
 

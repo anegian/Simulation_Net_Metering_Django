@@ -83,7 +83,7 @@
             
               <div class="left-middle">
               
-                <div class="panels-container" id="second-panel-left" title="Συνολική Παραγωγή & Κέρδος">
+                <div class="panels-container" id="second-panel-left">
                     <canvas class="panels-element-size" id="myChart2" ></canvas>
                 </div>
               
@@ -145,11 +145,13 @@
                         <span class="info-title">&#8226; {{azimuth_text}}</span> <br>
                         <span class="info-title">&#8226; Κλίση: {{inclination_PV}} &deg;</span>
 
-                          {% if total_savings_potential > 0 %}
+                          {% if total_savings_potential > 1 %}
                             <p class="info-title" id="potential-savings" ><span style="color: #738725;">Περιθώριο κέρδους:<br>✔</span> έως επιπλέον {{total_savings_potential|default:'0'}} €/έτος </p>
-                          {% elif total_savings_potential < 0 and profitPercent < 100 %}
-                            <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης</span></p>
-                          {% else %}   
+                          {% elif total_savings_potential == 0 and profitPercent < 100 %}
+                            <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
+                          {% elif total_savings_potential > 0 and profitPercent < 100 %}
+                            <p class="info-title" id="potential-savings" ><span style="color: lightslategray;">Με μικρές αλλαγές στις συνήθειες <br>σας, επιτυγχάνεται ο στόχος σας!!</span></p>
+                            {% else %}   
                              <p class="info-title" id="potential-savings" ><span style="color: lightslategrey;">Περιθώριο κέρδους:<br></span> Δεν υπάρχει διαθέσιμο περιθώριο κέρδους</p>      
                           {% endif %}
                       </div>
@@ -162,14 +164,14 @@
               </div>
 
               <div class="right-middle">
-                <div class="panels-container" id="second-panel" title="Μηνιαία ηλιακή ακτινοβολία & Μηνιαία Παραγωγή">
+                <div class="panels-container" id="second-panel">
                   <canvas class="panels-element-size" id="myChart1" ></canvas>
                 </div>
               </div>
 
               <div class="right-below">
 
-                <div class="panels-container" id="third-panel" title="Οικονομικοί Δείκτες">
+                <div class="panels-container" id="third-panel">
                   <canvas class="panels-element-size" id="myChart3"></canvas>
                 </div>
           </div> 
