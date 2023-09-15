@@ -146,7 +146,7 @@
                         <span class="info-title">&#8226; Κλίση: {{inclination_PV}} &deg;</span>
 
                           {% if total_savings_potential > 1 %}
-                            <p class="info-title" id="potential-savings" ><span style="color: #738725;">Περιθώριο κέρδους:<br>✔</span> έως επιπλέον {{total_savings_potential|default:'0'}} €/έτος </p>
+                            <p class="info-title" id="potential-savings" ><span style="color: #738725;">Περιθώριο κέρδους:<br>✔</span> έως επιπλέον {{total_savings_potential|default:'0'}} €/έτος <br> ή {{potential_kwh}} kWh </p>
                           {% elif total_savings_potential == 0 and profitPercent < 100 %}
                             <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
                           {% elif total_savings_potential > 0 and profitPercent < 100 %}
