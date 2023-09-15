@@ -90,7 +90,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         userPower_profile = request.session.get('userPower_profile')
         phase_load = request.session.get('phase_load')
         phase_loadkVA = int(request.session.get('phase_loadkVA'))
-        price_kwh = float(request.session.get('price_kwh'))
+        energy_cost = float(request.session.get('energy_cost'))
         annual_consumption = int(request.session.get('annual_consumption'))
         # panel_kWp & panel_efficiency are already float
         panel_kWp = request.session.get('panel_kWp')
@@ -252,12 +252,12 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 azimuth_value += 180
                 inclination_PV = request.POST.get('inclination')
                 userPower_profile = request.POST.get('power_option')
-                price_kwh = int(request.POST.get('price_kwh'))
+                energy_cost = int(request.POST.get('price_kwh'))
                 # to become decimal
-                if price_kwh >= 100:
-                    price_kwh /= 1000
+                if energy_cost >= 100:
+                    energy_cost /= 1000
                 else:
-                    price_kwh /= 100
+                    energy_cost /= 100
 
                 annual_consumption = request.POST.get('annual_consumption')
                 panel_kWp = float(request.POST.get('panel_kWp')) 
@@ -315,7 +315,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print(f"kWp of PV value: {PV_kWp}")
                 print(f"Did User select Battery storage: {has_storage}")
                 print(f"Number of panels in session: {number_of_panels_required}")
-                print(f"Τιμή κιλοβατώρας: {price_kwh}")
+                print(f"Τιμή κιλοβατώρας: {energy_cost}")
                 
                 if has_storage == 'with_storage':
                     print(f"Battery kWh value: {storage_kw}")
@@ -341,7 +341,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['storage_kw'] = storage_kw
             request.session['phase_loadkVA'] = phase_loadkVA
             request.session['phase_load'] = phase_load
-            request.session['price_kwh'] = price_kwh
+            request.session['energy_cost'] = energy_cost
             request.session['panel_kWp'] = panel_kWp
             request.session['panel_efficiency'] = panel_efficiency
             request.session['panel_cost'] = panel_cost
