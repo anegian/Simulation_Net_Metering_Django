@@ -149,9 +149,9 @@
                             <p class="info-title" id="potential-savings" ><span style="color: #738725;">Περιθώριο κέρδους:<br>✔</span> έως επιπλέον {{total_savings_potential|default:'0'}} €/έτος <br> 
                               <span style="color: #738725;">✔</span> ή {{potential_kwh}} kWh 
                             </p>
-                          {% elif total_savings_potential == 0 and profitPercent < 100 %}
+                          {% elif total_savings_potential == 0 and profitPercent < 100 and PV_kWp < 10}
                             <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
-                          {% elif total_savings_potential > 0 and profitPercent < 100 %}
+                          {% elif total_savings_potential > 0 and profitPercent < 100 }
                             <p class="info-title" id="potential-savings" ><span style="color: lightslategray;">Με μικρές αλλαγές στις συνήθειες <br>σας, επιτυγχάνεται ο στόχος σας!!</span></p>
                             {% else %}   
                              <p class="info-title" id="potential-savings" ><span style="color: lightslategrey;">Περιθώριο κέρδους:<br></span> Δεν υπάρχει διαθέσιμο περιθώριο κέρδους</p>      
