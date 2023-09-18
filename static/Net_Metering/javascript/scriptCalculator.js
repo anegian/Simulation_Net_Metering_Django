@@ -53,6 +53,7 @@ const radioTiltInputs = document.querySelectorAll('input[name="inclination"]');
 const tiltInput = document.getElementById('tiltInput');
 const tiltDefaultRadio = document.getElementById('inclination30');
 const profileDefaultRadio = document.getElementById('day-power');
+const powerRadioButton = document.querySelector('input[name="power_option"]:checked');
 const special_production_output = document.getElementById('placeProduction');
 const minimum_panel_container = document.getElementById('minimumPanels');
 const total_PV_area = document.getElementById('totalArea');
@@ -335,7 +336,8 @@ function calculateAutoPower() {
   const azimuthValue = parseFloat(azimuthInput.value);
   const tiltValue = parseFloat(tiltInput.value);
   let panelKWpValue = parseFloat(panelWpInput.value);
-  let shadingInputValue = parseInt(shadingSliderValue)
+  let shadingInputValue = parseInt(shadingSliderValue);
+  let powerRadioButton = powerRadioButton.value;
   // from Wp to kWp
   panelKWpValue /= 1000; 
   const panelAreaValue = parseFloat(panelAreaInput.value);
@@ -362,6 +364,7 @@ function calculateAutoPower() {
         panel_Wp_value: panelKWpValue,
         place_instalment_value: placeInstalmentValue,
         shading_value: shadingInputValue,
+        consumption_profile: powerRadioButton,
     };
 
     console.log(data);
@@ -1037,7 +1040,6 @@ priceKwhInput.addEventListener('input', function(){
 
 //Submit, reset, Modal events
 form_submit_button.addEventListener('click', function(event){
-  const powerRadioButton = document.querySelector('input[name="power_option"]:checked');
 
   if (powerRadioButton) {
     // Get the label element associated with the selected radio button

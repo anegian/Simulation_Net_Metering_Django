@@ -135,10 +135,10 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print("****************")
 
         # Calculate the rest variables
-        self_consumption_rate = calculate_self_consumption_rate(has_storage, userPower_profile)
+        self_consumption_ratio = calculate_self_consumption_ratio(has_storage, userPower_profile)
         total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required)
         consumption_total_charges = calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost)
-        self_consumed_energy = calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_rate)
+        self_consumed_energy = calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_ratio)
         _, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, panel_area, panel_efficiency, number_of_panels_required, shadings_percentage)
         total_avoided_charges, regulated_charges_for_grid_energy = calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges)
         average_annual_savings, profitPercent, total_savings_potential, potential_kwh = calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, consumption_total_charges, total_avoided_charges, regulated_charges_for_grid_energy, phase_loadkVA, energy_cost)
@@ -392,8 +392,12 @@ def calculate_power(request):
             place_instalment_value = data.get('place_instalment_value')
             shading_value = data.get('shading_value')
             shadings_percentage = calculate_shade_percentage(shading_value)
+            consumption_profile_value = data.get('consumption_profile')
+            # να προστεθεί το ποσοστό ιδιοκατατανάλωσης
+
             print("PARAMETERS FOR CALCULATING THE REQUEST:", data)
-            print(f"Σκίαση επίπεδο: {shading_value}, Ποσοστό σκίασης: {shadings_percentage}")
+            print(f"Σκίαση επίπεδο: {shading_value}, Ποσοστό σκίασης: {shadings_percentage}, Προφίλ Κατανάλωσης{consumption_profile_value}")
+
         
             # Call the get_solar_data function and retrieve the results
             monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_value)
@@ -543,9 +547,11 @@ def calculate_regulated_charges(difference_consumption):
 
      return round( (difference_consumption * 0.0213) + (difference_consumption * 0.00844) )
 
-def calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_rate):
+def calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_ratio):
 
-    return round(annual_PV_energy_produced * self_consumption_rate)
+    print(f"4444444 in calculate_self_consumed_energy: {annual_PV_energy_produced * self_consumption_ratio} , self_consumption_ratio: {self_consumption_ratio} ^^^^^^^^^")
+
+    return round(annual_PV_energy_produced * self_consumption_ratio)
     
 def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges):
     
@@ -567,28 +573,28 @@ def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produce
     
     return total_avoided_charges, regulated_charges_for_grid_energy
 
-def calculate_self_consumption_rate(has_storage, userPower_profile):
+def calculate_self_consumption_ratio(has_storage, userPower_profile):
     # cases with battery storage and use profile to calculate self-consumption rate
     if has_storage == "with_storage":
         if userPower_profile == "day-power":
-            self_consumption_rate = 0.9
+            self_consumption_ratio = 0.9
         elif userPower_profile == "high-day-evening":
-            self_consumption_rate = 0.85
+            self_consumption_ratio = 0.85
         elif userPower_profile == "evening-power":
-            self_consumption_rate = 0.80
+            self_consumption_ratio = 0.80
         else:
-            self_consumption_rate = 0.75
+            self_consumption_ratio = 0.75
     else:
         if userPower_profile == "day-power":
-            self_consumption_rate = 0.7
+            self_consumption_ratio = 0.8
         elif userPower_profile == "high-day-evening":
-            self_consumption_rate = 0.65
+            self_consumption_ratio = 0.65
         elif userPower_profile == "evening-power":
-            self_consumption_rate = 0.6
+            self_consumption_ratio = 0.6
         else:
-            self_consumption_rate = 0.5
+            self_consumption_ratio = 0.5
             
-    return self_consumption_rate
+    return self_consumption_ratio
     
 # Calculate annual savings, profit Percentage, total_savings_potential
 def calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, consumption_total_charges, total_avoided_charges, regulated_charges_for_grid_energy, phase_loadkVA, energy_cost):
