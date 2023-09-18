@@ -53,7 +53,8 @@ const radioTiltInputs = document.querySelectorAll('input[name="inclination"]');
 const tiltInput = document.getElementById('tiltInput');
 const tiltDefaultRadio = document.getElementById('inclination30');
 const profileDefaultRadio = document.getElementById('day-power');
-const powerRadioButton = document.querySelector('input[name="power_option"]:checked');
+const profileConsumptionRadioButton = document.querySelectorAll('input[name="profile_consumption"]');
+let profileConsumptionValue = profileConsumptionRadioButton.value;
 const special_production_output = document.getElementById('placeProduction');
 const minimum_panel_container = document.getElementById('minimumPanels');
 const total_PV_area = document.getElementById('totalArea');
@@ -194,6 +195,7 @@ function disableElements() {
   annual_Kwh_input.disabled = true;
   annual_Kwh_input.value = ""
   profileDefaultRadio.checked = true;
+  profileConsumptionValue = profileConsumptionRadioButton.checked ? profileConsumptionRadioButton.value : 'day-power';
   storage_selection.disabled = true;
   storage_kW.disabled = true; 
   manualPowerRadio.disabled = true;
@@ -337,7 +339,7 @@ function calculateAutoPower() {
   const tiltValue = parseFloat(tiltInput.value);
   let panelKWpValue = parseFloat(panelWpInput.value);
   let shadingInputValue = parseInt(shadingSliderValue);
-  let powerRadioButton = powerRadioButton.value;
+  let profileValue = profileConsumptionValue;
   // from Wp to kWp
   panelKWpValue /= 1000; 
   const panelAreaValue = parseFloat(panelAreaInput.value);
@@ -364,7 +366,7 @@ function calculateAutoPower() {
         panel_Wp_value: panelKWpValue,
         place_instalment_value: placeInstalmentValue,
         shading_value: shadingInputValue,
-        consumption_profile: powerRadioButton,
+        consumption_profile: profileValue,
     };
 
     console.log(data);
@@ -833,6 +835,9 @@ document.addEventListener('DOMContentLoaded', function() {
     previousButton.disabled = true;
     form_submit_button.disabled = true;
     submitBtnEnabled = false; // A flag to track the state of the submit button
+    profileDefaultRadio.checked = true;
+    profileConsumptionValue = profileConsumptionRadioButton.checked ? profileConsumptionRadioButton.value : 'day-power';
+
 
     console.log('Next Button Disabled:', nextButton.disabled);
     console.log('Previous Button Disabled:', previousButton.disabled);
@@ -1021,11 +1026,20 @@ themeSlider.addEventListener('input', function(event) {
 power_kWp_method.forEach(function(radioButton) {
   radioButton.addEventListener('change', toggleAutoPowerDiv);
 });
+
 autoPowerButton.addEventListener('click', handleCalculateButtonClick);
 // Discount percents
 noDiscountRadio.addEventListener('change', showDiscountInputs);
 discountRadio.addEventListener('change', showDiscountInputs);
 
+profileConsumptionRadioButton.forEach(function(radioButton){
+  radioButton.addEventListener('click', function() {
+    // Inside this function, 'radioButton' refers to the clicked radio button.
+    profileConsumptionValue = radioButton.value;
+    
+  });
+});
+ 
 // Reset the PV_kW_output element value to the initial value when the reset button is clicked
 reset_button.addEventListener('click', resetForm);
 
@@ -1041,9 +1055,9 @@ priceKwhInput.addEventListener('input', function(){
 //Submit, reset, Modal events
 form_submit_button.addEventListener('click', function(event){
 
-  if (powerRadioButton) {
+  if (profileConsumptionRadioButton) {
     // Get the label element associated with the selected radio button
-    const labelElement = document.querySelector(`label[for="${powerRadioButton.id}"]`);
+    const labelElement = document.querySelector(`label[for="${profileConsumptionRadioButton.id}"]`);
     
     if (labelElement) {
       // Get the label content and set it as the value of the target input field
