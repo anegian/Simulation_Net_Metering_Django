@@ -387,12 +387,14 @@ def calculate_power(request):
             azimuth_value += 180
             panel_area = data.get('panel_area')
             panel_efficiency = data.get('panel_efficiency')
-            annual_Kwh_value = data.get('annual_Kwh_value')
+            energy_consumption = data.get('annual_Kwh_value')
             panel_Wp_value = data.get('panel_Wp_value')
             place_instalment_value = data.get('place_instalment_value')
             shading_value = data.get('shading_value')
             shadings_percentage = calculate_shade_percentage(shading_value)
             consumption_profile_value = data.get('consumption_profile')
+            
+
             # να προστεθεί το ποσοστό ιδιοκατατανάλωσης
 
             print("PARAMETERS FOR CALCULATING THE REQUEST:", data)
@@ -409,33 +411,55 @@ def calculate_power(request):
 
             print("\n!! The power is generated in the calculate_power function !!") #test print
 
+            # kWh/m2 * m2 -> kWh
             special_production = annual_irradiance * panel_area * panel_efficiency * 0.75
-            total_consumption = annual_Kwh_value * 25 
+            total_consumption = energy_consumption * 25 
             total_production = 0
             minimum_PV_panels = 0
+            annual_production = 0
 
-            while total_production < total_consumption:
-                minimum_PV_panels += 1
-                annual_production = minimum_PV_panels * special_production
-                total_production = annual_production * 25 / cumulative_degradation
-                print("total_production: ",total_production, "annual_production:", annual_production)
+# Required PV System Size (kWp) = ( Annual Electricity Consumption (kWh) / (annual_irradiance (kWh/m²/year) × System Efficiency)) / (1 - Shading Factor) / self_consumption_ratio
+
+            # while total_production < total_consumption:
+            #     minimum_PV_panels += 1
+            #     annual_production = minimum_PV_panels * special_production
+            #     total_production = annual_production * 25 / cumulative_degradation
+            #     print("total_production: ",total_production, "annual_production:", annual_production)
             
-            if shadings_percentage < 1:
-                # Μείωση Παραγωγής  *  0.85
-                annual_reduced_production = annual_production * shadings_percentage
-                total_reduced_production = annual_reduced_production * 25 / cumulative_degradation
-                # Διαφορά μειωμένης παραγωγής από αρχική
-                production_required = annual_production - annual_reduced_production 
-                minimum_PV_panels += round((production_required / shadings_percentage) / special_production)
+
+            # if shadings_percentage < 1:
+            #     # Μείωση Παραγωγής  *  0.85
+            #     annual_reduced_production = annual_production * shadings_percentage
+            #     total_reduced_production = annual_reduced_production * 25 / cumulative_degradation
+            #     # Διαφορά μειωμένης παραγωγής από αρχική
+            #     production_required = annual_production - annual_reduced_production 
+            #     minimum_PV_panels += round((production_required / shadings_percentage) / special_production)
                 
-                annual_required_production = round(minimum_PV_panels * special_production)
-                annual_production = annual_required_production
-                total_new_production = round((annual_required_production * 25 / cumulative_degradation) * shadings_percentage)
-                print("If minimum_PV_panels", minimum_PV_panels, "1st total_production", total_reduced_production, "annual_reduced_production:",annual_reduced_production, "total_new_production:",total_new_production, "annual_required_production", annual_required_production)
+            #     annual_required_production = round(minimum_PV_panels * special_production)
+            #     annual_production = annual_required_production
+            #     total_new_production = round((annual_required_production * 25 / cumulative_degradation) * shadings_percentage)
+            #     print("If minimum_PV_panels", minimum_PV_panels, "1st total_production", total_reduced_production, "annual_reduced_production:",annual_reduced_production, "total_new_production:",total_new_production, "annual_required_production", annual_required_production)
+            
+            self_consumption_ratio = 1.0
+            # Initial calculations 
+            diminishing_factors = cumulative_degradation / shadings_percentage / self_consumption_ratio
+            minimum_PV_panels = round((energy_consumption / special_production) * diminishing_factors)
+            recommended_kWp  = minimum_PV_panels * panel_Wp_value
+            annual_production  = minimum_PV_panels * special_production / diminishing_factors
+
+            print("BEFORE WHILE: annual_production:", annual_production, "diminishing_factors: ", diminishing_factors, "minimum_PV_panels:",  minimum_PV_panels, "self_consumption_ratio: ", self_consumption_ratio)
+
+            i = 0
+            while annual_production <= energy_consumption:
+                i+=1
+                minimum_PV_panels +=1
+                annual_production  = minimum_PV_panels * special_production / diminishing_factors
+                print("IN WHILE LOOP: ADDED 1 more PV panel")
+
+            total_production = annual_production * 25
+            print("IN CALCULATE POWER:\n total_production: ",total_production, "annual_production:", annual_production, "minimum_PV_panels:", minimum_PV_panels, "self_consumption_ratio: ", self_consumption_ratio, "i: ", i )
 
             request.session['annual_production'] = annual_production
-
-            recommended_kWp = minimum_PV_panels * panel_Wp_value
 
             if place_instalment_value == 'roof':
                 total_area = minimum_PV_panels * panel_area    
@@ -445,11 +469,11 @@ def calculate_power(request):
 
             print("ANNUAL IRRADIANCE:", annual_irradiance)
             print("Monthly IRRADIANCE:", monthly_irradiance_list)
-            print('Annual Consumption:', annual_Kwh_value)
+            print('Annual Consumption:', energy_consumption)
             print("Minimum Panels:", minimum_PV_panels)
             print(f"Total area for {place_instalment_value}: {total_area}" )
             print('Annual Production:', annual_production)
-            print(f"Total production after 25 years for {minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {round(panel_Wp_value*1000)}Wp is: {round(total_production)}")
+            print(f"Total production after 25 years, for {minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {round(panel_Wp_value*1000)}Wp is: {round(total_production)}")
             print(f"Total consumption after 25 years: {total_consumption}")
             print("Recommended KWp PV system: ", recommended_kWp)
 
@@ -547,7 +571,7 @@ def calculate_regulated_charges(difference_consumption):
 
      return round( (difference_consumption * 0.0213) + (difference_consumption * 0.00844) )
 
-def calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_ratio):
+def calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_ratio, annual_consumption):
 
     print(f"4444444 in calculate_self_consumed_energy: {annual_PV_energy_produced * self_consumption_ratio} , self_consumption_ratio: {self_consumption_ratio} ^^^^^^^^^")
 
