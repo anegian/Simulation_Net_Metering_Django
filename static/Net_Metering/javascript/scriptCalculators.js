@@ -49,8 +49,11 @@ let isAutoCalculatingPower;
 const radioAzimuthInputs = document.querySelectorAll('input[name="azimuth"]');
 const azimuthInput = document.getElementById('azimuthInput');
 const azimuthDefaultRadio = document.getElementById("south");
-const radioTiltInputs = document.querySelectorAll('input[name="inclination"]');
+// const radioTiltInputs = document.querySelectorAll('input[name="inclination"]');
 const tiltInput = document.getElementById('tiltInput');
+const titlSlider = document.getElementById('tilt-slider');
+const titlSliderValue = document.getElementById('tilt-slider-value');
+const responsiveImage = document.getElementById('responsive-tilt-image');
 const tiltDefaultRadio = document.getElementById('inclination30');
 const profileDefaultRadio = document.getElementById('day-power');
 let profileConsumptionRadioButton = document.querySelectorAll('input[name="profile_consumption"]:checked');
@@ -185,8 +188,9 @@ function disableElements() {
   roofRadioButton.checked = true;
   shadingSliderValue = "1";
   defaultPanelParams.selected  = true;
-  tiltDefaultRadio.checked = true;
-  tiltInput.value = '30'; // Set the value of tiltInput to 30
+  // tiltDefaultRadio.checked = true;
+  titlSlider.value = '0'
+  tiltInput.value = '0'; // Set the value of tiltInput to 0
   azimuthDefaultRadio.checked = true;
   azimuthInput.value = 0;
   phase_load_selected.value = "phase_load";// Set the default phase value 
@@ -792,18 +796,18 @@ radioAzimuthInputs.forEach(function(input) {
     });
 });
 
-// Add event listener to each radio Tilt input
-radioTiltInputs.forEach(function(inputs) {
-    inputs.addEventListener('change', function(e) {
-      // Set the value of tiltInput to the selected radio input's value
-      tiltInput.value = this.value;
+// // Add event listener to each radio Tilt input
+// radioTiltInputs.forEach(function(inputs) {
+//     inputs.addEventListener('change', function(e) {
+//       // Set the value of tiltInput to the selected radio input's value
+//       tiltInput.value = this.value;
 
-        images.forEach(function(image) {
-            const tiltValue = image.getAttribute('tilt');
-            image.style.display = tiltValue ===  tiltInput.value ? 'block' : 'none';
-        });
-    });
-});
+//         images.forEach(function(image) {
+//             const tiltValue = image.getAttribute('tilt');
+//             image.style.display = tiltValue ===  tiltInput.value ? 'block' : 'none';
+//         });
+//     });
+// });
 placeInstalmentRadios.forEach(function(input) {
   input.addEventListener('change', function() {
     // Set the value of azimuthInput to the selected radio input's value
@@ -826,8 +830,9 @@ document.addEventListener('DOMContentLoaded', function() {
     roofRadioButton.checked = true;
     shadingSliderValue = "1";
     azimuthDefaultRadio.checked = true;
-    tiltDefaultRadio.checked = true;
-    tiltInput.value = '30'; // Set the value of tiltInput to 30
+    // tiltDefaultRadio.checked = true;
+    titlSlider.value = '0'
+    tiltInput.value = '0'; // Set the value of tiltInput to 0
     phaseLoadDefaultSelection.value = "phase_load"; // Set the default value here
     hideAutoPowerDiv();
     azimuthInput.value = 0;
@@ -844,7 +849,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     images.forEach(function(image) {
       const tiltValue = image.getAttribute('tilt');
-      image.style.display = tiltValue === '30' ? 'block' : 'none';
+      image.style.display = tiltValue === '0' ? 'block' : 'none';
     });
 
     previousButton.addEventListener("click", goToPreviousPanel);
@@ -1110,4 +1115,13 @@ submit_modal.addEventListener('click', function(event) {
   }else{
       form.submit();
   }
+});
+
+titlSlider.addEventListener('input', function () {
+    const degree = titlSlider.value;
+    // Invert the degree value for internal use
+    const invertedDegree = -degree;
+    titlSliderValue.textContent = `${degree}°`;
+    responsiveImage.style.transform = `rotate(${invertedDegree}deg)`;
+    tiltInput.value = degree;
 });

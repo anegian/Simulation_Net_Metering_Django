@@ -656,6 +656,45 @@ ul li{
         width: 200px;
     }   
 
+    #tilt-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #image-tilt{
+        width: 200px;
+        height: 200px;
+        overflow: hidden;
+        transform: translate(-60px, 15px);
+    }
+
+    #responsive-tilt-image {
+        width: 100%;
+        transform-origin: center center;
+        transition: transform 0.3s ease;
+    }
+
+    #tilt-slider {
+        width: 200px;
+        transform: translate(-60px, 50px);
+    }
+
+    #tilt-slider-value, #tilt-slider-label {
+        font-size: 14px;
+        text-align: center;
+        transform: translate(-60px, 50px);
+        color: lightslategrey;
+    }
+    #steady-line {
+        width: 2cm; /* Adjust the width of the steady line as needed */
+        height: 2px; /* Set the desired length in centimeters */
+        background-color: lightslategrey; /* Change the color as needed */
+        transform: translate(-102px, -86px);
+    }
+
+
     /* Change the border color for all radio buttons with class "form-check-input" */
     .form-check-input {
         border: 2px solid grey; /* Change "red" to the desired border color */
@@ -1388,9 +1427,23 @@ ul li{
                 #northWest, #northWest-label { transform: translate(30px, -160px); transform-origin: 0 0;}
                 #north, #north-label { transform: translate(113px, -200px); transform-origin: 0 0;}
                 
-                .img-tilt{
-                    width: 200px;
-                    height: 120px;
+                #image-tilt{
+                    width: 150px;
+                    height: 150px;
+                }
+            
+                #tilt-slider {
+                    width: 120px;
+                    transform: translate(-60px, 60px);
+                }
+            
+                #tilt-slider-value {
+                    font-size: 10px;
+                }
+                #steady-line {
+                    width: 1.5cm; /* Adjust the width of the steady line as needed */
+                    height: 1px; /* Set the desired length in centimeters */
+                    transform: translate(-91px, -60.5px);
                 }
                 .navigation-panel li a, .navigation-panel li span{
                     font-size: 8px;

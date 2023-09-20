@@ -322,16 +322,16 @@
 
                                 <div class="option-selector-margin" title="Παρακαλούμε, επιλέξτε την κλίση του συστήματος PV" id="panel-tilt">
                                     <p> 
-                                        <label for="inclination0" class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</label>
+                                        <label for="tilt-slider" class="spacer-label">Επιλέξτε κλίση Φ/Β πάνελ:</label>
                                         <button class="help-popper" type="button" title="help-button">
                                             <i class="fa fa-question-circle" id="tilt-info"></i>
                                         </button>
     
                                             <div class="help-container">
                                                 <span class="help-text" id="tilt-text">
-                                                    &#8226; Για τη γεωγραφική περιοχή της Ελλάδος, η βέλτιστη γωνία κλίσης Φ/Β συστήματος, είναι 
-                                                    οι <strong>30 μοίρες</strong> (προεπιλογή). Όσο περισσότερο προσεγγίζει τη γωνία αυτή το σύστημα σας, 
-                                                    τόσο υψηλότερη η απόδοση του.
+                                                    &#8226; Για τη πλειοψηφία της γεωγραφικής περιοχής της Ελλάδος, η βέλτιστη<br>
+                                                    γωνία κλίσης Φ/Β συστήματος, εντοπίζεται κοντά στις <strong>30</strong>&deg;. 
+                                                    Όσο περισσότερο προσεγγίζει την εν λόγω κλίση το σύστημα, τόσο υψηλότερη η απόδοση του.
                                                 </span>    
                                                 <span class="close-help">&times;</span>
                                             </div>
@@ -340,7 +340,7 @@
                                         <div class="spacer-in-calculator-panel">
                                         </div>
 
-                                    <div class="form-check">
+                                    <!-- <div class="form-check">
                                         <input type="radio" class="form-check-input" id="inclination0" name="inclination" value='0'>
                                         <label class="form-check-label" for="inclination0">0&deg;</label>
                                     </div>
@@ -366,12 +366,27 @@
                                         <img class="img-tilt" src="{% static 'images/30.png' %}" alt="No Image" tilt="30">
                                         <img class="img-tilt" src="{% static 'images/45.png' %}" alt="No Image" tilt="45">
 
-                                    <div>
-                                        <input class="panel-field" type="hidden" id="tiltInput" name="tiltInput" readonly>
-                                    </div>
+                                        <div>
+                                            <input class="panel-field" type="hidden" id="tiltInput" name="tiltInput" readonly>
+                                        </div>
 
 
+                                    </div> -->
+                                    <div id="tilt-container">
+                                        <div id="image-tilt">
+                                            <img id="responsive-tilt-image" src="{% static 'images/degree-chart3-line.png' %}" alt="Responsive Image">
+                                        </div>
+                    
+                                        <div id="steady-line"></div> <!-- This is the steady line element -->
+
+                                        <input type="range" id="tilt-slider" min="0" max="90" step="1" value="0">
+                                        <span id="tilt-slider-label">Κλίση: <span id="tilt-slider-value">0°</span> </span>
+
+                                        <div>
+                                            <input class="panel-field" type="hidden" id="tiltInput" name="tiltInput" readonly>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
