@@ -71,7 +71,7 @@
                         trigger="hover"
                         style="width:110px;height:120px">
                     </lord-icon>
-                    <p class="info-title" id="profit">{{average_annual_savings|default:'0'}} €/έτος</p>
+                    <p class="info-title" id="profit">έως {{total_savings_potential|default:'0'}} €/έτος</p>
                       {% if profitPercent == 100 %}
                         <p class="green-text">Κάλυψη Ετήσιου Κόστους: <br> ({{ profitPercent|default:'0' }}%) ✔</p>
                       {% else %}
@@ -145,15 +145,14 @@
                         <span class="info-title">&#8226; {{azimuth_text}}</span> <br>
                         <span class="info-title">&#8226; Κλίση: {{inclination_PV}} &deg;</span>
 
-                          {% if total_savings_potential > 1 and profitPercent > 100 %}
-                            <p class="info-title" id="potential-savings" ><span style="color: #738725;">Περιθώριο κέρδους:<br>✔</span> έως επιπλέον {{total_savings_potential|default:'0'}} €/έτος <br> 
-                              <span style="color: #738725;">✔</span> ή {{potential_kwh}} kWh 
+                          {% if average_annual_savings > 0 and profitPercent >= 100 %}
+                            <p class="info-title" id="potential-savings" ><span style="color: #738725;">Πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας:<br>✔</span> έως επιπλέον {{potential_kwh|default:'0'}} kWh<br> 
                             </p>
-                          {% elif total_savings_potential == 0 and profitPercent < 100 and PV_kWp < 9.0 %}
+                          {% elif annual_consumption > annual_PV_energy_produced and profitPercent < 90 %}
                             <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
-                          {% elif total_savings_potential > 0 and profitPercent < 100 %}
-                            <p class="info-title" id="potential-savings" ><span style="color: lightslategray;">Με μικρές αλλαγές στις συνήθειές <br>σας, επιτυγχάνεται ο στόχος σας!!</span></p>
-                            {% else %}   
+                          {% elif profitPercent < 100 and profitPercent > 90 %}
+                            <p class="info-title" id="potential-savings" ><span style="color: lightslategray;">Με μικρές αλλαγές στις συνήθειές σας, ή με λίγο <br μεγαλύτερο >σύστημα, επιτυγχάνεται ο στόχος σας!!</span></p>
+                          {% else %}   
                              <p class="info-title" id="potential-savings" ><span style="color: lightslategrey;">Περιθώριο κέρδους:<br></span> Δεν υπάρχει διαθέσιμο περιθώριο κέρδους</p>      
                           {% endif %}
                       </div>

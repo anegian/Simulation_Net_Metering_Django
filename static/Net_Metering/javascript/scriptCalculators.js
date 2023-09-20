@@ -53,8 +53,8 @@ const radioTiltInputs = document.querySelectorAll('input[name="inclination"]');
 const tiltInput = document.getElementById('tiltInput');
 const tiltDefaultRadio = document.getElementById('inclination30');
 const profileDefaultRadio = document.getElementById('day-power');
-const profileConsumptionRadioButton = document.querySelectorAll('input[name="profile_consumption"]');
-let profileConsumptionValue = profileConsumptionRadioButton.value;
+let profileConsumptionRadioButton = document.querySelectorAll('input[name="profile_consumption"]:checked');
+let profileConsumptionValue;
 const special_production_output = document.getElementById('placeProduction');
 const minimum_panel_container = document.getElementById('minimumPanels');
 const total_PV_area = document.getElementById('totalArea');
@@ -195,7 +195,7 @@ function disableElements() {
   annual_Kwh_input.disabled = true;
   annual_Kwh_input.value = ""
   profileDefaultRadio.checked = true;
-  profileConsumptionValue = profileConsumptionRadioButton.checked ? profileConsumptionRadioButton.value : 'day-power';
+  // profileConsumptionValue = profileConsumptionRadioButton.checked ? profileConsumptionRadioButton.value : 'day-power';
   storage_selection.disabled = true;
   storage_kW.disabled = true; 
   manualPowerRadio.disabled = true;
@@ -836,7 +836,7 @@ document.addEventListener('DOMContentLoaded', function() {
     form_submit_button.disabled = true;
     submitBtnEnabled = false; // A flag to track the state of the submit button
     profileDefaultRadio.checked = true;
-    profileConsumptionValue = profileConsumptionRadioButton.checked ? profileConsumptionRadioButton.value : 'day-power';
+    // profileConsumptionValue = profileConsumptionRadioButton.checked ? profileConsumptionRadioButton.value : 'day-power';
 
 
     console.log('Next Button Disabled:', nextButton.disabled);
@@ -1032,14 +1032,6 @@ autoPowerButton.addEventListener('click', handleCalculateButtonClick);
 noDiscountRadio.addEventListener('change', showDiscountInputs);
 discountRadio.addEventListener('change', showDiscountInputs);
 
-profileConsumptionRadioButton.forEach(function(radioButton){
-  radioButton.addEventListener('click', function() {
-    // Inside this function, 'radioButton' refers to the clicked radio button.
-    profileConsumptionValue = radioButton.value;
-    
-  });
-});
- 
 // Reset the PV_kW_output element value to the initial value when the reset button is clicked
 reset_button.addEventListener('click', resetForm);
 
@@ -1047,23 +1039,22 @@ priceKwhInput.addEventListener('input', function(){
     if (priceKwhInput.value > 999){
     priceKwhInput.value = 999;
   }
-
-  
   priceKwhInput.value = this.value;
+});
+
+profileConsumptionRadioButton.forEach(function(radioButton) {
+  profileConsumptionValue = radioButton.value;
+  console.log(profileConsumptionValue); // Outputs the value of each radio button
 });
 
 //Submit, reset, Modal events
 form_submit_button.addEventListener('click', function(event){
 
-  if (profileConsumptionRadioButton) {
-    // Get the label element associated with the selected radio button
-    const labelElement = document.querySelector(`label[for="${profileConsumptionRadioButton.id}"]`);
-    
-    if (labelElement) {
-      // Get the label content and set it as the value of the target input field
-      profile_modal_input.value = labelElement.textContent;
-    }
-  }
+  profileConsumptionRadioButton.forEach(function(radioButton) {
+    let labelElement = document.querySelector(`label[for="${radioButton.id}"]`);
+    profile_modal_input.value = labelElement.textContent; // Use textContent to get the label's text
+  });
+   
 
   slider_hidden_input.value = slider.value;
   power_modal_input.value = slider_hidden_input.value;
