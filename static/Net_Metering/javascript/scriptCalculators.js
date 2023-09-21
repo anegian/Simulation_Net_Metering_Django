@@ -914,16 +914,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }); 
   });
 
-  // Initially, show the image for the default selected radio button
-  const defaultSelectedRadio = document.querySelector('input[name="profile_consumption"]:checked');
-  if (defaultSelectedRadio) {
-      const defaultSelectedValue = defaultSelectedRadio.value;
-      const defaultSelectedProfileImage = document.querySelector(`[profile="${defaultSelectedValue}"]`);
-      if (defaultSelectedProfileImage) {
-          defaultSelectedProfileImage.style.display = 'block';
-      }
-  }
-
     previousButton.addEventListener("click", goToPreviousPanel);
     nextButton.addEventListener("click", goToNextPanel);
 });
@@ -1118,8 +1108,19 @@ priceKwhInput.addEventListener('input', validatePriceKwh);
 form_submit_button.addEventListener('click', function(event){
 
   profileConsumptionRadioButton.forEach(function(radioButton) {
-    let labelElement = document.querySelector(`label[for="${radioButton.id}"]`);
-    profile_modal_input.value = labelElement.textContent; // Use textContent to get the label's text
+    
+    let labelElement;
+    if (profileConsumptionValue == 'day-power'){
+      labelElement = 'Ημερήσιο (08:00 - 20:00)'
+    }else if (profileConsumptionValue == 'high-day-evening'){
+      labelElement = 'Πρωινό - Απογευματινό (06:00 - 12:00 & 16:00 - 22:00)'
+    }else if (profileConsumptionValue == 'evening-power'){
+      labelElement = 'Απογευματινό (14:00 - 23:00)'
+    }else if (profileConsumptionValue == 'night-power'){
+      labelElement = 'Νυχτερινό (17:00 - 08:00)'
+    }
+
+    profile_modal_input.value = labelElement;
   });
    
 

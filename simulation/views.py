@@ -259,14 +259,9 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 # from now on pvlib has an 180 offset for azimuth aspect
                 azimuth_value = float(request.POST.get('azimuth'))
                 azimuth_value += 180
-                inclination_PV = request.POST.get('inclination')
+                inclination_PV = int(request.POST.get('inclination'))
                 userPower_profile = request.POST.get('power_option')
-                energy_cost = int(request.POST.get('price_kwh'))
-                # to become decimal
-                if energy_cost >= 100:
-                    energy_cost /= 1000
-                else:
-                    energy_cost /= 100
+                energy_cost = float(request.POST.get('price_kwh'))
 
                 annual_consumption = request.POST.get('annual_consumption')
                 panel_kWp = float(request.POST.get('panel_kWp')) 
