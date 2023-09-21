@@ -602,9 +602,20 @@ ul li{
         width: 100px;
         height: 100px;
     }
-    .img-tilt{
+    /* .img-tilt{
         width: 300px;
         height: 200px;
+    } */
+    #profile-container{
+        display: flex;
+        align-items: center;
+    }
+    .img-profiles{
+        width: 260px;
+        height: 140px;
+    }
+    #profile-img-container{
+        margin-left: 30px;
     }
     .img-discount{
         width: 420px;
@@ -809,7 +820,7 @@ ul li{
         font-size: 14px;
     }
     #price_kwh{
-        width: 50px;
+        width: 80px;
         border-width: 2px;
         border: solid #738725;
         text-align: center;
@@ -1563,14 +1574,17 @@ ul li{
             width: 470px;
             display: flex;
             justify-content: center;
-          }
-          .left-upper,
-          .left-middle,
-          .left-below{
-            width: 358px;
-            display: flex;
-            justify-content: center;
-          }
+        }
+        .left-upper,
+        .left-middle,
+        .left-below{
+        width: 358px;
+        display: flex;
+        justify-content: center;
+        }
+        .form-check-label{
+            font-size: 6px;
+        }
     }
         /* ::: EXTRA ZOOM IN  (> 300%)::: */
         @media (max-width: 540px) {

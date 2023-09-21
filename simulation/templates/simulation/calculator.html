@@ -455,28 +455,40 @@
 
                                     <div class="spacer-in-calculator-panel">
                                     </div>
+                                
+                                <div id="profile-container">
+                                    <div id="profile-radios-container">
+                                     <div class="form-check" >
+                                     <input type="radio" class="form-check-input" id="day-power" name="profile_consumption" value="day-power" checked>
+                                        <label class="form-check-label" for="day-power">Ημερήσιο (08:00 - 20:00)</label>
+                                    </div>
 
-                                <div class="form-check" >
-                                    <input type="radio" class="form-check-input" id="day-power" name="profile_consumption" value="day-power" checked>
-                                    <label class="form-check-label" for="day-power">Ημερήσιο (08:00 - 20:00)</label>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input option2" id="high-day-evening" name="profile_consumption" value="high-day-evening">
+                                        <label class="form-check-label" for="high-day-evening">Πρωινό - Απογευματινό <br>(06:00 - 12:00 & 16:00 - 22:00) </label>
+                                    </div> 
+
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input option2" id="evening-power" name="profile_consumption" value="evening-power">
+                                        <label class="form-check-label" for="evening-power">Απογευματινό (14:00 - 23:00) </label>
+                                    </div> 
+
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input option2" id="night-power" name="profile_consumption" value="night-power">
+                                        <label class="form-check-label" for="night-power">Νυχτερινό (17:00 - 08:00)</label>
+                                    </div> 
+                                    </div>
+                                    
+                                    <div id="profile-img-container">
+                                        <img class="img-profiles" src="{% static 'images/profile1.png' %}" alt="No Image" profile="day-power">
+                                        <img class="img-profiles" src="{% static 'images/profile2.png' %}" alt="No Image" profile="high-day-evening">
+                                        <img class="img-profiles" src="{% static 'images/profile3.png' %}" alt="No Image" profile="evening-power">
+                                        <img class="img-profiles" src="{% static 'images/profile4.png' %}" alt="No Image" profile="night-power">
+                                    </div>
                                 </div>
 
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input option2" id="high-day-evening" name="profile_consumption" value="high-day-evening">
-                                    <label class="form-check-label" for="high-day-evening">Πρωινό - Απογευματινό (06:00 - 12:00 & 16:00 - 22:00) </label>
-                                </div> 
-
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input option2" id="evening-power" name="profile_consumption" value="evening-power">
-                                    <label class="form-check-label" for="evening-power">Απογευματινό (14:00 - 23:00) </label>
-                                </div> 
-
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input option2" id="night-power" name="profile_consumption" value="night-power">
-                                    <label class="form-check-label" for="night-power">Νυχτερινό (17:00 - 08:00)</label>
-                                </div> 
-
                             </div>
+                            
 
                             <div class="option-selector-margin" title="Συμπληρώστε την τιμή €/kWh του παρόχου σας.">
                                 <div> <span class="spacer-label">Επιλέξτε τιμή προμήθειας Ηλεκτρικής Ενέργειας:</span>
@@ -504,7 +516,7 @@
                                     <p class="spacer-in-calculator-panel"></p>
                                 
                                     <label for="price_kwh">Τιμή: </label>
-                                    <span>0. <input type="number" id="price_kwh" name="price_kwh" min="1" max="300" step="1" required></span>
+                                    <input type="text" id="price_kwh" name="price_kwh" min="0.0" max="0.300" step="0.001" required>
                                     <span> €/kWh</span>
                                     
                             </div>

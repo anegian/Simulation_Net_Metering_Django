@@ -56,7 +56,7 @@ const titlSliderValue = document.getElementById('tilt-slider-value');
 const responsiveImage = document.getElementById('responsive-tilt-image');
 const tiltDefaultRadio = document.getElementById('inclination30');
 const profileDefaultRadio = document.getElementById('day-power');
-let profileConsumptionRadioButton = document.querySelectorAll('input[name="profile_consumption"]:checked');
+let profileConsumptionRadioButton = document.querySelectorAll('input[name="profile_consumption"]');
 let profileConsumptionValue;
 const special_production_output = document.getElementById('placeProduction');
 const minimum_panel_container = document.getElementById('minimumPanels');
@@ -105,7 +105,8 @@ panelAreaInput.value = panelParamsSelect.options[0].dataset.panel_area;
 panelCostInput.value = panelParamsSelect.options[0].dataset.panel_cost;
 
 // Settings for tilt images
-const images = document.querySelectorAll('.img-tilt');
+// const images = document.querySelectorAll('.img-tilt');
+const profileImages = document.querySelectorAll('.img-profiles');
 
 // FUNCTIONS
 function triggerButtonEnable() {
@@ -194,12 +195,11 @@ function disableElements() {
   azimuthDefaultRadio.checked = true;
   azimuthInput.value = 0;
   phase_load_selected.value = "phase_load";// Set the default phase value 
-  priceKwhInput.max = 999;
-  priceKwhInput.value = 155;
+  priceKwhInput.max = 0.300;
+  priceKwhInput.value = 0.155;
   annual_Kwh_input.disabled = true;
   annual_Kwh_input.value = ""
   profileDefaultRadio.checked = true;
-  // profileConsumptionValue = profileConsumptionRadioButton.checked ? profileConsumptionRadioButton.value : 'day-power';
   storage_selection.disabled = true;
   storage_kW.disabled = true; 
   manualPowerRadio.disabled = true;
@@ -335,7 +335,6 @@ function calculateAutoPower() {
   // Show the progress bar at the start of the request
   $('#progressBar').css('width', '0%'); // reset progress bar
   $('#progressBar').show();
-  
   // Get the latitude, longitude, azimuth, and tilt values from the form
   const latitudeValue = parseFloat(latitudeInput.value);
   const longitudeValue = parseFloat(longitudeInput.value);
@@ -352,33 +351,36 @@ function calculateAutoPower() {
   panelEfficiencyValue /= 100;
   const annualKWhValue = parseInt(annual_Kwh_input.value);
   const placeInstalmentValue = selectedPlaceInstalmentValue;
+
+  // Validate the parsed values
+  if (isNaN(panelKWpValue) || isNaN(shadingInputValue) || isNaN(panelAreaValue) ) {
+      throw new Error("Παρακαλώ ελέγξτε τις παραμέτρους ΦΒ Πάνελ.");
+  }
+
   const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
   const url = '/simulation/ajax/' ;  // Make sure this matches the URL pattern in your Django project's URLs
 
-  if (!annualKWhValue){
-    alert('Πρώτα πρέπει να επιλέξετε ετήσια κατανάλωση σε kWh στο προηγούμενο βήμα');
-  }
-    // Create the data object
-    let data = {
-        latitude: latitudeValue,
-        longitude: longitudeValue,
-        inclination: tiltValue,
-        azimuth: azimuthValue,
-        panel_area: panelAreaValue,
-        panel_efficiency: panelEfficiencyValue,
-        annual_Kwh_value: annualKWhValue,
-        panel_Wp_value: panelKWpValue,
-        place_instalment_value: placeInstalmentValue,
-        shading_value: shadingInputValue,
-        consumption_profile: profileValue,
-    };
+  // Create the data object
+  let data = {
+      latitude: latitudeValue,
+      longitude: longitudeValue,
+      inclination: tiltValue,
+      azimuth: azimuthValue,
+      panel_area: panelAreaValue,
+      panel_efficiency: panelEfficiencyValue,
+      annual_Kwh_value: annualKWhValue,
+      panel_Wp_value: panelKWpValue,
+      place_instalment_value: placeInstalmentValue,
+      shading_value: shadingInputValue,
+      consumption_profile: profileValue,
+  };
 
     console.log(data);
 
   const jsonData = JSON.stringify(data);
-
+  
   // Make the AJAX request
-  $.ajax({
+  ajaxRequest = $.ajax({
     url: url,
     type: 'POST',
     data: jsonData,
@@ -450,8 +452,16 @@ function calculateAutoPower() {
       autoPowerButton.innerHTML = 'Υπολογισμός Απαιτούμενης Ισχύος';
 
     },
-    error: function(xhr, textStatus, errorThrown) {
-      console.log('Error:', errorThrown);
+    error: function(xhr, status, errorThrown) {
+      ajaxRequest.abort();
+
+      if (status === 'abort') {
+        // Request was intentionally aborted
+        console.log('Request aborted');
+      } else {
+        // Handle other errors
+        console.error('Error:', errorThrown);
+      }
       // Hide the progress bar on error
       $('#progressBar').hide();
       
@@ -655,18 +665,30 @@ function clearPanelParameters(){
 
 function validatePanelWp(){
   // Validation Rules
-  const panelWpEntered = panelWpInput.value;
-  let sanitizedWpValue = panelWpEntered.replace(/[^0-9]/g, '');
-  // Check value Entered & Limit the value to at most 500Wp
-  if (sanitizedWpValue > 500) {
-    sanitizedWpValue = 500;
+  let panelWpEntered = panelWpInput.value;
+
+  if (panelWpEntered === '0'){
+    panelWpEntered = '305';
+    alert("Δεν επιτρέπονται μηδενικές τιμές");
   }
+  
+  // Remove leading zeros and limit to 3 digits
+  if (!/^\d{0,3}$/.test(panelWpEntered)) {
+    // Invalid input, clear the value
+    panelWpEntered = '';
+  }
+
+  // Check value Entered & Limit the value to at most 500Wp
+  if (panelWpEntered > '500') {
+    panelWpEntered = '500';
+  }
+
   // after check set the value of the input
-  panelWpInput.value = sanitizedWpValue; 
+  panelWpInput.value = panelWpEntered; 
 };
 
 function validatePanelEfficiency(){
-  const enteredEfficiencyValue = panelEfficiencyInput.value;
+  let enteredEfficiencyValue = panelEfficiencyInput.value;
 
   $('#panelEfficiencyInput').mask('00.0', {
     reverse: true,
@@ -675,17 +697,19 @@ function validatePanelEfficiency(){
     },
   }); 
 
-  if (isNaN(enteredEfficiencyValue) || enteredEfficiencyValue < 0.0) {
-    // Invalid input, set to a default value
-    $(this).val('0.0');
-  } else if (enteredEfficiencyValue > 30.0) {
-      // Input value exceeds maximum, set to the maximum value
-      $(this).val('30.0');
+  if (enteredEfficiencyValue > '30.0') {
+    // Input value exceeds maximum, set to the maximum value
+    enteredEfficiencyValue = '30.0';
+  }else if (enteredEfficiencyValue === '0'){
+    enteredEfficiencyValue = '18.3';
+    alert("Δεν επιτρέπονται μηδενικές τιμές");
   }
+
+  panelEfficiencyInput.value = enteredEfficiencyValue;
 };
 
 function validatePanelArea(){
-  const enteredAreaValue = panelAreaInput.value;
+  let enteredAreaValue = panelAreaInput.value;
 
   $('#panelAreaInput').mask('0.00', {
     reverse: true,
@@ -694,20 +718,44 @@ function validatePanelArea(){
     },
   }); 
 
-  if (isNaN(enteredAreaValue) || enteredAreaValue < 0.00) {
+  if (isNaN(enteredAreaValue)) {
     // Invalid input, set to a default value
-    $(this).val('0.00');
+    panelAreaInput.value = '';
+  }
+
+  if (enteredAreaValue === '0'){
+    panelAreaInput.value = '1.67';
+    alert("Δεν επιτρέπονται μηδενικές τιμές");
+  }
+};
+
+function validatePriceKwh(){
+  let enteredAreaValue = priceKwhInput.value;
+
+  if (!/^\d{0,1}(\.\d{0,3})?$/.test(enteredAreaValue)) {
+    // Invalid input, set to a default value
+    priceKwhInput.value = '';
+  }
+
+  if (priceKwhInput.value > '0.200'){
+    priceKwhInput.value = '0.200';
   }
 };
 
 function validatePanelCost(){
   // Validation Rules
-  const panelCostEntered = panelCostInput.value;
+  let panelCostEntered = panelCostInput.value;
   let sanitizedCostValue = panelCostEntered.replace(/[^0-9]/g, '');
-  // Check value Entered & Limit the value to at most 500Wp
+  // Check value Entered & Limit the value to at most 500€
   if (sanitizedCostValue > 500) {
     sanitizedCostValue = 500;
   }
+
+  if (sanitizedCostValue === '0'){
+    sanitizedCostValue = 100;
+    alert("Δεν επιτρέπονται μηδενικές τιμές");
+  }
+
   // after check set the value of the input
   panelCostInput.value = sanitizedCostValue; 
 };
@@ -815,6 +863,7 @@ placeInstalmentRadios.forEach(function(input) {
 
     });
 });
+
 // loop through the radio buttons and add an event listener to each one
 radio_buttons.forEach(radioButton => {
     radioButton.addEventListener('click', () => {
@@ -841,16 +890,39 @@ document.addEventListener('DOMContentLoaded', function() {
     form_submit_button.disabled = true;
     submitBtnEnabled = false; // A flag to track the state of the submit button
     profileDefaultRadio.checked = true;
-    // profileConsumptionValue = profileConsumptionRadioButton.checked ? profileConsumptionRadioButton.value : 'day-power';
+    profileConsumptionValue = profileDefaultRadio.value;
 
 
     console.log('Next Button Disabled:', nextButton.disabled);
     console.log('Previous Button Disabled:', previousButton.disabled);
     
-    images.forEach(function(image) {
-      const tiltValue = image.getAttribute('tilt');
-      image.style.display = tiltValue === '0' ? 'block' : 'none';
-    });
+    // images.forEach(function(image) {
+    //   const tiltValue = image.getAttribute('tilt');
+    //   image.style.display = tiltValue === '0' ? 'block' : 'none';
+    // });
+
+  profileConsumptionRadioButton.forEach(function(radioButton) {
+    radioButton.addEventListener('change', function () {
+      // Inside this event listener, you can dynamically capture the checked radio button.
+      let checkedRadioButton = document.querySelector('input[name="profile_consumption"]:checked');
+      profileConsumptionValue = checkedRadioButton.value;
+
+      profileImages.forEach(function(image){
+        const profileValue = image.getAttribute('profile');
+        image.style.display = profileValue === profileConsumptionValue ? 'block' : 'none';
+      });
+    }); 
+  });
+
+  // Initially, show the image for the default selected radio button
+  const defaultSelectedRadio = document.querySelector('input[name="profile_consumption"]:checked');
+  if (defaultSelectedRadio) {
+      const defaultSelectedValue = defaultSelectedRadio.value;
+      const defaultSelectedProfileImage = document.querySelector(`[profile="${defaultSelectedValue}"]`);
+      if (defaultSelectedProfileImage) {
+          defaultSelectedProfileImage.style.display = 'block';
+      }
+  }
 
     previousButton.addEventListener("click", goToPreviousPanel);
     nextButton.addEventListener("click", goToNextPanel);
@@ -1040,17 +1112,7 @@ discountRadio.addEventListener('change', showDiscountInputs);
 // Reset the PV_kW_output element value to the initial value when the reset button is clicked
 reset_button.addEventListener('click', resetForm);
 
-priceKwhInput.addEventListener('input', function(){
-    if (priceKwhInput.value > 999){
-    priceKwhInput.value = 999;
-  }
-  priceKwhInput.value = this.value;
-});
-
-profileConsumptionRadioButton.forEach(function(radioButton) {
-  profileConsumptionValue = radioButton.value;
-  console.log(profileConsumptionValue); // Outputs the value of each radio button
-});
+priceKwhInput.addEventListener('input', validatePriceKwh);
 
 //Submit, reset, Modal events
 form_submit_button.addEventListener('click', function(event){
