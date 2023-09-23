@@ -17,9 +17,12 @@ const panelWpInput = document.getElementById('panelWpInput');
 const panelEfficiencyInput = document.getElementById('panelEfficiencyInput');
 const panelAreaInput = document.getElementById('panelAreaInput');
 const panelCostInput = document.getElementById('panelCostInput');
+const installationCostInput = document.getElementById('installationCostInput');
+const inverterCostInput = document.getElementById('inverterCostInput');
 const form = document.getElementById("calculatorForm");
 const placeInstalmentRadios  = document.getElementsByName('installation')
-const customParams = document.getElementById('customParameters');
+const customParamsButton = document.getElementById('customParameters');
+const otherCostParamsButton = document.getElementById('otherCosts');
 let selectedPlaceInstalmentValue;
 const roofRadioButton = document.getElementById('roof');
 const phase_load_selected = document.getElementById("id_select_phase");
@@ -68,6 +71,8 @@ const circleLinks = document.querySelectorAll('.circle-link');
 let currentPanelIndex = 0;
 let submitBtnEnabled;
 let loadingBar = document.getElementById('progressBar');
+const batteryCostButton = document.getElementById("batteryCostButton");
+const batteryCostInput = document.getElementById('battery_cost');
 
 //Modal fields
 const form_submit_button = document.getElementById("submitBtn");
@@ -103,6 +108,7 @@ panelWpInput.value = panelParamsSelect.options[0].value;
 panelEfficiencyInput.value = panelParamsSelect.options[0].dataset.efficiency;
 panelAreaInput.value = panelParamsSelect.options[0].dataset.panel_area;
 panelCostInput.value = panelParamsSelect.options[0].dataset.panel_cost;
+batteryCostInput.value = '"αυτόματα"';
 
 // Settings for tilt images
 // const images = document.querySelectorAll('.img-tilt');
@@ -110,17 +116,16 @@ const profileImages = document.querySelectorAll('.img-profiles');
 
 // FUNCTIONS
 function triggerButtonEnable() {
-
   nextButton.disabled = false;
   console.log("In trigger function:", placeSelected.value)
   console.log(nextButton.disabled);
   nextButton.classList.add('enabled-button') 
 }
 function triggerButtonDisable() {
-nextButton.disabled = true;
-nextButton.classList.remove ('enabled-button');
-console.log("In trigger function:", placeSelected.value);
-console.log(nextButton.disabled);
+  nextButton.disabled = true;
+  nextButton.classList.remove ('enabled-button');
+  console.log("In trigger function:", placeSelected.value);
+  console.log(nextButton.disabled);
 }
 function setStorage(value) {
   storage_kW.min = value;
@@ -177,6 +182,15 @@ function resetAutoPowerDiv(){
   $('#completionMessage').hide();
   console.log("Reset Power Div: yes", "Auto power value is now: ", autoCalculatedPowerNumber);
 }
+function setOtherCostParameters(){
+  installationCostInput.value = '500';
+  inverterCostInput.value = 'αυτόματα';
+};
+function clearOtheCostParameters(){
+  installationCostInput.value = "";
+  inverterCostInput.value = "";
+};
+
 // Disable and reset every element
 function disableElements() {
   placeSelected.value = "";
@@ -200,6 +214,7 @@ function disableElements() {
   annual_Kwh_input.disabled = true;
   annual_Kwh_input.value = ""
   profileDefaultRadio.checked = true;
+  updateProfileImagesVisibility();
   storage_selection.disabled = true;
   storage_kW.disabled = true; 
   manualPowerRadio.disabled = true;
@@ -216,7 +231,11 @@ function disableElements() {
   selectedPlaceInstalmentValue = 'roof';
   noDiscountRadio.checked = true;
   discountPercentContainer.style.display = 'none';
-  customParams.checked = false;
+  customParamsButton.checked = false;
+  otherCostParamsButton.checked = false;
+  setOtherCostParameters();
+  batteryCostButton.checked = false;
+  batteryCostInput.value = 'αυτόματα';
 } 
 function enableAnnualkWh(){
   annual_Kwh_input.disabled = false;
@@ -266,7 +285,7 @@ function set_initial_properties_theme_toggler(){
   document.documentElement.style.setProperty('--text-color', '#f2f2f2');
   document.documentElement.style.setProperty('--bg-color-panel', '#393052');
   document.documentElement.style.setProperty('--label-color', '#bbb');
-  document.documentElement.style.setProperty('--form-label-color', '#f2f2f2');
+  document.documentElement.style.setProperty('--form-label-color', '#lightslategrey');
   document.documentElement.style.setProperty('--title-panel-color', '#f2f2f2');
   document.documentElement.style.setProperty('--slider-color', '#f2f2f2');
   document.documentElement.style.setProperty('--slider-value-kW-color', '#f2f2f2');
@@ -284,7 +303,7 @@ function toggleAutoPowerDiv() {
     setStorage(slider.value);
     disablePanelButton(nextButton);
   } else if (autoPowerRadio.checked) {
-    showAutoPowerDiv();
+    showAutoPowerDiv();disablePanelButton
     console.log("in toggle Auto Power: ", autoCalculatedPowerNumber);
     console.log("Auto calculated?", autoCalculatedPower);
 
@@ -522,7 +541,7 @@ function validateForm() {
 
 // Function about Next, Previous buttons and how to show the panels of the form
 function toggleNextButtonState() {
-    if ( annual_Kwh_input.value.trim() === '' || annual_Kwh_input.value === '0' ) {
+    if ( annual_Kwh_input.value.trim() === '' || annual_Kwh_input.value === '0') {
       // If the kWh field is empty or contains only spaces, disable the "Next" button
       disablePanelButton(nextButton);
       disablePanelButton(form_submit_button);
@@ -656,6 +675,7 @@ function setPanelParameters(){
   panelAreaInput.value = panel_area;
   panelCostInput.value = panel_cost;
 };
+
 function clearPanelParameters(){
   panelWpInput.value = "";
   panelEfficiencyInput.value = "";
@@ -686,7 +706,6 @@ function validatePanelWp(){
   // after check set the value of the input
   panelWpInput.value = panelWpEntered; 
 };
-
 function validatePanelEfficiency(){
   let enteredEfficiencyValue = panelEfficiencyInput.value;
 
@@ -707,7 +726,6 @@ function validatePanelEfficiency(){
 
   panelEfficiencyInput.value = enteredEfficiencyValue;
 };
-
 function validatePanelArea(){
   let enteredAreaValue = panelAreaInput.value;
 
@@ -728,7 +746,6 @@ function validatePanelArea(){
     alert("Δεν επιτρέπονται μηδενικές τιμές");
   }
 };
-
 function validatePriceKwh(){
   let enteredAreaValue = priceKwhInput.value;
 
@@ -741,7 +758,6 @@ function validatePriceKwh(){
     priceKwhInput.value = '0.200';
   }
 };
-
 function validatePanelCost(){
   // Validation Rules
   let panelCostEntered = panelCostInput.value;
@@ -758,6 +774,132 @@ function validatePanelCost(){
 
   // after check set the value of the input
   panelCostInput.value = sanitizedCostValue; 
+};
+function validateInstallationCost(){
+  // Validation Rules
+  let installaionCostEntered = installationCostInput.value;
+  let sanitizedCostValue = installaionCostEntered.replace(/[^0-9]/g, '');
+  // Check value Entered & Limit the value to at most 500€
+  if (sanitizedCostValue > 500) {
+    sanitizedCostValue = 500;
+  }
+
+  if (sanitizedCostValue === '0'){
+    sanitizedCostValue = 100;
+    alert("Δεν επιτρέπονται μηδενικές τιμές");
+  }
+
+  // after check set the value of the input
+  installationCostInput.value = sanitizedCostValue; 
+};
+function validateInverterCost(){
+  // Validation Rules
+  let inverterCostEntered = inverterCostInput.value;
+  let sanitizedCostValue = inverterCostEntered.replace(/[^0-9]/g, '');
+  // Check value Entered & Limit the value to at most 7000€
+  if (sanitizedCostValue > 7000) {
+    sanitizedCostValue = 7000;
+  }
+
+  if (sanitizedCostValue === '0'){
+    sanitizedCostValue = "1000";
+    alert("Δεν επιτρέπονται μηδενικές τιμές");
+  }
+
+  // after check set the value of the input
+  inverterCostInput.value = sanitizedCostValue; 
+};
+function validateBatteryCost(){
+  // Validation Rules
+  let batteryCostEntered = batteryCostInput.value;
+  let sanitizedCostValue = batteryCostEntered.replace(/[^0-9]/g, '');
+  // Check value Entered & Limit the value to at most 10000€
+  if (sanitizedCostValue > 10000) {
+    sanitizedCostValue = 10000;
+  }
+
+  if (sanitizedCostValue === '0'){
+    sanitizedCostValue = "1000";
+    alert("Δεν επιτρέπονται μηδενικές τιμές");
+  }
+
+  // after check set the value of the input
+  batteryCostInput.value = sanitizedCostValue; 
+};
+function validateStorageKW(){
+  // Get the input value as a string
+  let enteredStorage = storage_kW.value;
+
+  // Replace consecutive dots or commas with a single dot or single comma
+  enteredStorage = enteredStorage.replace(/(\.{2,}|,{2,})/g, '.');
+  // enteredStorage = enteredStorage.replace(/[0-9]*\.?[0-9]+/g, storage_kW.min);
+
+  // Check if the input is empty or contains non-numeric characters
+  if (enteredStorage.match(/[^0-9.]/g)) {
+    // Invalid input, set to a default value
+    storage_kW.value = storage_kW.min;
+    return;
+  }
+
+  // Parse the input as a float
+  enteredStorage = parseFloat(enteredStorage);
+
+
+  // entered value wae parsed so must check for not a number instead of empty string
+  // Because it is parsed float, cannot use dot, only comma if i check isNaN. When i remove isNaN dot works as well.
+  if (enteredStorage === 0 || isNaN(enteredStorage)){
+    storage_kW.value = storage_kW.min;
+    alert('Δεν επιτρέπονται μηδενικές τιμές ή κενά πεδία')
+  } else if (enteredStorage < parseFloat(storage_kW.min)) {
+    storage_kW.value = storage_kW.min;
+  } else if(enteredStorage > parseFloat(storage_kW.max)){
+    storage_kW.value = storage_kW.max;
+  }
+};
+
+// Function to check if all panel parameters are filled
+function checkPanelParameters() {
+  // Check if all input fields have values
+  if (panelWpInput.value.trim() !== '' && panelEfficiencyInput.value.trim() !== '' && panelAreaInput.value.trim() !== '' && panelCostInput.value.trim() !== '') {
+    // Enable the next button if all parameters are filled
+    enablePanelButton(nextButton);
+  } else if(installationCostInput.value.trim() !== '' && inverterCostInput.value.trim() !== ''){
+    // Disable the next button if any parameter is empty
+    disablePanelButton(nextButton);
+  } else{
+    disablePanelButton(nextButton);
+  }
+};
+function checkRestCostParameters() {
+  // Check if all input fields have values
+  if (installationCostInput.value.trim() !== '' && inverterCostInput.value.trim() !== '') {
+    // Enable the next button if all parameters are filled
+    enablePanelButton(nextButton);
+  } else if (panelWpInput.value.trim() !== '' && panelEfficiencyInput.value.trim() !== '' && panelAreaInput.value.trim() !== '' && panelCostInput.value.trim() !== '') {
+    // Disable the next button if any parameter is empty
+    disablePanelButton(nextButton);
+  } else{
+    disablePanelButton(nextButton);
+  }
+};
+function checkBatteryCost() {
+  // Check if all input fields have values
+  if (batteryCostInput.value.trim() !== ''){
+    enablePanelButton(form_submit_button);
+  }else {
+    // Disable the next button if any parameter is empty
+    disablePanelButton(form_submit_button);
+  }
+};
+// Function to show/hide images based on the selected radio button
+function updateProfileImagesVisibility() {
+  let checkedRadioButton = document.querySelector('input[name="profile_consumption"]:checked');
+  profileConsumptionValue = checkedRadioButton.value;
+
+  profileImages.forEach(function (image) {
+    const profileValue = image.getAttribute('profile');
+    image.style.display = profileValue === profileConsumptionValue ? 'block' : 'none';
+  });
 };
 
 // Set the initial values of all elements to 0
@@ -777,22 +919,26 @@ slider.oninput = function() {
 // Parameters from panelContainers
 panelParamsSelect.addEventListener('change', function() {
   setPanelParameters();
-  customParams.checked = false;
+  customParamsButton.checked = false;
 
   // Toggle the 'highlight' class based on the checkbox state
   $('.panels_parameters input[type="number"], .panels_parameters input[type="text"]').removeClass('highlight-input');
   $('.panels_parameters input[type="number"], .panels_parameters input[type="text"]').removeClass('highlight-filled');
-  console.log(panelAreaInput.value)
 });
 
-customParams.addEventListener('click', function(){
-  if (customParams.checked) {
+customParamsButton.addEventListener('click', function(){
+  if (customParamsButton.checked) {
     clearPanelParameters();
     // Remove the "readonly" attribute from the input fields
     panelWpInput.removeAttribute('readonly');
     panelEfficiencyInput.removeAttribute('readonly');
     panelAreaInput.removeAttribute('readonly');
     panelCostInput.removeAttribute('readonly');
+    panelWpInput.classList.remove('lightslategrey');
+    panelEfficiencyInput.classList.remove('lightslategrey');
+    panelAreaInput.classList.remove('lightslategrey');
+    panelCostInput.classList.remove('lightslategrey');
+    disablePanelButton(nextButton);
   } else {
       setPanelParameters();   
       // If the checkbox is unchecked, add the "readonly" attribute back to the input fields
@@ -800,40 +946,116 @@ customParams.addEventListener('click', function(){
       panelEfficiencyInput.setAttribute('readonly', 'readonly');
       panelAreaInput.setAttribute('readonly', 'readonly');
       panelCostInput.setAttribute('readonly', 'readonly');
+      panelWpInput.classList.add('lightslategrey');
+      panelEfficiencyInput.classList.add('lightslategrey');
+      panelAreaInput.classList.add('lightslategrey');
+      panelCostInput.classList.add('lightslategrey');
+      if (!otherCostParamsButton.checked){
+        enablePanelButton(nextButton);
+      }
+      
   }
 });
+
+otherCostParamsButton.addEventListener('click', function(){
+  if (otherCostParamsButton.checked) {
+    clearOtheCostParameters();
+    // Remove the "readonly" attribute from the input fields
+    installationCostInput.removeAttribute('readonly');
+    inverterCostInput.removeAttribute('readonly');
+    installationCostInput.classList.remove('lightslategrey');
+    inverterCostInput.classList.remove('lightslategrey');
+    disablePanelButton(nextButton);
+  } else {
+      setOtherCostParameters();   
+      // If the checkbox is unchecked, add the "readonly" attribute back to the input fields
+      installationCostInput.setAttribute('readonly', 'readonly');
+      inverterCostInput.setAttribute('readonly', 'readonly');
+      installationCostInput.classList.add('lightslategrey');
+      inverterCostInput.classList.add('lightslategrey');
+      if (!customParamsButton.checked){
+        enablePanelButton(nextButton);
+      }
+  }
+});
+
+batteryCostButton.addEventListener('click', function(){
+  nextButton.disabled = true;
+
+  if (batteryCostButton.checked) {
+    disablePanelButton(form_submit_button);
+    batteryCostInput.value = '';
+    // Remove the "readonly" attribute from the input fields
+    batteryCostInput.removeAttribute('readonly');
+    batteryCostInput.classList.remove('lightslategrey');
+  } else {
+    batteryCostInput.value = 'αυτόματα';  
+    //  If the checkbox is unchecked, add the "readonly" attribute back to the input fields
+    batteryCostInput.setAttribute('readonly', 'readonly');
+    enablePanelButton(form_submit_button);
+    batteryCostInput.classList.add('lightslategrey');
+  }
+});
+
+
+// Add event listeners to the input fields
+panelWpInput.addEventListener('input', checkPanelParameters);
+panelEfficiencyInput.addEventListener('input', checkPanelParameters);
+panelAreaInput.addEventListener('input', checkPanelParameters);
+panelCostInput.addEventListener('input', checkPanelParameters);
+installationCostInput.addEventListener('input', checkRestCostParameters);
+inverterCostInput.addEventListener('input', checkRestCostParameters);
+batteryCostButton.addEventListener('input', checkRestCostParameters);
 
 $(document).ready(function () {
   $('#customParameters').click(function () {
     const isChecked = this.checked;
-    const inputs = $('.panels_parameters input[type="number"], .panels_parameters input[type="text"]');
-        
-    // Toggle the 'highlight' class based on the checkbox state
-    inputs.toggleClass('highlight-input', isChecked);
+    const inputs = $('.left_panels_parameters input[type="number"], .left_panels_parameters input[type="text"]');
 
     if (!isChecked) {
         inputs.removeClass('highlight-filled');
     }
   });
-    
-});
+  
+  $('#otherCosts').click(function () {
+    const isChecked = this.checked;
+    const inputs = $('.right-field-parameters input[type="number"], .right-field-parameters input[type="text"]');
+
+    if (!isChecked) {
+        inputs.removeClass('highlight-filled');
+    }
+  });
+
+  $('#batteryCostButton').click(function () {
+    const isChecked = this.checked;
+    const inputs = $('.battery-cost-input input[type="text"]');
+
+    if (!isChecked) {
+        inputs.removeClass('highlight-filled');
+
+    }
+  });
+
 
   // Add input event listeners to remove the border when the field is filled
-  $('.panels_parameters input[type="number"], .panels_parameters input[type="text"]').on('input', function () {
+  $('.panels_parameters input[type="number"], .panels_parameters input[type="text"], .right-field-parameters  input[type="number"], .right-field-parameters input[type="text"], .battery-cost-input input[type="text"]').on('input', function () {
     if ($(this).val().trim() !== '') {
-      $(this).removeClass('highlight-input');
       $(this).addClass('highlight-filled');
     }else{
-      $(this).addClass('highlight-input');
       $(this).removeClass('highlight-filled'); // Remove 'highlight-filled' class when it's empty
     }
   });
+});
 
 // Add input event listeners to trigger the validation function
 panelWpInput.addEventListener('input', validatePanelWp);
 panelEfficiencyInput.addEventListener('input', validatePanelEfficiency);
 panelAreaInput.addEventListener('input', validatePanelArea);
 panelCostInput.addEventListener('input', validatePanelCost);
+installationCostInput.addEventListener('input', validateInstallationCost);
+inverterCostInput.addEventListener('input', validateInverterCost);
+batteryCostInput.addEventListener('input', validateBatteryCost);
+storage_kW.addEventListener('input', validateStorageKW);
 
 // Add event listener to each radio Azimuth input
 radioAzimuthInputs.forEach(function(input) {
@@ -844,23 +1066,10 @@ radioAzimuthInputs.forEach(function(input) {
     });
 });
 
-// // Add event listener to each radio Tilt input
-// radioTiltInputs.forEach(function(inputs) {
-//     inputs.addEventListener('change', function(e) {
-//       // Set the value of tiltInput to the selected radio input's value
-//       tiltInput.value = this.value;
-
-//         images.forEach(function(image) {
-//             const tiltValue = image.getAttribute('tilt');
-//             image.style.display = tiltValue ===  tiltInput.value ? 'block' : 'none';
-//         });
-//     });
-// });
 placeInstalmentRadios.forEach(function(input) {
   input.addEventListener('change', function() {
     // Set the value of azimuthInput to the selected radio input's value
     selectedPlaceInstalmentValue = this.value;
-
     });
 });
 
@@ -875,42 +1084,37 @@ radio_buttons.forEach(radioButton => {
 // Show the image corresponding to 30 degrees when the page starts or reloads
 // Go to next and previous panel calculator
 document.addEventListener('DOMContentLoaded', function() {
-    // Set the "roof" radio button as default checked
-    roofRadioButton.checked = true;
-    shadingSliderValue = "1";
-    azimuthDefaultRadio.checked = true;
-    // tiltDefaultRadio.checked = true;
-    titlSlider.value = '0'
-    tiltInput.value = '0'; // Set the value of tiltInput to 0
-    phaseLoadDefaultSelection.value = "phase_load"; // Set the default value here
-    hideAutoPowerDiv();
-    azimuthInput.value = 0;
-    annual_Kwh_input.value = "";
-    previousButton.disabled = true;
-    form_submit_button.disabled = true;
-    submitBtnEnabled = false; // A flag to track the state of the submit button
-    profileDefaultRadio.checked = true;
-    profileConsumptionValue = profileDefaultRadio.value;
+  updateProfileImagesVisibility();
+  // Set the "roof" radio button as default checked
+  roofRadioButton.checked = true;
+  shadingSliderValue = "1";
+  azimuthDefaultRadio.checked = true;
+  // tiltDefaultRadio.checked = true;
+  titlSlider.value = '0'
+  tiltInput.value = '0'; // Set the value of tiltInput to 0
+  phaseLoadDefaultSelection.value = "phase_load"; // Set the default value here
+  hideAutoPowerDiv();
+  azimuthInput.value = 0;
+  annual_Kwh_input.value = "";
+  previousButton.disabled = true;
+  form_submit_button.disabled = true;
+  submitBtnEnabled = false; // A flag to track the state of the submit button
+  profileDefaultRadio.checked = true;
+  profileConsumptionValue = profileDefaultRadio.value;
+  updateProfileImagesVisibility();
 
 
-    console.log('Next Button Disabled:', nextButton.disabled);
-    console.log('Previous Button Disabled:', previousButton.disabled);
+  console.log('Next Button Disabled:', nextButton.disabled);
+  console.log('Previous Button Disabled:', previousButton.disabled);
     
-    // images.forEach(function(image) {
-    //   const tiltValue = image.getAttribute('tilt');
-    //   image.style.display = tiltValue === '0' ? 'block' : 'none';
-    // });
+  // images.forEach(function(image) {
+  //   const tiltValue = image.getAttribute('tilt');
+  //   image.style.display = tiltValue === '0' ? 'block' : 'none';
+  // });
 
   profileConsumptionRadioButton.forEach(function(radioButton) {
     radioButton.addEventListener('change', function () {
-      // Inside this event listener, you can dynamically capture the checked radio button.
-      let checkedRadioButton = document.querySelector('input[name="profile_consumption"]:checked');
-      profileConsumptionValue = checkedRadioButton.value;
-
-      profileImages.forEach(function(image){
-        const profileValue = image.getAttribute('profile');
-        image.style.display = profileValue === profileConsumptionValue ? 'block' : 'none';
-      });
+      updateProfileImagesVisibility();
     }); 
   });
 
@@ -1011,8 +1215,15 @@ slider_hidden_input.addEventListener("change", setStorage(slider_hidden_input.va
 shadingSlider.addEventListener('change', function(){
   shadingSliderValue = shadingSlider.value;
 });
+
 storage_kW.addEventListener("change", function(){
-    console.log(storage_kW.value);
+    if (isNaN(storage_kW.value || storage_kW.value === '')){
+      disablePanelButton(form_submit_button);
+      alert("Παρακαλώ συμπληρώστε το πεδίο.")
+    }else {
+      enablePanelButton(form_submit_button);
+      console.log(storage_kW.value);
+    }
 });
 
 let isOpen = new Array(numberOfHelpButtons).fill(true);
@@ -1122,16 +1333,17 @@ form_submit_button.addEventListener('click', function(event){
 
     profile_modal_input.value = labelElement;
   });
-   
+
 
   slider_hidden_input.value = slider.value;
   power_modal_input.value = slider_hidden_input.value;
 
-  if (storage_selection.checked){
-    battery_modal_input.value = storage_kW.value;
-  }else{
-    battery_modal_input.value = 0;
-  }
+  if (storage_selection.checked && isNaN(storage_kW.value)){
+    battery_modal_input.value = parseFloat(storage_kW.min);
+  }else if (storage_kW.value >= parseFloat(storage_kW.min)){
+    battery_modal_input.value = parseFloat(storage_kW.value).toFixed(1);
+  }else 
+   battery_modal_input.value = 0.0;
       
   if (noDiscountRadio.checked || (isNaN(discount_percent.value) && isNaN(discount_percent_battery.value))){
     discount_percent.value = 0;

@@ -117,16 +117,17 @@
 
                                         <div class="coords-map-latitude">
                                             <label class="form-check-label" for="regionInput">Νομός:</label>
-                                            <input class="panel-field" type="text" name="placeInput" id="regionInput" readonly required>
+                                            <input class="panel-field" type="text" name="placeInput" id="regionInput" placeholder="Νομός εγκατάστασης" 
+                                            title="Το πεδίο συμπληρώνεται αυτόματα" readonly required>
                                         </div>
                                         
                                         <div class="coords-map-latitude">
                                             <label class="form-check-label" for="latitude">Πλάτος &deg;</label>
-                                            <input type="number" name="latitude" id="latitude" step="0.000001" readonly required>
+                                            <input type="number" name="latitude" id="latitude" step="0.000001" title="Το πεδίο συμπληρώνεται αυτόματα" readonly required>
                                         </div>
                                         <div class="coords-map-longitude">
                                             <label class="form-check-label" for="longitude">Μήκος &deg;</label>
-                                            <input type="number" name="longitude" id="longitude" step="0.000001" readonly required>
+                                            <input type="number" name="longitude" id="longitude" step="0.000001" title="Το πεδίο συμπληρώνεται αυτόματα" readonly required>
                                         </div>
                                         
                                     </div>
@@ -228,29 +229,40 @@
                                         </select>
                                         <div class="custom_parameters">
                                             <label class="form-check-label" for="customParameters" title="Πατήστε εδώ για να συμπληρώσετε διαφορετικές τιμές παραμέτρων">Προσαρμοσμένες Παράμετροι:  </label>
-                                            <div class="checkbox-container">
+                                            <div class="parameters-checkbox-container">
                                                 <input type="checkbox" id="customParameters" value="yes">
+                                            </div>
+                                            <label class="form-check-label-other" for="otherCosts" title="Πατήστε εδώ για να συμπληρώσετε άλλες προαιρετικές τιμές παραμέτρων">Άλλες Παράμετροι Συστήματος:  </label>
+                                            <div class="parameters-checkbox-container">
+                                                <input type="checkbox" id="otherCosts" value="yes">
                                             </div>
                                         </div>
                                         
                                     </div>
                                     <div class="panels_parameters">
                                         
-                                        <div>
+                                        <div class="left_panels_parameters">
                                             <label class="form-check-label" for="panelWpInput">Ισχύς Πάνελ: </label>
-                                            <input type="number" name="panel_kWp" id="panelWpInput" readonly><span class="metrics-special-calculation"> kWp</span>
+                                            <input class="lightslategrey" type="number" name="panel_kWp" id="panelWpInput" placeholder="ισχύς" readonly><span class="metrics-special-calculation"> kWp</span>
 
                                             <label class="form-check-label" for="panelEfficiencyInput">Απόδοση Πάνελ: </label>
-                                            <input type="text" name="panel_efficiency" id="panelEfficiencyInput" readonly><span class="metrics-special-calculation"> %</span>
+                                            <input class="lightslategrey" type="text" name="panel_efficiency" id="panelEfficiencyInput" placeholder="απόδοση"  readonly><span class="metrics-special-calculation"> %</span>
 
                                         </div>
-                                        <div>
+                                        <div class="left_panels_parameters">
                                             <label class="form-check-label" for="panelAreaInput">Eμβαδόν Πάνελ: </label>
-                                            <input type="text" name="panel_area" id="panelAreaInput" readonly><span class="metrics-special-calculation"> m²</span>
+                                            <input class="lightslategrey" type="text" name="panel_area" id="panelAreaInput" placeholder="εμβαδόν"  readonly><span class="metrics-special-calculation"> m²</span>
 
                                             <label class="form-check-label" for="panelCostInput">Κόστος Πάνελ: </label>
-                                            <input type="number" name="panel_cost" id="panelCostInput" readonly><span class="metrics-special-calculation"> € </span>
+                                            <input class="lightslategrey" type="number" name="panel_cost" id="panelCostInput" placeholder="κόστος"  readonly><span class="metrics-special-calculation"> € </span>
 
+                                        </div>
+                                        <div class="right-field-parameters">
+                                            <label class="form-check-label" for="installationCostInput">Κόστος Εγκατάστασης: </label>
+                                            <input class="lightslategrey" type="number" name="installation_cost" id="installationCostInput" placeholder="κόστος"  readonly><span class="metrics-special-calculation"> €</span>
+
+                                            <label class="form-check-label" for="inverterCostInput">Κόστος Ινβέρτερ: </label>
+                                            <input class="lightslategrey" type="text" name="inverter_cost" id="inverterCostInput" placeholder="κόστος"  title="Αν δε δώσετε τιμή, υπολογίζεται αυτόματα με την υποβολή της φόρμας" readonly><span class="metrics-special-calculation"> € </span>
                                         </div>
                                     </div>
                              
@@ -427,8 +439,8 @@
                                 </div>
 
                                 <div>
-                                    <input class="panel-selection-height" type="number" name="annual_consumption" id="annual_kwh" 
-                                        title="Παρακαλώ, συμπληρώστε εκτιμώμενη ετήσια κατανάλωση σε kWh" >
+                                    <input class="panel-selection-height-consumption" type="number" name="annual_consumption" id="annual_kwh" 
+                                        title="Παρακαλώ, συμπληρώστε εκτιμώμενη ετήσια κατανάλωση σε kWh" placeholder="Ετήσια κατανάλωση">
                                     <span>kWh</span>
                                         <button class="help-popper" type="button" title="help-button">
                                           <i class="fa fa-question-circle" aria-hidden="true" id="annual-consumption-info"></i>
@@ -452,10 +464,7 @@
 
                             <div class="option-selector-margin" title="Σημειώστε το ωράριο, στο οποίο εντοπίζετε τις μεγαλύτερες ανάγκες σε οικιακό ρεύμα.">
                                 <p class="spacer-label">Επιλέξτε προφίλ μεγαλύτερης κατανάλωσης ρεύματος:</p>
-
-                                    <div class="spacer-in-calculator-panel">
-                                    </div>
-                                
+                              
                                 <div id="profile-container">
                                     <div id="profile-radios-container">
                                      <div class="form-check" >
@@ -480,10 +489,10 @@
                                     </div>
                                     
                                     <div id="profile-img-container">
-                                        <img class="img-profiles" src="{% static 'images/profile1.png' %}" alt="No Image" profile="day-power">
-                                        <img class="img-profiles" src="{% static 'images/profile2.png' %}" alt="No Image" profile="high-day-evening">
-                                        <img class="img-profiles" src="{% static 'images/profile3.png' %}" alt="No Image" profile="evening-power">
-                                        <img class="img-profiles" src="{% static 'images/profile4.png' %}" alt="No Image" profile="night-power">
+                                        <img class="img-profiles" src="{% static 'images/profile-day.png' %}" alt="No Image" profile="day-power">
+                                        <img class="img-profiles" src="{% static 'images/profile-highday-evening.png' %}" alt="No Image" profile="high-day-evening">
+                                        <img class="img-profiles" src="{% static 'images/profile-evening.png' %}" alt="No Image" profile="evening-power">
+                                        <img class="img-profiles" src="{% static 'images/profile-night.png' %}" alt="No Image" profile="night-power">
                                     </div>
                                 </div>
 
@@ -516,7 +525,7 @@
                                     <p class="spacer-in-calculator-panel"></p>
                                 
                                     <label for="price_kwh">Τιμή: </label>
-                                    <input type="text" id="price_kwh" name="price_kwh" min="0.0" max="0.300" step="0.001" required>
+                                    <input type="text" id="price_kwh" name="price_kwh" min="0.0" max="0.300" step="0.001" placeholder="τιμή kWh" required>
                                     <span> €/kWh</span>
                                     
                             </div>
@@ -623,7 +632,7 @@
                                 <h4>Aποθήκευση - Επιδότηση</h4>
                             </div>
 
-                            <div class="option-selector-margin" title="Παρακαλούμε, πρώτα συμπληρώστε τα πεδία Κατανάλωση και Ισχύς και στη συνέχεια επιλέξτε εάν επιθυμείτε προσθήκη συσσωρευτών ή όχι">
+                            <div class="option-selector-margin" title="Eπιθυμείτε προσθήκη συσσωρευτών">
                                 <p><label for="without_storage" class="spacer-label">Επιθυμείτε προσθήκη συσσωρευτή:</label></p>
                                     
                                 <div class="spacer-in-calculator-panel">  
@@ -648,12 +657,35 @@
                                             <div class="help-container">
                                                 <span class="help-text" id="storage-text">
                                                     &#8226; Η <strong>ελάχιστη</strong> τιμή kWh για τον συσσωρευτή είναι ίση με τα kVA της<br> Ισχύος Φ/Β!<br>
-                                                    &#8226; Η <strong>μέγιστη</strong> δυνατή τιμή, είναι 10 kWh<br>
+                                                    &#8226; Η <strong>μέγιστη</strong> δυνατή τιμή, είναι 10 kWh<br><br>
+
+                                                    Εφόσον γνωρίζετε το κόστος της μπαταρίας μπορείτε να το ορίσετε. Για να σας επιτραπεί ο ορισμός, πατήστε μέσα στο checkbox. 
+                                                    Διαφορετικά θα υπολογιστεί μετά την υποβολή φόρμας, σύμφωνα με τις επιλογές σας.
+                                                   
                                                 </span>    
                                                 <span class="close-help">&times;</span>
                                             </div>
                                         <input type="number" class="form-control" id="storage_kw" name="storage_kw">
+
+                                            <div id="battery-cost-container">
+                                                <!-- <label class="form-check-label" for="batteryCost" title="Πατήστε εδώ εάν γνωρίζετε το κόστος της μπαταρίας">Αλλαγή τιμής:  </label> -->
+                                                <div class="battery-checkbox-container">
+                                                    <input type="checkbox" id="batteryCostButton" value="yes">
+                                                    <label class="form-check-label" for="batteryCostButton">Κόστος Μπαταρίας: </label>
+                                                    
+
+                                                    <div class="battery-cost-input" title="Εφόσον σας είναι γνωστό, μπορείτε να ορίσετε το κόστος της μπαταρίας">
+                                                        <input class="lightslategrey" type="text" name="battery_cost" id="battery_cost" placeholder="κόστος"  title="Αν δε δώσετε τιμή, υπολογίζεται αυτόματα με την υποβολή της φόρμας" readonly><span class="metrics-special-calculation"> € </span>
+                                                    </div>
+                                                </div>
+    
+                                                
+                                            </div>
+                                          
+
                                     </div>
+
+                                            
                                 </div>
                             </div>
 
@@ -682,16 +714,10 @@
     
                                             <div class="help-container">
                                                 <span class="help-text" id="discount-text">
-                                                    <strong>Προσέξτε να έχει συμπληρωθεί στο προηγούμενο βήμα, το είδος <br> παροχής και η ετήσια κατανάλωση ρεύματος!</strong><br><br>
+                                                    <ul><li>Ποσοστά έκπτωσης σύμφωνα με το πρόγραμμα <strong>"Φωτοβολταϊκά <br> στη Στέγη"</strong></li></ul>
                                                     
+                                                    <img class="img-discount" src="{% static 'images/discount.png' %}" alt="No Image">
                                                     
-                                                     Μπορείτε ελεύθερα να αυξομειώσετε τη συνολική ισχύ σύμφωνα με τις εξατομικευμένες ανάγκες σας και τα επιτρεπτά όρια.<br><br>
-                                                     Επιλέγοντας "Εύρεση βέλτιστης Ισχύος", θα εμφανιστεί κουμπί υπολογισμού και πατώντας το, 
-                                                     θα συμπληρωθoύν τα kWp του Φ/Β συστήματος που απαιτούνται για να εκμηδενίσετε την ετήσια κατανάλωση σας σε βάθος 25ετίας.<br>
-                                                     <br>
-    
-                                                     <b style="color: red;">Προσοχή</b>!<br>Για Μονοφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 5 kWp.<br>
-                                                     Για Τριφασικό σύστημα Φ/Β, μέγιστη επιτρεπτή Ισχύς 10 kWp.
                                                 </span>
                                                  <span class="close-help">&times;</span>
                                             </div>

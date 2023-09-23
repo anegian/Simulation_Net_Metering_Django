@@ -587,6 +587,11 @@ ul li{
         height: 25px!important;
         color: #000022;
     }
+    .panel-selection-height-consumption{
+        height: 25px!important;
+        width: 150px!important;
+        color: #000022;
+    }
     .custom_parameters {
         margin-top: 5px;
         display: flex;
@@ -613,9 +618,7 @@ ul li{
     .img-profiles{
         width: 260px;
         height: 140px;
-    }
-    #profile-img-container{
-        margin-left: 30px;
+        margin-left: 60px;
     }
     .img-discount{
         width: 420px;
@@ -727,7 +730,11 @@ ul li{
         border: 2px solid #738725; /* Apply a red border to highlight the input */
         height: 24px;
     }
-    #customParameters:hover{
+    #customParameters:hover,
+    #otherCosts:hover,
+    #batteryCostButton:hover,
+    .form-check-label,
+    .form-check-label-other{
         cursor: pointer;
     }
 
@@ -755,7 +762,14 @@ ul li{
     }
     .form-check-label{
         font-size: 14px;
-        color: var(--form-label-color);
+        /* color: var(--form-label-color); */
+        color: lightslategrey;
+    }
+    .form-check-label-other{
+        font-size: 14px;
+        /* color: var(--form-label-color); */
+        color: lightslategrey;
+        margin-left: 80px;
     }
     .panel-fields-labels{
         color: #000022;
@@ -790,7 +804,7 @@ ul li{
         color: #000022;
     }
     .panels_parameters{
-        width: 250px;
+        width: 60%;
         display: flex;
         flex-direction: row;
         margin: 20px 0 0 60px;
@@ -1025,14 +1039,14 @@ ul li{
     }
 
     #storage_kw.form-control{
-        height: 35px!important;
+        height: 28px!important;
         width: 170px;
-        font-size: 16px;
+        font-size: 14px;
     }
     #discount_percent.form-control, #discount_percent_battery.form-control{
-        height: 35px!important;
+        height: 30px!important;
         width: 170px;
-        font-size: 16px;
+        font-size: 14px;
     }
     /* ::: Django forms.py form container::: */
     .name-form-container{
@@ -1082,7 +1096,7 @@ ul li{
         margin-bottom: 8px;
         font-size: 14px;
     }
-    #myModal .form-control{
+    #myModal.form-control{
         font-size: 12px;
     }
     #azimuth_modal_value{
@@ -1156,35 +1170,80 @@ ul li{
         font-weight: bold;
         margin-bottom: 15px;
     }
+    .parameters-checkbox-container{
+        margin-right: 10px;
+        display: flex;
+        align-self: center;
+        justify-content: center;
+    }
     /* Panel Parameters field's size */
     #panelAreaInput, 
     #panelCostInput, 
     #panelWpInput, 
-    #panelEfficiencyInput{
+    #panelEfficiencyInput,
+    #installationCostInput,
+    #inverterCostInput {
         color: #000022;
         width: 80px;
         margin-bottom: 15px;
         font-weight: bold;
     }
+    .left_panels_parameters input,
+    .right-field-parameters input,
+    .battery-cost-input input{
+        text-align: center;
+    }
+    .right-field-parameters{
+        border-left: solid lightslategrey 2px;
+    }
+    .right-field-parameters input,
+    .right-field-parameters label{
+        margin-left: 5px;
+    }
     .metrics-special-calculation{
         font-size: 12px;
+        color: lightslategray;
     }
     #loading-bar-container {
-    width: 90%;
-    height: 6px;
+        width: 90%;
+        height: 6px;
 
     }
     
     #progressBar {
-    height: 6px;
-    width: 0;
-    background-color: #738725;
-    transition: width 0.3s ease-in-out;
-    text-align: center;
-    line-height: 30px;
-    color: #f2f2f2;
+        height: 6px;
+        width: 0;
+        background-color: #738725;
+        transition: width 0.3s ease-in-out;
+        text-align: center;
+        line-height: 30px;
+        color: #f2f2f2;
     }
     
+    .battery-checkbox-container{
+        display: flex;
+        flex-direction: row;
+        margin: 10px 0 0 10px;
+    }
+    .battery-cost-input,
+    .battery-cost-input input,
+    .battery-cost-input label,
+    .battery-cost-input .metrics-special-calculation{
+        display: flex;
+        flex-direction: row;
+        align-self: center;
+        justify-content: center;
+        margin-left: 2px;
+        color: lightslategray;
+    }
+    #battery_cost{
+        color: #000022;
+        width: 80px;
+        font-weight: 8px;
+    }
+    .lightslategrey{
+        background-color: lightslategray;
+    }
 
  /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
 
@@ -1361,14 +1420,14 @@ ul li{
                 }
             } /* End media  */
 
-
+            /* zoom >170% */
             @media (max-width: 940px) {
                 div.top-right-panel-container{
                     min-height: 60vh;
                 }
             }
 
-
+            /* zoom >190% */
             @media (max-width: 836px) {
                 #myChart3{
                     height: 70vh!important; /* Set a minimum height for the elements inside */
@@ -1511,6 +1570,15 @@ ul li{
                     left: 310px;
                     position: absolute;
                     text-align: center;
+                }
+                #storage_kw.form-control{
+                    width: 100px;
+                    font-size: 14px;
+                }
+                .img-profiles{
+                    width: 160px;
+                    height: 80px;
+                    margin-left: 40px;
                 }
                 
             }
