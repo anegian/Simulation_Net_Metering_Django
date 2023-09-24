@@ -145,15 +145,17 @@
                         <span class="info-title">&#8226; {{azimuth_text}}</span> <br>
                         <span class="info-title">&#8226; Κλίση: {{inclination_PV}} &deg;</span>
 
-                          {% if average_annual_savings > 0 and profitPercent >= 100 %}
-                            <p class="info-title" id="potential-savings" ><span style="color: #738725;">Πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας:<br>✔</span> έως επιπλέον {{potential_kwh|default:'0'}} kWh<br> 
-                            </p>
+                          {% if total_savings_potential > 0 and profitPercent >= 100 %}
+                            <p class="info-title" id="potential-savings" ><span style="color: #738725;">Πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας:<br>✔</span> έως επιπλέον {{potential_kwh|default:'0'}} kWh<br></p>
                           {% elif annual_consumption > annual_PV_energy_produced and profitPercent < 90 %}
                             <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
-                          {% elif profitPercent < 100 and profitPercent > 90 %}
-                            <p class="info-title" id="potential-savings" ><span style="color: lightslategray;">Με μικρές αλλαγές στις συνήθειές σας, ή με λίγο <br μεγαλύτερο >σύστημα, επιτυγχάνεται ο στόχος σας!!</span></p>
+                          {% elif profitPercent < 100 and profitPercent > 90 and recommended_kWp < slider_max_value or PV_kWp < slider_max_value %}
+                            <p class="info-title" id="potential-savings" ><span style="color: lightskyblue;">Με μικρές αλλαγές στις συνήθειές σας, ή με λίγο <br> μεγαλύτερο σύστημα, είναι εφικτός ο στόχος σας!!</span></p>
+                          {% elif PV_kWp == slider_max_value or recommended_kWp == slider_max_value and annual_consumption > annual_PV_energy_produced %}
+                            <p class="info-title" id="potential-savings" ><span style="color: lightslategrey;">Η κατανάλωσή σας υπερβαίνει την παραγόμενη ενέργεια <br>
+                            και το ΦΒ σας σύστημα έχει τη μέγιστη τιμή kWp. Δοκιμάστε <br>αλλαγές σε κλίση, αζιμούθιο ή σκιάσεις.</span></p> 
                           {% else %}   
-                             <p class="info-title" id="potential-savings" ><span style="color: lightslategrey;">Περιθώριο κέρδους:<br></span> Δεν υπάρχει διαθέσιμο περιθώριο κέρδους</p>      
+                            <p class="info-title" id="potential-savings" ><span style="color: lightslategrey;">Περιθώριο κέρδους:<br></span> Δεν υπάρχει διαθέσιμο περιθώριο κέρδους</p>
                           {% endif %}
                       </div>
 

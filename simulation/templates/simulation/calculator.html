@@ -17,7 +17,7 @@
 <script> let geojsonPath = "{% static 'Net_Metering/json/Prefectures_boundaries.geojson' %}";</script>
 <script src="{% static 'Net_Metering/javascript/leaflet_map.js' %}" defer></script>
 <script> var calculatePowerURL = "{% url 'simulation:calculate_power' %}";</script>
-<script src="{% static 'Net_Metering/javascript/scriptCalculators.js' %}" defer></script>
+<script src="{% static 'Net_Metering/javascript/scriptCalculator.js' %}" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 {% endblock %}
 
@@ -243,7 +243,7 @@
                                         
                                         <div class="left_panels_parameters">
                                             <label class="form-check-label" for="panelWpInput">Ισχύς Πάνελ: </label>
-                                            <input class="lightslategrey" type="number" name="panel_kWp" id="panelWpInput" placeholder="ισχύς" readonly><span class="metrics-special-calculation"> kWp</span>
+                                            <input class="lightslategrey" type="number" name="panel_kWp" id="panelWpInput" placeholder="ισχύς" readonly><span class="metrics-special-calculation"> Wp</span>
 
                                             <label class="form-check-label" for="panelEfficiencyInput">Απόδοση Πάνελ: </label>
                                             <input class="lightslategrey" type="text" name="panel_efficiency" id="panelEfficiencyInput" placeholder="απόδοση"  readonly><span class="metrics-special-calculation"> %</span>
@@ -325,8 +325,8 @@
                                     </div>
 
                                     <div>
-                                    <label class="azimuth_label" for="azimuthInput" class="azimuth_label" title="Το πεδίο συπληρώνεται αυτόματα">Αζιμούθιο σε &deg; :  </label>
-                                    <input class="panel-field azimuth" type="text" id="azimuthInput" readonly>
+                                    <label class="azimuth_label" for="azimuthInput" class="azimuth_label">Αζιμούθιο σε &deg; :  </label>
+                                    <input class="panel-field azimuth" type="text" id="azimuthInput" title="Το πεδίο συμπληρώνεται αυτόματα, αντίστοιχα με την επιλογή της πυξίδας" readonly>
                                 </div>
                                 
                                 </div>
@@ -500,7 +500,7 @@
                             
 
                             <div class="option-selector-margin" title="Συμπληρώστε την τιμή €/kWh του παρόχου σας.">
-                                <div> <span class="spacer-label">Επιλέξτε τιμή προμήθειας Ηλεκτρικής Ενέργειας:</span>
+                                <div class="space-price-kwh"> <span class="spacer-label">Επιλέξτε τιμή προμήθειας Ηλεκτρικής Ενέργειας:</span>
                                        
                                                 <button class="help-popper" type="button" title="help-button">
                                                 <i class="fa fa-question-circle" aria-hidden="true" id="price-kwh-info"></i>
@@ -520,13 +520,11 @@
                                                     <span class="close-help price">&times;</span>
                                                 </div>
                                       
-                                    </div>
+                                </div>
 
-                                    <p class="spacer-in-calculator-panel"></p>
-                                
-                                    <label for="price_kwh">Τιμή: </label>
-                                    <input type="text" id="price_kwh" name="price_kwh" min="0.0" max="0.300" step="0.001" placeholder="τιμή kWh" required>
-                                    <span> €/kWh</span>
+                                <label for="price_kwh">Τιμή: </label>
+                                <input type="text" id="price_kwh" name="price_kwh" min="0.0" max="0.300" step="0.001" placeholder="τιμή kWh" required>
+                                <span> €/kWh</span>
                                     
                             </div>
                         </div>
@@ -597,20 +595,34 @@
                                         </button>
                                     </div>
                                    
-                                    
-                                    <div>
-                                        <label class="form-check-label" for="placeProduction">Ειδική Παραγωγή Πάνελ:</label>
-                                        <input type="text" id="placeProduction" readonly><span class="metrics-special-calculation"> kWh/panel</span>
-
-                                    </div>
-                                        <div>
-                                            <label class="form-check-label" for="minimumPanels">Ελάχιστος Αριθμός Πάνελ:</label>
-                                            <input type="text" id="minimumPanels" name="minimumPanels" readonly><span class="metrics-special-calculation"> panels</span>
+                                    <div class="autopower-fields">
+                                         <div class="left-autopower-fields">
+                                            <div>
+                                                <label class="form-check-label-autopower" for="annualProduction">Εκτίμηση Ετήσιας Παραγωγής:</label>
+                                                <input type="text" class="lightslategrey" id="annualProduction" name="annual-production" readonly><span class="metrics-special-calculation"> kWh</span>
+                                            </div>
+                                            <div>
+                                                <label class="form-check-label-autopower" for="placeProduction">Ειδική Παραγωγή Πάνελ:</label>
+                                                <input type="text" class="lightslategrey" id="placeProduction" readonly><span class="metrics-special-calculation"> kWh/panel</span>
+                                            </div>
+                                            
                                         </div>
-                                    <div>
-                                        <label class="form-check-label" for="totalArea">Συνολικό Εμβαδόν:</label>
-                                        <input type="text" id="totalArea" readonly><span class="metrics-special-calculation"> m²</span>
+
+                                        <div class="right-autopower-fields">
+                                            <div>
+                                                <label class="form-check-label-autopower" for="minimumPanels">Ελάχιστος Αριθμός Πάνελ:</label>
+                                                <input type="text" class="lightslategrey" id="minimumPanels" name="minimum_panels" readonly><span class="metrics-special-calculation"> panels</span>
+                                            </div>
+                                            <div>
+                                                <label class="form-check-label-autopower" for="totalArea">Συνολικό Εμβαδόν Πάνελ:</label>
+                                                <input type="text" class="lightslategrey" id="totalArea" readonly><span class="metrics-special-calculation"> m²</span>
+                                            </div>
+                                        </div>
                                     </div>
+                                   
+                                           
+
+                                       
                                     
                                     <!-- Add the loading bar container -->
                                     <div id="loading-bar-container">
@@ -785,7 +797,7 @@
                                         <input type="number" class="form-control" id="azimuth_modal_value" readonly>
                                         <label for="tilt_modal_value">Κλίση (σε &deg;):</label>
                                         <input type="number" class="form-control" id="tilt_modal_value" readonly>
-                                        <label for="annual_Kwh_modal_value">Κατανάλωση (σε kWh):</label>
+                                        <label for="annual_Kwh_modal_value">Ετήσια Κατανάλωση (σε kWh):</label>
                                         <input type="number" class="form-control" id="annual_Kwh_modal_value" readonly>
                                         <label for="profile_modal_value">Προφίλ κατανάλωσης (ωράριο):</label>
                                         <input type="text" class="form-control" id="profile_modal_value" readonly>

@@ -28,6 +28,7 @@ const roofRadioButton = document.getElementById('roof');
 const phase_load_selected = document.getElementById("id_select_phase");
 const phaseLoadDefaultSelection = document.getElementById("phase_load");
 let priceKwhInput = document.getElementById('price_kwh');
+const defaultPriceKWh = 0.155;
 const reset_button = document.getElementById("resetBtn");
 const lastPanelField = document.getElementById('lastPanelField');
 const error_message = document.getElementById('error-message-panel');
@@ -64,6 +65,7 @@ let profileConsumptionValue;
 const special_production_output = document.getElementById('placeProduction');
 const minimum_panel_container = document.getElementById('minimumPanels');
 const total_PV_area = document.getElementById('totalArea');
+const annual_production = document.getElementById('annualProduction');
 const panelContainers = document.getElementsByClassName("panel-calculator");
 const previousButton = document.getElementById("previous-button");
 const nextButton = document.getElementById("next-button");
@@ -179,6 +181,7 @@ function resetAutoPowerDiv(){
   special_production_output.value = "";
   minimum_panel_container.value = "";
   total_PV_area.value = "";
+  annual_production.value = "";
   $('#completionMessage').hide();
   console.log("Reset Power Div: yes", "Auto power value is now: ", autoCalculatedPowerNumber);
 }
@@ -201,7 +204,7 @@ function disableElements() {
   disablePanelButton(form_submit_button);
   submitBtnEnabled = false;
   roofRadioButton.checked = true;
-  shadingSliderValue = "1";
+  shadingSliderValue = 1;
   defaultPanelParams.selected  = true;
   // tiltDefaultRadio.checked = true;
   titlSlider.value = '0'
@@ -210,7 +213,7 @@ function disableElements() {
   azimuthInput.value = 0;
   phase_load_selected.value = "phase_load";// Set the default phase value 
   priceKwhInput.max = 0.300;
-  priceKwhInput.value = 0.155;
+  priceKwhInput.value = defaultPriceKWh;
   annual_Kwh_input.disabled = true;
   annual_Kwh_input.value = ""
   profileDefaultRadio.checked = true;
@@ -359,17 +362,18 @@ function calculateAutoPower() {
   const longitudeValue = parseFloat(longitudeInput.value);
   const azimuthValue = parseFloat(azimuthInput.value);
   const tiltValue = parseFloat(tiltInput.value);
-  let panelKWpValue = parseFloat(panelWpInput.value);
+  let panelWpValue = parseFloat(panelWpInput.value);
   let shadingInputValue = parseInt(shadingSliderValue);
   let profileValue = profileConsumptionValue;
   // from Wp to kWp
-  panelKWpValue /= 1000; 
+  let panelKWpValue = panelWpValue / 1000; 
   const panelAreaValue = parseFloat(panelAreaInput.value);
-  let panelEfficiencyValue = parseFloat(panelEfficiencyInput.value);
+  let panelEfficiencyValue = parseFloat(panelEfficiencyInput.value).toFixed(1);
   //  from xx % to 0,xx %
   panelEfficiencyValue /= 100;
   const annualKWhValue = parseInt(annual_Kwh_input.value);
   const placeInstalmentValue = selectedPlaceInstalmentValue;
+  let sliderMaxValue = parseFloat(slider.max);
 
   // Validate the parsed values
   if (isNaN(panelKWpValue) || isNaN(shadingInputValue) || isNaN(panelAreaValue) ) {
@@ -381,17 +385,22 @@ function calculateAutoPower() {
 
   // Create the data object
   let data = {
+      // place's info
       latitude: latitudeValue,
       longitude: longitudeValue,
       inclination: tiltValue,
       azimuth: azimuthValue,
-      panel_area: panelAreaValue,
-      panel_efficiency: panelEfficiencyValue,
-      annual_Kwh_value: annualKWhValue,
-      panel_Wp_value: panelKWpValue,
       place_instalment_value: placeInstalmentValue,
       shading_value: shadingInputValue,
+      // panel's info
+      panel_area: panelAreaValue,
+      panel_efficiency: panelEfficiencyValue,
+      panel_kWp_value: panelKWpValue,
+      // consumption
+      annual_Kwh_value: annualKWhValue,
       consumption_profile: profileValue,
+      //slider power
+      slider_max_value: sliderMaxValue,
   };
 
     console.log(data);
@@ -424,40 +433,36 @@ function calculateAutoPower() {
         // Set the width of the progress bar based on the current percentage
         $('#progressBar').css('width', currentPercentage + '%');
 
-
       }, false);
       return xhr;
     },
-  
+
     success: function(response) {
       // Handle the response
-      const specialProduction = response.special_production;
+      let specialProduction = response.special_production_per_panel;
       let recommended_kWp = response.recommended_kWp;
       let minimum_PV_panels = response.minimum_PV_panels;
       let totalArea = response.total_area;
+      const diminishingFactors = response.diminishing_factors;
+      let annualProduction = response.annual_production;
+      console.log("--- recommended_kWp: ", recommended_kWp, "---", 'panelkWpValue: ', panelKWpValue, 'annual_production: ', annualProduction );
+      console.log("---", 'minimum_PV_panels: ',minimum_PV_panels, 'diminishingFactors: ', diminishingFactors)
       
-      if ( recommended_kWp > Number(slider.max) ){
-        console.log("@@@ The energy consumption exceeds solar production @@@")
-        console.log("--- panel kWp: ", panelKWpValue, "---")
-        recommended_kWp = Number(slider.max);
-        // panel Wp was set as decimal, so we have to multiply with 100
-        minimum_PV_panels = (recommended_kWp * panelKWpValue * 10 ).toFixed(0) ; 
-        totalArea = (minimum_PV_panels * panelAreaValue).toFixed(1);
-      }
-
       // Update the input field with the calculated power
       $('#placeProduction').val(specialProduction);
+      $('#minimumPanels').val(minimum_PV_panels);
+      $('#totalArea').val(totalArea);
+      $('#annualProduction').val(annualProduction);
+
       slider.value = recommended_kWp;
-      slider_hidden_input.value = Number(recommended_kWp.toFixed(1));
+      slider_hidden_input.value = recommended_kWp;
       PV_kW_output.innerHTML = slider.value;
       storage_kW.min = slider.value;
       storage_kW.value = slider.value;
       autoCalculatedPower = true;
-      autoCalculatedPowerNumber = Number(recommended_kWp.toFixed(1));
-      $('#minimumPanels').val(minimum_PV_panels);
-      $('#totalArea').val(totalArea);
-
+      autoCalculatedPowerNumber = recommended_kWp;
       enablePanelButton(nextButton);
+
       // Hide the progress bar on success
       $('#progressBar').hide();
       // Display a completion message with the actual time taken
@@ -483,7 +488,6 @@ function calculateAutoPower() {
       }
       // Hide the progress bar on error
       $('#progressBar').hide();
-      
     }
   });
 }
@@ -658,6 +662,8 @@ function resetForm(){
   disableElements();
   disableStorage();
   disableSlider();
+  disableErrorMessages();
+  
   // Show the first panel and scroll to it
   currentPanelIndex = 0; // Reset to the first panel index
   showPanel(currentPanelIndex);
@@ -757,6 +763,9 @@ function validatePriceKwh(){
   if (priceKwhInput.value > '0.200'){
     priceKwhInput.value = '0.200';
   }
+  if (priceKwhInput.value === ''){
+    priceKwhInput.value = defaultPriceKWh;
+  }
 };
 function validatePanelCost(){
   // Validation Rules
@@ -782,11 +791,6 @@ function validateInstallationCost(){
   // Check value Entered & Limit the value to at most 500€
   if (sanitizedCostValue > 500) {
     sanitizedCostValue = 500;
-  }
-
-  if (sanitizedCostValue === '0'){
-    sanitizedCostValue = 100;
-    alert("Δεν επιτρέπονται μηδενικές τιμές");
   }
 
   // after check set the value of the input
@@ -849,7 +853,7 @@ function validateStorageKW(){
   // Because it is parsed float, cannot use dot, only comma if i check isNaN. When i remove isNaN dot works as well.
   if (enteredStorage === 0 || isNaN(enteredStorage)){
     storage_kW.value = storage_kW.min;
-    alert('Δεν επιτρέπονται μηδενικές τιμές ή κενά πεδία')
+    alert('Δεν επιτρέπονται μηδενικές ή μη αριθμητικές τιμές.')
   } else if (enteredStorage < parseFloat(storage_kW.min)) {
     storage_kW.value = storage_kW.min;
   } else if(enteredStorage > parseFloat(storage_kW.max)){
@@ -993,6 +997,7 @@ batteryCostButton.addEventListener('click', function(){
     //  If the checkbox is unchecked, add the "readonly" attribute back to the input fields
     batteryCostInput.setAttribute('readonly', 'readonly');
     enablePanelButton(form_submit_button);
+    disablePanelButton(nextButton);
     batteryCostInput.classList.add('lightslategrey');
   }
 });
@@ -1087,7 +1092,7 @@ document.addEventListener('DOMContentLoaded', function() {
   updateProfileImagesVisibility();
   // Set the "roof" radio button as default checked
   roofRadioButton.checked = true;
-  shadingSliderValue = "1";
+  shadingSliderValue = 1;
   azimuthDefaultRadio.checked = true;
   // tiltDefaultRadio.checked = true;
   titlSlider.value = '0'
@@ -1334,7 +1339,9 @@ form_submit_button.addEventListener('click', function(event){
     profile_modal_input.value = labelElement;
   });
 
-
+  if (priceKwhInput.value === '0'  || priceKwhInput.value === '0.'){
+    priceKwhInput.value = defaultPriceKWh;
+  }
   slider_hidden_input.value = slider.value;
   power_modal_input.value = slider_hidden_input.value;
 
@@ -1354,10 +1361,6 @@ form_submit_button.addEventListener('click', function(event){
     discount_percent_modal_input.value = discount_percent.value;
     discount_percent_battery_modal_input.value = discount_percent_battery.value;
   }
-    
-  if (manualPowerRadio.checked){
-    minimum_panel_container.value = 0;
-  }
 
   if ( discountRadio.checked && discount_percent_battery.value > 0 && no_storage_selection.checked ){
     alert('Έχετε επιλέξει ποσοστό έκπτωσης μπαταρίας, χωρίς να επιλέξετε προσθήκη συσσωρευτών!');
@@ -1374,6 +1377,7 @@ form_submit_button.addEventListener('click', function(event){
     console.log(profile_modal_input.value);
     console.log(slider_hidden_input.value);
     console.log(minimum_panel_container.value);
+    console.log('annual_production: ', annual_production.value)
     console.log('discount_percent_battery value:', discount_percent_battery.value);
     console.log('discount_percent_battery value:', discount_percent_battery_modal_input.value);
   }

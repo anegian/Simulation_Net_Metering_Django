@@ -591,6 +591,7 @@ ul li{
         height: 25px!important;
         width: 150px!important;
         color: #000022;
+        margin-top: 5px;
     }
     .custom_parameters {
         margin-top: 5px;
@@ -738,6 +739,7 @@ ul li{
         cursor: pointer;
     }
 
+
     .calculator-fieldset .panel-calculator{
         width: 780px;
         height: 460px;
@@ -760,7 +762,8 @@ ul li{
         font-size: 16px;
         text-decoration: underline;
     }
-    .form-check-label{
+    .form-check-label,
+    .form-check-label-autopower{
         font-size: 14px;
         /* color: var(--form-label-color); */
         color: lightslategrey;
@@ -839,7 +842,10 @@ ul li{
         border: solid #738725;
         text-align: center;
         font-weight: 600;
-        }
+    }
+    .space-price-kwh{
+        margin-bottom: 5px;
+    }
     /* Calculator Form help question mark poppers */
     .help-popper, #phase-load-button, #phase-load-info {
         background: none;
@@ -1164,7 +1170,17 @@ ul li{
     .column-calculator-page{
         width: 25%;
     }
-    #placeProduction, #minimumPanels, #totalArea{
+    .autopower-fields{
+        display: flex;
+        flex-direction: row;
+
+    }
+    .left-autopower-fields,
+    .right-autopower-fields{
+        width: 300px;
+        margin-left: 30px;
+    }
+    #placeProduction, #minimumPanels, #totalArea, #annualProduction{
         color: #000022;
         width: 50px;
         font-weight: bold;
