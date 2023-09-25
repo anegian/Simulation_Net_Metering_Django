@@ -50,8 +50,24 @@
                         style="width:120px;height:120px">
                     </lord-icon>
                     <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">
-                      Σύνολο: {{total_investment|default:'0' }} €
+                      Σύνολο: {{total_investment|default:'0' }} € <br>
+                      {% if discount_battery > 0 %}
+                      <span class="grey-text"> Έχει εφαρμοστεί έκπτωση {{discount_PV|default:'0'}}%</span>
+                      {% endif %} 
                     </p>    
+                    <p class="info-title" id="battery-cost-value" data-value="{{ battery_cost|default:'0' }}">
+                      {% if has_storage == "with_storage" and discount_battery == 0  %}
+                      <span style="color: #738725;">✔ Μπαταρία:</span> {{battery_cost|default:'0' }} € 
+                      {% elif has_storage == "with_storage" and discount_battery == 90 %}
+                      <span style="color: #738725;">✔ Μπαταρία:</span> {{battery_cost|default:'0' }} € 
+                      <span class="grey-text" style="color: lightslategrey;"><br> Έχει εφαρμοστεί έκπτωση {{discount_battery|default:'0'}}%</span>
+                      {% elif has_storage == "with_storage" and discount_battery == 100 %}
+                      <span style="color: #738725;">✔ Μπαταρία:</span> 
+                      <span class="grey-text" style="color: lightslategrey;"><br> Έχει εφαρμοστεί έκπτωση {{discount_battery|default:'0'}}%</span>
+                      {% else %}
+                      <span class="grey-text" style="color: lightslategrey;">Άνευ Μπαταρίας</span>
+                      {% endif %}  
+                    </p>  
                 </div>
 
                 <div class="container-icons">

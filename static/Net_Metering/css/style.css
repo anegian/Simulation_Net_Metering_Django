@@ -1276,6 +1276,10 @@ ul li{
                     width: 200px;
                     height: 160px;
                 }
+                .right-upper,
+                .top-right-panel-container{
+                    height: 1000px;
+                }
             }
             /* ZOOM IN  (> 120%) */
             @media (max-width: 1300px) {

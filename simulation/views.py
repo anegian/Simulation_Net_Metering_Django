@@ -1,5 +1,4 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.shortcuts import render
 from django.http.response import Http404, HttpResponse
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, HttpResponseServerError, JsonResponse
 from .forms import *
@@ -12,7 +11,6 @@ import pvlib.iotools
 import pvlib
 from django.conf import settings
 from django.contrib.sessions.models import Session
-
 
 # Create your views here
 # App level
@@ -99,11 +97,15 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         panel_efficiency = request.session.get('panel_efficiency')
         panel_cost = int(request.session.get('panel_cost'))
         panel_area = float(request.session.get('panel_area'))
+        inverter_cost = int(request.session.get('inverter_cost'))
+        installation_cost = int(request.session.get('installation_cost'))
+
         power_kWp_method = request.session.get('power_kWp_method')
         PV_kWp = float(request.session.get('PV_kWp'))
         slider_max_value = request.session.get('slider_max_value')
         has_storage = request.session.get('has_storage')
         storage_kw = float(request.session.get('storage_kw'))
+        battery_cost = request.session.get('battery_cost')
         discount_PV = request.session.get('discount_PV')
         discount_battery = request.session.get('discount_battery')
         shadings_percentage = calculate_shade_percentage(shadings_slider_value)
@@ -144,8 +146,11 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             print("****************")
 
         # Calculate the rest variables
+        print(f"BATTERY VALUE: {battery_cost}, BATTERY VALUE TYPE: {type(battery_cost)}")
+        print(f"PANEL PARAMETERS: kWp={panel_kWp}, efficiency={panel_efficiency}, cost={panel_cost}, area={panel_area}")
+        print(f"INVERTER COST: {inverter_cost}, INSTALLATION COST: {installation_cost}")
         self_consumption_ratio = calculate_self_consumption_ratio(has_storage, userPower_profile, annual_PV_energy_produced, annual_consumption)
-        total_investment, inverter_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required)
+        total_investment, inverter_cost, battery_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, battery_cost, panel_cost, discount_PV, discount_battery, number_of_panels_required, inverter_cost, installation_cost)
         consumption_total_charges = calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost)
         self_consumed_energy = calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_ratio)
         total_avoided_charges = calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges)
@@ -189,6 +194,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'storage_kw': storage_kw,
             'discount_PV': discount_PV,
             'discount_battery': discount_battery,
+            'battery_cost': battery_cost,
 
             # calculated values
             'total_investment': total_investment,
@@ -273,9 +279,11 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 panel_kWp /= 1000 
                 panel_efficiency = float(request.POST.get('panel_efficiency'))
                 # from xx % to 0,xx %
-                panel_efficiency /= 100
+                panel_efficiency = round(panel_efficiency / 100, 3)
                 panel_area = request.POST.get('panel_area')
                 panel_cost = request.POST.get('panel_cost')
+                inverter_cost = request.POST.get('inverter_cost')
+                installation_cost = request.POST.get('installation_cost')
                 phase_load = request.POST.get('select_phase')
 
                 if phase_load == "single_phase":
@@ -289,7 +297,13 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 PV_kWp = request.POST.get('myRangeSliderHidden')
                 has_storage = request.POST.get('storage')
                 storage_kw = request.POST.get('storage_kw')
+                battery_cost = request.POST.get('battery_cost')
                 noDiscountRadio = request.POST.get('discount')
+
+                if request.POST.get('battery_cost') is None or battery_cost == 'NaN' or battery_cost == 'αυτόματα' :
+                    battery_cost = 0
+                else:
+                    battery_cost = int(battery_cost)
 
                 if noDiscountRadio == 'no' or request.POST.get('discount_percent') is None and request.POST.get('discount_percent_battery') is None:
                     # The "no" radio button is selected
@@ -355,14 +369,16 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['panel_efficiency'] = panel_efficiency
             request.session['panel_cost'] = panel_cost
             request.session['panel_area'] = panel_area
+            request.session['inverter_cost'] = inverter_cost
+            request.session['installation_cost'] = installation_cost
             request.session['discount_PV'] = discount_PV
             request.session['discount_battery'] = discount_battery
             request.session['power_kWp_method'] = power_kWp_method
             request.session['slider_max_value'] = slider_max_value
+            request.session['battery_cost'] = battery_cost
 
             print(f"DISCOUNTS in session\n PV:{discount_PV}%, Battery:{discount_battery}%")
 
-            # return redirect(reverse('simulation:dashboard'))  # redirect to dashboard html
             return dashboard_results(request)
         else:
             # Form is not valid, handle the error or display a message
@@ -486,11 +502,12 @@ def calculate_power(request):
         return Http404("404 Generic Error")
 
 # Calculation functions
-def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, panel_cost, discount_PV, discount_battery, number_of_panels_required):
-    installation_cost = 500 # average cost in €
-    electric_materials = 100 # average cost in €
-    inverter_cost = 0
+# OK
+def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, battery_cost, panel_cost, discount_PV, discount_battery, number_of_panels_required, inverter_cost, installation_cost):
     average_battery_cost_per_kW = 850 # average in €
+    electric_materials = 100 # average cost in €
+    initial_inverter_cost = inverter_cost
+
     # Cost of PV system is total panels * cost
     panel_bases_cost = 90 * number_of_panels_required # bases for the panels on roof or terrace, average cost per base
     Pv_panels_cost = round((number_of_panels_required * panel_cost) + panel_bases_cost)
@@ -498,23 +515,37 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, pane
     # for 0.1 - 5 kWp
     if phase_load == "single_phase":
         # inverters cost -> 700€-1200€ prices, hybrid inverters are expensive
-        if has_storage == "with_storage":
-            inverter_cost = ( PV_kWp * 200 ) + ( (5 - PV_kWp) * 100 )  # 1-phase hybrid inverter for battery support
+        if has_storage == "with_storage" and battery_cost > 0:
+            inverter_cost_auto = ( PV_kWp * 200 ) + ( (5 - PV_kWp) * 100 )  # 1-phase hybrid inverter and given battery cost 
+            battery_cost = battery_cost
+            print(f"total_investment 1st if" )
+        elif has_storage == "with_storage" and battery_cost == 0:
+            inverter_cost_auto = ( PV_kWp * 200 ) + ( (5 - PV_kWp) * 100 ) # 1-phase hybrid inverter for battery support
             battery_cost = round(storage_kw * average_battery_cost_per_kW)
+            print(f"total_investment 2nd if" )
         else:
-            inverter_cost = ( PV_kWp * 100 ) + ( (5 - PV_kWp) * 100 )# simple 1-phase PV inverter
+            inverter_cost_auto = ( PV_kWp * 100 ) + ( (5 - PV_kWp) * 100 )# simple 1-phase PV inverter
             battery_cost = 0
+            print(f"total_investment 3rd if" )
     # for 0.1 - 10.8 kWp
     elif phase_load == "3_phase":
-        if has_storage == "with_storage":
-            inverter_cost = (PV_kWp * 250 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter for battery support
+        if has_storage == "with_storage" and battery_cost == 0:
+            inverter_cost_auto = (PV_kWp * 250 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter for battery support
             battery_cost = round(storage_kw * average_battery_cost_per_kW)
+        elif has_storage == "with_storage" and battery_cost > 0:
+            inverter_cost_auto = (PV_kWp * 250 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter and given battery cost
+            battery_cost = battery_cost
         else:
-            inverter_cost = ( PV_kWp * 150 )+ ( (10 - PV_kWp) * 100 ) # simple 3-phase PV inverter
+            inverter_cost_auto = ( PV_kWp * 150 )+ ( (10 - PV_kWp) * 100 ) # simple 3-phase PV inverter
             battery_cost = 0
     else:
         battery_cost = 0
 
+    if initial_inverter_cost > 0:
+        inverter_cost = inverter_cost
+    elif initial_inverter_cost == 0:
+        inverter_cost = inverter_cost_auto
+    
     # How much the PV system costs without battery
     Pv_system_cost = Pv_panels_cost + installation_cost + inverter_cost + electric_materials
 
@@ -533,7 +564,7 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, pane
     total_investment = round(Pv_system_cost + battery_cost)
     print(f"*Total investment: {total_investment}\n PV total cost: {Pv_system_cost}\n PV panels' Cost: {Pv_panels_cost},\n Battery Cost: {battery_cost},\n Inverter: {inverter_cost} and PV kWp: {PV_kWp},")
    
-    return total_investment, inverter_cost
+    return total_investment, round(inverter_cost), battery_cost
 # OK
 def calculate_shade_percentage(shadings_slider_value):
     # solar production reduction percentage due to shadings
@@ -663,7 +694,8 @@ def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produce
     
     return total_avoided_charges
 
-# ΛΙΓΟ ΠΡΟΣΟΧΗ ΣΤΙΣ ΠΕΡΙΠΤΩΣΕΙΣ όταν ενταχθεί η ιδιοκατανάλωση
+# -- ΛΙΓΟ ΠΡΟΣΟΧΗ ΣΤΙΣ ΠΕΡΙΠΤΩΣΕΙΣ του self_consumed_energy όταν ενταχθεί η ιδιοκατανάλωση -- 
+
 # Calculate annual savings, profit Percentage, total_savings_potential
 def calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, consumption_total_charges, total_avoided_charges, phase_loadkVA, energy_cost):
     print("TEST in calculate_annual_savings\n")
@@ -674,8 +706,9 @@ def calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self
         exported_energy_to_grid = annual_PV_energy_produced - annual_consumption
         total_savings_potential = round(total_avoided_charges)
         potential_kwh = round(exported_energy_to_grid,2)
-        print(f"In calculate_annual_savings 1st if : self_consumed_energy: {self_consumed_energy}, total_savings_potential{total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
+        print(f"In calculate_annual_savings 1st if : self_consumed_energy: {self_consumed_energy}, total_savings_potential: {total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
     else: # annual_consumption > annual_PV_energy_produced
+        # CAREFULL WHEN THE PRODUCED ENERGY IS VERY LARGE vs CONSUMPTION. SELF CONSUMPTION IS Larger than Consumption
         exported_energy_to_grid = annual_consumption - annual_PV_energy_produced
         total_savings_potential = round(total_avoided_charges)
         potential_kwh = 0
@@ -723,21 +756,21 @@ def calculate_payback_period(total_investment, total_savings_potential):
     else:
         payback_period = f"{years} έτη & {months} μήνες"
 
-    return payback_period, payback_year_float    
+    return payback_period, round(payback_year_float, 2)    
 
 def calculate_total_production_kwh(annual_PV_energy_produced, shadings_percentage):
     # 1st year the total production is the annual_PV_energy_produced
     total_production_kwh = annual_PV_energy_produced
     total_production_kwh_array =[0, annual_PV_energy_produced]
-    print(f"3333333333 in calculate_total_production_kwh, annual_PV_energy_produced {annual_PV_energy_produced} 333333")
+    print(f"3333333 in calculate_total_production_kwh, annual_PV_energy_produced {annual_PV_energy_produced}")
 
     for i in range(1, 25):
         total_production_kwh += annual_PV_energy_produced / ( annual_degradation_production ** i) * shadings_percentage
         total_production_kwh_array.append(round(total_production_kwh))
 
-    print("Total kWh production after 25 years: ", total_production_kwh)
+    print("Total kWh production after 25 years: ", round(total_production_kwh))
 
-    return total_production_kwh_array, total_production_kwh
+    return total_production_kwh_array, round(total_production_kwh)
 
 def transform_azimuth_text(azimuth_value):
     if azimuth_value == 180:

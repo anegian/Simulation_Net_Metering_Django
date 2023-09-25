@@ -91,6 +91,7 @@ const discount_percent_modal_input = document.getElementById("discount_percent_m
 const discount_percent = document.getElementById("discount_percent");
 const discount_percent_battery_modal_input = document.getElementById("discount_percent_battery_modal_value");
 const discount_percent_battery = document.getElementById("discount_percent_battery");
+
 // Show the modal programmatically
 const myModal = new bootstrap.Modal(document.getElementById('myModal'));
 // Get references to the discount_percent and discount battery select elements
@@ -110,7 +111,7 @@ panelWpInput.value = panelParamsSelect.options[0].value;
 panelEfficiencyInput.value = panelParamsSelect.options[0].dataset.efficiency;
 panelAreaInput.value = panelParamsSelect.options[0].dataset.panel_area;
 panelCostInput.value = panelParamsSelect.options[0].dataset.panel_cost;
-batteryCostInput.value = '"αυτόματα"';
+batteryCostInput.value = "αυτόματα";
 
 // Settings for tilt images
 // const images = document.querySelectorAll('.img-tilt');
@@ -443,10 +444,9 @@ function calculateAutoPower() {
       let recommended_kWp = response.recommended_kWp;
       let minimum_PV_panels = response.minimum_PV_panels;
       let totalArea = response.total_area;
-      const diminishingFactors = response.diminishing_factors;
       let annualProduction = response.annual_production;
       console.log("--- recommended_kWp: ", recommended_kWp, "---", 'panelkWpValue: ', panelKWpValue, 'annual_production: ', annualProduction );
-      console.log("---", 'minimum_PV_panels: ',minimum_PV_panels, 'diminishingFactors: ', diminishingFactors)
+      console.log("---", 'minimum_PV_panels: ',minimum_PV_panels);
       
       // Update the input field with the calculated power
       $('#placeProduction').val(specialProduction);
@@ -822,14 +822,15 @@ function validateBatteryCost(){
     sanitizedCostValue = 10000;
   }
 
-  if (sanitizedCostValue === '0'){
+  if (sanitizedCostValue === '0' || isNaN(sanitizedCostValue)){
     sanitizedCostValue = "1000";
-    alert("Δεν επιτρέπονται μηδενικές τιμές");
+    alert("Δεν επιτρέπονται μηδενικές ή μη αριθμητικές τιμές");
   }
 
   // after check set the value of the input
-  batteryCostInput.value = sanitizedCostValue; 
+  batteryCostInput.value = parseInt(sanitizedCostValue);
 };
+
 function validateStorageKW(){
   // Get the input value as a string
   let enteredStorage = storage_kW.value;
@@ -884,15 +885,6 @@ function checkRestCostParameters() {
     disablePanelButton(nextButton);
   } else{
     disablePanelButton(nextButton);
-  }
-};
-function checkBatteryCost() {
-  // Check if all input fields have values
-  if (batteryCostInput.value.trim() !== ''){
-    enablePanelButton(form_submit_button);
-  }else {
-    // Disable the next button if any parameter is empty
-    disablePanelButton(form_submit_button);
   }
 };
 // Function to show/hide images based on the selected radio button
@@ -987,7 +979,6 @@ batteryCostButton.addEventListener('click', function(){
   nextButton.disabled = true;
 
   if (batteryCostButton.checked) {
-    disablePanelButton(form_submit_button);
     batteryCostInput.value = '';
     // Remove the "readonly" attribute from the input fields
     batteryCostInput.removeAttribute('readonly');
@@ -996,8 +987,6 @@ batteryCostButton.addEventListener('click', function(){
     batteryCostInput.value = 'αυτόματα';  
     //  If the checkbox is unchecked, add the "readonly" attribute back to the input fields
     batteryCostInput.setAttribute('readonly', 'readonly');
-    enablePanelButton(form_submit_button);
-    disablePanelButton(nextButton);
     batteryCostInput.classList.add('lightslategrey');
   }
 });
@@ -1010,7 +999,6 @@ panelAreaInput.addEventListener('input', checkPanelParameters);
 panelCostInput.addEventListener('input', checkPanelParameters);
 installationCostInput.addEventListener('input', checkRestCostParameters);
 inverterCostInput.addEventListener('input', checkRestCostParameters);
-batteryCostButton.addEventListener('input', checkRestCostParameters);
 
 $(document).ready(function () {
   $('#customParameters').click(function () {
@@ -1323,7 +1311,7 @@ priceKwhInput.addEventListener('input', validatePriceKwh);
 //Submit, reset, Modal events
 form_submit_button.addEventListener('click', function(event){
 
-  profileConsumptionRadioButton.forEach(function(radioButton) {
+  profileConsumptionRadioButton.forEach(function() {
     
     let labelElement;
     if (profileConsumptionValue == 'day-power'){
@@ -1335,7 +1323,6 @@ form_submit_button.addEventListener('click', function(event){
     }else if (profileConsumptionValue == 'night-power'){
       labelElement = 'Νυχτερινό (17:00 - 08:00)'
     }
-
     profile_modal_input.value = labelElement;
   });
 
@@ -1370,6 +1357,10 @@ form_submit_button.addEventListener('click', function(event){
     tilt_modal_input.value = tiltInput.value;
     annual_Kwh_modal_input.value = annual_Kwh_input.value;  
     myModal.show();
+
+  if (inverterCostInput.value == 'αυτόματα'){
+    inverterCostInput.value = 0
+  }
 
     // test prints
     console.log(place_modal_input.value);

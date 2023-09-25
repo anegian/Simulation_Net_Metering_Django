@@ -17,7 +17,7 @@
 <script> let geojsonPath = "{% static 'Net_Metering/json/Prefectures_boundaries.geojson' %}";</script>
 <script src="{% static 'Net_Metering/javascript/leaflet_map.js' %}" defer></script>
 <script> var calculatePowerURL = "{% url 'simulation:calculate_power' %}";</script>
-<script src="{% static 'Net_Metering/javascript/scriptCalculator.js' %}" defer></script>
+<script src="{% static 'Net_Metering/javascript/scriptCalculators.js' %}" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 {% endblock %}
 
@@ -688,6 +688,7 @@
 
                                                     <div class="battery-cost-input" title="Εφόσον σας είναι γνωστό, μπορείτε να ορίσετε το κόστος της μπαταρίας">
                                                         <input class="lightslategrey" type="text" name="battery_cost" id="battery_cost" placeholder="κόστος"  title="Αν δε δώσετε τιμή, υπολογίζεται αυτόματα με την υποβολή της φόρμας" readonly><span class="metrics-special-calculation"> € </span>
+                                                        <input type="hidden" id="battery_cost_hidden" name="battery_cost_hidden" readonly>
                                                     </div>
                                                 </div>
     
