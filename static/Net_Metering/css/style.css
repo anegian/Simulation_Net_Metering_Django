@@ -1276,9 +1276,8 @@ ul li{
                     width: 200px;
                     height: 160px;
                 }
-                .right-upper,
-                .top-right-panel-container{
-                    height: 1000px;
+                div.top-right-panel-container{
+                    height: 250px;
                 }
             }
             /* ZOOM IN  (> 120%) */
@@ -1374,9 +1373,6 @@ ul li{
                 #third-panel{
                     width: 81%;
                     height: 50vh!important; /* Set a minimum height for the elements inside */
-                }
-                div.top-right-panel-container{
-                    height: 200px;
                 }
                 #second-panel-left{
                     height: 50vh!important;

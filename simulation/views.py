@@ -152,7 +152,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         self_consumption_ratio = calculate_self_consumption_ratio(has_storage, userPower_profile, annual_PV_energy_produced, annual_consumption)
         total_investment, inverter_cost, battery_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, battery_cost, panel_cost, discount_PV, discount_battery, number_of_panels_required, inverter_cost, installation_cost)
         consumption_total_charges = calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost)
-        self_consumed_energy = calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_ratio)
+        self_consumed_energy = calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption, self_consumption_ratio)
         total_avoided_charges = calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges)
         profitPercent, total_savings_potential, potential_kwh = calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, consumption_total_charges, total_avoided_charges, phase_loadkVA, energy_cost)
         total_savings, total_savings_array = calculate_total_savings(total_savings_potential)
@@ -160,7 +160,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced, shadings_percentage)
         total_production_kwh_array_json = json.dumps(total_production_kwh_array)
         payback_period, payback_year_float = calculate_payback_period(total_investment, total_savings_potential) #in months
-
+        
         net_present_value = calculate_npv(total_investment, total_savings)
         maintenance_cost = calculate_maintenance_cost(total_investment, inverter_cost)
         lcoe = calculate_lcoe(total_investment, maintenance_cost , total_production_kwh)
@@ -605,7 +605,7 @@ def calculate_self_consumption_ratio(has_storage, userPower_profile, annual_PV_e
     if has_storage == "with_storage":
         self_consumption_ratio  = 1.0
     else:
-        self_consumption_ratio  = 1.0
+        self_consumption_ratio  = 0.85
     
     # if userPower_profile == "day-power":
     #     print("1st condition")
@@ -643,11 +643,23 @@ def calculate_self_consumption_ratio(has_storage, userPower_profile, annual_PV_e
     return self_consumption_ratio
  
 # NEEDS UPDATING 2
-def calculate_self_consumed_energy(annual_PV_energy_produced, self_consumption_ratio):
+def calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption, self_consumption_ratio):
 
-    print(f"4444444 in calculate_self_consumed_energy: {annual_PV_energy_produced * self_consumption_ratio} , self_consumption_ratio: {self_consumption_ratio} ^^^^^^^^^")
+    potential_self_consumed_energy = round(annual_PV_energy_produced * self_consumption_ratio)
 
-    return round(annual_PV_energy_produced * self_consumption_ratio)
+    if annual_PV_energy_produced > annual_consumption and potential_self_consumed_energy >= annual_consumption:
+        exported_energy_to_grid = annual_PV_energy_produced - annual_consumption
+        self_consumed_energy = annual_consumption
+    elif annual_PV_energy_produced > annual_consumption and potential_self_consumed_energy < annual_consumption:
+        exported_energy_to_grid = annual_PV_energy_produced - potential_self_consumed_energy
+        self_consumed_energy = potential_self_consumed_energy
+    elif annual_PV_energy_produced < annual_consumption:
+        exported_energy_to_grid = annual_PV_energy_produced - potential_self_consumed_energy
+        self_consumed_energy = potential_self_consumed_energy
+
+    print(f"4444444 in calculate_self_consumed_energy: {self_consumed_energy} , self_consumption_ratio: {self_consumption_ratio}, exported_energy: {exported_energy_to_grid} ^^^^^^^^^")
+
+    return self_consumed_energy
 # OK   
 def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, number_of_panels_required):
     monthly_panel_energy_produced_list = []
@@ -668,30 +680,39 @@ def calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energ
 # OK
 def calculate_total_charges_for_imported_energy(exported_energy, imported_energy, phase_loadkVA, energy_cost):
     # additional energy has full cost, but imported energy thas was primarily exported only has regulated charges
-    if imported_energy >= exported_energy:
+    if imported_energy > exported_energy:
         additional_imported_energy = imported_energy - exported_energy
+        charges_for_additional_imported_energy = round((phase_loadkVA * 0.52) + (phase_loadkVA * 1) + (additional_imported_energy * 0.017) + (additional_imported_energy * energy_cost*0.06) + ( additional_imported_energy * energy_cost) + (additional_imported_energy * 0.0213) + (additional_imported_energy * 0.00844))
+        regulated_charges = round( (exported_energy * 0.0213) + (exported_energy * 0.00844) )
     else:
-        additional_imported_energy = exported_energy - imported_energy
-
-    charges_for_additional_imported_energy = round((phase_loadkVA * 0.52) + (phase_loadkVA * 1) + (additional_imported_energy * 0.017) + (additional_imported_energy * energy_cost*0.06) + ( additional_imported_energy * energy_cost) + (additional_imported_energy * 0.0213) + (additional_imported_energy * 0.00844))
-    regulated_charges = round( (exported_energy * 0.0213) + (exported_energy * 0.00844) )
+        additional_imported_energy = 0
+        charges_for_additional_imported_energy = 0
+        new_imported_energy = exported_energy - imported_energy
+        regulated_charges = round( (new_imported_energy * 0.0213) + (new_imported_energy * 0.00844) )
      
     return charges_for_additional_imported_energy + regulated_charges 
-# OK
+# NEEDS UPDATING 3
 def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges):
-    
+    exported_energy = annual_PV_energy_produced - self_consumed_energy
+
     # Calculate solar energy regulated cost sent back and forth to the grid 
-    if annual_PV_energy_produced >= annual_consumption and annual_consumption >= self_consumed_energy :
-        exported_energy = annual_PV_energy_produced - self_consumed_energy
-        imported_energy = annual_consumption - self_consumed_energy
-        total_charges_for_imported_energy = calculate_total_charges_for_imported_energy(exported_energy, imported_energy, phase_loadkVA, energy_cost)
-        total_avoided_charges = consumption_total_charges - total_charges_for_imported_energy 
-    else: # annual_consumption > annual_PV_energy_produced
-        exported_energy = annual_PV_energy_produced - self_consumed_energy
+    if annual_PV_energy_produced > annual_consumption and annual_consumption == self_consumed_energy :
+        imported_energy = 0
+        total_charges_for_imported_energy = 0
+        # Αν είναι πολύ μεγάλη η παραγωγή εξισώνεται η κατανάλωση και η ιδιοκατανάλωση σε kWh. 
+        total_avoided_charges = consumption_total_charges
+        print(f"9999 in total_avoided_charges 1st: exported_energy: {exported_energy}, imported_energy: {imported_energy}, total_charges_for_imported_energy: {total_charges_for_imported_energy}, total_avoided_charges: {total_avoided_charges} ")
+    elif annual_PV_energy_produced > annual_consumption and self_consumed_energy < annual_consumption :  
         imported_energy = annual_consumption - self_consumed_energy
         imported_energy_charges = calculate_total_charges_for_imported_energy(exported_energy, imported_energy, phase_loadkVA, energy_cost)
         total_avoided_charges = consumption_total_charges - imported_energy_charges
-    
+        print(f"9999 in total_avoided_charges 2nd: exported_energy: {exported_energy}, imported_energy: {imported_energy}, total_charges_for_imported_energy: {total_charges_for_imported_energy}, total_avoided_charges: {total_avoided_charges} ")
+    else: # annual_consumption > annual_PV_energy_produced
+        imported_energy = annual_consumption - self_consumed_energy
+        imported_additional_energy_charges = calculate_total_charges_for_imported_energy(exported_energy, imported_energy, phase_loadkVA, energy_cost)
+        total_avoided_charges = calculate_consumption_total_charges(self_consumed_energy, phase_loadkVA, energy_cost) - imported_additional_energy_charges
+        print(f"9999 in total_avoided_charges 3rd: exported_energy: {exported_energy}, imported_energy: {imported_energy}, total_charges_for_imported_energy: {total_charges_for_imported_energy}, total_avoided_charges: {total_avoided_charges} ")
+   
     return total_avoided_charges
 
 # -- ΛΙΓΟ ΠΡΟΣΟΧΗ ΣΤΙΣ ΠΕΡΙΠΤΩΣΕΙΣ του self_consumed_energy όταν ενταχθεί η ιδιοκατανάλωση -- 
@@ -708,11 +729,10 @@ def calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self
         potential_kwh = round(exported_energy_to_grid,2)
         print(f"In calculate_annual_savings 1st if : self_consumed_energy: {self_consumed_energy}, total_savings_potential: {total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
     else: # annual_consumption > annual_PV_energy_produced
-        # CAREFULL WHEN THE PRODUCED ENERGY IS VERY LARGE vs CONSUMPTION. SELF CONSUMPTION IS Larger than Consumption
-        exported_energy_to_grid = annual_consumption - annual_PV_energy_produced
+        exported_energy_to_grid = annual_PV_energy_produced - self_consumed_energy
         total_savings_potential = round(total_avoided_charges)
         potential_kwh = 0
-        print(f"In calculate_annual_savings else if : self_consumed_energy: {self_consumed_energy}, total_savings_potential{total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
+        print(f"In calculate_annual_savings else if : self_consumed_energy: {self_consumed_energy}, total_savings_potential: {total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
        
     profitPercent =  min(round(annual_PV_energy_produced / annual_consumption * 100, 1),100) 
 
