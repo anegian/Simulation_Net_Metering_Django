@@ -89,9 +89,9 @@
                     </lord-icon>
                     <p class="info-title" id="profit">έως {{total_savings_potential|default:'0'}} €/έτος</p>
                       {% if profitPercent == 100 %}
-                        <p class="green-text">Κάλυψη Ετήσιου Κόστους: <br> ({{ profitPercent|default:'0' }}%) ✔</p>
+                        <p class="green-text">Κάλυψη Ετήσιου Κόστους: <br>{{consumption_total_charges}}€ ({{ profitPercent|default:'0' }}%) ✔ </p>
                       {% else %}
-                        <p class="grey-text">Κάλυψη Ετήσιου Κόστους: <br> ({{ profitPercent|default:'0' }}%) --</p>
+                        <p class="grey-text">Κάλυψη Ετήσιου Κόστους: <br>{{consumption_total_charges}}€ ({{ profitPercent|default:'0' }}%) --</p>
                       {% endif %}
                 </div>
 
@@ -156,6 +156,7 @@
                     <div id="pv-info">
 
                       <div title="Στοιχεία ΦΒ Συστήματος" id="pv-info-list">
+                        <span class="info-title">&#8226; Ισχύς: {{PV_kWp|default:'0'}} kWp</span> <br> 
                         <span class="info-title">&#8226; Σύνολο: {{number_of_panels_required|default:'0'}} Φ/Β πάνελ</span> <br>
                         <span class="info-title">&#8226; Εμβαδόν: {{total_panel_area|default:'0'}} m²</span> <br>
                         <span class="info-title">&#8226; {{azimuth_text}}</span> <br>
@@ -163,7 +164,7 @@
 
                           {% if total_savings_potential > 0 and profitPercent >= 100 %}
                             <p class="info-title" id="potential-savings" ><span style="color: #738725;">Πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας:<br>✔</span> έως επιπλέον {{potential_kwh|default:'0'}} kWh<br></p>
-                          {% elif annual_consumption > annual_PV_energy_produced and profitPercent < 90 %}
+                          {% elif annual_consumption > annual_PV_energy_produced and profitPercent < 90 and recommended_kWp <= slider_max_value %}
                             <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
                           {% elif profitPercent < 100 and profitPercent > 90 and recommended_kWp < slider_max_value or PV_kWp < slider_max_value %}
                             <p class="info-title" id="potential-savings" ><span style="color: lightskyblue;">Με μικρές αλλαγές στις συνήθειές σας, ή με λίγο <br> μεγαλύτερο σύστημα, είναι εφικτός ο στόχος σας!!</span></p>
