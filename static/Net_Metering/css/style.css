@@ -1044,7 +1044,7 @@ ul li{
         display: block;
     }
 
-    #storage_kw.form-control{
+    #battery_capacity_kwh.form-control{
         height: 28px!important;
         width: 170px;
         font-size: 14px;
@@ -1587,7 +1587,7 @@ ul li{
                     position: absolute;
                     text-align: center;
                 }
-                #storage_kw.form-control{
+                #battery_capacity_kwh.form-control{
                     width: 100px;
                     font-size: 14px;
                 }

@@ -37,7 +37,7 @@ const error_message3 = document.getElementById('error-message-panel6');
 const max_message = document.getElementById("max-message")
 // Get the selected radio button's value
 const storage_selection = document.getElementById("with_storage");
-const storage_kW = document.getElementById("storage_kw");
+const battery_capacity_kwh = document.getElementById("battery_capacity_kwh");
 const noDiscountRadio = document.getElementById('no-discount');
 const discountRadio = document.getElementById('discount');
 const no_storage_selection = document.getElementById("without_storage");
@@ -131,8 +131,8 @@ function triggerButtonDisable() {
   console.log(nextButton.disabled);
 }
 function setStorage(value) {
-  storage_kW.min = value;
-  storage_kW.value = value;
+  battery_capacity_kwh.min = value;
+  battery_capacity_kwh.value = value;
 }
 function enablePanelButton(button){
   button.disabled = false;
@@ -220,7 +220,7 @@ function disableElements() {
   profileDefaultRadio.checked = true;
   updateProfileImagesVisibility();
   storage_selection.disabled = true;
-  storage_kW.disabled = true; 
+  battery_capacity_kwh.disabled = true; 
   manualPowerRadio.disabled = true;
   manualPowerRadio.checked = true;
   autoPowerRadio.disabled = true;
@@ -253,18 +253,18 @@ function disableAnnualkWh() {
 function enableStorage() {
   no_storage_selection.checked = true;
   storage_selection.disabled = false;
-  storage_kW.disabled = false;
-  storage_kW.min = slider.value;
-  storage_kW.max = 10.8;
-  storage_kW.step = 0.1;
-  storage_kW.value = slider.value;   
+  battery_capacity_kwh.disabled = false;
+  battery_capacity_kwh.min = slider.value;
+  battery_capacity_kwh.max = 10.8;
+  battery_capacity_kwh.step = 0.1;
+  battery_capacity_kwh.value = slider.value;   
 }
 function disableStorage() {
   no_storage_selection.checked = true;
-  storage_kW.disabled = true;
+  battery_capacity_kwh.disabled = true;
   storage_selection.disabled = true;
-  storage_kW.min = slider.value;
-  storage_kW.value = 0.0;
+  battery_capacity_kwh.min = slider.value;
+  battery_capacity_kwh.value = 0.0;
 }
 function disableErrorMessages() {
   phase_load_selected.classList.remove('error');
@@ -457,8 +457,8 @@ function calculateAutoPower() {
       slider.value = recommended_kWp;
       slider_hidden_input.value = recommended_kWp;
       PV_kW_output.innerHTML = slider.value;
-      storage_kW.min = slider.value;
-      storage_kW.value = slider.value;
+      battery_capacity_kwh.min = slider.value;
+      battery_capacity_kwh.value = slider.value;
       autoCalculatedPower = true;
       autoCalculatedPowerNumber = recommended_kWp;
       enablePanelButton(nextButton);
@@ -833,16 +833,16 @@ function validateBatteryCost(){
 
 function validateStorageKW(){
   // Get the input value as a string
-  let enteredStorage = storage_kW.value;
+  let enteredStorage = battery_capacity_kwh.value;
 
   // Replace consecutive dots or commas with a single dot or single comma
   enteredStorage = enteredStorage.replace(/(\.{2,}|,{2,})/g, '.');
-  // enteredStorage = enteredStorage.replace(/[0-9]*\.?[0-9]+/g, storage_kW.min);
+  // enteredStorage = enteredStorage.replace(/[0-9]*\.?[0-9]+/g, battery_capacity_kwh.min);
 
   // Check if the input is empty or contains non-numeric characters
   if (enteredStorage.match(/[^0-9.]/g)) {
     // Invalid input, set to a default value
-    storage_kW.value = storage_kW.min;
+    battery_capacity_kwh.value = battery_capacity_kwh.min;
     return;
   }
 
@@ -853,12 +853,12 @@ function validateStorageKW(){
   // entered value wae parsed so must check for not a number instead of empty string
   // Because it is parsed float, cannot use dot, only comma if i check isNaN. When i remove isNaN dot works as well.
   if (enteredStorage === 0 || isNaN(enteredStorage)){
-    storage_kW.value = storage_kW.min;
+    battery_capacity_kwh.value = battery_capacity_kwh.min;
     alert('Δεν επιτρέπονται μηδενικές ή μη αριθμητικές τιμές.')
-  } else if (enteredStorage < parseFloat(storage_kW.min)) {
-    storage_kW.value = storage_kW.min;
-  } else if(enteredStorage > parseFloat(storage_kW.max)){
-    storage_kW.value = storage_kW.max;
+  } else if (enteredStorage < parseFloat(battery_capacity_kwh.min)) {
+    battery_capacity_kwh.value = battery_capacity_kwh.min;
+  } else if(enteredStorage > parseFloat(battery_capacity_kwh.max)){
+    battery_capacity_kwh.value = battery_capacity_kwh.max;
   }
 };
 
@@ -1048,7 +1048,7 @@ panelCostInput.addEventListener('input', validatePanelCost);
 installationCostInput.addEventListener('input', validateInstallationCost);
 inverterCostInput.addEventListener('input', validateInverterCost);
 batteryCostInput.addEventListener('input', validateBatteryCost);
-storage_kW.addEventListener('input', validateStorageKW);
+battery_capacity_kwh.addEventListener('input', validateStorageKW);
 
 // Add event listener to each radio Azimuth input
 radioAzimuthInputs.forEach(function(input) {
@@ -1209,13 +1209,13 @@ shadingSlider.addEventListener('change', function(){
   shadingSliderValue = shadingSlider.value;
 });
 
-storage_kW.addEventListener("change", function(){
-    if (isNaN(storage_kW.value || storage_kW.value === '')){
+battery_capacity_kwh.addEventListener("change", function(){
+    if (isNaN(battery_capacity_kwh.value || battery_capacity_kwh.value === '')){
       disablePanelButton(form_submit_button);
       alert("Παρακαλώ συμπληρώστε το πεδίο.")
     }else {
       enablePanelButton(form_submit_button);
-      console.log(storage_kW.value);
+      console.log(battery_capacity_kwh.value);
     }
 });
 
@@ -1332,10 +1332,10 @@ form_submit_button.addEventListener('click', function(event){
   slider_hidden_input.value = slider.value;
   power_modal_input.value = slider_hidden_input.value;
 
-  if (storage_selection.checked && isNaN(storage_kW.value)){
-    battery_modal_input.value = parseFloat(storage_kW.min);
-  }else if (storage_kW.value >= parseFloat(storage_kW.min)){
-    battery_modal_input.value = parseFloat(storage_kW.value).toFixed(1);
+  if (storage_selection.checked && isNaN(battery_capacity_kwh.value)){
+    battery_modal_input.value = parseFloat(battery_capacity_kwh.min);
+  }else if (battery_capacity_kwh.value >= parseFloat(battery_capacity_kwh.min)){
+    battery_modal_input.value = parseFloat(battery_capacity_kwh.value).toFixed(1);
   }else 
    battery_modal_input.value = 0.0;
       

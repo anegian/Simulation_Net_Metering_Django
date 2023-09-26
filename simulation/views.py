@@ -104,7 +104,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         PV_kWp = float(request.session.get('PV_kWp'))
         slider_max_value = request.session.get('slider_max_value')
         has_storage = request.session.get('has_storage')
-        storage_kw = float(request.session.get('storage_kw'))
+        battery_capacity_kwh = float(request.session.get('battery_capacity_kwh'))
         battery_cost = request.session.get('battery_cost')
         discount_PV = request.session.get('discount_PV')
         discount_battery = request.session.get('discount_battery')
@@ -121,6 +121,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
                 number_of_panels_required = request.session.get('minimum_PV_panels')
                 annual_PV_energy_produced = request.session.get('annual_production')
                 special_production_per_panel = request.session.get('special_production_per_panel')
+
+
                 print ("Annual PV energy produced calculated with request", annual_PV_energy_produced)
                 print("****************")
                 print("\nThe PV power was auto generated with ajax request!!!!!!\n")
@@ -140,7 +142,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             # In manual mode, the rounded number of panel, must give us a ne kWp value for our system
             PV_kWp = round(number_of_panels_required * panel_kWp,1)
             annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, number_of_panels_required)
-            self_consumption_ratio = calculate_self_consumption_ratio(has_storage, userPower_profile, annual_PV_energy_produced, annual_consumption)
+            
+            # two times self_consumption ratio??
             print ("annual_PV_energy_produced calculated after submit", annual_PV_energy_produced, "special_production_per_panel: ", special_production_per_panel)
             print("****************")
             print("\nThe PV power was manually given!!!!!!\n")
@@ -151,11 +154,13 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         print(f"BATTERY VALUE: {battery_cost}, BATTERY VALUE TYPE: {type(battery_cost)}")
         print(f"PANEL PARAMETERS: kWp={panel_kWp}, efficiency={panel_efficiency}, cost={panel_cost}, area={panel_area}")
         print(f"INVERTER COST: {inverter_cost}, INSTALLATION COST: {installation_cost}")
-        self_consumption_ratio = calculate_self_consumption_ratio(has_storage, userPower_profile, annual_PV_energy_produced, annual_consumption)
-        total_investment, inverter_cost, battery_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, battery_cost, panel_cost, discount_PV, discount_battery, number_of_panels_required, inverter_cost, installation_cost)
+        # two times self_consumption ratio??
+        self_consumption_ratio = calculate_self_consumption_ratio(userPower_profile, annual_PV_energy_produced, has_storage, battery_capacity_kwh, annual_consumption)
+        total_investment, inverter_cost, battery_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, battery_capacity_kwh, battery_cost, panel_cost, discount_PV, discount_battery, number_of_panels_required, inverter_cost, installation_cost)
         consumption_total_charges = calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost)
-        self_consumed_energy, potential_self_consumed_energy = calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption, self_consumption_ratio)
-        total_avoided_charges = calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges)
+        self_consumed_energy, potential_self_consumed_energy, exported_energy = calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption, self_consumption_ratio)
+        
+        total_avoided_charges = calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges, exported_energy)
         profitPercent, total_savings_potential, potential_kwh = calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, consumption_total_charges, total_avoided_charges, phase_loadkVA, energy_cost)
         total_savings, total_savings_array = calculate_total_savings(total_savings_potential)
         total_savings_array_json = json.dumps(total_savings_array)
@@ -193,7 +198,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             'PV_kWp': PV_kWp,
             'slider_max_value': slider_max_value,
             'has_storage': has_storage,
-            'storage_kw': storage_kw,
+            'battery_capacity_kwh': battery_capacity_kwh,
             'discount_PV': discount_PV,
             'discount_battery': discount_battery,
             'battery_cost': battery_cost,
@@ -298,7 +303,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 power_kWp_method = request.POST.get('power_kWp_method')
                 PV_kWp = request.POST.get('myRangeSliderHidden')
                 has_storage = request.POST.get('storage')
-                storage_kw = request.POST.get('storage_kw')
+                battery_capacity_kwh = request.POST.get('battery_capacity_kwh')
                 battery_cost = request.POST.get('battery_cost')
                 noDiscountRadio = request.POST.get('discount')
 
@@ -343,9 +348,9 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
                 print(f"Τιμή κιλοβατώρας: {energy_cost}")
                 
                 if has_storage == 'with_storage':
-                    print(f"Battery kWh value: {storage_kw}")
+                    print(f"Battery kWh value: {battery_capacity_kwh}")
                 else:
-                    storage_kw = 0
+                    battery_capacity_kwh = 0
                     print('No storage selected')
             except KeyError:
                 # Handle the case where an invalid key is provided
@@ -363,7 +368,7 @@ def calculator_forms_choice(request):    # simulation/templates/calculator.html
             request.session['annual_consumption'] = annual_consumption
             request.session['PV_kWp'] = PV_kWp
             request.session['has_storage'] = has_storage
-            request.session['storage_kw'] = storage_kw
+            request.session['battery_capacity_kwh'] = battery_capacity_kwh
             request.session['phase_loadkVA'] = phase_loadkVA
             request.session['phase_load'] = phase_load
             request.session['energy_cost'] = energy_cost
@@ -449,7 +454,7 @@ def calculate_power(request):
             while annual_production <= energy_consumption:
                 loop_passes +=1
                 minimum_PV_panels +=1
-                annual_production  = round(minimum_PV_panels * special_production_per_panel / cumulative_degradation)
+                annual_production  = round(minimum_PV_panels * (special_production_per_panel / cumulative_degradation))
                 print("IN WHILE LOOP: ADDED 1 more PV panel")
 
             total_production = annual_production * 25
@@ -462,7 +467,7 @@ def calculate_power(request):
                 print("@@@ The energy consumption exceeds solar production @@@")
                 recommended_kWp = slider_max_value
                 minimum_PV_panels = round(recommended_kWp / panel_kWp_value)
-                annual_production = round((minimum_PV_panels * special_production_per_panel) / cumulative_degradation)
+                annual_production = round(minimum_PV_panels * (special_production_per_panel / cumulative_degradation))
                 print(f"--- new panel kWp: {recommended_kWp}, annual_production: {annual_production}, minimum_PV_panels: {minimum_PV_panels}")
 
             if place_instalment_value == 'roof':
@@ -505,7 +510,7 @@ def calculate_power(request):
 
 # Calculation functions
 # OK
-def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, battery_cost, panel_cost, discount_PV, discount_battery, number_of_panels_required, inverter_cost, installation_cost):
+def calculate_total_investment(PV_kWp, phase_load, has_storage, battery_capacity_kwh, battery_cost, panel_cost, discount_PV, discount_battery, number_of_panels_required, inverter_cost, installation_cost):
     average_battery_cost_per_kW = 850 # average in €
     electric_materials = 100 # average cost in €
     initial_inverter_cost = inverter_cost
@@ -523,7 +528,7 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, batt
             print(f"total_investment 1st if" )
         elif has_storage == "with_storage" and battery_cost == 0:
             inverter_cost_auto = ( PV_kWp * 200 ) + ( (5 - PV_kWp) * 100 ) # 1-phase hybrid inverter for battery support
-            battery_cost = round(storage_kw * average_battery_cost_per_kW)
+            battery_cost = round(battery_capacity_kwh * average_battery_cost_per_kW)
             print(f"total_investment 2nd if" )
         else:
             inverter_cost_auto = ( PV_kWp * 100 ) + ( (5 - PV_kWp) * 100 )# simple 1-phase PV inverter
@@ -533,7 +538,7 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, storage_kw, batt
     elif phase_load == "3_phase":
         if has_storage == "with_storage" and battery_cost == 0:
             inverter_cost_auto = (PV_kWp * 250 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter for battery support
-            battery_cost = round(storage_kw * average_battery_cost_per_kW)
+            battery_cost = round(battery_capacity_kwh * average_battery_cost_per_kW)
         elif has_storage == "with_storage" and battery_cost > 0:
             inverter_cost_auto = (PV_kWp * 250 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter and given battery cost
             battery_cost = battery_cost
@@ -578,90 +583,76 @@ def calculate_shade_percentage(shadings_slider_value):
         shadings_percentage = 1
     
     return shadings_percentage
+# OK
+def calculate_self_consumption_ratio(userPower_profile, annual_PV_energy_produced, has_storage, battery_capacity_kwh, annual_consumption):
+    depth_battery_discharge = 0.8 #80% dod for lithium batteries
+    solar_production_hours = 12
+    self_consumption_hours = 0
+    
+    if userPower_profile == "day-power":
+        print("1st condition day-power")
+        self_consumption_hours = 10
+    elif userPower_profile == "high-day-evening":
+        print("2nd condition high-day-evening")
+        self_consumption_hours = 8
+    elif userPower_profile == "evening-power":
+        print("3rd condition evening-power")
+        self_consumption_hours = 4
+    elif userPower_profile == "night-power":
+        print("4th condition night-power")
+        self_consumption_hours = 0
 
-# NEEDS UPDATING 1
-def calculate_self_consumption_ratio(has_storage, userPower_profile, annual_PV_energy_produced, annual_consumption ):
-    # # cases with battery storage and use profile to calculate self-consumption rate
-    # if has_storage == "with_storage":
-    #     if userPower_profile == "day-power":
-    #         self_consumption_ratio = 0.9
-    #     elif userPower_profile == "high-day-evening":
-    #         self_consumption_ratio = 0.85
-    #     elif userPower_profile == "evening-power":
-    #         self_consumption_ratio = 0.80
-    #     else:
-    #         self_consumption_ratio = 0.75
-    # else:
-    #     if userPower_profile == "day-power":
-    #         self_consumption_ratio = 0.8
-    #     elif userPower_profile == "high-day-evening":
-    #         self_consumption_ratio = 0.65
-    #     elif userPower_profile == "evening-power":
-    #         self_consumption_ratio = 0.6
-    #     else:
-    #         self_consumption_ratio = 0.5
+    self_consumption_ratio = round(self_consumption_hours / solar_production_hours,2) 
 
-    daily_energy_production = annual_PV_energy_produced / 365
-    daily_energy_consumption = annual_consumption / 365
+    print(f"self_consumption_ratio without battery is: {self_consumption_ratio}")
 
     if has_storage == "with_storage":
-        self_consumption_ratio  = 1.0
-    else:
-        self_consumption_ratio  = 0.85
+        daily_energy_production = round((annual_PV_energy_produced / 365) * self_consumption_ratio,2)
+        daily_energy_consumption = round(annual_consumption / 365,2)
+        if daily_energy_production == 0.0:
+            battery_stored_energy = round(battery_capacity_kwh * depth_battery_discharge,2)
+            self_consumption_hours = (12 * battery_stored_energy) / daily_energy_consumption
+            print(f"daily_energy_production: {daily_energy_production}, daily_energy_consumption: {daily_energy_consumption}, self_consumption_hours: {self_consumption_hours}, battery_stored_energy: {battery_stored_energy}")
+        elif daily_energy_production >= daily_energy_consumption:
+            battery_stored_energy = daily_energy_production - daily_energy_consumption
+            self_consumption_hours += (daily_energy_consumption + battery_stored_energy) / daily_energy_production
+        else:
+            battery_stored_energy = daily_energy_consumption - daily_energy_production
+            self_consumption_hours += (daily_energy_consumption + battery_stored_energy) / daily_energy_production
+
+        self_consumption_ratio = round(self_consumption_hours / solar_production_hours,2) 
+        print(f"daily_energy_production: {daily_energy_production}, daily_energy_consumption: {daily_energy_consumption}, battery_stored_energy: {battery_stored_energy}")
+        print(f"self_consumption_ratio with battery becomes: {self_consumption_ratio}")
+        
     
-    # if userPower_profile == "day-power":
-    #     print("1st condition")
-    #     if daily_energy_production >= daily_energy_consumption:
-    #         exported_solar_energy = (daily_energy_consumption - daily_energy_consumption) 
-    #         self_consumption_ratio = exported_solar_energy / daily_energy_production
-    #         print(f"1st condition - daily_energy_production: {daily_energy_production}, daily_energy_consumption: {daily_energy_consumption} ")
-    #     else:
-    #         self_consumption_ratio = 1.0
-    #         print("1st condition - default")
-    # elif userPower_profile == "high-day-evening":
-    #     print("2nd condition")
-    #     if daily_energy_production >= daily_energy_consumption:
-    #         exported_solar_energy = (daily_energy_consumption - daily_energy_consumption) 
-    #         self_consumption_ratio = exported_solar_energy / daily_energy_production
-    #     else:
-    #         self_consumption_ratio = 1.0
-    # elif userPower_profile == "evening-power":
-    #     print("3rd condition")
-    #     if daily_energy_production >= daily_energy_consumption:
-    #         exported_solar_energy = (daily_energy_consumption - daily_energy_consumption) 
-    #         self_consumption_ratio = exported_solar_energy / daily_energy_production
-    #     else:
-    #         self_consumption_ratio = 1.0
-    # elif userPower_profile == "night-power":
-    #     print("4th condition")
-    #     if daily_energy_production >= daily_energy_consumption:
-    #         exported_solar_energy = (daily_energy_consumption - daily_energy_consumption) 
-    #         self_consumption_ratio = exported_solar_energy / daily_energy_production
-    #     else:
-    #         self_consumption_ratio = 1.0
 
-    print(f"self_consumption_ratio in calculation method is: {self_consumption_ratio}")
-
-    return self_consumption_ratio
- 
+    return self_consumption_ratio 
 # OK
 def calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption, self_consumption_ratio):
 
     potential_self_consumed_energy = round(annual_PV_energy_produced * self_consumption_ratio)
 
-    if annual_PV_energy_produced > annual_consumption and potential_self_consumed_energy >= annual_consumption:
-        exported_energy_to_grid = annual_PV_energy_produced - annual_consumption
-        self_consumed_energy = annual_consumption
+    # self_consumption_ratio = 0
+    if potential_self_consumed_energy == 0:
+        exported_energy_to_grid = annual_PV_energy_produced
+        self_consumed_energy = potential_self_consumed_energy
+        print(f"calculate self_consumed_energy, 1st potential_self_consumed_energy == 0")
     elif annual_PV_energy_produced > annual_consumption and potential_self_consumed_energy < annual_consumption:
         exported_energy_to_grid = annual_PV_energy_produced - potential_self_consumed_energy
         self_consumed_energy = potential_self_consumed_energy
-    elif annual_PV_energy_produced < annual_consumption:
-        exported_energy_to_grid = annual_PV_energy_produced - potential_self_consumed_energy
+        print(f"calculate self_consumed_energy, 2nd potential_self_consumed_energy < annual_consumption")
+    elif annual_PV_energy_produced > annual_consumption and potential_self_consumed_energy >= annual_consumption:
+        exported_energy_to_grid = annual_PV_energy_produced - annual_consumption
+        self_consumed_energy = annual_consumption
+        print(f"calculate self_consumed_energy, 3rd potential_self_consumed_energy >= annual_consumption")
+    else:
+        exported_energy_to_grid = annual_PV_energy_produced - annual_consumption
         self_consumed_energy = potential_self_consumed_energy
+        print(f"calculate self_consumed_energy, else")
 
-    print(f"4444444 in calculate_self_consumed_energy: {self_consumed_energy} , self_consumption_ratio: {self_consumption_ratio}, exported_energy: {exported_energy_to_grid} ^^^^^^^^^")
+    print(f"4444444 in calculate self_consumed_energy: annual_PV_energy_produced:{annual_PV_energy_produced},self_consumed_energy: {self_consumed_energy} , self_consumption_ratio: {self_consumption_ratio}, exported_energy: {exported_energy_to_grid} ^^^^^^^^^")
 
-    return self_consumed_energy, potential_self_consumed_energy
+    return self_consumed_energy, potential_self_consumed_energy, exported_energy_to_grid
 # OK   
 def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, number_of_panels_required):
     monthly_panel_energy_produced_list = []
@@ -686,6 +677,13 @@ def calculate_total_charges_for_imported_energy(exported_energy, imported_energy
         additional_imported_energy = imported_energy - exported_energy
         charges_for_additional_imported_energy = round((phase_loadkVA * 0.52) + (phase_loadkVA * 1) + (additional_imported_energy * 0.017) + (additional_imported_energy * energy_cost*0.06) + ( additional_imported_energy * energy_cost) + (additional_imported_energy * 0.0213) + (additional_imported_energy * 0.00844))
         regulated_charges = round( (exported_energy * 0.0213) + (exported_energy * 0.00844) )
+    # for night consumption and self_consumption_ratio = 0
+    elif imported_energy == exported_energy:
+        charges_for_additional_imported_energy = 0
+        regulated_charges = round( (imported_energy * 0.0213) + (imported_energy * 0.00844) )
+    elif exported_energy > imported_energy:
+        regulated_charges = round( (imported_energy * 0.0213) + (imported_energy * 0.00844) )
+        charges_for_additional_imported_energy = 0
     else:
         additional_imported_energy = 0
         charges_for_additional_imported_energy = 0
@@ -694,16 +692,15 @@ def calculate_total_charges_for_imported_energy(exported_energy, imported_energy
      
     return charges_for_additional_imported_energy + regulated_charges 
 # OK
-def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges):
-    exported_energy = annual_PV_energy_produced - self_consumed_energy
+def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges, exported_energy):
 
     # Calculate solar energy regulated cost sent back and forth to the grid 
     # first codition when self consumed energy can be greater than consumption, annual_consumption == self_consumed_energy
     if annual_PV_energy_produced > annual_consumption and annual_consumption == self_consumed_energy :
         imported_energy = 0
         total_charges_for_imported_energy = 0
+        # Αν είναι πολύ μεγάλη η παραγωγή εξισώνεται η κατανάλωση και η ιδιοκατανάλωση σε kWh. Δημιουργείται μεγάλο περιθώριο κέρδους
         potential_energy =  potential_self_consumed_energy - annual_consumption
-        # Αν είναι πολύ μεγάλη η παραγωγή εξισώνεται η κατανάλωση και η ιδιοκατανάλωση σε kWh. Δημιουργείται μεγάλο περιθώριο κέρδους λό
         total_avoided_charges = consumption_total_charges + calculate_consumption_total_charges(potential_energy, phase_loadkVA, energy_cost)
         print(f"9999 in total_avoided_charges 1st: exported_energy: {exported_energy}, imported_energy: {imported_energy}, potential_energy: {potential_energy}, total_charges_for_imported_energy: {total_charges_for_imported_energy}, total_avoided_charges: {total_avoided_charges} ")
     elif annual_PV_energy_produced > annual_consumption and self_consumed_energy < annual_consumption :  
@@ -719,7 +716,6 @@ def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produce
    
     return total_avoided_charges
 
-# -- ΛΙΓΟ ΠΡΟΣΟΧΗ ΣΤΙΣ ΠΕΡΙΠΤΩΣΕΙΣ του self_consumed_energy όταν ενταχθεί η ιδιοκατανάλωση -- 
 
 # Calculate annual savings, profit Percentage, total_savings_potential
 # OK
