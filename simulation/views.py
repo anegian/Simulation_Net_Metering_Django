@@ -139,6 +139,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             monthly_irradiance_json, annual_irradiance, monthly_irradiance_list = get_solar_data(latitude_coords, longitude_coords, inclination_PV, azimuth_value)
             special_production_per_panel = round(annual_irradiance * panel_area * panel_efficiency * performance_degradation * shadings_percentage )
             number_of_panels_required = round(PV_kWp / panel_kWp )
+            request.session['minimum_PV_panels'] = number_of_panels_required
             # In manual mode, the rounded number of panel, must give us a ne kWp value for our system
             PV_kWp = round(number_of_panels_required * panel_kWp,1)
             annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, number_of_panels_required)
@@ -157,6 +158,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         # two times self_consumption ratio??
         self_consumption_ratio = calculate_self_consumption_ratio(userPower_profile, annual_PV_energy_produced, has_storage, battery_capacity_kwh, annual_consumption)
         total_investment, inverter_cost, battery_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, battery_capacity_kwh, battery_cost, panel_cost, discount_PV, discount_battery, number_of_panels_required, inverter_cost, installation_cost)
+        request.session['total_investment'] = total_investment
         consumption_total_charges = calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost)
         self_consumed_energy, potential_self_consumed_energy, exported_energy = calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption, self_consumption_ratio)
         
@@ -176,6 +178,8 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         average_CO2 = round(calculate_CO2_emissions_reduced(annual_PV_energy_produced))
         trees_planted = round(calculate_equivalent_trees_planted(annual_PV_energy_produced))
         total_panel_area = round(number_of_panels_required * panel_area, 1)
+        request.session['total_panel_area'] = total_panel_area
+
         azimuth_text = transform_azimuth_text(int(azimuth_value))
 
         # dictionary with rendered variables
@@ -507,6 +511,54 @@ def calculate_power(request):
             return JsonResponse(response_data)
     except Http404:      # not use bare except
         return Http404("404 Generic Error")
+
+def recalculate_pv_system_properties(request):
+    print("\n!! PV system proporties recalculating with ajax request !!")
+
+    try:
+        if request.method == 'POST':
+            # Retrieve values from the JSON data and the session
+            data = json.loads(request.body)
+
+            changed_number_panels = int(data.get('changed_number_panels'))
+            panel_kWp_value = request.session.get('panel_kWp')
+            panel_area = float(request.session.get('panel_area'))
+            total_panel_area = float(request.session.get('total_panel_area'))
+            panel_cost = int(request.session.get('panel_cost'))
+            # special_production_per_panel = request.session.get('special_production_per_panel')
+            total_investment = request.session.get('total_investment')
+            previous_pv_panels = request.session.get('minimum_PV_panels')
+            
+            if changed_number_panels > previous_pv_panels:
+                number_panels_difference = changed_number_panels - previous_pv_panels
+                added_panels_bases_cost = (number_panels_difference * 90)
+                new_total_investment = total_investment + (number_panels_difference * panel_cost) + added_panels_bases_cost
+                new_panel_area = round(total_panel_area + (number_panels_difference*panel_area),1)
+            else:
+                number_panels_difference =  previous_pv_panels - changed_number_panels
+                added_panels_bases_cost = (number_panels_difference * 90)
+                new_total_investment = total_investment - (number_panels_difference * panel_cost) - added_panels_bases_cost
+                new_panel_area = round(total_panel_area - (number_panels_difference*panel_area),1)
+
+            recalculated_pv = round(changed_number_panels * panel_kWp_value, 1)
+            # annual_production = round(changed_number_panels * (special_production_per_panel / cumulative_degradation))
+            
+            
+            # profitPercent, total_savings_potential, potential_kwh = calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, consumption_total_charges, total_avoided_charges, phase_loadkVA, energy_cost)
+            # payback_period, payback_year_float = calculate_payback_period(total_investment, total_savings_potential)
+
+        request.session['PV_kWp'] = recalculated_pv
+        
+        response_data = {
+            'recalculated_pv': recalculated_pv,
+            'changed_number_panels': changed_number_panels,
+            'total_investment': new_total_investment,
+            'new_panel_area': new_panel_area,
+        }
+
+        return JsonResponse(response_data)
+    except Http404:      # not use bare except
+        return Http404("404 Generic Error")       
 
 # Calculation functions
 # OK

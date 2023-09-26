@@ -11,17 +11,23 @@
          let totalProductionArray = JSON.parse( '{{ total_production_kwh_array_json|safe }}' );
          let monthIrradianceArray = JSON.parse( '{{ monthly_irradiance_json|safe }}' );
          let monthlyPanelEnergy= JSON.parse('{{monthly_panel_energy_produced_json|safe }}' );
+         let pvKwp = '{{PV_kWp}}';
+         let numberPanels = '{{number_of_panels_required}}';
          let paybackYear = '{{ payback_year_float }}';
+         let batteryCapacity = '{{battery_capacity_kwh}}';
          let profitPercent = '{{ profitPercent }}';
          let roi = '{{ roi }}';
          let annual_roi = '{{ annualized_roi }}';
          let lcoe = '{{ lcoe }}';
          let irr = '{{ irr }}';
-         let npv = '{{ net_present_value }}'
- </script>
+         let npv = '{{ net_present_value }}';
+         // Retrieve the CSRF token
+  </script>
  <script src="{% static 'Net_Metering/javascript/chart.js' %}" defer></script>
  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" ></script>
  <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="{% static 'Net_Metering/javascript/scriptDashboards.js' %}" defer></script>
 {% endblock %}
 
 {% block menu_list %}
@@ -37,7 +43,7 @@
     <div class="dashboard-page-content">
 
       <section class="full-container">
-    
+        {% csrf_token %}
         <div class="zoom-center">
           <div class="left-container">
 
@@ -50,7 +56,7 @@
                         style="width:120px;height:120px">
                     </lord-icon>
                     <p class="info-title" id="total_investment" data-value="{{ total_investment|default:'0' }}">
-                      Σύνολο: {{total_investment|default:'0' }} € <br>
+                      Σύνολο: <span id="total_investment_tag">{{total_investment|default:'0' }}</span> € <br>
                       {% if discount_battery > 0 %}
                       <span class="grey-text"> Έχει εφαρμοστεί έκπτωση {{discount_PV|default:'0'}}%</span>
                       {% endif %} 
@@ -66,7 +72,14 @@
                       <span class="grey-text" style="color: lightslategrey;"><br> Έχει εφαρμοστεί έκπτωση {{discount_battery|default:'0'}}%</span>
                       {% else %}
                       <span class="grey-text" style="color: lightslategrey;">Άνευ Μπαταρίας</span>
-                      {% endif %}  
+                      <form method="post" action="/your-form-action/">
+                        {% csrf_token %}
+                        <div>
+                          <img class="img-battery" src="{% static 'images/battery.png' %}" alt="No Image">
+                          <button class="add-battery-button" type="button" id="battery_add_button">Προσθήκη Μπαταρίας</button>
+                        </div>
+                      {% endif %} 
+                      </form> 
                     </p>  
                 </div>
 
@@ -158,11 +171,27 @@
                     <div id="pv-info">
 
                       <div title="Στοιχεία ΦΒ Συστήματος" id="pv-info-list">
-                        <span class="info-title">&#8226; Ισχύς: {{PV_kWp|default:'0'}} kWp</span> <br> 
-                        <span class="info-title">&#8226; Σύνολο: {{number_of_panels_required|default:'0'}} Φ/Β πάνελ</span> <br>
-                        <span class="info-title">&#8226; Εμβαδόν: {{total_panel_area|default:'0'}} m²</span> <br>
-                        <span class="info-title">&#8226; {{azimuth_text}}</span> <br>
-                        <span class="info-title">&#8226; Κλίση: {{inclination_PV}} &deg;</span>
+                          <span class="info-title">&#8226; Ισχύς:<span id="PV_kWp">{{PV_kWp|default:'0'}}</span>  kWp
+                            <!-- {% if phase_load == "single_phase" %}  
+                              <input type="number" id="PV_kWp_dashboard" min="1.0" max="5.0" step="0.1" value="0" readonly>kWp
+                            {% else %}
+                              <input type="number" id="PV_kWp_dashboard" min="1.0" max="10.8" step="0.1" value="0" readonly>kWp
+                            {% endif %}  -->
+                          </span> <br>
+                          <span class="info-title" title="Μπορείτε να αυξομειώσετε τον αριθμό των Φ/Β πάνελ και να κάνετε επανυπολογισμό.">
+                            &#8226; Σύνολο: <input type="number" id="number_panels_dashboard" min="1" max="30" step="1" value="0">Φ/Β πάνελ</span> 
+                          <span>
+                            <button type="button" id="recalculate_button" title="Πατήστε εδώ για επανυπολογισμό ">
+                              <img class="img-recalculate" src="{% static 'images/restart.png' %}" alt="No Image">
+                            </button>
+                          </span>
+                          <br>
+                          <span class="info-title">&#8226; Εμβαδόν:<span id="total_panel_area">{{total_panel_area|default:'0'}}</span> m² <br>
+                          <span class="info-title">&#8226; {{azimuth_text}}</span> <br>
+                          <span class="info-title">&#8226; Κλίση: {{inclination_PV}} &deg;</span> <br>                     
+                          {% if has_storage == "with_storage" %}
+                            <span class="info-title">&#8226; Μπαταρία: {{battery_capacity_kwh|default:'0'}} kWh</span><br>
+                          {% endif %}
 
                           {% if total_savings_potential > 0 and profitPercent >= 100 %}
                             <p class="info-title" id="potential-savings" ><span style="color: #738725;">Πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας:<br>✔</span> έως επιπλέον {{potential_kwh|default:'0'}} kWh<br></p>

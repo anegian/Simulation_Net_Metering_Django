@@ -411,7 +411,40 @@ ul li{
       .grey-dash::before {
         content: '-';
       }
-    
+      .add-battery-button{
+        width: 160px;
+        height: 40px;
+        background-color: #738725;
+        color: #f2f2f2;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 5px;
+        border-width: 0.01px;
+        box-shadow: 0 0 10px rgba(103, 103, 159, 0.5);
+        opacity: 0.8;
+        margin: 0 5px 0 5px;
+      }
+      .add-battery-button:hover{
+        opacity: 1;
+      }
+      .img-battery{
+        width: 30px;
+        height: 30px;
+      }
+      .img-recalculate{
+        width: 30px;
+        height: 30px;
+      }
+      #recalculate_button{
+        background-color: #393052;
+        border: none;
+        opacity: 0.8;
+      }
+      #recalculate_button:hover{
+        background-color: #393052;
+        border: none;
+        opacity: 1;
+      }
 
 
 
