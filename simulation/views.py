@@ -706,8 +706,12 @@ def calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption
         exported_energy_to_grid = annual_PV_energy_produced - annual_consumption
         self_consumed_energy = annual_consumption
         print(f"calculate self_consumed_energy, 3rd potential_self_consumed_energy >= annual_consumption")
+    elif annual_PV_energy_produced < annual_consumption:
+        exported_energy_to_grid = annual_PV_energy_produced - potential_self_consumed_energy
+        self_consumed_energy = potential_self_consumed_energy
+        print(f"calculate self_consumed_energy, 4th annual_PV_energy_produced < annual_consumption")
     else:
-        exported_energy_to_grid = annual_PV_energy_produced - annual_consumption
+        exported_energy_to_grid = annual_PV_energy_produced - potential_self_consumed_energy
         self_consumed_energy = potential_self_consumed_energy
         print(f"calculate self_consumed_energy, else")
 
