@@ -425,7 +425,7 @@ ul li{
         margin: 0 5px 0 5px;
       }
       .add-battery-button:hover{
-        opacity: 1;
+        opacity: 1.2;
       }
       .img-battery{
         width: 30px;
@@ -445,6 +445,7 @@ ul li{
         border: none;
         opacity: 1;
       }
+
 
 
 
@@ -1310,7 +1311,7 @@ ul li{
                     height: 160px;
                 }
                 div.top-right-panel-container{
-                    height: 250px;
+                    height: 325px;
                 }
             }
             /* ZOOM IN  (> 120%) */
@@ -1340,6 +1341,9 @@ ul li{
                 .img-house{
                    width: 180px;
                    height: 140px;
+                }
+                div.top-right-panel-container{
+                    height: 284px;
                 }
             }
  

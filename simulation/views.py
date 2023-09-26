@@ -528,6 +528,8 @@ def recalculate_pv_system_properties(request):
             # special_production_per_panel = request.session.get('special_production_per_panel')
             total_investment = request.session.get('total_investment')
             previous_pv_panels = request.session.get('minimum_PV_panels')
+            phase_load = request.session.get('phase_load')
+            pv_kwp_max_value = 5 if phase_load == "single_phase" else 10.8
             
             if changed_number_panels > previous_pv_panels:
                 number_panels_difference = changed_number_panels - previous_pv_panels
@@ -541,13 +543,20 @@ def recalculate_pv_system_properties(request):
                 new_panel_area = round(total_panel_area - (number_panels_difference*panel_area),1)
 
             recalculated_pv = round(changed_number_panels * panel_kWp_value, 1)
+            # Use a while loop to limit recalculated_pv to pv_kwp_max_value
+            while recalculated_pv > pv_kwp_max_value:
+                changed_number_panels -= 1
+                recalculated_pv = round(changed_number_panels * panel_kWp_value, 1)
+
+            request.session['PV_kWp'] = recalculated_pv
+
             # annual_production = round(changed_number_panels * (special_production_per_panel / cumulative_degradation))
             
             
             # profitPercent, total_savings_potential, potential_kwh = calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, consumption_total_charges, total_avoided_charges, phase_loadkVA, energy_cost)
             # payback_period, payback_year_float = calculate_payback_period(total_investment, total_savings_potential)
 
-        request.session['PV_kWp'] = recalculated_pv
+       
         
         response_data = {
             'recalculated_pv': recalculated_pv,
