@@ -195,7 +195,7 @@
 
                           {% if total_savings_potential > 0 and profitPercent >= 100 %}
                             <p class="info-title" id="potential-savings" ><span style="color: #738725;">Πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας:<br>✔</span> έως επιπλέον {{potential_kwh|default:'0'}} kWh<br></p>
-                          {% elif annual_consumption > annual_PV_energy_produced and profitPercent < 90 and recommended_kWp <= slider_max_value %}
+                          {% elif annual_consumption > annual_PV_energy_produced and profitPercent < 85 and PV_kWp <= slider_max_value %}
                             <p class="info-title" id="potential-savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
                           {% elif profitPercent > 90 and profitPercent < 100  and recommended_kWp < slider_max_value or PV_kWp < slider_max_value %}
                             <p class="info-title" id="potential-savings" ><span style="color: lightskyblue;">Με μικρές αλλαγές ή με λίγο μεγαλύτερο Φ/Β σύστημα,<br> μπορείτε να εκμηδενίσετε το ετήσιο κόστος!!</span></p>

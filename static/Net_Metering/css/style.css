@@ -1294,6 +1294,9 @@ ul li{
     .lightslategrey{
         background-color: lightslategray;
     }
+    input#number_panels_dashboard{
+        width: 50px;
+    }
 
  /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
             /* ZOOM IN  (> 110%) */
