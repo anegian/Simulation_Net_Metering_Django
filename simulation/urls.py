@@ -10,7 +10,7 @@ urlpatterns = [
 
     path('ajax/', views.calculate_power, name='calculate_power'),
     path('recalculation/', views.recalculate_pv_system_properties, name='recalculate_pv_system_properties'),
-    path('calculator/', views.calculator_forms_choice, name='calculator'),
+    path('calculator/', views.calculator_form_fields_handler, name='calculator'),
     path('dashboard/', views.dashboard_results, name='dashboard'),
     path('regulations/', views.regulations, name='regulations'),
     path('about/', views.about, name='about'), 

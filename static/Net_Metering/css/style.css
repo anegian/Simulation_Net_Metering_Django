@@ -1295,8 +1295,6 @@ ul li{
         background-color: lightslategray;
     }
 
- /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
-
  /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
             /* ZOOM IN  (> 110%) */
             @media (max-width: 1397px) {
@@ -1311,7 +1309,10 @@ ul li{
                     height: 160px;
                 }
                 div.top-right-panel-container{
-                    height: 325px;
+                    min-height: 50vh;
+                }
+                .container-icons{
+                    height: 50vh;
                 }
             }
             /* ZOOM IN  (> 120%) */
@@ -1320,6 +1321,13 @@ ul li{
                 .lord-icon-small{
                     width: 80px!important;
                     height:80px!important;
+                }
+                .left-upper .container-icons
+                {
+                    min-height: 284px;
+                }
+                div.top-right-panel-container{
+                    min-height: 50vh;
                 }
             }
 
@@ -2012,7 +2020,7 @@ footer .admin-info {
     align-items: center;
   }
   .top-right-panel-container{
-    min-height: 40vh;
+    min-height: 42vh;
     margin: 10px 0 10px 0;
     width: 95%;
     background-color: #393052;
@@ -2040,7 +2048,7 @@ footer .admin-info {
     border-style: solid;
     border-width: 1.5px;
     border-color: #221e2e;
-    min-height: 40vh;
+    min-height: 42vh;
   }
   .container-icons-bottom{
     margin-top: 10px;

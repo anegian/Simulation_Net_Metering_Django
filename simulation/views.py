@@ -265,7 +265,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         except Http404:      # not use bare except
             return Http404("404 Generic Error")
 
-def calculator_forms_choice(request):    # simulation/templates/calculator.html
+def calculator_form_fields_handler(request):    # simulation/templates/calculator.html
     if request.method == 'POST':
         print(request.POST)
         # changes the name of variable to calculator_form because form was fault --> shadow name 'form' out of scope
@@ -678,10 +678,15 @@ def calculate_self_consumption_ratio(userPower_profile, annual_PV_energy_produce
             battery_stored_energy = daily_energy_production - daily_energy_consumption
             self_consumption_hours += (daily_energy_consumption + battery_stored_energy) / daily_energy_production
         else:
-            battery_stored_energy = daily_energy_consumption - daily_energy_production
+            battery_stored_energy = round(battery_capacity_kwh * depth_battery_discharge,2)
             self_consumption_hours += (daily_energy_consumption + battery_stored_energy) / daily_energy_production
 
         self_consumption_ratio = round(self_consumption_hours / solar_production_hours,2) 
+
+        if self_consumption_ratio < 1.0:
+            self_consumption_ratio = self_consumption_ratio
+        else: 
+            self_consumption_ratio = 1.0
         print(f"daily_energy_production: {daily_energy_production}, daily_energy_consumption: {daily_energy_consumption}, battery_stored_energy: {battery_stored_energy}")
         print(f"self_consumption_ratio with battery becomes: {self_consumption_ratio}")
         
@@ -777,6 +782,8 @@ def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produce
         imported_energy = annual_consumption - self_consumed_energy
         imported_additional_energy_charges = calculate_total_charges_for_imported_energy(exported_energy, imported_energy, phase_loadkVA, energy_cost)
         total_avoided_charges = calculate_consumption_total_charges(self_consumed_energy, phase_loadkVA, energy_cost) - imported_additional_energy_charges
+        if total_avoided_charges < 0:
+            total_avoided_charges = calculate_consumption_total_charges(self_consumed_energy, phase_loadkVA, energy_cost)
         print(f"9999 in total_avoided_charges 3rd: exported_energy: {exported_energy}, imported_energy: {imported_energy}, total_avoided_charges: {total_avoided_charges} ")
    
     return total_avoided_charges
@@ -827,6 +834,7 @@ def calculate_payback_period(total_investment, total_savings_potential):
     years_to_overcome_investment = 0
     total_savings = []
     starting_invest = total_investment
+
 
     # Find the point where savings exceed investment
     while sum(total_savings) <= total_investment:
