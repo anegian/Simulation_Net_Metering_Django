@@ -393,9 +393,13 @@ ul li{
         align-items: center;
     }
     .green-text {
-        color: #738725;
+        color: green;
         font-size: 14px;
         font-weight: bold;
+      }
+      p#annualCostLabel.lightskyblue-text{
+        color: lightskyblue;
+        font-size: 12px;
       }
     
       .grey-text {
@@ -1062,6 +1066,19 @@ ul li{
         }
     }
 
+    @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(-360deg);
+        }
+      }
+      
+      .rotate {
+        animation: rotate 1s linear infinite; /* Adjust animation duration as needed */
+      }
+
     #completionMessage {
         font-size: 14px; /* Adjust the font size to your preference */
         color: green; /* Change the text color */
@@ -1304,7 +1321,7 @@ ul li{
                 .green-text,
                 .grey-text,
                 span.info-title,
-                #potential-savings{
+                #potential_savings{
                     font-size: 12px;
                   }
                 .img-house{
@@ -1341,7 +1358,7 @@ ul li{
                 span.info-title{
                     font-size: 10px;
                 }
-                #potential-savings{
+                #potential_savings{
                     font-size: 10px;
                     transform: translate(0, 50px);
                 }
@@ -2090,7 +2107,8 @@ footer .admin-info {
   #pv-info-list{
     margin-right: 8px;
   }
-  #potential-savings{
+  p#potential_savings.info-title{
+    margin-top: 5px;
     transform: translateY(30px);
   }
   .right-below{
