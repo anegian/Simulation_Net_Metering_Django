@@ -136,17 +136,17 @@ function recalculatePvSystemProperties(){
       updateChart('myChart2', newTotalSavingsArray, newTotalProductionArray, newPaybackYear)
 
       if (potentialKwh == 0 && profitPercent >= 100) {
-        $("#potential_savings").html('<span style="color: #738725;">Εκμηδενίσατε το ετήσιο κόστος</span>, όμως δεν υπάρχει διαθέσιμο <br>πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας');
+        $("#potential_savings").html('<p style="color: lightslategrey; font-size: 10px; font-weight: 600;"><span style="color: #738725; font-size: 10px; font-weight: 600;">Εκμηδενίσατε το ετήσιο κόστος</span>, όμως δεν υπάρχει διαθέσιμο <br>πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας');
       } else if (totalSavingsPotential > 0 && profitPercent >= 100) {
-        $("#potential_savings").html('<span style="color: green;">Πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας:<br>✔</span> έως επιπλέον <span id="potentialKwhValue">' + potentialKwh + '</span> kWh<br>');
+        $("#potential_savings").html('<p style="color: #f2f2f2; font-size: 10px; font-weight: 600;"><span style="color: green; font-size: 10px; font-weight: 600;">Πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας:<br>✔</span> έως επιπλέον <span id="potentialKwhValue">' + potentialKwh + '</span> kWh<br>');
       } else if (annual_consumption > annual_PV_energy_produced && profitPercent < 85 && recalculatedPV <= pv_kwp_max_value) {
-        $("#potential_savings").html('<span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span>');
+        $("#potential_savings").html('<span style="color: red; font-size: 10px; font-weight: 600;">Προσοχή! </span><span style="color: lightslategray; font-size: 10px; font-weight: 600;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span>');
       } else if ((profitPercent > 90 && profitPercent < 100 && recalculatedPV < pv_kwp_max_value) || (recalculatedPV < pv_kwp_max_value)) {
-        $("#potential_savings").html('<span style="color: lightskyblue;">Με μικρές αλλαγές, με προσθήκη μπαταρίας ή με λίγο <br>μεγαλύτερο Φ/Β σύστημα, μπορείτε να εκμηδενίσετε το ετήσιο κόστος!!</span>');
+        $("#potential_savings").html('<span style="color: lightskyblue; font-size: 10px; font-weight: 600;">Με μικρές αλλαγές, με προσθήκη μπαταρίας ή με λίγο <br>μεγαλύτερο Φ/Β σύστημα, μπορείτε να εκμηδενίσετε το<br>ετήσιο κόστος!!</span>');
       } else if ((recalculatedPV == pv_kwp_max_value || recalculatedPV == pv_kwp_max_value) && annual_consumption > annual_PV_energy_produced) {
-        $("#potential_savings").html('<span style="color: lightslategrey;">Η κατανάλωσή σας υπερβαίνει την παραγόμενη ενέργεια <br>και το ΦΒ σύστημα έχει τη μέγιστη τιμή kWp. Δοκιμάστε <br>αλλαγές σε κλίση, αζιμούθιο ή σκιάσεις.</span>');
+        $("#potential_savings").html('<span style="color: lightslategrey; font-size: 10px; font-weight: 600;">Η κατανάλωσή σας υπερβαίνει την παραγόμενη ενέργεια <br>και το ΦΒ σύστημα έχει τη μέγιστη τιμή kWp. Δοκιμάστε <br>αλλαγές σε κλίση, αζιμούθιο ή σκιάσεις.</span>');
       } else if (potentialKwh == 0) {
-        $("#potential_savings").html('<span style="color: lightslategrey;">Περιθώριο κέρδους:<br></span> Δεν υπάρχει διαθέσιμο πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας');
+        $("#potential_savings").html('<span style="color: lightslategrey; font-size: 10px; font-weight: 600;">Περιθώριο κέρδους:<br></span> Δεν υπάρχει διαθέσιμο πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας');
       }
 
       if (profitPercent == 100) {

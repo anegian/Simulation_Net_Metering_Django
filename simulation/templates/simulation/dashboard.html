@@ -211,7 +211,7 @@
                           {% elif annual_consumption > annual_PV_energy_produced and profitPercent < 85 and PV_kWp <= slider_max_value %}
                             <p class="info-title" id="potential_savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
                           {% elif profitPercent > 90 and profitPercent < 100  and recommended_kWp < slider_max_value or PV_kWp < slider_max_value %}
-                            <p class="info-title" id="potential_savings" ><span style="color: lightskyblue;">Με μικρές αλλαγές, με προσθήκη μπαταρίας ή με λίγο <br>μεγαλύτερο Φ/Β σύστημα, μπορείτε να εκμηδενίσετε το ετήσιο κόστος!!</span></p>
+                            <p class="info-title" id="potential_savings" ><span class="info-title-below" style="color: lightskyblue;">Με μικρές αλλαγές, με προσθήκη μπαταρίας ή με λίγο <br>μεγαλύτερο Φ/Β σύστημα, μπορείτε να εκμηδενίσετε το<br>ετήσιο κόστος!!</span></p>
                           {% elif PV_kWp == slider_max_value or recommended_kWp == slider_max_value and annual_consumption > annual_PV_energy_produced %}
                             <p class="info-title" id="potential_savings" ><span style="color: lightslategrey;">Η κατανάλωσή σας υπερβαίνει την παραγόμενη ενέργεια <br>
                             και το ΦΒ σύστημα έχει τη μέγιστη τιμή kWp. Δοκιμάστε <br>αλλαγές σε κλίση, αζιμούθιο ή σκιάσεις.</span></p> 

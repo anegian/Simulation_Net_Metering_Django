@@ -400,6 +400,7 @@ ul li{
       p#annualCostLabel.lightskyblue-text{
         color: lightskyblue;
         font-size: 12px;
+        font-weight: 600;
       }
     
       .grey-text {
@@ -2108,8 +2109,9 @@ footer .admin-info {
     margin-right: 8px;
   }
   p#potential_savings.info-title{
-    margin-top: 5px;
-    transform: translateY(30px);
+    font-size: 12px;
+    font-weight: 600;
+    transform: translateY(20px);
   }
   .right-below{
     display: flex;
@@ -2136,6 +2138,10 @@ footer .admin-info {
     color: #f2f2f2;
     font-weight: bold;
     font-size: 14px;
+  }
+  span.info-title-below{
+    font-weight: 600;
+    font-size: 10px;
   }
   .go-back-button-dash-empty{
     height: 60px;
