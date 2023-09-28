@@ -45,7 +45,6 @@
     <div class="dashboard-page-content">
 
       <section class="full-container">
-        {% csrf_token %}
         <div class="zoom-center">
           <div class="left-container">
 
@@ -74,14 +73,14 @@
                       <span class="grey-text" style="color: lightslategrey;"><br> Έχει εφαρμοστεί έκπτωση {{discount_battery|default:'0'}}%</span>
                       {% else %}
                       <span class="grey-text" style="color: lightslategrey;">Άνευ Μπαταρίας</span>
-                      <form method="post" action="/your-form-action/">
+                      <!-- <form method="post" action="/your-form-action/">
                         {% csrf_token %}
                         <div>
                           <img class="img-battery" src="{% static 'images/battery.png' %}" alt="No Image">
                           <button class="add-battery-button" type="button" id="battery_add_button">Προσθήκη Μπαταρίας</button>
-                        </div>
+                        </div> -->
                       {% endif %} 
-                      </form> 
+                      <!-- </form>  -->
                     </p>  
                 </div>
 
@@ -180,7 +179,8 @@
                     </span> <br>
 
                     <div id="pv-info">
-
+                      <form method="post">
+                        {% csrf_token %}
                       <div title="Στοιχεία ΦΒ Συστήματος" id="pv-info-list">
                           <span class="info-title">&#8226; Ισχύς: <span id="PV_kWp">{{PV_kWp|default:'0'}}</span>  kWp
                             <!-- {% if phase_load == "single_phase" %}  
@@ -192,9 +192,9 @@
                           <span class="info-title" title="Μπορείτε να αυξομειώσετε τον αριθμό των Φ/Β πάνελ και να κάνετε επανυπολογισμό.">
                             &#8226; Σύνολο: <input type="number" id="number_panels_dashboard" min="1" max="40" step="1" value="0">Φ/Β πάνελ</span> 
                           <span>
-                            <button type="button" class="recalc-button" id="recalculate_button" title="Πατήστε εδώ για επανυπολογισμό ">
-                              <img class="img-recalculate" src="{% static 'images/restart.png' %}" alt="No Image">
-                            </button>
+                              <button type="button" class="recalc-button" id="recalculate_button" title="Πατήστε εδώ για επανυπολογισμό ">
+                                <img class="img-recalculate" src="{% static 'images/restart.png' %}" alt="No Image">
+                              </button>
                           </span>
                           <br>
                           <span class="info-title">&#8226; Εμβαδόν: <span id="total_panel_area">{{total_panel_area|default:'0'}}</span> m² <br>
@@ -211,7 +211,7 @@
                           {% elif annual_consumption > annual_PV_energy_produced and profitPercent < 85 and PV_kWp <= slider_max_value %}
                             <p class="info-title" id="potential_savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
                           {% elif profitPercent > 90 and profitPercent < 100  and recommended_kWp < slider_max_value or PV_kWp < slider_max_value %}
-                            <p class="info-title" id="potential_savings" ><span style="color: lightskyblue;">Με μικρές αλλαγές ή με λίγο μεγαλύτερο Φ/Β σύστημα,<br> μπορείτε να εκμηδενίσετε το ετήσιο κόστος!!</span></p>
+                            <p class="info-title" id="potential_savings" ><span style="color: lightskyblue;">Με μικρές αλλαγές, με προσθήκη μπαταρίας ή με λίγο <br>μεγαλύτερο Φ/Β σύστημα, μπορείτε να εκμηδενίσετε το ετήσιο κόστος!!</span></p>
                           {% elif PV_kWp == slider_max_value or recommended_kWp == slider_max_value and annual_consumption > annual_PV_energy_produced %}
                             <p class="info-title" id="potential_savings" ><span style="color: lightslategrey;">Η κατανάλωσή σας υπερβαίνει την παραγόμενη ενέργεια <br>
                             και το ΦΒ σύστημα έχει τη μέγιστη τιμή kWp. Δοκιμάστε <br>αλλαγές σε κλίση, αζιμούθιο ή σκιάσεις.</span></p> 
@@ -219,6 +219,7 @@
                             <p class="info-title" id="potential_savings" ><span style="color: lightslategrey;">Περιθώριο κέρδους:<br></span> Δεν υπάρχει διαθέσιμο περιθώριο κέρδους</p>
                           {% endif %}
                       </div>
+                    </form>
 
                       <img class="img-house" src="{% static 'images/roof.png' %}" alt="No Image"> 
                     </div>

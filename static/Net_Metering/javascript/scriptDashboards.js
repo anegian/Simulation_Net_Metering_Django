@@ -142,7 +142,7 @@ function recalculatePvSystemProperties(){
       } else if (annual_consumption > annual_PV_energy_produced && profitPercent < 85 && recalculatedPV <= pv_kwp_max_value) {
         $("#potential_savings").html('<span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span>');
       } else if ((profitPercent > 90 && profitPercent < 100 && recalculatedPV < pv_kwp_max_value) || (recalculatedPV < pv_kwp_max_value)) {
-        $("#potential_savings").html('<span style="color: lightskyblue;">Με μικρές αλλαγές ή με λίγο μεγαλύτερο Φ/Β σύστημα,<br> μπορείτε να εκμηδενίσετε το ετήσιο κόστος!!</span>');
+        $("#potential_savings").html('<span style="color: lightskyblue;">Με μικρές αλλαγές, με προσθήκη μπαταρίας ή με λίγο <br>μεγαλύτερο Φ/Β σύστημα, μπορείτε να εκμηδενίσετε το ετήσιο κόστος!!</span>');
       } else if ((recalculatedPV == pv_kwp_max_value || recalculatedPV == pv_kwp_max_value) && annual_consumption > annual_PV_energy_produced) {
         $("#potential_savings").html('<span style="color: lightslategrey;">Η κατανάλωσή σας υπερβαίνει την παραγόμενη ενέργεια <br>και το ΦΒ σύστημα έχει τη μέγιστη τιμή kWp. Δοκιμάστε <br>αλλαγές σε κλίση, αζιμούθιο ή σκιάσεις.</span>');
       } else if (potentialKwh == 0) {
