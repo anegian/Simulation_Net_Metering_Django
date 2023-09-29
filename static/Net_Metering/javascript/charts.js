@@ -2,7 +2,7 @@
 const monthValues = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 
 
-new Chart("myChart1", {
+let myChart1 = new Chart("myChart1", {
   type: "line",
   data: {
     labels: monthValues,
@@ -40,11 +40,13 @@ new Chart("myChart1", {
   }
 });
 
+// Store the chart instance in the globalCharts object
+globalCharts["myChart1"] = myChart1;
 
 // DASHBOARD CHART 2
 const pv_lifetime = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
 
-new Chart("myChart2", {
+let myChart2 = new Chart("myChart2", {
   type: "line",
   data: {
     labels: pv_lifetime,
@@ -112,6 +114,8 @@ new Chart("myChart2", {
   }
 });
 
+// Store the chart instance in the globalCharts object
+globalCharts["myChart2"] = myChart2;
 
 // DASHBOARD CHART 3
 var zValues = ["Απόδοση Επένδυσης(ROI) %", "Καθαρό Κέρδος (NPV) (€)", " Σταθμισμένο Κόστος Ενέργειας(LCOE)€", "Εσωτερικός βαθμός απόδοση (IRR) %", "Ετήσια Απόδοση Επένδυσης (aROI) %"];
@@ -124,7 +128,7 @@ var barColors = [
   "#e8c3b9"
 ];
 
-new Chart("myChart3", {
+let myChart3 = new Chart("myChart3", {
   type: "pie",
   data: {
     labels: zValues,
@@ -147,3 +151,6 @@ new Chart("myChart3", {
     },
   }
 });
+
+// Store the chart instance in the globalCharts object
+globalCharts["myChart3"] = myChart3;

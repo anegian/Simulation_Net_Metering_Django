@@ -243,7 +243,7 @@ function disableElements() {
 } 
 function enableAnnualkWh(){
   annual_Kwh_input.disabled = false;
-  annual_Kwh_input.max = phase_load_selected.value === 'single_phase' ? 7000 : 15000;
+  annual_Kwh_input.max = phase_load_selected.value === 'single_phase' ? 7000 : 12000;
   annual_Kwh_input.step = 10;
   annual_Kwh_input.min = 0;
 }
@@ -443,7 +443,7 @@ function calculateAutoPower() {
       let specialProduction = response.special_production_per_panel;
       let recommended_kWp = response.recommended_kWp;
       let minimum_PV_panels = response.minimum_PV_panels;
-      let totalArea = response.total_area;
+      let totalArea = response.total_panel_area;
       let annualProduction = response.annual_production;
       console.log("--- recommended_kWp: ", recommended_kWp, "---", 'panelkWpValue: ', panelKWpValue, 'annual_production: ', annualProduction );
       console.log("---", 'minimum_PV_panels: ',minimum_PV_panels);

@@ -393,9 +393,14 @@ ul li{
         align-items: center;
     }
     .green-text {
-        color: #738725;
+        color: green;
         font-size: 14px;
         font-weight: bold;
+      }
+      p#annualCostLabel.lightskyblue-text{
+        color: lightskyblue;
+        font-size: 12px;
+        font-weight: 600;
       }
     
       .grey-text {
@@ -411,7 +416,41 @@ ul li{
       .grey-dash::before {
         content: '-';
       }
-    
+      .add-battery-button{
+        width: 160px;
+        height: 40px;
+        background-color: #738725;
+        color: #f2f2f2;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 5px;
+        border-width: 0.01px;
+        box-shadow: 0 0 10px rgba(103, 103, 159, 0.5);
+        opacity: 0.8;
+        margin: 0 5px 0 5px;
+      }
+      .add-battery-button:hover{
+        opacity: 1.2;
+      }
+      .img-battery{
+        width: 30px;
+        height: 30px;
+      }
+      .img-recalculate{
+        width: 30px;
+        height: 30px;
+      }
+      #recalculate_button{
+        background-color: #393052;
+        border: none;
+        opacity: 0.8;
+      }
+      #recalculate_button:hover{
+        background-color: #393052;
+        border: none;
+        opacity: 1;
+      }
+
 
 
 
@@ -1028,6 +1067,19 @@ ul li{
         }
     }
 
+    @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(-360deg);
+        }
+      }
+      
+      .rotate {
+        animation: rotate 1s linear infinite; /* Adjust animation duration as needed */
+      }
+
     #completionMessage {
         font-size: 14px; /* Adjust the font size to your preference */
         color: green; /* Change the text color */
@@ -1260,8 +1312,9 @@ ul li{
     .lightslategrey{
         background-color: lightslategray;
     }
-
- /* ::: END OF MAIN CONTENT OF CALCULATOR PAGE ::: */
+    input#number_panels_dashboard{
+        width: 50px;
+    }
 
  /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
             /* ZOOM IN  (> 110%) */
@@ -1269,7 +1322,7 @@ ul li{
                 .green-text,
                 .grey-text,
                 span.info-title,
-                #potential-savings{
+                #potential_savings{
                     font-size: 12px;
                   }
                 .img-house{
@@ -1277,7 +1330,10 @@ ul li{
                     height: 160px;
                 }
                 div.top-right-panel-container{
-                    height: 250px;
+                    min-height: 50vh;
+                }
+                .container-icons{
+                    height: 50vh;
                 }
             }
             /* ZOOM IN  (> 120%) */
@@ -1286,6 +1342,13 @@ ul li{
                 .lord-icon-small{
                     width: 80px!important;
                     height:80px!important;
+                }
+                .left-upper .container-icons
+                {
+                    min-height: 284px;
+                }
+                div.top-right-panel-container{
+                    min-height: 50vh;
                 }
             }
 
@@ -1296,7 +1359,7 @@ ul li{
                 span.info-title{
                     font-size: 10px;
                 }
-                #potential-savings{
+                #potential_savings{
                     font-size: 10px;
                     transform: translate(0, 50px);
                 }
@@ -1307,6 +1370,9 @@ ul li{
                 .img-house{
                    width: 180px;
                    height: 140px;
+                }
+                div.top-right-panel-container{
+                    height: 284px;
                 }
             }
  
@@ -1975,7 +2041,7 @@ footer .admin-info {
     align-items: center;
   }
   .top-right-panel-container{
-    min-height: 40vh;
+    min-height: 42vh;
     margin: 10px 0 10px 0;
     width: 95%;
     background-color: #393052;
@@ -2003,7 +2069,7 @@ footer .admin-info {
     border-style: solid;
     border-width: 1.5px;
     border-color: #221e2e;
-    min-height: 40vh;
+    min-height: 42vh;
   }
   .container-icons-bottom{
     margin-top: 10px;
@@ -2042,8 +2108,10 @@ footer .admin-info {
   #pv-info-list{
     margin-right: 8px;
   }
-  #potential-savings{
-    transform: translateY(30px);
+  p#potential_savings.info-title{
+    font-size: 12px;
+    font-weight: 600;
+    transform: translateY(20px);
   }
   .right-below{
     display: flex;
@@ -2070,6 +2138,10 @@ footer .admin-info {
     color: #f2f2f2;
     font-weight: bold;
     font-size: 14px;
+  }
+  span.info-title-below{
+    font-weight: 600;
+    font-size: 10px;
   }
   .go-back-button-dash-empty{
     height: 60px;
