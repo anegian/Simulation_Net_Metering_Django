@@ -2,7 +2,7 @@
 const numberPanelsDashboard = document.getElementById('number_panels_dashboard')
 numberPanelsDashboard.value = numberPanels; // Set the value of the input element
 let numberPanelsDashboardValue = numberPanelsDashboard.value
-// const batteryAddButton = document.getElementById('battery_add_button');
+const batteryAddButton = document.getElementById('battery_add_button');
 const recalculateButton = document.getElementById('recalculate_button')
 
 // Functions
@@ -233,10 +233,15 @@ function recalculatePvSystemProperties(){
 };
 // Function to handle the "Calculate Power" button click
 function handleRecalculation() {
-      // Call the calculation function
-      recalculatePvSystemProperties();
+  // Call the calculation function
+  recalculatePvSystemProperties();
 };
-
+// function addBattery(){
+  
+// };
+// function handleBatteryAddition(){
+//   addBattery();
+// }
 // Listeners
 document.addEventListener('DOMContentLoaded', function() {
     PvKWpDashboardValue = pvKwp
@@ -248,3 +253,5 @@ numberPanelsDashboard.addEventListener('input', function(){
     numberPanelsDashboardValue = numberPanelsDashboard.value
 });
 recalculateButton.addEventListener('click', handleRecalculation);
+
+// batteryAddButton.addEventListener('click', handleBatteryAddition)
