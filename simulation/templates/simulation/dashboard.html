@@ -108,15 +108,15 @@
                       <span id="profit_tag">{{total_savings_potential|default:'0' }}</span> €/έτος <br>
                     </p>
                       {% if profitPercent == 100 %}
-                        <p class="green-text">Ποσοστό Κάλυψης: <span id="profitPercent_tag">{{ profitPercent|default:'0' }} % ✔</span></p>
-                          <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}}€</p>
+                        <p class="green-text"><span style="color: green;" id="profitPercentLabel">Ποσοστό Κάλυψης:</span> <span id="profitPercent_tag">{{ profitPercent|default:'0' }}% ✔</span></p>
+                          <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
                           
                       {% elif profitPercent > 90 and profitPercent < 100 %}
-                        <p class="info-title"><span style="color: green;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span><span id="profitPercent_tag">{{ profitPercent|default:'0' }} %</span> <br></p>
-                          <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}}€</p>
+                        <p class="info-title"><span style="color: #738725;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span><span id="profitPercent_tag">{{ profitPercent|default:'0' }}%</span> <br></p>
+                          <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
                         </p>
                       {% else %}
-                        <p class="grey-text" id="annualCostLabel">Ποσοστό Κάλυψης: <span id="profitPercent_tag">{{ profitPercent|default:'0' }} %</span>  <br>Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}}€  --</p>
+                        <p class="grey-text" id="annualCostLabel"><span style="color: lightslategray;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span> <span id="profitPercent_tag">{{ profitPercent|default:'0' }} %</span>  <br>Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €  --</p>
                       {% endif %}
                 </div>
 

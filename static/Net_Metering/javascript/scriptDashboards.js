@@ -185,7 +185,7 @@ function recalculatePvSystemProperties(){
           "color": "lightskyblue",
           "font-size": "12px"
         });
-        $("#annualCostLabel").text("Ετήσιο Κόστος Ρεύματος: " + (consumptionTotalCharges || '0') + "€");
+        $("#annualCostLabel").text("Ετήσιο Κόστος Ρεύματος: " + (consumptionTotalCharges || '0') + " €");
       } else if (profitPercent > 90 && profitPercent < 100) {
         $("#profitPercentLabel").css("color", "#738725");
         $("#profitPercent_tag").text(profitPercent || '0');
@@ -194,7 +194,7 @@ function recalculatePvSystemProperties(){
           "color": "lightskyblue",
           "font-size": "12px"
         });
-        $("#annualCostLabel").text("Ετήσιο Κόστος Ρεύματος: " + (consumptionTotalCharges || '0') + "€");
+        $("#annualCostLabel").text("Ετήσιο Κόστος Ρεύματος: " + (consumptionTotalCharges || '0') + " €");
       } else {
         $("#profitPercentLabel").css("color", "grey");
         $("#profitPercent_tag").text(profitPercent || '0');
@@ -203,7 +203,7 @@ function recalculatePvSystemProperties(){
           "color": "lightskyblue",
           "font-size": "12px"
         });
-        $("#annualCostLabel").text("Ετήσιο Κόστος Ρεύματος: " + (consumptionTotalCharges || '0') + "€");
+        $("#annualCostLabel").text("Ετήσιο Κόστος Ρεύματος: " + (consumptionTotalCharges || '0') + " €");
       }
 
       if (paybackPeriod == 0 || paybackPeriod =="0") {
