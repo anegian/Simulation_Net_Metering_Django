@@ -597,13 +597,9 @@ def recalculate_pv_system_properties(request):
 
         print(f"NEW annual_PV_energy_produced: {annual_PV_energy_produced}")
         print(f"NEW self_consumed_energy: {self_consumed_energy}")
-        print(f"NEW total_avoided_charges: {total_avoided_charges}")
         print(f"NEW total_savings_potential: {total_savings_potential}")
         print(f"NEW payback_period: {payback_period}")
-        print(f"new_total_production_kwh_array: {new_total_production_kwh_array}")
-        print(f"NEW potential_kwh: {potential_kwh}")
-        print(f"NEW monthly_panel_energy_produced_list: {monthly_panel_energy_produced_list}")
-
+  
         response_data = {
             'recalculated_pv': recalculated_pv,
             'changed_number_panels': changed_number_panels,
@@ -800,7 +796,6 @@ def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, spe
 
     for irradiance_month in monthly_irradiance_list:
         monthly_energy_produced = round(irradiance_month / (total_panel_area))
-        print("irradiance_month: ", irradiance_month)
         monthly_panel_energy_produced_list.append(monthly_energy_produced)
 
     monthly_panel_energy_produced_json = json.dumps(monthly_panel_energy_produced_list)
@@ -919,9 +914,8 @@ def calculate_total_savings(total_savings_potential):
     return total_savings, total_savings_array
 
 def calculate_payback_period(total_investment, total_savings_potential, consumption_total_charges): 
-    print('6767676767 total_savings_potential type: ', type(total_savings_potential))
+    print('6767 total_savings_potential type: ', type(total_savings_potential))
     if total_savings_potential == 0:
-        print('343434 calculate_payback_period: total_savings_potential < 100: ', total_savings_potential)
         payback_period = 0
         payback_year_float = 0
     else:
@@ -934,9 +928,7 @@ def calculate_payback_period(total_investment, total_savings_potential, consumpt
             while sum(total_savings) <= total_investment:
                 savings = consumption_total_charges
                 total_savings.append( savings )
-                print('anuual savings:', total_savings, "total: ", sum(total_savings))
                 years_to_overcome_investment += 1
-                print('years_to_overcome_investment:', years_to_overcome_investment)
 
             subtraction = sum(total_savings) - total_investment
             monthly_savings = total_savings [years_to_overcome_investment - 2] /12
@@ -962,9 +954,7 @@ def calculate_payback_period(total_investment, total_savings_potential, consumpt
                         break  # Break the loop if the result is close to zero
             
                     total_savings.append( result )
-                    print('anuual savings:', total_savings, "total: ", sum(total_savings))
                     years_to_overcome_investment += 1
-                    print('years_to_overcome_investment:', years_to_overcome_investment)
 
                 except OverflowError:
                     # Handle the overflow error here, e.g., provide an error message
