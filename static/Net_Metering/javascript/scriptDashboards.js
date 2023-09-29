@@ -9,20 +9,48 @@ let numberPanelsDashboardValue = numberPanelsDashboard.value
 const batteryAddButton = document.getElementById('battery_add_button');
 const recalculateButton = document.getElementById('recalculate_button')
 
-function updateChart2Datasets(newTotalSavingsArray, newTotalProductionArray, newPaybackYear){
-  
+function updateChart2Datasets(newTotalSavingsArray, newTotalProductionArray, newPaybackYear, newMonthlyPanelEnergy){
+
   window.totalSavingsArray = newTotalSavingsArray;
   window.totalProductionArray = newTotalProductionArray;
   window.paybackYear = newPaybackYear;
+  window.monthlyPanelEnergy = newMonthlyPanelEnergy;
 };
 
-// Function to update a specific chart
-function updateChart(chartId, newTotalSavingsArray, newTotalProductionArray, newPaybackYear) {
+function updateEconomicMetrics(netPresentValue, returnOnInvest, levelisedCostEnergy, internalRateReturn, annualInternalRateReturn){
+
+  window.roi = returnOnInvest;
+  window.annual_roi = annualInternalRateReturn;
+  window.lcoe = levelisedCostEnergy;
+  window.irr = internalRateReturn;
+  window.npv = netPresentValue;
+};
+
+function updateChartProduction(chartId, newMonthlyPanelEnergy){
   if (globalCharts.hasOwnProperty(chartId)) {
     let chart = globalCharts[chartId];
     // Update chart data with new data
-    chart.data.datasets[0].data = newTotalSavingsArray; // Update the first dataset
-    chart.data.datasets[1].data = newTotalProductionArray; // Update the second dataset
+    chart.data.datasets[1].data = newMonthlyPanelEnergy; // Update the second dataset
+  }
+};
+
+function updateChartMetrics(chartId, netPresentValue, returnOnInvest, levelisedCostEnergy, internalRateReturn, annualInternalRateReturn){
+  let newData = [returnOnInvest, netPresentValue, levelisedCostEnergy, internalRateReturn, annualInternalRateReturn]
+
+  if (globalCharts.hasOwnProperty(chartId)) {
+    let chart = globalCharts[chartId];
+    // Update chart data with new data
+    chart.data.datasets[0].data = newData; // Update the second dataset
+  }
+};
+
+// Function to update chart2
+function updateChartSavings(chartId, newTotalSavingsArray, newTotalProductionArray, newPaybackYear) {
+  if (globalCharts.hasOwnProperty(chartId)) {
+    let chart = globalCharts[chartId];
+    // Update chart data with new data
+    chart.data.datasets[0].data = newTotalProductionArray ; // Update the first dataset
+    chart.data.datasets[1].data = newTotalSavingsArray ; // Update the second dataset
     
     // Update the paybackYear in the chart options
     chart.options.animation.onComplete = function () {
@@ -107,6 +135,7 @@ function recalculatePvSystemProperties(){
       let profitPercent = response.profitPercent;
       let totalSavingsPotential = response.total_savings_potential;
       let annual_PV_energy_produced = response.annual_PV_energy_produced;
+      let newMonthlyPanelEnergyProducedList = response.monthly_panel_energy_produced_list;
       let annual_consumption =  response.annual_consumption;
       let pv_kwp_max_value = response.pv_kwp_max_value;
       let potentialKwh = response.potential_kwh;
@@ -114,14 +143,17 @@ function recalculatePvSystemProperties(){
       let paybackPeriod = response.payback_period;
       let newPaybackYear = response.payback_year_float;
       // for chart2
-      let total_production_kwh_array = response.total_production_kwh_array;
-      let newTotalProductionArray = total_production_kwh_array;
-      let total_savings_array = response.total_savings_array;
+      let newTotalProductionArray = response.new_total_production_kwh_array;
       let newTotalSavingsArray = response.total_savings_array;
       let consumptionTotalCharges = response.consumption_total_charges;
+      let netPresentValue = response.net_present_value;
+      let returnOnInvest = response.new_roi;
+      let levelisedCostEnergy = response.new_lcoe;
+      let internalRateReturn = response.new_irr;
+      let annualInternalRateReturn = response.new_annualized_roi;
+      let averageCO2 = response.new_average_CO2;
+      let treesPlanted = response.new_trees_planted;
 
-      console.log('totalSavingsPotential: ', totalSavingsPotential)
-      console.log("--- recalculatedPV: ", recalculatedPV, "---", 'totalInvestment: ', totalInvestment);
       // Update the input field with the calculated power
       $('#number_panels_dashboard').val(changed_number_panels);
       // Update the PV_kWp tag
@@ -131,9 +163,14 @@ function recalculatePvSystemProperties(){
       $('#total_panel_area').text(newPanelArea);
       $('#profit_tag').text(totalSavingsPotential);
       $('#profitPercent_tag').text(profitPercent);
-      
-      updateChart2Datasets(newTotalSavingsArray, newTotalProductionArray, newPaybackYear)
-      updateChart('myChart2', newTotalSavingsArray, newTotalProductionArray, newPaybackYear)
+      $('#CO2_tag').text(averageCO2);
+      $('#trees_tag').text(treesPlanted);
+        
+      updateChart2Datasets(newTotalSavingsArray, newTotalProductionArray, newPaybackYear, newMonthlyPanelEnergyProducedList);
+      updateChartProduction('myChart1', newMonthlyPanelEnergyProducedList);
+      updateChartSavings('myChart2', newTotalSavingsArray, newTotalProductionArray, newPaybackYear);
+      updateEconomicMetrics(netPresentValue, returnOnInvest, levelisedCostEnergy, internalRateReturn, annualInternalRateReturn);
+      updateChartMetrics('myChart3', netPresentValue, returnOnInvest, levelisedCostEnergy, internalRateReturn, annualInternalRateReturn);
 
       if (potentialKwh == 0 && profitPercent >= 100) {
         $("#potential_savings").html('<p style="color: lightslategrey; font-size: 10px; font-weight: 600;"><span style="color: #738725; font-size: 10px; font-weight: 600;">Εκμηδενίσατε το ετήσιο κόστος</span>, όμως δεν υπάρχει διαθέσιμο <br>πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας');
@@ -181,7 +218,10 @@ function recalculatePvSystemProperties(){
       if (paybackPeriod == 0 || paybackPeriod =="0") {
         $("#paybackPeriod_tag").css("color", "lightslategrey");
         $('#paybackPeriod_tag').html('&#8734; <br> Δυστυχώς έχετε μηδενικό όφελος');
-      } else {
+      }else if (newPaybackYear >= 100){
+        $("#paybackPeriod_tag").css("color", "lightslategrey");
+        $('#paybackPeriod_tag').html('&#8734; <br> Η περίοδος απόσβασης υπερβαίνει τα 100 έτη');
+      }else {
         $('#paybackPeriod_tag').text(paybackPeriod || '0');
       }
 
@@ -189,7 +229,9 @@ function recalculatePvSystemProperties(){
       $("#recalculate_button img").removeClass("rotate");
       // Handle your AJAX success here
         // ...
-      }, 1000); // 2-second delay (adjust as needed)
+      }, 1000); // 1-second delay
+
+      console.log("Request successfully completed. Data updated")
     },
     error: function(xhr, status, errorThrown) {
       ajaxRequest.abort();

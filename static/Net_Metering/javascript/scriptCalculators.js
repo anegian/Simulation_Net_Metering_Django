@@ -443,7 +443,7 @@ function calculateAutoPower() {
       let specialProduction = response.special_production_per_panel;
       let recommended_kWp = response.recommended_kWp;
       let minimum_PV_panels = response.minimum_PV_panels;
-      let totalArea = response.total_area;
+      let totalArea = response.total_panel_area;
       let annualProduction = response.annual_production;
       console.log("--- recommended_kWp: ", recommended_kWp, "---", 'panelkWpValue: ', panelKWpValue, 'annual_production: ', annualProduction );
       console.log("---", 'minimum_PV_panels: ',minimum_PV_panels);

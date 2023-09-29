@@ -122,7 +122,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
                 number_of_panels_required = request.session.get('minimum_PV_panels')
                 annual_PV_energy_produced = request.session.get('annual_production')
                 special_production_per_panel = request.session.get('special_production_per_panel')
-
+                total_panel_area = request.session.get('total_panel_area')
 
                 print ("Annual PV energy produced calculated with request", annual_PV_energy_produced)
                 print("****************")
@@ -143,9 +143,12 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
             special_production_per_panel = round(annual_irradiance * panel_area * panel_efficiency * performance_degradation * shadings_percentage )
             number_of_panels_required = round(PV_kWp / panel_kWp )
             request.session['minimum_PV_panels'] = number_of_panels_required
+            total_panel_area = round(number_of_panels_required * panel_area, 1)
+            request.session['total_panel_area'] = total_panel_area
             # In manual mode, the rounded number of panel, must give us a ne kWp value for our system
             PV_kWp = round(number_of_panels_required * panel_kWp,1)
-            annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, number_of_panels_required)
+            annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, number_of_panels_required, total_panel_area)
+            request.session['monthly_panel_energy_produced_list'] = monthly_panel_energy_produced_list
             
             # two times self_consumption ratio??
             print ("annual_PV_energy_produced calculated after submit", annual_PV_energy_produced, "special_production_per_panel: ", special_production_per_panel)
@@ -163,6 +166,7 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         request.session['self_consumption_ratio'] = self_consumption_ratio
         total_investment, inverter_cost, battery_cost = calculate_total_investment(PV_kWp, phase_load, has_storage, battery_capacity_kwh, battery_cost, panel_cost, discount_PV, discount_battery, number_of_panels_required, inverter_cost, installation_cost)
         request.session['total_investment'] = total_investment
+        request.session['inverter_cost'] = inverter_cost
         consumption_total_charges = calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost)
         request.session['consumption_total_charges'] = consumption_total_charges
         self_consumed_energy, potential_self_consumed_energy, exported_energy = calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption, self_consumption_ratio)
@@ -173,17 +177,25 @@ def dashboard_results(request):   # simulation/templates/dashboard.html
         total_savings_array_json = json.dumps(total_savings_array)
         total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced, shadings_percentage)
         total_production_kwh_array_json = json.dumps(total_production_kwh_array)
-        payback_period, payback_year_float = calculate_payback_period(total_investment, total_savings_potential) #in months
+        payback_period, payback_year_float = calculate_payback_period(total_investment, total_savings_potential,consumption_total_charges) #in months
         
         net_present_value = calculate_npv(total_investment, total_savings)
-        maintenance_cost = calculate_maintenance_cost(total_investment, inverter_cost)
+        maintenance_cost = calculate_maintenance_cost(total_investment)
         lcoe = calculate_lcoe(total_investment, maintenance_cost , total_production_kwh)
         roi, annualized_roi = calculate_roi(net_present_value, total_investment, total_savings)
         irr = calculate_irr(total_investment, total_savings_array)
         average_CO2 = round(calculate_CO2_emissions_reduced(annual_PV_energy_produced))
         trees_planted = round(calculate_equivalent_trees_planted(annual_PV_energy_produced))
-        total_panel_area = round(number_of_panels_required * panel_area, 1)
-        request.session['total_panel_area'] = total_panel_area
+
+        request.session['net_present_value'] = net_present_value
+        request.session['maintenance_cost'] = maintenance_cost
+        request.session['lcoe'] = lcoe
+        request.session['roi'] = roi
+        request.session['annualized_roi'] = annualized_roi
+        request.session['irr'] = irr
+        request.session['average_CO2'] = average_CO2
+        request.session['trees_planted'] = trees_planted
+        
 
         azimuth_text = transform_azimuth_text(int(azimuth_value))
 
@@ -480,24 +492,25 @@ def calculate_power(request):
                 print(f"--- new panel kWp: {recommended_kWp}, annual_production: {annual_production}, minimum_PV_panels: {minimum_PV_panels}")
 
             if place_instalment_value == 'roof':
-                total_area = round(minimum_PV_panels * panel_area, 1)
+                total_panel_area = round(minimum_PV_panels * panel_area, 1)
             else:
                 # needs more space for terrace instead of roof
-                total_area = round(minimum_PV_panels * panel_area  * 1.5, 1)
+                total_panel_area = round(minimum_PV_panels * panel_area  * 1.5, 1)
 
-            _, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, minimum_PV_panels)
+            _, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, minimum_PV_panels, total_panel_area)
 
             request.session['monthly_panel_energy_produced_list'] = monthly_panel_energy_produced_list
             request.session['monthly_panel_energy_produced_json'] = monthly_panel_energy_produced_json
             request.session['minimum_PV_panels'] = minimum_PV_panels
             request.session['annual_production'] = annual_production
             request.session['special_production_per_panel'] = special_production_per_panel
+            request.session['total_panel_area'] = total_panel_area
             print("$$ RESULTS in CALCULATE POWER: \nRecommended KWp PV system: ", recommended_kWp)
             print("Minimum Panels:", minimum_PV_panels)
             print("ANNUAL IRRADIANCE:", annual_irradiance)
             print("Monthly IRRADIANCE:", monthly_irradiance_list)
             print('Annual Consumption:', energy_consumption)
-            print(f"Total area for {place_instalment_value}: {total_area}" )
+            print(f"Total area for {place_instalment_value}: {total_panel_area}" )
             print('Annual Production:', annual_production)
             
             print(f"Total production after 25 years, for {minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {panel_kWp_value}Wp is: {round(total_production)}")
@@ -507,7 +520,7 @@ def calculate_power(request):
                 'special_production_per_panel': round(special_production_per_panel  / cumulative_degradation, 1),
                 'recommended_kWp': recommended_kWp,
                 'minimum_PV_panels': minimum_PV_panels,
-                'total_area': total_area,
+                'total_panel_area': total_panel_area,
                 'annual_production': annual_production,
                 'monthly_panel_energy_produced_list': monthly_panel_energy_produced_list,
                 'monthly_panel_energy_produced_json': monthly_panel_energy_produced_json,
@@ -527,16 +540,19 @@ def recalculate_pv_system_properties(request):
     energy_cost = float(request.session.get('energy_cost'))
     consumption_total_charges = request.session.get('consumption_total_charges')
     shadings_percentage = request.session.get('shadings_percentage')
-
+    total_panel_area = float(request.session.get('total_panel_area'))
+    net_present_value = request.session.get('net_present_value')
+    inverter_cost = int(request.session.get('inverter_cost'))
+    
     try:
         if request.method == 'POST':
             # Retrieve values from the JSON data and the session
             data = json.loads(request.body)
 
             changed_number_panels = int(data.get('changed_number_panels'))
+
             panel_kWp_value = request.session.get('panel_kWp')
             panel_area = float(request.session.get('panel_area'))
-            total_panel_area = float(request.session.get('total_panel_area'))
             panel_cost = int(request.session.get('panel_cost'))
             special_production_per_panel = request.session.get('special_production_per_panel')
             total_investment = request.session.get('total_investment')
@@ -563,23 +579,30 @@ def recalculate_pv_system_properties(request):
 
             request.session['PV_kWp'] = recalculated_pv
 
-        annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, changed_number_panels)
+        annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list = calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, changed_number_panels, new_panel_area)
         self_consumed_energy, potential_self_consumed_energy, exported_energy = calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption, self_consumption_ratio)
         total_avoided_charges = calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges, exported_energy)
         annual_savings =  calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy,consumption_total_charges, total_avoided_charges, phase_loadkVA, energy_cost)
         profitPercent, total_savings_potential, potential_kwh = calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, consumption_total_charges, total_avoided_charges, phase_loadkVA, energy_cost)
         total_savings, total_savings_array = calculate_total_savings(total_savings_potential)
-        total_savings, total_savings_array  = calculate_total_savings(total_savings_potential)
-        payback_period, payback_year_float = calculate_payback_period(new_total_investment, total_savings_potential)
-        total_production_kwh_array, total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced, shadings_percentage)
+        payback_period, payback_year_float = calculate_payback_period(new_total_investment, total_savings_potential, consumption_total_charges)
+        new_total_production_kwh_array, new_total_production_kwh = calculate_total_production_kwh(annual_PV_energy_produced, shadings_percentage)
+        net_present_value = calculate_npv(new_total_investment, total_savings)
+        new_maintenance_cost = calculate_maintenance_cost(new_total_investment)
+        new_lcoe = calculate_lcoe(new_total_investment, new_maintenance_cost , new_total_production_kwh)
+        new_roi, new_annualized_roi = calculate_roi(net_present_value, new_total_investment, total_savings)
+        new_irr = calculate_irr(new_total_investment, total_savings_array)
+        new_average_CO2 = round(calculate_CO2_emissions_reduced(annual_PV_energy_produced))
+        new_trees_planted = round(calculate_equivalent_trees_planted(annual_PV_energy_produced))
+
         print(f"NEW annual_PV_energy_produced: {annual_PV_energy_produced}")
         print(f"NEW self_consumed_energy: {self_consumed_energy}")
         print(f"NEW total_avoided_charges: {total_avoided_charges}")
         print(f"NEW total_savings_potential: {total_savings_potential}")
         print(f"NEW payback_period: {payback_period}")
-        print(f"NEW total_production_kwh_array: {total_production_kwh_array}")
+        print(f"new_total_production_kwh_array: {new_total_production_kwh_array}")
         print(f"NEW potential_kwh: {potential_kwh}")
-
+        print(f"NEW monthly_panel_energy_produced_list: {monthly_panel_energy_produced_list}")
 
         response_data = {
             'recalculated_pv': recalculated_pv,
@@ -594,12 +617,19 @@ def recalculate_pv_system_properties(request):
             'total_savings_array': total_savings_array,
             'payback_period': payback_period,
             'payback_year_float': payback_year_float,
-            'total_production_kwh_array': total_production_kwh_array,
+            'new_total_production_kwh_array': new_total_production_kwh_array,
             'annual_PV_energy_produced': annual_PV_energy_produced,
+            'monthly_panel_energy_produced_list': monthly_panel_energy_produced_list,
             'annual_consumption': annual_consumption,
             'pv_kwp_max_value': pv_kwp_max_value,
             'consumption_total_charges': consumption_total_charges,
-
+            'net_present_value': net_present_value,
+            'new_lcoe': new_lcoe,
+            'new_roi': new_roi,
+            'new_annualized_roi': new_annualized_roi,
+            'new_irr': new_irr,
+            'new_average_CO2': new_average_CO2,
+            'new_trees_planted': new_trees_planted,
         }
 
         return JsonResponse(response_data)
@@ -647,10 +677,11 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, battery_capacity
         battery_cost = 0
 
     if initial_inverter_cost > 0:
-        inverter_cost = inverter_cost
+        inverter_cost = round(inverter_cost)
     elif initial_inverter_cost == 0:
-        inverter_cost = inverter_cost_auto
+        inverter_cost = round(inverter_cost_auto)
     
+
     # How much the PV system costs without battery
     Pv_system_cost = Pv_panels_cost + installation_cost + inverter_cost + electric_materials
 
@@ -669,7 +700,7 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, battery_capacity
     total_investment = round(Pv_system_cost + battery_cost)
     print(f"*Total investment: {total_investment}\n PV total cost: {Pv_system_cost}\n PV panels' Cost: {Pv_panels_cost},\n Battery Cost: {battery_cost},\n Inverter: {inverter_cost} and PV kWp: {PV_kWp},")
    
-    return total_investment, round(inverter_cost), battery_cost
+    return total_investment, inverter_cost, battery_cost
 # OK
 def calculate_shade_percentage(shadings_slider_value):
     # solar production reduction percentage due to shadings
@@ -761,13 +792,15 @@ def calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption
 
     return self_consumed_energy, potential_self_consumed_energy, exported_energy_to_grid
 # OK   
-def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, number_of_panels_required):
+def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, number_of_panels_required, total_panel_area):
     monthly_panel_energy_produced_list = []
     annual_PV_energy_produced = round( number_of_panels_required * special_production_per_panel / cumulative_degradation)
     print(f"88888888 In calculate PV energy: annual_PV_energy_produced: {annual_PV_energy_produced},special_production_per_panel:{special_production_per_panel}, number_of_panels_required: {number_of_panels_required}")
+    print("annual_irradiance: ", annual_irradiance)
 
     for irradiance_month in monthly_irradiance_list:
-        monthly_energy_produced = round(irradiance_month * (special_production_per_panel / annual_irradiance))
+        monthly_energy_produced = round(irradiance_month / (total_panel_area))
+        print("irradiance_month: ", irradiance_month)
         monthly_panel_energy_produced_list.append(monthly_energy_produced)
 
     monthly_panel_energy_produced_json = json.dumps(monthly_panel_energy_produced_list)
@@ -782,20 +815,25 @@ def calculate_total_charges_for_imported_energy(exported_energy, imported_energy
     # additional energy has full cost, but imported energy thas was primarily exported only has regulated charges
     if imported_energy > exported_energy:
         additional_imported_energy = imported_energy - exported_energy
-        charges_for_additional_imported_energy = round((phase_loadkVA * 0.52) + (phase_loadkVA * 1) + (additional_imported_energy * 0.017) + (additional_imported_energy * energy_cost*0.06) + ( additional_imported_energy * energy_cost) + (additional_imported_energy * 0.0213) + (additional_imported_energy * 0.00844))
+        charges_for_additional_imported_energy = round(calculate_consumption_total_charges(additional_imported_energy, phase_loadkVA, energy_cost))
         regulated_charges = round( (exported_energy * 0.0213) + (exported_energy * 0.00844) )
+        print(f'123 123 1st if : exported_energy: {exported_energy}, imported_energy: {imported_energy}, charges_for_additional_imported_energy: {charges_for_additional_imported_energy+regulated_charges}')
     # for night consumption and self_consumption_ratio = 0
     elif imported_energy == exported_energy:
         charges_for_additional_imported_energy = 0
         regulated_charges = round( (imported_energy * 0.0213) + (imported_energy * 0.00844) )
+        print(f'123 123 2nd if : exported_energy: {exported_energy}, imported_energy: {imported_energy}, charges_for_additional_imported_energy: {charges_for_additional_imported_energy+regulated_charges}')
     elif exported_energy > imported_energy:
         regulated_charges = round( (imported_energy * 0.0213) + (imported_energy * 0.00844) )
         charges_for_additional_imported_energy = 0
+        print(f'123 123 3rd if : exported_energy: {exported_energy}, imported_energy: {imported_energy}, charges_for_additional_imported_energy: {charges_for_additional_imported_energy+regulated_charges}')
     else:
         additional_imported_energy = 0
         charges_for_additional_imported_energy = 0
         new_imported_energy = exported_energy - imported_energy
         regulated_charges = round( (new_imported_energy * 0.0213) + (new_imported_energy * 0.00844) )
+        print(f'123 123 else if : exported_energy: {exported_energy}, imported_energy: {imported_energy}, charges_for_additional_imported_energy: {charges_for_additional_imported_energy}')
+    
      
     return charges_for_additional_imported_energy + regulated_charges 
 # OK
@@ -816,12 +854,14 @@ def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produce
         total_avoided_charges = consumption_total_charges - imported_energy_charges
         print(f"9999 in total_avoided_charges 2nd: exported_energy: {exported_energy}, imported_energy: {imported_energy}, total_avoided_charges: {total_avoided_charges} ")
     else: # annual_consumption > annual_PV_energy_produced
-        imported_energy = annual_consumption - self_consumed_energy
+        # total imported
+        imported_energy = annual_consumption - self_consumed_energy 
+        # imported_additional_energy_charges = imported with full cost - imported with only regulated
         imported_additional_energy_charges = calculate_total_charges_for_imported_energy(exported_energy, imported_energy, phase_loadkVA, energy_cost)
-        total_avoided_charges = calculate_consumption_total_charges(self_consumed_energy, phase_loadkVA, energy_cost) - imported_additional_energy_charges
+        total_avoided_charges = calculate_consumption_total_charges(self_consumed_energy, phase_loadkVA, energy_cost) - imported_additional_energy_charges 
         if total_avoided_charges < 0:
             total_avoided_charges = 0
-        print(f"9999 in total_avoided_charges 3rd: exported_energy: {exported_energy}, imported_energy: {imported_energy}, total_avoided_charges: {total_avoided_charges} ")
+        print(f"9999 in total_avoided_charges 3rd: exported_energy: {exported_energy}, imported_energy: {imported_energy}, total_avoided_charges: {total_avoided_charges}, imported_additional_energy_charges: {imported_additional_energy_charges} ")
    
     return total_avoided_charges
 
@@ -833,22 +873,27 @@ def calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self
     print(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, consumption_total_charges, total_avoided_charges, phase_loadkVA, energy_cost)
     print("TEST in calculate_annual_savings\n")
 
-    # Again self_consumed_energy >= annual_consumption, is valid when the potential self consumed is greater than consumption
-    if  annual_PV_energy_produced > annual_consumption and self_consumed_energy >= annual_consumption:
-        exported_energy_to_grid = potential_self_consumed_energy - annual_consumption
-        total_savings_potential = round(total_avoided_charges)
-        potential_kwh = round(exported_energy_to_grid)
-        print(f"In calculate_annual_savings 1st if : self_consumed_energy: {self_consumed_energy}, total_savings_potential: {total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
-    elif annual_PV_energy_produced > annual_consumption and self_consumed_energy < annual_consumption:
-        exported_energy_to_grid = annual_PV_energy_produced - self_consumed_energy
-        total_savings_potential = round(total_avoided_charges) 
-        potential_kwh = round(exported_energy_to_grid)
-        print(f"In calculate_annual_savings 1st if : self_consumed_energy: {self_consumed_energy}, total_savings_potential: {total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
-    else: # annual_PV_energy_produced < annual_consumption
-        exported_energy_to_grid = annual_PV_energy_produced - self_consumed_energy
-        total_savings_potential = round(total_avoided_charges)
-        potential_kwh = round(exported_energy_to_grid)
-        print(f"In calculate_annual_savings else if : self_consumed_energy: {self_consumed_energy}, total_savings_potential: {total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
+    if total_avoided_charges == 0:
+        total_avoided_charges = 0
+        total_savings_potential = 0
+        potential_kwh = 0
+    else:
+        # Again self_consumed_energy >= annual_consumption, is valid when the potential self consumed is greater than consumption
+        if  annual_PV_energy_produced > annual_consumption and self_consumed_energy >= annual_consumption:
+            exported_energy_to_grid = potential_self_consumed_energy - annual_consumption
+            total_savings_potential = round(total_avoided_charges)
+            potential_kwh = round(exported_energy_to_grid)
+            print(f"In calculate_annual_savings 1st if : self_consumed_energy: {self_consumed_energy}, total_savings_potential: {total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
+        elif annual_PV_energy_produced > annual_consumption and self_consumed_energy < annual_consumption:
+            exported_energy_to_grid = annual_PV_energy_produced - self_consumed_energy
+            total_savings_potential = round(total_avoided_charges) 
+            potential_kwh = round(exported_energy_to_grid)
+            print(f"In calculate_annual_savings 1st if : self_consumed_energy: {self_consumed_energy}, total_savings_potential: {total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
+        else: # annual_PV_energy_produced < annual_consumption
+            exported_energy_to_grid = annual_PV_energy_produced - self_consumed_energy
+            total_savings_potential = round(total_avoided_charges)
+            potential_kwh = round(exported_energy_to_grid)
+            print(f"In calculate_annual_savings else if : self_consumed_energy: {self_consumed_energy}, total_savings_potential: {total_savings_potential}, annual_PV_energy_produced: {annual_PV_energy_produced}, annual_consumption: {annual_consumption}")
 
     if total_savings_potential <= 0:
         profitPercent = 0
@@ -858,6 +903,9 @@ def calculate_annual_savings(annual_consumption, annual_PV_energy_produced, self
     return profitPercent, total_savings_potential, potential_kwh
 
 def calculate_total_savings(total_savings_potential):
+    if total_savings_potential == 0:
+        total_savings_array = [0]
+        total_savings = 0
     # Calculate the total profit over 25 years
     # based on the annual savings
     # 1st year the total savings is the total_savings_potential
@@ -870,48 +918,69 @@ def calculate_total_savings(total_savings_potential):
 
     return total_savings, total_savings_array
 
-def calculate_payback_period(total_investment, total_savings_potential): 
-    if total_savings_potential <= 0:
+def calculate_payback_period(total_investment, total_savings_potential, consumption_total_charges): 
+    print('6767676767 total_savings_potential type: ', type(total_savings_potential))
+    if total_savings_potential == 0:
+        print('343434 calculate_payback_period: total_savings_potential < 100: ', total_savings_potential)
         payback_period = 0
         payback_year_float = 0
     else:
         years_to_overcome_investment = 0
         total_savings = []
-        starting_invest = total_investment
+        # starting_invest = total_investment
 
-        # Find the point where savings exceed investment
-        while sum(total_savings) <= total_investment:
-            try:
-                result = total_savings_potential / (annual_degradation_production ** years_to_overcome_investment)
-                # Check if the result is very small (close to zero)
-                if abs(result) < 1e-6:  # You can adjust the threshold as needed
-                    payback_period = "0"
-                    payback_year_float = 0
-                    break  # Break the loop if the result is close to zero
-        
-                
-                total_savings.append( result )
+        # Calculate years and months independently from that point 
+        if total_savings_potential > (consumption_total_charges * annual_degradation_production):
+            while sum(total_savings) <= total_investment:
+                savings = consumption_total_charges
+                total_savings.append( savings )
+                print('anuual savings:', total_savings, "total: ", sum(total_savings))
                 years_to_overcome_investment += 1
-                starting_invest -= float(total_savings[-1])
+                print('years_to_overcome_investment:', years_to_overcome_investment)
 
-                # Calculate years and months independently from that point    
+            subtraction = sum(total_savings) - total_investment
+            monthly_savings = total_savings [years_to_overcome_investment - 2] /12
+            years = years_to_overcome_investment - 1
+            months = round(12 - (subtraction/monthly_savings) )
+            payback_year_float  = round(years + (months / 13),2)
+
+            if months == 1:
+                payback_period = f"{years} έτη & {months} μήνας"
+            else:
+                payback_period = f"{years} έτη & {months} μήνες"
+        else:
+            total_savings_potential = total_savings_potential
+
+            # Find the point where savings exceed investment
+            while sum(total_savings) <= total_investment:
+                try:
+                    result = total_savings_potential / (annual_degradation_production ** years_to_overcome_investment)
+                    # Check if the result is very small (close to zero)
+                    if abs(result) < 1e-1:  # You can adjust the threshold as needed
+                        payback_period = "0"
+                        payback_year_float = 0
+                        break  # Break the loop if the result is close to zero
+            
+                    total_savings.append( result )
+                    print('anuual savings:', total_savings, "total: ", sum(total_savings))
+                    years_to_overcome_investment += 1
+                    print('years_to_overcome_investment:', years_to_overcome_investment)
+
+                except OverflowError:
+                    # Handle the overflow error here, e.g., provide an error message
+                    payback_period = "Calculation error: Result too large" 
+                    payback_year_float = 0
+
                 subtraction = sum(total_savings) - total_investment
                 monthly_savings = total_savings [years_to_overcome_investment - 2] /12
                 years = years_to_overcome_investment - 1
                 months = round(12 - (subtraction/monthly_savings) )
-
                 payback_year_float  = round(years + (months / 13),2)
 
                 if months == 1:
                     payback_period = f"{years} έτη & {months} μήνας"
-
                 else:
                     payback_period = f"{years} έτη & {months} μήνες"
-            except OverflowError:
-                # Handle the overflow error here, e.g., provide an error message
-                payback_period = "Calculation error: Result too large" 
-                payback_year_float = float('inf')
-                    
 
     return payback_period, payback_year_float  
 
@@ -949,7 +1018,7 @@ def transform_azimuth_text(azimuth_value):
 
     return azimuth_text
 
-def calculate_maintenance_cost(total_investment, inverter_cost):
+def calculate_maintenance_cost(total_investment):
     cost_rate = (1.5 / 100) * 25 # 1.5% της συνολικής επένδυσης ανά έτος
 
     return total_investment * cost_rate
@@ -959,55 +1028,73 @@ def calculate_npv(total_investment, total_savings):
     # based on the total savings and the total investment
     # annual_value_discount_rate = 0.3, annual_electricity_inflation = 0.2
     # Return the result
-    
-    return total_savings - total_investment
+    if total_savings == 0:
+        return 0
+    else:
+        return total_savings - total_investment
 
 def calculate_roi(net_present_value, total_investment, total_savings):
     # Calculate the return on investment
     # Return the result
-    roi = round(net_present_value / total_investment * 100, 2)
-    annualized_roi = round(((total_savings / total_investment) ** (1/25) -1) *100, 2)
-    
-    print('Return On Investment: ', roi)
-    print('Annualized Return On Investment: ', annualized_roi)
+    if total_savings == 0:
+        roi = 0
+        annualized_roi = 0
+        return roi, annualized_roi
+    else:
+        roi = round(net_present_value / total_investment * 100, 2)
+        annualized_roi = round(((total_savings / total_investment) ** (1/25) -1) *100, 2)
+        
+        print('Return On Investment: ', roi)
+        print('Annualized Return On Investment: ', annualized_roi)
 
-    return roi, annualized_roi
+        return roi, annualized_roi
 
 def calculate_lcoe(total_investment, maintenance_cost, total_production_kwh):
     # Calculate the levelized cost of electricity
     # based on the total cost, and the user's annual usage
     # Return the result
+    if total_production_kwh == 0:
+        return 0
+    else:
+        lcoe = round(( total_investment + maintenance_cost ) / total_production_kwh, 3)
+        
+        print('Levelized Cost of Electricity: ', lcoe)
 
-    lcoe = round(( total_investment + maintenance_cost ) / total_production_kwh, 3)
-    
-    print('Levelized Cost of Electricity: ', lcoe)
-
-    return lcoe
+        return lcoe
    
 def calculate_irr(total_investment, total_savings_array):
     # Calculate the return on investment
     # Return the result
-    initial_investment = -total_investment
-    saving_flows = total_savings_array.copy()  # Create a copy of the total_savings_array
-    
-    saving_flows.insert(0, initial_investment)  # Insert the initial investment at index 0
-    
-    irr = round(npf.irr(saving_flows)* 100, 2) 
+    if sum(total_savings_array) == 0:
+        return 0
+    else:
+        initial_investment = -total_investment
+        saving_flows = total_savings_array.copy()  # Create a copy of the total_savings_array
+        
+        saving_flows.insert(0, initial_investment)  # Insert the initial investment at index 0
+        
+        irr = round(npf.irr(saving_flows)* 100, 2) 
 
-    print('Internal Rate: ', irr)
-    
-    return irr   
+        print('Internal Rate: ', irr)
+        
+        return irr   
    
 def calculate_CO2_emissions_reduced(annual_PV_energy_produced):
    # Calculate the equivalent CO2 emissions, reduced due to solar production
-   average_CO2 = 0.04 # ~ 40 g CO2 eq/kWh for a year
-   
-   return average_CO2 * annual_PV_energy_produced # kg per year
+    if annual_PV_energy_produced > 0:
+        average_CO2 = 0.04 # ~ 40 g CO2 eq/kWh for a year
+
+        return average_CO2 * annual_PV_energy_produced # kg per year
+    else:
+        return 0
   
 def calculate_equivalent_trees_planted(annual_PV_energy_produced):
-   percentage_trees_per_kWh = 0.02
-   
-   return annual_PV_energy_produced * percentage_trees_per_kWh 
+    if annual_PV_energy_produced > 0:
+        percentage_trees_per_kWh = 0.02
+
+        return annual_PV_energy_produced * percentage_trees_per_kWh 
+    else:
+        return 0
 
 def regulations(request):     
     try:
