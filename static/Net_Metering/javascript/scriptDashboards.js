@@ -1,14 +1,11 @@
-// const PvKWpDashboard = document.getElementById('PV_kWp_dashboard')
-// PvKWpDashboard.value = pvKwp; // Set the value of the input element
-// let PvKWpDashboardValue = PvKWpDashboard.value
-
+// Variables
 const numberPanelsDashboard = document.getElementById('number_panels_dashboard')
 numberPanelsDashboard.value = numberPanels; // Set the value of the input element
 let numberPanelsDashboardValue = numberPanelsDashboard.value
-
-const batteryAddButton = document.getElementById('battery_add_button');
+// const batteryAddButton = document.getElementById('battery_add_button');
 const recalculateButton = document.getElementById('recalculate_button')
 
+// Functions
 function updateChart2Datasets(newTotalSavingsArray, newTotalProductionArray, newPaybackYear, newMonthlyPanelEnergy){
 
   window.totalSavingsArray = newTotalSavingsArray;
@@ -16,7 +13,6 @@ function updateChart2Datasets(newTotalSavingsArray, newTotalProductionArray, new
   window.paybackYear = newPaybackYear;
   window.monthlyPanelEnergy = newMonthlyPanelEnergy;
 };
-
 function updateEconomicMetrics(netPresentValue, returnOnInvest, levelisedCostEnergy, internalRateReturn, annualInternalRateReturn){
 
   window.roi = returnOnInvest;
@@ -25,7 +21,6 @@ function updateEconomicMetrics(netPresentValue, returnOnInvest, levelisedCostEne
   window.irr = internalRateReturn;
   window.npv = netPresentValue;
 };
-
 function updateChartProduction(chartId, newMonthlyPanelEnergy){
   if (globalCharts.hasOwnProperty(chartId)) {
     let chart = globalCharts[chartId];
@@ -33,7 +28,6 @@ function updateChartProduction(chartId, newMonthlyPanelEnergy){
     chart.data.datasets[1].data = newMonthlyPanelEnergy; // Update the second dataset
   }
 };
-
 function updateChartMetrics(chartId, netPresentValue, returnOnInvest, levelisedCostEnergy, internalRateReturn, annualInternalRateReturn){
   let newData = [returnOnInvest, netPresentValue, levelisedCostEnergy, internalRateReturn, annualInternalRateReturn]
 
@@ -43,8 +37,6 @@ function updateChartMetrics(chartId, netPresentValue, returnOnInvest, levelisedC
     chart.data.datasets[0].data = newData; // Update the second dataset
   }
 };
-
-// Function to update chart2
 function updateChartSavings(chartId, newTotalSavingsArray, newTotalProductionArray, newPaybackYear) {
   if (globalCharts.hasOwnProperty(chartId)) {
     let chart = globalCharts[chartId];
@@ -84,7 +76,6 @@ function updateChartSavings(chartId, newTotalSavingsArray, newTotalProductionArr
     console.error(`Chart with ID '${chartId}' not found.`);
   }
 }
-
 function recalculatePvSystemProperties(){
     // Record the start time
     const startTime = new Date().getTime();
@@ -240,28 +231,20 @@ function recalculatePvSystemProperties(){
     }
   });
 };
-
 // Function to handle the "Calculate Power" button click
 function handleRecalculation() {
       // Call the calculation function
       recalculatePvSystemProperties();
 };
 
+// Listeners
 document.addEventListener('DOMContentLoaded', function() {
     PvKWpDashboardValue = pvKwp
     PvKWpDashboardValue = numberPanels
 });
-
-// PvKWpDashboard.addEventListener('input', function(){
-//     if (PvKWpDashboard.value == '' || PvKWpDashboard.value == "0" )
-//         PvKWpDashboard.value = '1';
-//     PvKWpDashboardValue = PvKWpDashboard.value
-// });
-
 numberPanelsDashboard.addEventListener('input', function(){
     if (numberPanelsDashboard.value == '' || numberPanelsDashboard.value == '0')
         numberPanelsDashboard.value = '1';
     numberPanelsDashboardValue = numberPanelsDashboard.value
 });
-
 recalculateButton.addEventListener('click', handleRecalculation);
