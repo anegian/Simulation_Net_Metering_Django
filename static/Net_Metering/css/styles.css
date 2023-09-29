@@ -394,7 +394,7 @@ ul li{
     }
     .green-text {
         color: green;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: bold;
       }
       #profitPercent_tag{
@@ -408,8 +408,13 @@ ul li{
     
       .grey-text {
         color: lightslategray;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: bold;
+      }
+      .pale-green-text{
+        font-size: 12px;
+        font-weight: bold;
+        color: #738725;
       }
     
       .green-tick::before {

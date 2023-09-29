@@ -111,12 +111,13 @@
                         <p class="green-text"><span style="color: green;" id="profitPercentLabel">Ποσοστό Κάλυψης:</span> <span id="profitPercent_tag">{{ profitPercent|default:'0' }}% ✔</span></p>
                           <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
                           
-                      {% elif profitPercent > 90 and profitPercent < 100 %}
-                        <p class="info-title"><span style="color: #738725;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span><span id="profitPercent_tag">{{ profitPercent|default:'0' }}%</span> <br></p>
+                      {% elif profitPercent > 85 and profitPercent < 100 %}
+                        <p class="pale-green-text"><span style="color: #738725;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span><span id="profitPercent_tag">{{ profitPercent|default:'0' }}%</span></p>
                           <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
                         </p>
                       {% else %}
-                        <p class="grey-text" id="annualCostLabel"><span style="color: lightslategray;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span> <span id="profitPercent_tag">{{ profitPercent|default:'0' }} %</span>  <br>Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €  --</p>
+                        <p class="grey-text"><span style="color: grey;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span> <span id="profitPercent_tag">{{ profitPercent|default:'0' }} %</span></p>
+                          <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
                       {% endif %}
                 </div>
 
@@ -212,7 +213,7 @@
                             <p class="info-title" id="potential_savings" ><span style="color: #738725;">Εκμηδενίσατε το ετήσιο κόστος</span>, όμως δεν υπάρχει διαθέσιμο <br>πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας'</p>;
                           {% elif total_savings_potential > 0 and profitPercent >= 100 %}
                             <p class="info-title" id="potential_savings" ><span style="color: green;">Πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας:<br>✔</span> έως επιπλέον <span id="potentialKwhValue">{{potential_kwh}}</span> kWh<br></p>
-                          {% elif annual_consumption > annual_PV_energy_produced and profitPercent < 85 and PV_kWp <= slider_max_value %}
+                          {% elif annual_consumption > annual_PV_energy_produced and profitPercent <= 85 and PV_kWp <= slider_max_value %}
                             <p class="info-title" id="potential_savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
                           {% elif profitPercent > 90 and profitPercent < 100  and recommended_kWp < slider_max_value or PV_kWp < slider_max_value %}
                             <p class="info-title" id="potential_savings" ><span class="info-title-below" style="color: lightskyblue;">Με μικρές αλλαγές, με προσθήκη μπαταρίας ή με λίγο <br>μεγαλύτερο Φ/Β σύστημα, μπορείτε να εκμηδενίσετε το<br>ετήσιο κόστος!!</span></p>
