@@ -397,6 +397,9 @@ ul li{
         font-size: 14px;
         font-weight: bold;
       }
+      #profitPercent_tag{
+        color: #f2f2f2!important;
+      }
       p#annualCostLabel.lightskyblue-text{
         color: lightskyblue;
         font-size: 12px;
