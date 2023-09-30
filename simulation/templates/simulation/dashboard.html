@@ -23,8 +23,7 @@
          lcoe = '{{ lcoe }}';
          irr = '{{ irr }}';
          npv = '{{ net_present_value }}';
-         // Retrieve the CSRF token
-  </script>
+ </script>
  <script src="{% static 'Net_Metering/javascript/charts.js' %}" defer></script>
  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" ></script>
  <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
@@ -73,14 +72,14 @@
                       <span class="grey-text" style="color: lightslategrey;"><br> Έχει εφαρμοστεί έκπτωση {{discount_battery|default:'0'}}%</span>
                       {% else %}
                       <span class="grey-text" style="color: lightslategrey;">Άνευ Μπαταρίας</span>
-                      <!-- <form method="post" action="/your-form-action/">
+                      <form method="post">
                         {% csrf_token %}
                         <div>
                           <img class="img-battery" src="{% static 'images/battery.png' %}" alt="No Image">
                           <button class="add-battery-button" type="button" id="battery_add_button">Προσθήκη Μπαταρίας</button>
-                        </div> -->
+                        </div>
                       {% endif %} 
-                      <!-- </form>  -->
+                      </form>
                     </p>  
                 </div>
 
@@ -188,11 +187,6 @@
                         {% csrf_token %}
                       <div title="Στοιχεία ΦΒ Συστήματος" id="pv-info-list">
                           <span class="info-title">&#8226; Ισχύς: <span id="PV_kWp">{{PV_kWp|default:'0'}}</span>  kWp
-                            <!-- {% if phase_load == "single_phase" %}  
-                              <input type="number" id="PV_kWp_dashboard" min="1.0" max="5.0" step="0.1" value="0" readonly>kWp
-                            {% else %}
-                              <input type="number" id="PV_kWp_dashboard" min="1.0" max="10.8" step="0.1" value="0" readonly>kWp
-                            {% endif %}  -->
                           </span> <br>
                           <span class="info-title" title="Μπορείτε να αυξομειώσετε τον αριθμό των Φ/Β πάνελ και να κάνετε επανυπολογισμό.">
                             &#8226; Σύνολο: <input type="number" id="number_panels_dashboard" min="1" max="40" step="1" value="0">Φ/Β πάνελ</span> 
