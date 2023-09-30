@@ -830,7 +830,6 @@ function validateBatteryCost(){
   // after check set the value of the input
   batteryCostInput.value = parseInt(sanitizedCostValue);
 };
-
 function validateStorageKW(){
   // Get the input value as a string
   let enteredStorage = battery_capacity_kwh.value;
@@ -1291,7 +1290,8 @@ themeSlider.addEventListener('input', function(event) {
         document.documentElement.style.setProperty('--bg-color-submit-button', '#738725');
         document.documentElement.style.setProperty('--help-popper', 'blue');
         }
-    });
+});
+
 // Add event listeners to the radio buttons and the calculation button
 // Loop through each radio button in the NodeList and add an event listener
 power_kWp_method.forEach(function(radioButton) {

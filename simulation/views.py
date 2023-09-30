@@ -15,7 +15,7 @@ from django.contrib.sessions.models import Session
 # Create your views here
 # App level
 # annual degardation aprox. 0.5%. After 25 years degradation almost 12.5%
-annual_degradation_production = 1 + 0.005
+annual_degradation_production = 0.005
 cumulative_degradation  = 1.125
 performance_degradation = 0.75
 
@@ -410,12 +410,11 @@ def calculator_form_fields_handler(request):    # simulation/templates/calculato
             return dashboard_results(request)
         else:
             # Form is not valid, handle the error or display a message
-            return render(request, 'simulation/calculator.html', context={'form_phase_load': form_phase_load})
+            error_message = "Please correct the errors in the form."
+            return render(request, 'simulation/calculator.html', context={'form_phase_load': form_phase_load, 'error_message': error_message})
     else:
-        # form_district = PlaceOfInstallationForm()
         form_phase_load = PhaseLoad()
-    return render(request, 'simulation/calculator.html', context={'form_phase_load': form_phase_load,}) 
-    #'form_district': form_district, 
+    return render(request, 'simulation/calculator.html', context={'form_phase_load': form_phase_load}) 
 
 # Ajax Request Calculation    url = simulation/ajax/
 def calculate_power(request):
@@ -423,7 +422,6 @@ def calculate_power(request):
     # Initial assignment
     total_PV_life_years= 25
     annual_production = 0
-    total_production = 0
     minimum_PV_panels = 0
 
     try:
@@ -464,9 +462,9 @@ def calculate_power(request):
             # Initial calculations 
             special_production_per_panel = round(annual_irradiance * panel_area * panel_efficiency * performance_degradation * shadings_percentage)
             total_consumption = energy_consumption * total_PV_life_years
-            minimum_PV_panels = round((energy_consumption / special_production_per_panel) * cumulative_degradation)
+            minimum_PV_panels = round(energy_consumption / special_production_per_panel)
             recommended_kWp  = round(minimum_PV_panels * panel_kWp_value, 1)
-            annual_production  = round((minimum_PV_panels * special_production_per_panel) / cumulative_degradation)
+            annual_production  = round(minimum_PV_panels * special_production_per_panel)
             print("BEFORE WHILE: annual_production:", annual_production, "minimum_PV_panels:",  minimum_PV_panels)
             print(f"special_production_per_panel: {special_production_per_panel}")
 
@@ -475,12 +473,11 @@ def calculate_power(request):
             while annual_production <= energy_consumption:
                 loop_passes +=1
                 minimum_PV_panels +=1
-                annual_production  = round(minimum_PV_panels * (special_production_per_panel / cumulative_degradation))
+                annual_production  = round(minimum_PV_panels * special_production_per_panel)
                 print("IN WHILE LOOP: ADDED 1 more PV panel")
-
-            total_production = annual_production * 25
+ 
             recommended_kWp  = round(minimum_PV_panels * panel_kWp_value, 1)
-            print(f"IN CALCULATE POWER:\n recommended_kWp: {recommended_kWp}, total_production: {total_production}, annual_production: {annual_production}, minimum_PV_panels: {minimum_PV_panels}, loop_passes: {loop_passes} ")
+            print(f"IN CALCULATE POWER:\n recommended_kWp: {recommended_kWp}, annual_production: {annual_production}, minimum_PV_panels: {minimum_PV_panels}, loop_passes: {loop_passes} ")
             print('slider_max_value: ', slider_max_value)
 
             # check if recommended kWp is greater than house power load(slider) max value
@@ -488,7 +485,7 @@ def calculate_power(request):
                 print("@@@ The energy consumption exceeds solar production @@@")
                 recommended_kWp = slider_max_value
                 minimum_PV_panels = round(recommended_kWp / panel_kWp_value)
-                annual_production = round(minimum_PV_panels * (special_production_per_panel / cumulative_degradation))
+                annual_production = round(minimum_PV_panels * special_production_per_panel)
                 print(f"--- new panel kWp: {recommended_kWp}, annual_production: {annual_production}, minimum_PV_panels: {minimum_PV_panels}")
 
             if place_instalment_value == 'roof':
@@ -513,15 +510,15 @@ def calculate_power(request):
             print(f"Total area for {place_instalment_value}: {total_panel_area}" )
             print('Annual Production:', annual_production)
             
-            print(f"Total production after 25 years, for {minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {panel_kWp_value}Wp is: {round(total_production)}")
+            print(f"{minimum_PV_panels} panels, efficiency {panel_efficiency*100}%, area {panel_area} m² and {panel_kWp_value}Wp")
             print(f"Total consumption after 25 years: {total_consumption}")
 
             response_data = {
-                'special_production_per_panel': round(special_production_per_panel  / cumulative_degradation, 1),
+                'special_production_per_panel': round(special_production_per_panel),
                 'recommended_kWp': recommended_kWp,
                 'minimum_PV_panels': minimum_PV_panels,
                 'total_panel_area': total_panel_area,
-                'annual_production': annual_production,
+                'annual_production': round(annual_production),
                 'monthly_panel_energy_produced_list': monthly_panel_energy_produced_list,
                 'monthly_panel_energy_produced_json': monthly_panel_energy_produced_json,
             }
@@ -542,7 +539,6 @@ def recalculate_pv_system_properties(request):
     shadings_percentage = request.session.get('shadings_percentage')
     total_panel_area = float(request.session.get('total_panel_area'))
     net_present_value = request.session.get('net_present_value')
-    inverter_cost = int(request.session.get('inverter_cost'))
     
     try:
         if request.method == 'POST':
@@ -647,27 +643,27 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, battery_capacity
     if phase_load == "single_phase":
         # inverters cost -> 700€-1200€ prices, hybrid inverters are expensive
         if has_storage == "with_storage" and battery_cost > 0:
-            inverter_cost_auto = ( PV_kWp * 200 ) + ( (5 - PV_kWp) * 100 )  # 1-phase hybrid inverter and given battery cost 
+            inverter_cost_auto = ( PV_kWp * 450 )  # 1-phase hybrid inverter and given battery cost 
             battery_cost = battery_cost
             print(f"total_investment 1st if" )
         elif has_storage == "with_storage" and battery_cost == 0:
-            inverter_cost_auto = ( PV_kWp * 200 ) + ( (5 - PV_kWp) * 100 ) # 1-phase hybrid inverter for battery support
+            inverter_cost_auto = ( PV_kWp * 450 )  # 1-phase hybrid inverter for battery support
             battery_cost = round(battery_capacity_kwh * average_battery_cost_per_kW)
             print(f"total_investment 2nd if" )
         else:
-            inverter_cost_auto = ( PV_kWp * 100 ) + ( (5 - PV_kWp) * 100 )# simple 1-phase PV inverter
+            inverter_cost_auto = ( PV_kWp * 350 ) # simple 1-phase PV inverter
             battery_cost = 0
             print(f"total_investment 3rd if" )
     # for 0.1 - 10.8 kWp
     elif phase_load == "3_phase":
         if has_storage == "with_storage" and battery_cost == 0:
-            inverter_cost_auto = (PV_kWp * 250 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter for battery support
+            inverter_cost_auto = (PV_kWp * 450 )  # 3-phase hybrid inverter for battery support
             battery_cost = round(battery_capacity_kwh * average_battery_cost_per_kW)
         elif has_storage == "with_storage" and battery_cost > 0:
-            inverter_cost_auto = (PV_kWp * 250 ) + ( (10 - PV_kWp) * 100 )  # 3-phase hybrid inverter and given battery cost
+            inverter_cost_auto = (PV_kWp * 450 ) # 3-phase hybrid inverter and given battery cost
             battery_cost = battery_cost
         else:
-            inverter_cost_auto = ( PV_kWp * 150 )+ ( (10 - PV_kWp) * 100 ) # simple 3-phase PV inverter
+            inverter_cost_auto = ( PV_kWp * 350 ) # simple 3-phase PV inverter
             battery_cost = 0
     else:
         battery_cost = 0
@@ -697,7 +693,7 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, battery_capacity
     print(f"*Total investment: {total_investment}\n PV total cost: {Pv_system_cost}\n PV panels' Cost: {Pv_panels_cost},\n Battery Cost: {battery_cost},\n Inverter: {inverter_cost} and PV kWp: {PV_kWp},")
    
     return total_investment, inverter_cost, battery_cost
-# OK
+
 def calculate_shade_percentage(shadings_slider_value):
     # solar production reduction percentage due to shadings
     if shadings_slider_value == 2:
@@ -708,7 +704,7 @@ def calculate_shade_percentage(shadings_slider_value):
         shadings_percentage = 1
     
     return shadings_percentage
-# OK
+
 def calculate_self_consumption_ratio(userPower_profile, annual_PV_energy_produced, has_storage, battery_capacity_kwh, annual_consumption):
     depth_battery_discharge = 0.8 #80% dod for lithium batteries
     solar_production_hours = 12
@@ -757,7 +753,7 @@ def calculate_self_consumption_ratio(userPower_profile, annual_PV_energy_produce
     
 
     return self_consumption_ratio 
-# OK
+
 def calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption, self_consumption_ratio):
 
     potential_self_consumed_energy = round(annual_PV_energy_produced * self_consumption_ratio)
@@ -787,10 +783,10 @@ def calculate_self_consumed_energy(annual_PV_energy_produced, annual_consumption
     print(f"4444444 in calculate self_consumed_energy: annual_PV_energy_produced:{annual_PV_energy_produced},self_consumed_energy: {self_consumed_energy} , self_consumption_ratio: {self_consumption_ratio}, exported_energy: {exported_energy_to_grid} ^^^^^^^^^")
 
     return self_consumed_energy, potential_self_consumed_energy, exported_energy_to_grid
-# OK   
+ 
 def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, special_production_per_panel, number_of_panels_required, total_panel_area):
     monthly_panel_energy_produced_list = []
-    annual_PV_energy_produced = round( number_of_panels_required * special_production_per_panel / cumulative_degradation)
+    annual_PV_energy_produced = round( number_of_panels_required * special_production_per_panel)
     print(f"88888888 In calculate PV energy: annual_PV_energy_produced: {annual_PV_energy_produced},special_production_per_panel:{special_production_per_panel}, number_of_panels_required: {number_of_panels_required}")
     print("annual_irradiance: ", annual_irradiance)
 
@@ -801,11 +797,11 @@ def calculate_PV_energy_produced(monthly_irradiance_list, annual_irradiance, spe
     monthly_panel_energy_produced_json = json.dumps(monthly_panel_energy_produced_list)
     
     return annual_PV_energy_produced, monthly_panel_energy_produced_json, monthly_panel_energy_produced_list
-# OK
+
 def calculate_consumption_total_charges(annual_consumption, phase_loadkVA, energy_cost):
     # πάγιο(0.52 €/kVA), ΔΙΑΝΟΜΗ 0,0213 €/kWh, ΜΕΤΑΦΟΡΑ 0.00844€/kWh, ΕΤΜΕΑΡ 0,017€/kWh, ΦΠΑ 6% * kWh * τιμή kWh, Συνολικό κόστος κατανάλωσης
     return round((phase_loadkVA * 0.52) + (annual_consumption * 0.0213) + (phase_loadkVA * 1) + (annual_consumption * 0.00844) + (annual_consumption*0.017) + (annual_consumption*energy_cost*0.06) + ( annual_consumption*energy_cost))
-# OK
+
 def calculate_total_charges_for_imported_energy(exported_energy, imported_energy, phase_loadkVA, energy_cost):
     # additional energy has full cost, but imported energy thas was primarily exported only has regulated charges
     if imported_energy > exported_energy:
@@ -831,7 +827,7 @@ def calculate_total_charges_for_imported_energy(exported_energy, imported_energy
     
      
     return charges_for_additional_imported_energy + regulated_charges 
-# OK
+
 def calculate_total_avoided_charges(annual_consumption, annual_PV_energy_produced, self_consumed_energy, potential_self_consumed_energy, phase_loadkVA, energy_cost, consumption_total_charges, exported_energy):
 
     # Calculate solar energy regulated cost sent back and forth to the grid 
@@ -908,7 +904,7 @@ def calculate_total_savings(total_savings_potential):
     total_savings = total_savings_potential
     
     for i in range(1, 25):
-        total_savings += round(total_savings_potential / ( ( annual_degradation_production ) ** i))
+        total_savings += round(total_savings_potential / ( 1 + (annual_degradation_production * i)) )
         total_savings_array.append(total_savings)
 
     return total_savings, total_savings_array
@@ -924,7 +920,7 @@ def calculate_payback_period(total_investment, total_savings_potential, consumpt
         # starting_invest = total_investment
 
         # Calculate years and months independently from that point 
-        if total_savings_potential > (consumption_total_charges * annual_degradation_production):
+        if total_savings_potential > (consumption_total_charges * (1+annual_degradation_production) ):
             while sum(total_savings) <= total_investment:
                 savings = consumption_total_charges
                 total_savings.append( savings )
@@ -946,7 +942,7 @@ def calculate_payback_period(total_investment, total_savings_potential, consumpt
             # Find the point where savings exceed investment
             while sum(total_savings) <= total_investment:
                 try:
-                    result = total_savings_potential / (annual_degradation_production ** years_to_overcome_investment)
+                    result = total_savings_potential / (1+ (annual_degradation_production ** years_to_overcome_investment) )
                     # Check if the result is very small (close to zero)
                     if abs(result) < 1e-1:  # You can adjust the threshold as needed
                         payback_period = "0"
@@ -977,11 +973,10 @@ def calculate_payback_period(total_investment, total_savings_potential, consumpt
 def calculate_total_production_kwh(annual_PV_energy_produced, shadings_percentage):
     # 1st year the total production is the annual_PV_energy_produced
     total_production_kwh = annual_PV_energy_produced
-    total_production_kwh_array =[0, annual_PV_energy_produced]
-    print(f"3333333 in calculate_total_production_kwh, annual_PV_energy_produced {annual_PV_energy_produced}")
+    total_production_kwh_array =[0, total_production_kwh]
 
     for i in range(1, 25):
-        total_production_kwh += annual_PV_energy_produced / ( annual_degradation_production ** i) * shadings_percentage
+        total_production_kwh += annual_PV_energy_produced * shadings_percentage / (1 + (annual_degradation_production * i))
         total_production_kwh_array.append(round(total_production_kwh))
 
     print("Total kWh production after 25 years: ", round(total_production_kwh))
