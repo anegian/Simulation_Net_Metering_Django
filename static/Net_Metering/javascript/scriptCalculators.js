@@ -243,7 +243,7 @@ function disableElements() {
 } 
 function enableAnnualkWh(){
   annual_Kwh_input.disabled = false;
-  annual_Kwh_input.max = phase_load_selected.value === 'single_phase' ? 7000 : 12000;
+  annual_Kwh_input.max = phase_load_selected.value === 'single_phase' ? 5000 : 12000;
   annual_Kwh_input.step = 10;
   annual_Kwh_input.min = 0;
 }
