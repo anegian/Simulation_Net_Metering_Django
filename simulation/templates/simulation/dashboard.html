@@ -72,14 +72,14 @@
                       <span class="grey-text" style="color: lightslategrey;"><br> Έχει εφαρμοστεί έκπτωση {{discount_battery|default:'0'}}%</span>
                       {% else %}
                       <span class="grey-text" style="color: lightslategrey;">Άνευ Μπαταρίας</span>
-                      <form method="post">
+                      <!-- <form method="post">
                         {% csrf_token %}
                         <div>
                           <img class="img-battery" src="{% static 'images/battery.png' %}" alt="No Image">
                           <button class="add-battery-button" type="button" id="battery_add_button">Προσθήκη Μπαταρίας</button>
-                        </div>
+                        </div> -->
                       {% endif %} 
-                      </form>
+                      <!-- </form> -->
                     </p>  
                 </div>
 
@@ -107,9 +107,15 @@
                       <span id="profit_tag">{{total_savings_potential|default:'0' }}</span> €/έτος <br>
                     </p>
                       {% if profitPercent == 100 %}
+<<<<<<< HEAD
                         <p class="green-text"><span style="color: green;" id="profitPercentLabel">Ποσοστό Κάλυψης:</span> <span id="profitPercent_tag">{{ profitPercent|default:'0' }}% ✔</span></p>
                           <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
                           
+=======
+                      <p class="green-text"><span style="color: green;" id="profitPercentLabel">Ποσοστό Κάλυψης:</span> <span id="profitPercent_tag">{{ profitPercent|default:'0' }}% ✔</span></p>
+                        <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
+                        
+>>>>>>> a9017cb213e4a87191517d264fe2920034f3e7b3
                       {% elif profitPercent > 85 and profitPercent < 100 %}
                         <p class="pale-green-text"><span style="color: #738725;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span><span id="profitPercent_tag">{{ profitPercent|default:'0' }}%</span></p>
                           <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
