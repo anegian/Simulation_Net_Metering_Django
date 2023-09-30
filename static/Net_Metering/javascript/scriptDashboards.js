@@ -2,14 +2,8 @@
 const numberPanelsDashboard = document.getElementById('number_panels_dashboard')
 numberPanelsDashboard.value = numberPanels; // Set the value of the input element
 let numberPanelsDashboardValue = numberPanelsDashboard.value
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 const batteryAddButton = document.getElementById('battery_add_button');
->>>>>>> 95b374de004f25eba0da5eceba6cfee5c1fcc180
-=======
 // const batteryAddButton = document.getElementById('battery_add_button');
->>>>>>> a9017cb213e4a87191517d264fe2920034f3e7b3
 const recalculateButton = document.getElementById('recalculate_button')
 
 // Functions
@@ -254,13 +248,6 @@ numberPanelsDashboard.addEventListener('input', function(){
         numberPanelsDashboard.value = '1';
     numberPanelsDashboardValue = numberPanelsDashboard.value
 });
-<<<<<<< HEAD
-
-=======
 recalculateButton.addEventListener('click', handleRecalculation);
-<<<<<<< HEAD
 
-// batteryAddButton.addEventListener('click', handleBatteryAddition)
->>>>>>> 95b374de004f25eba0da5eceba6cfee5c1fcc180
-=======
->>>>>>> a9017cb213e4a87191517d264fe2920034f3e7b3
+
