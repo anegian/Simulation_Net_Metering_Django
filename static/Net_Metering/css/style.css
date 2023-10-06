@@ -268,7 +268,7 @@ ul li{
             }
 
 /* ::: NAVBAR ::: */
-.second-navbar{
+.main-navbar{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -276,13 +276,13 @@ ul li{
     height: 40px;
     width: 100%;
 }
-.second-navbar-left-container{
+.main-navbar-left-container{
     height: inherit;
     display: flex;
     align-items: center;
     margin-left: 120px;
 }
-.second-navbar-left-container .nav-list{
+.main-navbar-left-container .nav-list{
     height: inherit;
     display: flex;
     justify-content: space-evenly;
@@ -290,7 +290,7 @@ ul li{
     padding-top: 28px;
     margin-right: 20px;
 }
-.second-navbar-right-container{
+.main-navbar-right-container{
     height: inherit;
     display: inherit;
     align-items: center;
@@ -1497,11 +1497,11 @@ ul li{
                     transition: all .5s ease-in;
                 }
 
-                .second-navbar-left-container .nav-list li{
+                .main-navbar-left-container .nav-list li{
                     /* padding-bottom: 50px; */
                     cursor: pointer;
                 }
-                .second-navbar-left-container{
+                .main-navbar-left-container{
                     margin-left: 0px;
                 }
                 .img-house{
@@ -2284,6 +2284,3 @@ footer .admin-info {
     align-items: center;
     text-decoration: none;
   }
-
-
-

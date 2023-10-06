@@ -639,43 +639,36 @@ def calculate_total_investment(PV_kWp, phase_load, has_storage, battery_capacity
     panel_bases_cost = 90 * number_of_panels_required # bases for the panels on roof or terrace, average cost per base
     Pv_panels_cost = round((number_of_panels_required * panel_cost) + panel_bases_cost)
     
-    # for 0.1 - 5 kWp
-    if phase_load == "single_phase":
-        # inverters cost -> 700€-1200€ prices, hybrid inverters are expensive
-        if has_storage == "with_storage" and battery_cost > 0:
-            inverter_cost_auto = ( PV_kWp * 450 )  # 1-phase hybrid inverter and given battery cost 
-            battery_cost = battery_cost
-            print(f"total_investment 1st if" )
-        elif has_storage == "with_storage" and battery_cost == 0:
-            inverter_cost_auto = ( PV_kWp * 450 )  # 1-phase hybrid inverter for battery support
-            battery_cost = round(battery_capacity_kwh * average_battery_cost_per_kW)
-            print(f"total_investment 2nd if" )
-        else:
-            inverter_cost_auto = ( PV_kWp * 350 ) # simple 1-phase PV inverter
-            battery_cost = 0
-            print(f"total_investment 3rd if" )
-    # for 0.1 - 10.8 kWp
-    elif phase_load == "3_phase":
-        if has_storage == "with_storage" and battery_cost == 0:
-            inverter_cost_auto = (PV_kWp * 450 )  # 3-phase hybrid inverter for battery support
-            battery_cost = round(battery_capacity_kwh * average_battery_cost_per_kW)
-        elif has_storage == "with_storage" and battery_cost > 0:
-            inverter_cost_auto = (PV_kWp * 450 ) # 3-phase hybrid inverter and given battery cost
-            battery_cost = battery_cost
-        else:
-            inverter_cost_auto = ( PV_kWp * 350 ) # simple 3-phase PV inverter
-            battery_cost = 0
+    if has_storage == "with_storage" and battery_cost == 0:
+        battery_cost = round(battery_capacity_kwh * average_battery_cost_per_kW)
+    elif has_storage == "with_storage" and battery_cost > 0:
+        battery_cost = battery_cost
     else:
         battery_cost = 0
-
-    if initial_inverter_cost > 0:
-        inverter_cost = round(inverter_cost)
-    elif initial_inverter_cost == 0:
+        
+    if phase_load == 'single_phase':
+        energy_meter = 120
+        if PV_kWp >= 2.0 and PV_kWp <= 5.0:
+            inverter_cost_auto = 350 * PV_kWp
+        else:
+            inverter_cost_auto = 650
+    else:
+        energy_meter = 250
+        if PV_kWp >= 1.0 and PV_kWp <= 6.1:
+            inverter_cost_auto = PV_kWp * (650 - (PV_kWp * 50) )
+        elif PV_kWp > 6.1 and PV_kWp <= 10.8:
+            inverter_cost_auto = PV_kWp * (250 + (20 * (10.8 - PV_kWp) ) )
+        else:
+            inverter_cost_auto = 650
+            
+    if initial_inverter_cost == 0:
         inverter_cost = round(inverter_cost_auto)
+    else:
+        inverter_cost = inverter_cost
     
 
-    # How much the PV system costs without battery
-    Pv_system_cost = Pv_panels_cost + installation_cost + inverter_cost + electric_materials
+    # PV system cost without battery
+    Pv_system_cost = Pv_panels_cost + installation_cost + inverter_cost + electric_materials + energy_meter
 
     # If client/user is eligible to discounts
     if discount_PV > 0:

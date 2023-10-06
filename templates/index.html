@@ -13,7 +13,7 @@
     integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="website icon" type="png" href="{% static 'images/panel_128x107.png'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"/>
-    <link rel="stylesheet" href=" {% static 'Net_Metering/css/styles.css' %}"/>
+    <link rel="stylesheet" href=" {% static 'Net_Metering/css/style.css' %}"/>
 
     {% block css %} 
     {% endblock %}
@@ -29,9 +29,9 @@
 
 <body class="{% block body_class %}{% endblock %} ">
 
-        <nav class="second-navbar">
+        <nav class="main-navbar">
 
-            <div class="second-navbar-right-container">
+            <div class="main-navbar-right-container">
 
                 <header class="main-header">         
                     <div class="header-container-left">
@@ -42,7 +42,7 @@
                 </header>
             </div >
 
-            <div class="second-navbar-left-container" id="second-navbar-left-container">
+            <div class="main-navbar-left-container" id="main-navbar-left-container">
                 <input type="checkbox" id="check-navbar">
                 <label  for="check-navbar" id="menu-nav-button" class="demo-class"><i class="fas fa-bars"></i></label>
 
@@ -62,9 +62,6 @@
                         
                     </div>     
             </div>
-
-            
-            
         </nav>
         
         <div id="main-index-content-for-all">
