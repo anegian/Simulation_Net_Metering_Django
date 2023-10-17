@@ -209,7 +209,7 @@ function recalculatePvSystemProperties(){
 
       if (paybackPeriod == 0 || paybackPeriod =="0") {
         $("#paybackPeriod_tag").css("color", "lightslategrey");
-        $('#paybackPeriod_tag').html('&#8734; <br> Η περίοδος απόσβεσης υπερβαίνει τα όρια <br>υπολογισμού.');
+        $('#paybackPeriod_tag').html('&#8734; <br> Η περίοδος απόσβεσης υπερβαίνει τα όρια υπολογισμού.');
       }else if (newPaybackYear >= 100){
         $("#paybackPeriod_tag").css("color", "lightslategrey");
         $('#paybackPeriod_tag').html('&#8734; <br> Η περίοδος απόσβασης υπερβαίνει τα 100 έτη');
