@@ -12,11 +12,11 @@
          totalProductionArray = JSON.parse( '{{ total_production_kwh_array_json|safe }}' );
          let monthIrradianceArray = JSON.parse( '{{ monthly_irradiance_json|safe }}' );
          monthlyPanelEnergy= JSON.parse('{{monthly_panel_energy_produced_json|safe }}' );
-         let pvKwp = '{{PV_kWp}}';
+         let pvKwp = parseFloat('{{PV_kWp}}');
          let numberPanels = '{{number_of_panels_required}}';
          paybackYear = '{{ payback_year_float }}';
          let batteryCapacity = '{{battery_capacity_kwh}}';
-         let profitPercent = '{{ profitPercent }}';
+         let profitPercent = '{{ profit_percent }}';
          let potentialKwh = '{{potential_kwh}}';
          roi = '{{ roi }}';
          annual_roi = '{{ annualized_roi }}';
@@ -29,6 +29,7 @@
  <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  <script src="{% static 'Net_Metering/javascript/scriptDashboards.js' %}" defer></script>
+ <script src="{% static 'Net_Metering/javascript/addBattery.js' %}" defer></script>
 {% endblock %}
 
 {% block menu_list %}
@@ -71,15 +72,16 @@
                       <span style="color:green;">✔ Μπαταρία:</span> 
                       <span class="grey-text" style="color: lightslategrey;"><br> Έχει εφαρμοστεί έκπτωση {{discount_battery|default:'0'}}%</span>
                       {% else %}
-                      <span class="grey-text" style="color: lightslategrey;">Άνευ Μπαταρίας</span>
-                      <!-- <form method="post">
+                      <!-- <span class="grey-text" style="color: lightslategrey;">Άνευ Μπαταρίας</span> -->
+                      <form method="post">
                         {% csrf_token %}
                         <div>
                           <img class="img-battery" src="{% static 'images/battery.png' %}" alt="No Image">
-                          <button class="add-battery-button" type="button" id="battery_add_button">Προσθήκη Μπαταρίας</button>
-                        </div> -->
+                          <button class="add-battery-button" type="button" id="battery_add_button"
+                           title="Πατήστε εδώ εάν δεν είχατε επιλέξει συσσωρευτή για να προσθέσετε εκ νέου!">Προσθήκη Μπαταρίας</button>
+                        </div>
                       {% endif %} 
-                      <!-- </form> -->
+                      </form>
                     </p>  
                 </div>
 
@@ -107,15 +109,15 @@
                       <span id="profit_tag">{{total_savings_potential|default:'0' }}</span> €/έτος <br>
                     </p>
                       {% if profitPercent == 100 %}
-                        <p class="green-text"><span style="color: green;" id="profitPercentLabel">Ποσοστό Κάλυψης:</span> <span id="profitPercent_tag">{{ profitPercent|default:'0' }}% ✔</span></p>
+                        <p class="green-text"><span style="color: green;" id="profitPercentLabel">Ποσοστό Κάλυψης:</span> <span id="profitPercent_tag">{{ profit_percent|default:'0' }}% ✔</span></p>
                           <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
                           
                       {% elif profitPercent > 85 and profitPercent < 100 %}
-                        <p class="pale-green-text"><span style="color: #738725;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span><span id="profitPercent_tag">{{ profitPercent|default:'0' }}%</span></p>
+                        <p class="pale-green-text"><span style="color: #738725;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span><span id="profitPercent_tag">{{ profit_percent|default:'0' }}%</span></p>
                           <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
                         </p>
                       {% else %}
-                        <p class="grey-text"><span style="color: grey;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span> <span id="profitPercent_tag">{{ profitPercent|default:'0' }} %</span></p>
+                        <p class="grey-text"><span style="color: grey;" id="profitPercentLabel">Ποσοστό Κάλυψης: </span> <span id="profitPercent_tag">{{ profit_percent|default:'0' }} %</span></p>
                           <p class="lightskyblue-text" id="annualCostLabel">Ετήσιο Κόστος Ρεύματος: {{consumption_total_charges}} €</p>
                       {% endif %}
                 </div>
@@ -207,11 +209,11 @@
                             <p class="info-title" id="potential_savings" ><span style="color: #738725;">Εκμηδενίσατε το ετήσιο κόστος</span>, όμως δεν υπάρχει διαθέσιμο <br>πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας'</p>;
                           {% elif total_savings_potential > 0 and profitPercent >= 100 %}
                             <p class="info-title" id="potential_savings" ><span style="color: green;">Πλεόνασμα ιδιοκαταναλισκόμενης ενέργειας:<br>✔</span> έως επιπλέον <span id="potentialKwhValue">{{potential_kwh}}</span> kWh<br></p>
-                          {% elif annual_consumption > annual_PV_energy_produced and profitPercent <= 85 and PV_kWp <= slider_max_value %}
+                          {% elif annual_consumption > annual_pv_energy_produced and profitPercent <= 85 and PV_kWp <= slider_max_value %}
                             <p class="info-title" id="potential_savings" ><span style="color: red;">Προσοχή! </span><span style="color: lightslategray;">Απαιτείται μεγαλύτερο ΦΒ <br>σύστημα για κάλυψη ετήσιας κατανάλωσης.</span></p>
                           {% elif profitPercent > 90 and profitPercent < 100  and recommended_kWp < slider_max_value or PV_kWp < slider_max_value %}
                             <p class="info-title" id="potential_savings" ><span class="info-title-below" style="color: lightskyblue;">Με μικρές αλλαγές, με προσθήκη μπαταρίας ή με λίγο <br>μεγαλύτερο Φ/Β σύστημα, μπορείτε να εκμηδενίσετε το<br>ετήσιο κόστος!!</span></p>
-                          {% elif PV_kWp == slider_max_value or recommended_kWp == slider_max_value and annual_consumption > annual_PV_energy_produced %}
+                          {% elif PV_kWp == slider_max_value or recommended_kWp == slider_max_value and annual_consumption > annual_pv_energy_produced %}
                             <p class="info-title" id="potential_savings" ><span style="color: lightslategrey;">Η κατανάλωσή σας υπερβαίνει την παραγόμενη ενέργεια <br>
                             και το ΦΒ σύστημα έχει τη μέγιστη τιμή kWp. Δοκιμάστε <br>αλλαγές σε κλίση, αζιμούθιο ή σκιάσεις.</span></p> 
                           {% else %}   

@@ -1,13 +1,14 @@
-from django.http.response import HttpResponse, Http404, HttpResponseRedirect
-from django.urls import reverse
+# from django.http.response import HttpResponse, Http404, HttpResponseRedirect
+# from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 # project level
 def simple_view(request):
+    """Function"""
     return render(request, 'home.html')
 
 # @login_required
@@ -15,6 +16,7 @@ def simple_view(request):
 #     return render(request, 'home.html')
 
 def login_view(request):
+    """Function"""
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -34,6 +36,7 @@ def login_view(request):
 
 @login_required
 def logout_view(request):
+    """Function"""
     logout(request)
     return redirect('login')
 
@@ -55,6 +58,7 @@ def logout_view(request):
 
 @login_required
 def change_password_view(request):
+    """Function"""
     if request.method == 'POST':
         form = PasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():

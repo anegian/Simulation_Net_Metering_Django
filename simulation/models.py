@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
+# from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 # Create your models here.
@@ -11,38 +11,38 @@ class PlaceOfInstallation(models.Model):
     def __str__(self):
         return f"{self.city_name}, {self.district_name}"
 
-class SolarPanel(models.Model):
-    capacity = models.FloatField()
-    inclination = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(90)])
+# class SolarPanel(models.Model):
+#     capacity = models.FloatField()
+#     inclination = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(90)])
 
-    # null=True and blank=True when a property may not be filled or known
-    efficiency = models.FloatField(null=True, blank=True)
-    panel_type = models.CharField(max_length=50, null=True, blank=True)
-    manufacturer = models.CharField(max_length=100, null=True, blank=True)
-    model_number = models.CharField(max_length=100, null=True, blank=True)
+#     # null=True and blank=True when a property may not be filled or known
+#     efficiency = models.FloatField(null=True, blank=True)
+#     panel_type = models.CharField(max_length=50, null=True, blank=True)
+#     manufacturer = models.CharField(max_length=100, null=True, blank=True)
+#     model_number = models.CharField(max_length=100, null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.capacity} kW, {self.inclination} degrees"
+#     def __str__(self):
+#         return f"{self.capacity} kW, {self.inclination} degrees"
 
-class Customer(models.Model):
-    user = models.OneToOneField('MyUser', on_delete=models.CASCADE)
-    place_of_installation = models.ForeignKey(PlaceOfInstallation, on_delete=models.CASCADE)
+# class Customer(models.Model):
+#     user = models.OneToOneField('MyUser', on_delete=models.CASCADE)
+#     place_of_installation = models.ForeignKey(PlaceOfInstallation, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+#     def __str__(self):
+#         return f"{self.user.first_name} {self.user.last_name}"
 
-class EnergyGeneration(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    solar_panel = models.ForeignKey(SolarPanel, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    solar_irradiance = models.FloatField()
+# class EnergyGeneration(models.Model):
+#     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+#     solar_panel = models.ForeignKey(SolarPanel, on_delete=models.CASCADE)
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     solar_irradiance = models.FloatField()
 
-    def calculate_energy_generation(self):
-        # Calculate energy generation using solar irradiance and panel capacity
-        return self.solar_panel.capacity * self.solar_irradiance
+#     def calculate_energy_generation(self):
+#         # Calculate energy generation using solar irradiance and panel capacity
+#         return self.solar_panel.capacity * self.solar_irradiance
 
-    def __str__(self):
-        return f"{self.solar_panel} - {self.customer} - {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
+#     def __str__(self):
+#         return f"{self.solar_panel} - {self.customer} - {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
 
 class MyUserManager(BaseUserManager):
     use_in_migrations = True
@@ -86,5 +86,5 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     # responsible for querying the database and returning instances of the model
     objects = MyUserManager()
 
-    def __str__(self):
-        return self.email
+    # def __str__(self):
+    #     return self.email
