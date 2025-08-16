@@ -48,7 +48,7 @@ def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_v
 
     print(latitude_value,longitude_value, inclination_value, "Azimuth: ", azimuth_value)
 
-    solar_data_2020, meta, inputs = pvlib.iotools.get_pvgis_hourly(
+    solar_data_2020, meta = pvlib.iotools.get_pvgis_hourly(
                 latitude=latitude_value, longitude=longitude_value,
                 start=2020, end=2020, raddatabase= 'PVGIS-SARAH2', components=True,
                 surface_tilt=inclination_value, surface_azimuth=azimuth_value, outputformat='json',
