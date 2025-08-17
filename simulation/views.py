@@ -60,7 +60,7 @@ def get_solar_data(latitude_value, longitude_value, inclination_value, azimuth_v
 
     solar_data_2020['poa_diffuse'] = solar_data_2020['poa_sky_diffuse'] + solar_data_2020['poa_ground_diffuse']
     solar_data_2020['poa_global'] = solar_data_2020['poa_direct'] + solar_data_2020['poa_diffuse']
-    print(meta, inputs)
+    print(meta)
 
     # Convert the index (time) to a separate column named 'time'
     solar_data_2020['time'] = solar_data_2020.index.strftime('%Y-%m-%d-%H:%M:%S')
